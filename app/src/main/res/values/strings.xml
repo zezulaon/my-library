@@ -1,0 +1,106 @@
+<resources>
+    <string name="app_name">My Library</string>
+
+    <string name="screen_title_sign_in">Sign Up</string>
+    <string name="btn_add">Save</string>
+    <string name="btn_update">Update</string>
+
+    <string name="screen_detail_tab_shelves">Shelves</string>
+    <string name="screen_detail_tab_book">Detail</string>
+    <string name="screen_detail_tab_reviews">Reviews</string>
+
+    <string name="btn_google_sign_in">Sign in with Google</string>
+    <string name="btn_anonymous_sign_in">Try anonymously</string>
+
+    <string name="invalid_input_form">Please fill in all required fields.</string>
+
+    <!-- Sign In -->
+    <string name="sign_in_google_sign_in_failed">Google Sign In Failed</string>
+    <string name="sign_in_anonymous_sign_in_failed">Anonymous Sign In Failed</string>
+
+    <string name="error_no_book_found">Failed to find the book</string>
+
+    <!-- Create/Update book -->
+    <string name="screen_title_create_new_book">Add a New Book</string>
+    <string name="screen_title_update_book">Update the Book</string>
+    <string name="create_book_label_title">Title</string>
+    <string name="create_book_label_author">Author</string>
+    <string name="create_book_label_publisher">Publisher</string>
+    <string name="create_book_label_year">Year Published</string>
+    <string name="create_book_label_no_pages">Number of Pages</string>
+    <string name="create_book_label_isbn">Isbn</string>
+    <string name="create_book_label_desc">Description</string>
+
+    <string name="create_book_failed_to_save">An error has occurred - the book wasn\t saved.</string>
+
+    <!-- Home/Book list -->
+    <string name="home_btn_scan">Scan a Barcode</string>
+    <string name="home_shelf_title_all_books">All Books</string>
+    <string name="home_failed_to_refresh">Failed to refresh My Library</string>
+    <!-- Drawer -->
+    <string name="drawer_item_manage_shelves">Manage Shelves</string>
+    <string name="drawer_item_all_books">All Books</string>
+    <string name="drawer_label_shelves">Shelves</string>
+    <string name="drawer_app_title">MY LIBRARY</string>
+
+    <!-- Book Detail -->
+    <string name="detail_label_page_count">Page Count</string>
+    <string name="detail_label_publisher">Publisher</string>
+    <string name="detail_label_year_published">Year Published</string>
+    <string name="detail_label_year_isbn">ISBN</string>
+    <string name="detail_label_year_added_on">Added on</string>
+    <string name="detail_reviews_btn_read_more">Read More</string>
+
+    <string name="detail_label_rated">Rated</string>
+    <string name="detail_label_rating_reviews_count">%1s ratings and %2s reviews</string>
+
+    <string name="detail_failed_to_delete">An error has occurred - the book wasn\'t deleted.</string>
+    <string name="detail_failed_to_update_shelf">An error has occurred - the shelf wasn\'t updated.</string>
+
+    <!-- Manage Shelves -->
+    <string name="shelves_dialog_title_add">Add a New Shelf</string>
+    <string name="shelves_dialog_title_edit">Edit the Shelf</string>
+    <string name="shelves_dialog_btn_cancel">Cancel</string>
+    <string name="shelves_dialog_btn_save">Save</string>
+    <string name="shelves_dialog_btn_update">Update</string>
+    <string name="shelves_screen_title">Manage Shelves</string>
+    <string name="shelves_btn_new_shelf">New Shelf</string>
+    <string name="shelves_btn_remove">Delete</string>
+    <string name="shelves_btn_edit">Edit</string>
+
+    <string name="shelves_failed_to_create_shelf">An error has occurred - the shelf wasn\'t created.</string>
+    <string name="shelves_failed_to_update_shelf">An error has occurred - the shelf wasn\'t updated.</string>
+    <string name="shelves_failed_to_delete_shelf">An error has occurred - the shelf wasn\'t deleted.</string>
+
+    <plurals name="shelves_label_books_count">
+        <item quantity="zero">No books added</item>
+        <item quantity="one">1 book</item>
+        <item quantity="few">%s books</item>
+        <item quantity="many">%s books</item>
+        <item quantity="other">%s books</item>
+    </plurals>
+
+
+    <!-- Scanner -->
+    <string name="scanner_title">Scanner</string>
+    <string name="scanner_perm_required">In order to scan a barcode, My Library requires the permission to use this device\'s camera. Please grant the permission.</string>
+    <string name="scanner_btn_allow_camera">Allow Camera</string>
+
+    <!-- Content descriptions -->
+    <string name="content_desc_navigate_back">Navigate Back</string>
+    <string name="content_desc_edit">Edit</string>
+    <string name="content_desc_delete">Delete</string>
+    <string name="content_add_new_shelf">New Shelf</string>
+    <string name="content_open_drawer">Open Navigation Drawer</string>
+    <string name="content_open_drawer_menu">Open Drawer Menu</string>
+    <string name="content_add_new_book">Add a Book</string>
+
+    <!-- Search -->
+    <string name="search_title">Search a Barcode</string>
+    <string name="search_btn_scan_again">Scan Again</string>
+    <string name="search_no_book_found_for_isbn">No book was found for ISBN:</string>
+
+    <!-- Generic errors -->
+    <string name="error_failed_get_data">Failed to load data</string>
+
+</resources>

@@ -1,0 +1,132 @@
+[versions]
+androidGradlePlugin = "7.3.1"
+kotlin = "1.7.20"
+androidxCore = "1.9.0"
+androidxLifecycle = "2.6.0-alpha03"
+androidxActivity = "1.6.1"
+androidxComposeCompiler = "1.3.2"
+androidxComposeBom = "2023.01.00"
+activityKtx = "1.6.1"
+androidxNavigation = "2.5.3"
+androidxRoom = "2.5.0"
+androidxTestExt = "1.1.5"
+# TODO: This is older version of test runner (The latest one - 1.5.1 failed to execute :app:connectedDebugAndroidTest on a device)
+androidxTestRunner = "1.4.0"
+# https://developer.android.com/training/testing/espresso/setup (espresso requires test runner)
+androidxEspresso = "3.4.0"
+coroutines = "1.6.4"
+junit = "4.13.2"
+koinAdroidCompose = "3.4.1"
+koinAdroid = "3.3.2"
+koinTest = "3.3.2"
+desugarJdk = "1.1.5"
+googleGmsServices = "4.3.14"
+androidGmsServices = "20.4.0"
+androidGmsServicesBarcodeScanning = "18.1.0"
+mlkitBarcode = "17.0.3"
+cameraVersion = "1.3.0-alpha02"
+firebaseBom = "31.0.2"
+crashlyticsPlugin = "2.9.2"
+retrofit = "2.9.0"
+accompanistPermissions = "0.28.0"
+glide = "4.14.2"
+glideCompose = "1.0.0-alpha.1"
+timber = "5.0.1"
+#ksp = "1.7.20-1.0.8"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+
+# Android lifecycle
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+
+# UI
+androidx-activity-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "activityKtx" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+
+# UI - Compose
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidxComposeCompiler" }
+
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+
+# UI - Navigation
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
+
+# Accomponist
+google-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidxRoom" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidxRoom" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidxRoom" }
+
+# Glide
+bumptech-glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
+bumptech-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+bumptech-glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+
+# Koin DI
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAdroid" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAdroidCompose" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koinTest" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinTest" }
+
+# Coroutines
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+# HTTP/REST/JSON/XML
+squareup-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+#squareup-retrofit2-converter-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "retrofit" }
+squareup-retrofit2-converter-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "retrofit" }
+
+# JUnit/Tests
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxEspresso" }
+
+# Accessing new Java APIs through desugaring (LocalDateTime for example)
+android-tools-desugar-jdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdk" }
+
+# Logging
+jakewharton-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+# Firebase
+google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+
+# GMS
+google-android-gms-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "androidGmsServices" }
+# This dependency adds ML model dynamically via Google Play Services (it has to be downloaded on app start)
+# google-android-gms-services-mlkit-barcode-scanning = { module = "com.google.android.gms:play-services-mlkit-barcode-scanning", version.ref = "androidGmsServicesBarcodeScanning" }
+
+# ML barcode KIT
+google-mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkitBarcode" }
+
+# Camera
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraVersion" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraVersion" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraVersion" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-services = { id = "com.google.gms.google-services", version.ref = "googleGmsServices" }
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }
+
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+# TODO https://kotlinlang.org/docs/ksp-overview.html
+#ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
