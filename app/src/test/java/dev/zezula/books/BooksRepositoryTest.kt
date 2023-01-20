@@ -7,9 +7,9 @@ import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.source.db.BookDao
-import dev.zezula.books.data.source.db.ShelfDao
+import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.fake.FakeBookDaoImpl
-import dev.zezula.books.data.source.db.fake.FakeShelfDaoImpl
+import dev.zezula.books.data.source.db.fake.FakeShelfAndBookDaoImpl
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,18 +24,18 @@ class BooksRepositoryTest {
 
     private lateinit var booksRepository: BooksRepository
     private lateinit var booksDao: BookDao
-    private lateinit var shelfDao: ShelfDao
+    private lateinit var shelfAndBookDao: ShelfAndBookDao
     private lateinit var networkDataSource: NetworkDataSource
 
     @Before
     fun setup() {
         booksDao = FakeBookDaoImpl()
-        shelfDao = FakeShelfDaoImpl()
+        shelfAndBookDao = FakeShelfAndBookDaoImpl()
         networkDataSource = FakeNetworkDataSourceImpl()
         booksRepository = BooksRepositoryImpl(
-            booksDbDataSource = booksDao,
+            booksDao = booksDao,
             networkDataSource = networkDataSource,
-            shelvesDbDataSource = shelfDao
+            shelfAndBookDao = shelfAndBookDao
         )
     }
 

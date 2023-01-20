@@ -7,7 +7,7 @@ import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
 import dev.zezula.books.data.source.db.BookDao
-import dev.zezula.books.data.source.db.ShelfDao
+import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -17,25 +17,25 @@ import java.time.LocalDateTime
 import java.util.*
 
 class BooksRepositoryImpl(
-    private val booksDbDataSource: BookDao,
+    private val booksDao: BookDao,
     private val networkDataSource: NetworkDataSource,
-    private val shelvesDbDataSource: ShelfDao,
+    private val shelfAndBookDao: ShelfAndBookDao,
 ) : BooksRepository {
 
     override fun getBooksForShelfAsStream(shelfId: String): Flow<List<Book>> {
-        return booksDbDataSource.getForShelfAsStream(shelfId).map {
+        return shelfAndBookDao.getBooksForShelfAsStream(shelfId).map {
             it.map(BookEntity::asExternalModel)
         }
     }
 
     override fun getAllBooksStream(): Flow<List<Book>> {
-        return booksDbDataSource.getAllBooksAsStream().map {
+        return booksDao.getAllBooksAsStream().map {
             it.map(BookEntity::asExternalModel)
         }
     }
 
     override fun getBookStream(bookId: String): Flow<Book?> {
-        return booksDbDataSource.getBook(bookId)
+        return booksDao.getBook(bookId)
             .map {
                 it?.asExternalModel()
             }
@@ -62,7 +62,7 @@ class BooksRepositoryImpl(
         networkDataSource.addOrUpdateBook(networkBook)
 
         val bookEntity = fromNetworkBook(networkBook)
-        booksDbDataSource.addOrUpdate(bookEntity)
+        booksDao.addOrUpdate(bookEntity)
         return bookEntity.asExternalModel()
     }
 
@@ -72,25 +72,25 @@ class BooksRepositoryImpl(
     }
 
     override suspend fun refreshBooks() {
-        val numberOfBooks = booksDbDataSource.getBookCount()
+        val numberOfBooks = booksDao.getBookCount()
         // TODO: implement proper syncing. Right now, the firestore is used as a simple online "back up" (which is
         //  downloaded only when there are no books in the app database)
         if (numberOfBooks == 0) {
             networkDataSource.getBooks().forEach { networkBook ->
-                booksDbDataSource.addOrUpdate(fromNetworkBook(networkBook))
+                booksDao.addOrUpdate(fromNetworkBook(networkBook))
             }
             networkDataSource.getShelves().forEach { networkShelf ->
-                shelvesDbDataSource.addOrUpdate(fromNetworkShelf(networkShelf))
+                shelfAndBookDao.addOrUpdate(fromNetworkShelf(networkShelf))
             }
             networkDataSource.getShelvesWithBooks().forEach { networkShelfWithBook ->
-                shelvesDbDataSource.addBookToShelf(fromNetworkShelfWithBook(networkShelfWithBook))
+                shelfAndBookDao.addBookToShelf(fromNetworkShelfWithBook(networkShelfWithBook))
             }
         }
     }
 
     override suspend fun deleteBook(bookId: String) {
         networkDataSource.deleteBook(bookId)
-        booksDbDataSource.delete(bookId)
+        booksDao.delete(bookId)
     }
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
@@ -99,14 +99,14 @@ class BooksRepositoryImpl(
         networkDataSource.updateBookInToShelf(shelfId, bookId, isBookInShelf)
 
         if (isBookInShelf) {
-            shelvesDbDataSource.addBookToShelf(shelvesWithBooksEntity)
+            shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
         } else {
-            shelvesDbDataSource.removeBookFromShelf(shelvesWithBooksEntity)
+            shelfAndBookDao.removeBookFromShelf(shelvesWithBooksEntity)
         }
     }
 
     override suspend fun getBookId(isbn: String): String? {
-        val dbBooks = booksDbDataSource.getForIsbn(isbn)
+        val dbBooks = booksDao.getForIsbn(isbn)
         return dbBooks.firstOrNull()?.id
     }
 

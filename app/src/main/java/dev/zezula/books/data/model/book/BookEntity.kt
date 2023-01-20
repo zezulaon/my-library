@@ -50,3 +50,30 @@ fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
         thumbnailLink = networkBook.thumbnailLink
     )
 }
+
+val previewBookEntities = listOf(
+    BookEntity(
+        id = "1",
+        title = "Hobit",
+        author = "J. R. R. Tolkien",
+        description = "Hobit desc",
+        isbn = "987789555",
+        publisher = "Publisher 1",
+        yearPublished = 2001,
+        pageCount = 152,
+        thumbnailLink = null,
+        dateAdded = "2022-01-05T17:43:25.629"
+    ),
+    BookEntity(
+        id = "2",
+        title = "Neverwhere",
+        author = "N. Gaiman",
+        description = "Neverwhere description",
+        isbn = "987789554",
+        publisher = "Publisher 2",
+        yearPublished = 2001,
+        pageCount = 152,
+        thumbnailLink = null,
+        dateAdded = "2023-01-05T17:43:25.629"
+    ),
+)

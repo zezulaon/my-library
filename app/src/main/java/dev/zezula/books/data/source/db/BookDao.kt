@@ -10,10 +10,6 @@ interface BookDao {
     @Query("SELECT * FROM books ORDER BY dateAdded DESC")
     fun getAllBooksAsStream(): Flow<List<BookEntity>>
 
-    @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM books INNER JOIN shelf_with_book ON bookId=id WHERE shelfId=:shelfId ORDER BY dateAdded DESC")
-    fun getForShelfAsStream(shelfId: String): Flow<List<BookEntity>>
-
     @Query("SELECT * FROM books WHERE id=:bookId")
     fun getBook(bookId: String): Flow<BookEntity?>
 
@@ -25,6 +21,9 @@ interface BookDao {
 
     @Upsert
     suspend fun addOrUpdate(book: BookEntity)
+
+    @Upsert
+    suspend fun addOrUpdate(books: List<BookEntity>)
 
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun delete(bookId: String)

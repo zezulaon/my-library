@@ -127,6 +127,10 @@ class NavigationTest : KoinTest {
     fun updateBookScreen_fillBookData_updatesBook() {
 
         composeTestRule.apply {
+            // Wait till list items are fetched and visible
+            waitUntil {
+                onAllNodesWithText(previewBooks.first().title!!).fetchSemanticsNodes().size == 1
+            }
             // GIVEN the user is on "Update" screen
             onNodeWithText(previewBooks.first().title!!).performClick()
             onNodeWithContentDescription(

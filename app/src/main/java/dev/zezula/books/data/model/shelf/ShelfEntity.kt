@@ -21,3 +21,8 @@ fun fromNetworkShelf(networkShelf: NetworkShelf): ShelfEntity {
         title = networkShelf.title,
     )
 }
+
+val previewShelfEntities = listOf(
+    ShelfEntity(id = "1", dateAdded = "2023-01-05T17:43:25.629", title = "Favorites"),
+    ShelfEntity(id = "2", dateAdded = "2022-01-05T17:43:25.629", title = "Have Read"),
+)

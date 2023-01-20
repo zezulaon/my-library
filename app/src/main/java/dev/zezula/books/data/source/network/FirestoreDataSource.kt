@@ -112,7 +112,7 @@ class FirestoreDataSource : NetworkDataSource {
     }
 
     override suspend fun updateBookInToShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
-        Timber.d("addBookToShelf(shelfId=$shelfId, bookId=$bookId)")
+        Timber.d("updateBookInToShelf(shelfId=$shelfId, bookId=$bookId, isBookInShelf=$isBookInShelf)")
 
         val shelfWithBookId = createShelfWithBookId(shelfId, bookId)
 

@@ -1,7 +1,7 @@
 package dev.zezula.books.data
 
 import dev.zezula.books.data.model.shelf.*
-import dev.zezula.books.data.source.db.ShelfDao
+import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -10,12 +10,12 @@ import java.time.LocalDateTime
 import java.util.*
 
 class ShelvesRepositoryImpl(
-    private val shelvesDbDataSource: ShelfDao,
+    private val shelvesDbDataSource: ShelfAndBookDao,
     private val networkDataSource: NetworkDataSource,
 ) : ShelvesRepository {
 
     override fun getShelvesAsStream(): Flow<List<Shelf>> {
-        return shelvesDbDataSource.getAllAsStream().map { shelfEntities ->
+        return shelvesDbDataSource.getAllShelvesAsStream().map { shelfEntities ->
             shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
         }
     }

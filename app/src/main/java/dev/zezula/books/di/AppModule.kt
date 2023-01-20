@@ -56,7 +56,7 @@ val appModule = module {
     }
     single {
         val database = get<AppDatabase>()
-        database.shelfDao()
+        database.shelfAndBookDao()
     }
     single<NetworkDataSource> {
         FirestoreDataSource()

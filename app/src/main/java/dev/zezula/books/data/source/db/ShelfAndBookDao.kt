@@ -1,6 +1,7 @@
 package dev.zezula.books.data.source.db
 
 import androidx.room.*
+import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfForBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
@@ -8,17 +9,24 @@ import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ShelfDao {
-
-    @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT *, Count(bookId) as numberOfBooks FROM shelves LEFT JOIN shelf_with_book ON shelfId=id GROUP BY id ORDER BY dateAdded DESC")
-    fun getAllAsStream(): Flow<List<ShelfWithBookCountEntity>>
+interface ShelfAndBookDao {
 
     @Upsert
     suspend fun addOrUpdate(shelf: ShelfEntity)
 
+    @Upsert
+    suspend fun addOrUpdate(shelves: List<ShelfEntity>)
+
     @Query("DELETE FROM shelves WHERE id = :shelfId")
     suspend fun delete(shelfId: String)
+
+    @RewriteQueriesToDropUnusedColumns
+    @Query("SELECT *, Count(bookId) as numberOfBooks FROM shelves LEFT JOIN shelf_with_book ON shelfId=id GROUP BY id ORDER BY dateAdded DESC")
+    fun getAllShelvesAsStream(): Flow<List<ShelfWithBookCountEntity>>
+
+    @RewriteQueriesToDropUnusedColumns
+    @Query("SELECT * FROM books INNER JOIN shelf_with_book ON bookId=id WHERE shelfId=:shelfId ORDER BY dateAdded DESC")
+    fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBookToShelf(shelvesWithBooksEntity: ShelfWithBookEntity)
