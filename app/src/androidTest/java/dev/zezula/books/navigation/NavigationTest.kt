@@ -14,6 +14,7 @@ import dev.zezula.books.di.appModule
 import dev.zezula.books.di.test.appTestModule
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.util.*
+import dev.zezula.books.waitUntilExists
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
@@ -128,9 +129,8 @@ class NavigationTest : KoinTest {
 
         composeTestRule.apply {
             // Wait till list items are fetched and visible
-            waitUntil {
-                onAllNodesWithText(previewBooks.first().title!!).fetchSemanticsNodes().size == 1
-            }
+            waitUntilExists(hasText(previewBooks.first().title!!))
+
             // GIVEN the user is on "Update" screen
             onNodeWithText(previewBooks.first().title!!).performClick()
             onNodeWithContentDescription(
