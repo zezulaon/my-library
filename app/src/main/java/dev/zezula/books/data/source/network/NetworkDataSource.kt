@@ -20,5 +20,5 @@ interface NetworkDataSource {
 
     suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook>
 
-    suspend fun updateBookInToShelf(shelfId: String, bookId: String, isBookInShelf: Boolean)
+    suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean)
 }

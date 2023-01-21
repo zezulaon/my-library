@@ -65,7 +65,7 @@ class FakeNetworkDataSourceImpl : NetworkDataSource {
         return emptyList()
     }
 
-    override suspend fun updateBookInToShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
+    override suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
         // book<->shelf connection not used in this fake
     }
 }

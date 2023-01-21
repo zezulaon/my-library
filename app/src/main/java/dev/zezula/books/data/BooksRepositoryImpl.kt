@@ -96,7 +96,7 @@ class BooksRepositoryImpl(
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
         val shelvesWithBooksEntity = ShelfWithBookEntity(bookId = bookId, shelfId = shelfId)
 
-        networkDataSource.updateBookInToShelf(shelfId, bookId, isBookInShelf)
+        networkDataSource.updateBookInShelf(shelfId, bookId, isBookInShelf)
 
         if (isBookInShelf) {
             shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
