@@ -4,7 +4,7 @@ import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asExternalModel
-import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.di.appUnitTestModule
@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
@@ -22,7 +23,7 @@ import org.koin.test.inject
 class BooksRepositoryTest : KoinTest {
 
     private val booksRepository: BooksRepository by inject()
-    private val booksDao: BookDao by inject()
+    private val bookDao: BookDao by inject()
     private val networkDataSource: NetworkDataSource by inject()
 
     @get:Rule
@@ -30,10 +31,17 @@ class BooksRepositoryTest : KoinTest {
         modules(appUnitTestModule)
     }
 
+    private val booksTestData = listOf(previewBookEntities.first())
+
+    @Before
+    fun setupRepository() = runTest {
+        bookDao.addOrUpdate(booksTestData)
+    }
+
     @Test
     fun books_stream_is_backed_by_book_dao() = runTest {
         assertEquals(
-            booksDao.getAllBooksAsStream()
+            bookDao.getAllBooksAsStream()
                 .first()
                 .map(BookEntity::asExternalModel),
             booksRepository.getAllBooksStream()
@@ -48,7 +56,7 @@ class BooksRepositoryTest : KoinTest {
 
         // Check that book was added to DB
         assertTrue(
-            booksDao.getAllBooksAsStream()
+            bookDao.getAllBooksAsStream()
                 .first()
                 .any { entity ->
                     bookFormData.title == entity.title
@@ -65,7 +73,7 @@ class BooksRepositoryTest : KoinTest {
 
         // Check that repository returns same IDs as DB
         assertEquals(
-            booksDao.getAllBooksAsStream()
+            bookDao.getAllBooksAsStream()
                 .first()
                 .map(BookEntity::asExternalModel)
                 .first { book -> book.title == bookFormData.title }.id,
@@ -76,14 +84,14 @@ class BooksRepositoryTest : KoinTest {
 
     @Test
     fun book_is_updated() = runTest {
-        val bookToUpdate = booksRepository.getBook(previewBooks.first().id)!!
+        val bookToUpdate = booksRepository.getBook(booksTestData.first().id)!!
         val updatedTitle = "new title"
         booksRepository.addOrUpdateBook(bookId = bookToUpdate.id, bookFormData = BookFormData(title = updatedTitle))
 
         // Check that the book in the repository was updated
         assertEquals(updatedTitle, booksRepository.getBook(bookToUpdate.id)!!.title)
         // Check that the book in DB was updated
-        assertEquals(updatedTitle, booksDao.getBook(bookToUpdate.id).first()!!.title)
+        assertEquals(updatedTitle, bookDao.getBook(bookToUpdate.id).first()!!.title)
         // Check that the book in network data source was updated
         assertTrue(
             networkDataSource.getBooks()
@@ -95,12 +103,12 @@ class BooksRepositoryTest : KoinTest {
 
     @Test
     fun delete_removes_the_book() = runTest {
-        val bookToDelete = booksRepository.getBook(previewBooks.first().id)!!
+        val bookToDelete = booksRepository.getBook(booksTestData.first().id)!!
         booksRepository.deleteBook(bookToDelete.id)
 
         // Check that the book was deleted from all data sources
         assertNull(booksRepository.getBook(bookToDelete.id))
-        assertNull(booksDao.getBook(bookToDelete.id).first())
+        assertNull(bookDao.getBook(bookToDelete.id).first())
         assertFalse(
             networkDataSource.getBooks()
                 .any { book ->
@@ -112,7 +120,7 @@ class BooksRepositoryTest : KoinTest {
     @Test
     fun refresh_fetches_books_from_network_and_saves_them_to_database() = runTest {
         // delete local DB
-        booksDao.deleteAll()
+        bookDao.deleteAll()
         // Check that repo is empty after delete
         assertTrue(booksRepository.getAllBooksStream().first().isEmpty())
 

@@ -1,29 +1,12 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.*
 
 class FakeBookDaoImpl : BookDao {
 
-    private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(
-        previewBooks.map { book ->
-            BookEntity(
-                id = book.id,
-                dateAdded = book.dateAdded,
-                title = book.title,
-                author = book.author,
-                description = book.description,
-                isbn = book.isbn,
-                publisher = book.publisher,
-                yearPublished = book.yearPublished,
-                thumbnailLink = book.thumbnailLink,
-                pageCount = book.pageCount
-            )
-        }
-            .associateBy { entity -> entity.id }
-    )
+    private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
 
     override fun getAllBooksAsStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
 

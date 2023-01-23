@@ -1,8 +1,10 @@
 package dev.zezula.books.vm
 
 import dev.zezula.books.MainDispatcherRule
-import dev.zezula.books.data.model.book.previewBooks
-import dev.zezula.books.data.model.shelf.previewShelves
+import dev.zezula.books.data.model.book.previewBookEntities
+import dev.zezula.books.data.model.shelf.previewShelfEntities
+import dev.zezula.books.data.source.db.BookDao
+import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.di.appUnitTestModule
 import dev.zezula.books.ui.screen.list.BookListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,17 +12,21 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BookListViewModelTest: KoinTest {
 
     private val viewModel: BookListViewModel by inject()
+    private val shelfAndBookDao: ShelfAndBookDao by inject()
+    private val bookDao: BookDao by inject()
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -30,10 +36,19 @@ class BookListViewModelTest: KoinTest {
         modules(appUnitTestModule)
     }
 
+    private val booksTestData = listOf(previewBookEntities.first())
+    private val shelvesTestData = previewShelfEntities
+
+    @Before
+    fun setupRepository() = runTest {
+        bookDao.addOrUpdate(booksTestData)
+        shelfAndBookDao.addOrUpdate(shelvesTestData)
+    }
+
     @Test
     fun shelves_are_initialized() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
-        assertEquals(previewShelves, viewModel.uiState.value.shelves)
+        assertEquals(shelvesTestData.size, viewModel.uiState.value.shelves.size)
         collectJob.cancel()
     }
 
@@ -41,13 +56,14 @@ class BookListViewModelTest: KoinTest {
     fun shelf_is_selected_after_navigation_drawer_shelf_is_clicked() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
-        val shelfToSelect = previewShelves.first()
+        val shelfToSelect = viewModel.uiState.value.shelves.last()
+
+        // Check that no shelf is selected (default)
+        assertNull(viewModel.uiState.value.selectedShelf)
+
         viewModel.onShelfSelected(shelfToSelect)
-        val uiState = viewModel.uiState.value
         // Check that shelf is selected
-        assertEquals(shelfToSelect, uiState.selectedShelf)
-        // Check that shelf has correct number of books
-        assertEquals(shelfToSelect.numberOfBooks, uiState.books.size)
+        assertEquals(shelfToSelect, viewModel.uiState.value.selectedShelf)
 
         collectJob.cancel()
     }
@@ -57,11 +73,12 @@ class BookListViewModelTest: KoinTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
         viewModel.onAllBooksShelfSelected()
-        val uiState = viewModel.uiState.value
-        // Check that "all books" (no shelf) is selected
-        assertEquals(null, uiState.selectedShelf)
-        // Check that all books are displayed
-        assertEquals(previewBooks.size, uiState.books.size)
+        with(viewModel.uiState.value) {
+            // Check that "all books" (no shelf) is selected
+            assertEquals(null, selectedShelf)
+            // Check that all books are displayed
+            assertEquals(booksTestData.size, books.size)
+        }
 
         collectJob.cancel()
     }

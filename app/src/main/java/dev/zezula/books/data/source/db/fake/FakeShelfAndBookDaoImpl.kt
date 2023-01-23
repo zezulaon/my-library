@@ -1,23 +1,15 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.model.shelf.*
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import kotlinx.coroutines.flow.*
 
 class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
 
-    private var shelvesFlow: MutableStateFlow<Map<String, ShelfEntity>> = MutableStateFlow(
-        previewShelves.map { shelf ->
-            ShelfEntity(
-                id = shelf.id,
-                dateAdded = shelf.dateAdded,
-                title = shelf.title,
-            )
-        }
-            .associateBy { entity -> entity.id }
-    )
+    private var shelvesFlow: MutableStateFlow<Map<String, ShelfEntity>> = MutableStateFlow(emptyMap())
+    private var booksForShelfFlow: MutableStateFlow<Map<String, List<BookEntity>>> = MutableStateFlow(emptyMap())
+    private var shelvesForBook: MutableStateFlow<Map<String, List<ShelfForBookEntity>>> = MutableStateFlow(emptyMap())
 
     override fun getAllShelvesAsStream(): Flow<List<ShelfWithBookCountEntity>> {
         return shelvesFlow.map { shelfMap ->
@@ -60,28 +52,9 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         throw NotImplementedError("Unused in tests")
     }
 
-    override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBookEntity>> {
-        // FIXME: add proper book<->shelf relation
-        return when (bookId) {
-            previewBookEntities[0].id -> {
-                flowOf(previewShelfEntities.map { entity ->
-                    ShelfForBookEntity(id = entity.id, title = entity.title, true)
-                })
-            }
-            previewBookEntities[1].id -> {
-                flowOf(previewShelfEntities.map { entity ->
-                    ShelfForBookEntity(id = entity.id, title = entity.title, true)
-                })
-            }
-            else -> flowOf(emptyList())
-        }
-    }
+    override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBookEntity>> =
+        shelvesForBook.map { it.getOrDefault(bookId, emptyList()) }
 
-    override fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>> {
-        return when (shelfId) {
-            previewShelfEntities[0].id -> flowOf(listOf(previewBookEntities[0]))
-            previewShelfEntities[1].id -> flowOf(listOf(previewBookEntities[1]))
-            else -> flowOf(emptyList())
-        }
-    }
+    override fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>> =
+        booksForShelfFlow.map { it.getOrDefault(shelfId, emptyList()) }
 }
