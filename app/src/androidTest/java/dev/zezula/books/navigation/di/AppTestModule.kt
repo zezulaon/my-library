@@ -1,4 +1,4 @@
-package dev.zezula.books.di.test
+package dev.zezula.books.navigation.di
 
 import androidx.room.Room
 import dev.zezula.books.data.source.db.AppDatabase
@@ -11,7 +11,11 @@ import dev.zezula.books.data.source.network.fake.FakeOnlineBookFinderServiceImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val appTestModule = module {
+/**
+ * Provides fake (in memory) DB and fake services and data sources. In navigation tests, this module overrides
+ * production modules.
+ */
+val appInstrumentedTestModule = module {
     factory<OnlineBookFinderService> { FakeOnlineBookFinderServiceImpl() }
     factory<NetworkDataSource> { FakeNetworkDataSourceImpl() }
     single<AuthService> { FakeAuthServiceImpl() }

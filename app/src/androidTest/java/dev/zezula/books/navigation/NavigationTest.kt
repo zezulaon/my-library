@@ -11,7 +11,7 @@ import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.previewShelves
 import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.di.appModule
-import dev.zezula.books.di.test.appTestModule
+import dev.zezula.books.navigation.di.appInstrumentedTestModule
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.util.*
 import dev.zezula.books.waitUntilExists
@@ -40,7 +40,8 @@ class NavigationTest : KoinTest {
 
     @get:Rule(order = 0)
     val koinTestRule = KoinTestRule(
-        modules = listOf(appModule, appTestModule)
+        // Override some production components with instrumented module
+        modules = listOf(appModule, appInstrumentedTestModule)
     )
 
     @get:Rule(order = 1)

@@ -1,53 +1,33 @@
 package dev.zezula.books
 
 import dev.zezula.books.data.BooksRepository
-import dev.zezula.books.data.BooksRepositoryImpl
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.source.db.BookDao
-import dev.zezula.books.data.source.db.ShelfAndBookDao
-import dev.zezula.books.data.source.db.fake.FakeBookDaoImpl
-import dev.zezula.books.data.source.db.fake.FakeShelfAndBookDaoImpl
 import dev.zezula.books.data.source.network.NetworkDataSource
-import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
+import dev.zezula.books.di.appUnitTestModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
+import org.koin.test.KoinTest
+import org.koin.test.KoinTestRule
+import org.koin.test.inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class BooksRepositoryTest {
+class BooksRepositoryTest : KoinTest {
 
-    private lateinit var booksRepository: BooksRepository
-    private lateinit var booksDao: BookDao
-    private lateinit var shelfAndBookDao: ShelfAndBookDao
-    private lateinit var networkDataSource: NetworkDataSource
+    private val booksRepository: BooksRepository by inject()
+    private val booksDao: BookDao by inject()
+    private val networkDataSource: NetworkDataSource by inject()
 
-    @Before
-    fun setup() {
-        startKoin {
-            modules()
-        }
-        booksDao = FakeBookDaoImpl()
-        shelfAndBookDao = FakeShelfAndBookDaoImpl()
-        networkDataSource = FakeNetworkDataSourceImpl()
-        booksRepository = BooksRepositoryImpl(
-            booksDao = booksDao,
-            networkDataSource = networkDataSource,
-            shelfAndBookDao = shelfAndBookDao
-        )
-    }
-
-    @After
-    fun cleanup() {
-        stopKoin()
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        modules(appUnitTestModule)
     }
 
     @Test

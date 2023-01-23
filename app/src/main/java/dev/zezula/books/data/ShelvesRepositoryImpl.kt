@@ -10,18 +10,18 @@ import java.time.LocalDateTime
 import java.util.*
 
 class ShelvesRepositoryImpl(
-    private val shelvesDbDataSource: ShelfAndBookDao,
+    private val shelvesAndBooksDao: ShelfAndBookDao,
     private val networkDataSource: NetworkDataSource,
 ) : ShelvesRepository {
 
     override fun getShelvesAsStream(): Flow<List<Shelf>> {
-        return shelvesDbDataSource.getAllShelvesAsStream().map { shelfEntities ->
+        return shelvesAndBooksDao.getAllShelvesAsStream().map { shelfEntities ->
             shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
         }
     }
 
     override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBook>> {
-        return shelvesDbDataSource.getShelvesForBookAsStream(bookId).map { list ->
+        return shelvesAndBooksDao.getShelvesForBookAsStream(bookId).map { list ->
             list.map(ShelfForBookEntity::asExternalModel)
         }
     }
@@ -41,11 +41,11 @@ class ShelvesRepositoryImpl(
         networkDataSource.addOrUpdateShelf(networkShelf)
 
         val shelf = fromNetworkShelf(networkShelf)
-        shelvesDbDataSource.addOrUpdate(shelf)
+        shelvesAndBooksDao.addOrUpdate(shelf)
     }
 
     override suspend fun deleteShelf(shelf: Shelf) {
         networkDataSource.deleteShelf(shelf.id)
-        shelvesDbDataSource.delete(shelf.id)
+        shelvesAndBooksDao.delete(shelf.id)
     }
 }

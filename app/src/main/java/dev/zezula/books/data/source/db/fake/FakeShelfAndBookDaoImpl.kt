@@ -1,12 +1,10 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.model.shelf.*
 import dev.zezula.books.data.source.db.ShelfAndBookDao
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 
 class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
 
@@ -63,10 +61,27 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
     }
 
     override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBookEntity>> {
-        throw NotImplementedError("Unused in tests")
+        // FIXME: add proper book<->shelf relation
+        return when (bookId) {
+            previewBookEntities[0].id -> {
+                flowOf(previewShelfEntities.map { entity ->
+                    ShelfForBookEntity(id = entity.id, title = entity.title, true)
+                })
+            }
+            previewBookEntities[1].id -> {
+                flowOf(previewShelfEntities.map { entity ->
+                    ShelfForBookEntity(id = entity.id, title = entity.title, true)
+                })
+            }
+            else -> flowOf(emptyList())
+        }
     }
 
     override fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>> {
-        throw NotImplementedError("Unused in tests")
+        return when (shelfId) {
+            previewShelfEntities[0].id -> flowOf(listOf(previewBookEntities[0]))
+            previewShelfEntities[1].id -> flowOf(listOf(previewBookEntities[1]))
+            else -> flowOf(emptyList())
+        }
     }
 }
