@@ -18,3 +18,13 @@ class CrashlyticsTree : Timber.Tree() {
         }
     }
 }
+
+class TestTree : Timber.DebugTree() {
+
+    override fun isLoggable(tag: String?, priority: Int) = true
+
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        val tagOrDefault = tag ?: "TimberLog"
+        println("$tagOrDefault: $message")
+    }
+}

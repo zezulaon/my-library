@@ -82,7 +82,7 @@ fun ShelvesListScreen(
                 onDeleteClick = onDeleteShelfClick
             )
 
-            if (uiState.showAddOrEditShelf) {
+            if (uiState.showAddOrEditShelfDialog) {
                 AddOrEditShelfDialog(
                     selectedShelf = uiState.selectedShelf,
                     onDialogDismiss = onAddShelfDialogDismiss,

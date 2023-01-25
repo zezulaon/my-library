@@ -22,7 +22,7 @@ class ReviewsRepositoryImpl(
 
     override fun getReviewsForBookAsStream(bookId: String): Flow<List<Review>> {
         return reviewsDao.getReviews(bookId).mapNotNull {
-            it?.map(ReviewEntity::asExternalModel)
+            it.map(ReviewEntity::asExternalModel)
         }
     }
 

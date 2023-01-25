@@ -23,7 +23,7 @@ class ShelvesViewModel(
     getShelvesUseCase: GetShelvesUseCase,
 ) : ViewModel() {
 
-    private val _showAddNewShelfDialog = MutableStateFlow(false)
+    private val _showShelfDialog = MutableStateFlow(false)
     private val _selectedShelf = MutableStateFlow<Shelf?>(null)
     private val _errorMessage = MutableStateFlow<Int?>(null)
 
@@ -33,13 +33,13 @@ class ShelvesViewModel(
     val uiState: StateFlow<ShelvesUiState> =
         combine(
             shelves,
-            _showAddNewShelfDialog,
+            _showShelfDialog,
             _selectedShelf,
             _errorMessage,
         ) { shelves, showAddNewShelf, selectedShelf, errorMessage ->
             ShelvesUiState(
                 shelves = shelves.getOrDefault(emptyList()),
-                showAddOrEditShelf = showAddNewShelf,
+                showAddOrEditShelfDialog = showAddNewShelf,
                 selectedShelf = selectedShelf,
                 errorMessage = errorMessage,
             )
@@ -83,16 +83,16 @@ class ShelvesViewModel(
     }
 
     fun onAddNewShelfClick() {
-        _showAddNewShelfDialog.value = true
+        _showShelfDialog.value = true
     }
 
     fun onEditShelfClicked(shelf: Shelf) {
-        _showAddNewShelfDialog.value = true
+        _showShelfDialog.value = true
         _selectedShelf.value = shelf
     }
 
     fun onShelfDialogDismissed() {
-        _showAddNewShelfDialog.value = false
+        _showShelfDialog.value = false
         _selectedShelf.value = null
     }
 

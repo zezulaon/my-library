@@ -32,6 +32,7 @@ accompanistPermissions = "0.28.0"
 glide = "4.14.2"
 glideCompose = "1.0.0-alpha.1"
 timber = "5.0.1"
+turbine = "0.12.1"
 #ksp = "1.7.20-1.0.8"
 
 [libraries]
@@ -82,6 +83,9 @@ koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "
 # Coroutines
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+# Turbine
+app-cash-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # HTTP/REST/JSON/XML
 squareup-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
