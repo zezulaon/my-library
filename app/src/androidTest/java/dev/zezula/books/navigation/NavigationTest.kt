@@ -63,13 +63,13 @@ class NavigationTest : KoinTest {
         yearPublished = 2000,
         pageCount = 10,
         thumbnailLink = null,
-        dateAdded = "2023-01-05T17:43:25.629"
+        dateAdded = "2023-01-05T17:43:25.629",
     )
 
     @get:Rule(order = 0)
     val koinTestRule = KoinTestRule(
         // Override some production components with instrumented module
-        modules = listOf(appModule, appInstrumentedTestModule)
+        modules = listOf(appModule, appInstrumentedTestModule),
     )
 
     @get:Rule(order = 1)
@@ -92,7 +92,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun scannerScreen_firstLaunch_showsMissingPermissionInfo() {
-
         composeTestRule.apply {
             // GIVEN the user is on "Scan a book" screen
             onNodeWithText(text = activity.getString(R.string.home_btn_scan), useUnmergedTree = true)
@@ -109,7 +108,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun createBookScreen_saveEmptyForm_showsError() {
-
         composeTestRule.apply {
             // GIVEN the user is on "Create" screen
             onNodeWithTag(homeBtnAddBookManually).performClick()
@@ -124,7 +122,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun createBookScreen_fillAndSaveForm_addsABook() {
-
         composeTestRule.apply {
             // GIVEN the user is on "Create" screen
             onNodeWithTag(homeBtnAddBookManually).performClick()
@@ -155,7 +152,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun updateBookScreen_fillBookData_updatesBook() {
-
         composeTestRule.apply {
             // Wait till list items are fetched and visible
             waitUntilExists(hasText(previewBooks.first().title!!))
@@ -164,7 +160,7 @@ class NavigationTest : KoinTest {
             onNodeWithText(previewBooks.first().title!!).performClick()
             onNodeWithContentDescription(
                 label = activity.getString(R.string.content_desc_edit),
-                useUnmergedTree = true
+                useUnmergedTree = true,
             ).performClick()
             // WHEN user fills in all required data
             onNodeWithTag(createBookInputTitle).apply { performTextClearance() }.performTextInput(bookToCreate.title!!)
@@ -196,7 +192,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun bookDetailScreen_clickOnDelete_deletesBook() {
-
         val bookToDelete = previewBooks.first()
 
         composeTestRule.apply {
@@ -207,7 +202,7 @@ class NavigationTest : KoinTest {
             // WHEN user clicks on delete button
             onNodeWithContentDescription(
                 label = activity.getString(R.string.content_desc_delete),
-                useUnmergedTree = true
+                useUnmergedTree = true,
             ).performClick()
             // THEN "all books" home screen is displayed
             onAllNodesWithText(activity.getString(R.string.home_shelf_title_all_books)).onFirst().assertExists()
@@ -218,7 +213,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun bookDetailScreen_clickOnShelfCheckbox_bookIsAddedToShelf() {
-
         val bookToCheck = previewBooks.first()
         val shelfToCheck = previewShelves.first()
 
@@ -245,7 +239,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun manageShelvesScreen_newShelf_isCreated() {
-
         val newShelfTitle = "New Test Shelf 123"
 
         composeTestRule.apply {
@@ -255,7 +248,7 @@ class NavigationTest : KoinTest {
             // WHEN user clicks on New Shelf button
             onNodeWithText(
                 text = activity.getString(R.string.shelves_btn_new_shelf),
-                useUnmergedTree = true
+                useUnmergedTree = true,
             ).performClick()
             // AND fills the name of the new shelf
             onNodeWithTag(createShelfInputTitle).performTextInput(newShelfTitle)
@@ -271,7 +264,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun manageShelvesScreen_clickOnDelete_shelfIsDeleted() {
-
         composeTestRule.apply {
             // GIVEN the user is on "Manage Shelves" screen
             onNodeWithTag(homeNavDrawer).performClick()
@@ -287,7 +279,6 @@ class NavigationTest : KoinTest {
 
     @Test
     fun manageShelvesScreen_clickOnEdit_updateNewTitle_newTitleIsSaved() {
-
         val updatedShelfTitle = "updated shelf title"
 
         composeTestRule.apply {

@@ -11,7 +11,7 @@ class OnlineBookFinderServiceImpl(
         val goodreadsBook = goodreadsApi.findBookOrNull(isbn)
         val descWithoutHtmlTags = goodreadsBook?.description?.removeHtmlTags()
         return FindBookOnlineResponse(
-            goodreadsBook = goodreadsBook?.copy(description = descWithoutHtmlTags)
+            goodreadsBook = goodreadsBook?.copy(description = descWithoutHtmlTags),
         )
     }
 }

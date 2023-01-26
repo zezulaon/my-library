@@ -31,7 +31,9 @@ class BooksTest {
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, AppDatabase::class.java).build()
+            context,
+            AppDatabase::class.java,
+        ).build()
         bookDao = db.bookDao()
     }
 
@@ -95,7 +97,6 @@ class BooksTest {
         bookDao.deleteAll()
         // Check all books were deleted
         assertEquals(0, bookDao.getAllBooksAsStream().first().size)
-
     }
 
     @Test

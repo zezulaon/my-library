@@ -60,10 +60,9 @@ val appModule = module {
         Room.databaseBuilder(
             androidApplication(),
             AppDatabase::class.java,
-            "app_database"
+            "app_database",
         )
             .build()
-
     }
     single {
         val database = get<AppDatabase>()

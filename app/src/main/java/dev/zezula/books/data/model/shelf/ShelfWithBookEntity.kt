@@ -14,7 +14,7 @@ import dev.zezula.books.data.model.book.BookEntity
     foreignKeys = [
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
         ForeignKey(entity = ShelfEntity::class, parentColumns = ["id"], childColumns = ["shelfId"], onDelete = CASCADE),
-    ]
+    ],
 )
 data class ShelfWithBookEntity(
     val bookId: String,

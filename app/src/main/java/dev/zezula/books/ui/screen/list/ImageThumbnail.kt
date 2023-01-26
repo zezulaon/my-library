@@ -23,13 +23,13 @@ import dev.zezula.books.R
 @OptIn(ExperimentalGlideComposeApi::class)
 internal fun ImageThumbnail(
     modifier: Modifier = Modifier,
-    bookThumbnailUri: String? = null
+    bookThumbnailUri: String? = null,
 ) {
     val iconShape = RoundedCornerShape(12.dp)
     Box {
         Box(
             modifier = modifier
-                .background(color = MaterialTheme.colorScheme.secondaryContainer, shape = iconShape)
+                .background(color = MaterialTheme.colorScheme.secondaryContainer, shape = iconShape),
         ) {
             Image(
                 modifier = Modifier

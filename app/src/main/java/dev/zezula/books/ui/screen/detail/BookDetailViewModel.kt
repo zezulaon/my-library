@@ -62,7 +62,7 @@ class BookDetailViewModel(
             selectedTab = selectedTab,
             isBookDeleted = bookDeleted,
             errorMessage = errorMessage,
-            isInProgress = isInProgress
+            isInProgress = isInProgress,
         )
     }.stateIn(viewModelScope, whileSubscribedInActivity, BookDetailUiState())
 
@@ -128,7 +128,7 @@ class BookDetailViewModel(
                     onSuccess = {
                         _bookDeleted.value = true
                     },
-                    onFailure = { _errorMessage.value = R.string.detail_failed_to_delete }
+                    onFailure = { _errorMessage.value = R.string.detail_failed_to_delete },
                 )
         }
     }

@@ -23,10 +23,10 @@ internal fun BookListItem(
     book: Book,
     onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isLast: Boolean = false
+    isLast: Boolean = false,
 ) {
     Column(
-        modifier = modifier.clickable { onBookClick(book.id) }
+        modifier = modifier.clickable { onBookClick(book.id) },
     ) {
         Row(
             modifier = Modifier
@@ -38,7 +38,7 @@ internal fun BookListItem(
                 modifier = Modifier
                     .width(64.dp)
                     .height(90.dp),
-                bookThumbnailUri = book.thumbnailLink
+                bookThumbnailUri = book.thumbnailLink,
             )
             Spacer(modifier = Modifier.width(24.dp))
             Column(modifier = Modifier.weight(weight = 1f, fill = true)) {
@@ -46,7 +46,7 @@ internal fun BookListItem(
                     text = book.title.orEmpty(),
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
+                    maxLines = 2,
                 )
                 Text(text = book.author ?: "", style = MaterialTheme.typography.bodyMedium)
             }

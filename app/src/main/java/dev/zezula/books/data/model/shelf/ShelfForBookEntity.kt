@@ -10,6 +10,6 @@ fun ShelfForBookEntity.asExternalModel(): ShelfForBook {
     return ShelfForBook(
         id = id,
         title = title,
-        isBookAdded = isBookAdded
+        isBookAdded = isBookAdded,
     )
 }

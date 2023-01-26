@@ -39,9 +39,8 @@ internal fun AddOrEditShelfDialog(
         Surface(
             shape = AlertDialogDefaults.shape,
             contentColor = AlertDialogDefaults.containerColor,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+            tonalElevation = AlertDialogDefaults.TonalElevation,
         ) {
-
             val textValue = rememberSaveable { mutableStateOf(selectedShelf?.title ?: "") }
             Column(modifier = Modifier.padding(all = 24.dp)) {
                 val dialogTitleRes = if (isInEditMode) {
@@ -52,7 +51,7 @@ internal fun AddOrEditShelfDialog(
                 Text(
                     text = stringResource(dialogTitleRes),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = AlertDialogDefaults.titleContentColor
+                    color = AlertDialogDefaults.titleContentColor,
                 )
                 OutlinedTextField(
                     modifier = Modifier
@@ -78,7 +77,7 @@ internal fun AddOrEditShelfDialog(
                             } else {
                                 onDialogSaveClick(textValue.value)
                             }
-                        }
+                        },
                     ) {
                         val saveBtnRes = if (isInEditMode) {
                             R.string.shelves_dialog_btn_update

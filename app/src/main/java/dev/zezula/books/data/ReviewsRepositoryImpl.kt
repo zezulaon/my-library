@@ -48,7 +48,7 @@ class ReviewsRepositoryImpl(
 
     override suspend fun addReviews(
         book: Book,
-        fetchBookNetworkResponse: FindBookOnlineResponse
+        fetchBookNetworkResponse: FindBookOnlineResponse,
     ) {
         val goodreadsBook = fetchBookNetworkResponse.goodreadsBook
         if (goodreadsBook?.reviews != null) {
@@ -73,7 +73,7 @@ class ReviewsRepositoryImpl(
                     votes = it.votes,
                     spoilerFlag = it.spoiler_flag ?: false,
                     userName = it.user?.name,
-                    userImageLink = it.user?.image_url
+                    userImageLink = it.user?.image_url,
                 )
             }
         reviewsDao.deleteAllForBookId(bookId)

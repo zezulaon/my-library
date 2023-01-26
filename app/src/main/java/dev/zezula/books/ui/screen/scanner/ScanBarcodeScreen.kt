@@ -37,14 +37,14 @@ fun ScanBarcodeRoute(
 ) {
     // Camera permission state
     val cameraPermissionState = rememberPermissionState(
-        android.Manifest.permission.CAMERA
+        android.Manifest.permission.CAMERA,
     )
 
     ScanBarcodeScreen(
         isCameraPermissionGranted = cameraPermissionState.status.isGranted,
         onRequestCameraPermissionClick = { cameraPermissionState.launchPermissionRequest() },
         onBarcodeScanned = onBarcodeScanned,
-        onNavigateBack = onNavigateBack
+        onNavigateBack = onNavigateBack,
     )
 }
 
@@ -63,16 +63,16 @@ private fun ScanBarcodeScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.scanner_title)) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
                 navigationIcon = {
                     IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_desc_navigate_back)
+                            contentDescription = stringResource(R.string.content_desc_navigate_back),
                         )
                     }
-                }
+                },
             )
         },
     ) { innerPadding ->
@@ -96,7 +96,7 @@ private fun ScanBarcodeScreen(
 private fun RequestCameraPermission(onRequestCameraPermissionClick: () -> Unit) {
     Column(
         modifier = Modifier.padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(stringResource(R.string.scanner_perm_required))
         Spacer(modifier = Modifier.height(16.dp))
@@ -114,7 +114,7 @@ private fun DefaultPreview() {
             onBarcodeScanned = {},
             onNavigateBack = {},
             onRequestCameraPermissionClick = {},
-            isCameraPermissionGranted = false
+            isCameraPermissionGranted = false,
         )
     }
 }

@@ -24,7 +24,7 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
                     id = key,
                     dateAdded = value.dateAdded,
                     title = value.title,
-                    numberOfBooks = 0
+                    numberOfBooks = 0,
                 )
             }
         }

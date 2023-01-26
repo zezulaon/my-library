@@ -48,7 +48,7 @@ class BooksRepositoryTest : KoinTest {
                 .first()
                 .map(BookEntity::asExternalModel),
             booksRepository.getAllBooksStream()
-                .first()
+                .first(),
         )
     }
 
@@ -63,7 +63,7 @@ class BooksRepositoryTest : KoinTest {
                 .first()
                 .any { entity ->
                     bookFormData.title == entity.title
-                }
+                },
         )
 
         // Check that the book was added to network data source
@@ -71,7 +71,7 @@ class BooksRepositoryTest : KoinTest {
             networkDataSource.getBooks()
                 .any { book ->
                     bookFormData.title == book.title
-                }
+                },
         )
 
         // Check that repository returns same IDs as DB
@@ -81,7 +81,7 @@ class BooksRepositoryTest : KoinTest {
                 .map(BookEntity::asExternalModel)
                 .first { book -> book.title == bookFormData.title }.id,
             booksRepository.getAllBooksStream()
-                .first().first { book -> book.title == bookFormData.title }.id
+                .first().first { book -> book.title == bookFormData.title }.id,
         )
     }
 
@@ -100,7 +100,7 @@ class BooksRepositoryTest : KoinTest {
             networkDataSource.getBooks()
                 .any { book ->
                     book.title == updatedTitle
-                }
+                },
         )
     }
 
@@ -116,7 +116,7 @@ class BooksRepositoryTest : KoinTest {
             networkDataSource.getBooks()
                 .any { book ->
                     book.id == bookToDelete.id
-                }
+                },
         )
     }
 
@@ -136,7 +136,7 @@ class BooksRepositoryTest : KoinTest {
             networkDataSource.getBooks()
                 .map { it.id },
             booksRepository.getAllBooksStream()
-                .first().map { it.id }
+                .first().map { it.id },
         )
     }
 }

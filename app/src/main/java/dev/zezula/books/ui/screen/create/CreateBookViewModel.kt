@@ -38,7 +38,7 @@ class CreateBookViewModel(
         _isInEditMode,
         _isInProgress,
         _isBookSaved,
-        _invalidForm
+        _invalidForm,
     ) { bookFormData, errorMessage, isInEditMode, isInProgress, isBookSaved, invalidForm ->
         CreateBookUiState(
             bookFormData = bookFormData,
@@ -46,7 +46,7 @@ class CreateBookViewModel(
             isInProgress = isInProgress,
             isBookSaved = isBookSaved,
             errorMessage = errorMessage,
-            invalidForm = invalidForm
+            invalidForm = invalidForm,
         )
     }
         .stateIn(viewModelScope, whileSubscribedInActivity, CreateBookUiState())
@@ -105,7 +105,7 @@ class CreateBookViewModel(
             addOrUpdateBookUseCase(bookId = bookId, bookFormData = _bookFormData.value)
                 .fold(
                     onSuccess = { _isBookSaved.value = true },
-                    onFailure = { _errorMessage.value = R.string.create_book_failed_to_save }
+                    onFailure = { _errorMessage.value = R.string.create_book_failed_to_save },
                 )
             _isInProgress.value = false
         }
@@ -139,5 +139,4 @@ class CreateBookViewModel(
         val pageCount: Int? = updatedPageCount.toIntOrNull()
         _bookFormData.update { it.copy(pageCount = pageCount) }
     }
-
 }

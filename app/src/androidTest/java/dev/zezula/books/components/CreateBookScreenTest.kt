@@ -28,7 +28,6 @@ class CreateBookScreenTest {
      */
     @Test
     fun createBook_check_correctSaveAppBar() {
-
         composeTestRule.apply {
             setContent {
                 createTestScreen(
@@ -38,8 +37,8 @@ class CreateBookScreenTest {
                         isInProgress = false,
                         isBookSaved = false,
                         errorMessage = null,
-                        invalidForm = false
-                    )
+                        invalidForm = false,
+                    ),
                 )
             }
 
@@ -57,7 +56,6 @@ class CreateBookScreenTest {
      */
     @Test
     fun createBook_check_correctEditAppBar() {
-
         composeTestRule.apply {
             composeTestRule.setContent {
                 createTestScreen(
@@ -67,8 +65,8 @@ class CreateBookScreenTest {
                         isInProgress = false,
                         isBookSaved = false,
                         errorMessage = null,
-                        invalidForm = false
-                    )
+                        invalidForm = false,
+                    ),
                 )
             }
 
@@ -79,7 +77,6 @@ class CreateBookScreenTest {
                 .assertIsDisplayed()
                 .assertIsEnabled()
         }
-
     }
 
     /**
@@ -87,7 +84,6 @@ class CreateBookScreenTest {
      */
     @Test
     fun createBook_check_correctInProgressState() {
-
         composeTestRule.apply {
             setContent {
                 createTestScreen(
@@ -97,8 +93,8 @@ class CreateBookScreenTest {
                         isInProgress = true,
                         isBookSaved = false,
                         errorMessage = null,
-                        invalidForm = false
-                    )
+                        invalidForm = false,
+                    ),
                 )
             }
 
@@ -125,7 +121,7 @@ class CreateBookScreenTest {
             onAuthorValueChanged = {},
             onPublisherValueChanged = {},
             onYearPublishedValueChanged = {},
-            onPageCountValueChanged = {}
+            onPageCountValueChanged = {},
         )
     }
 }

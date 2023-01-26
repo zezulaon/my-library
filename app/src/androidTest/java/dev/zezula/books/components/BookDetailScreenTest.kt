@@ -29,11 +29,9 @@ class BookDetailScreenTest {
      */
     @Test
     fun detail_check_correctDetailTabDisplayed() {
-
         val book = previewBooks.first()
 
         composeTestRule.apply {
-
             setContent {
                 createTestScreen(
                     BookDetailUiState(
@@ -44,8 +42,8 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Detail,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false
-                    )
+                        isInProgress = false,
+                    ),
                 )
             }
 
@@ -69,12 +67,10 @@ class BookDetailScreenTest {
      */
     @Test
     fun detail_check_correctReviewTabDisplayed() {
-
         val book = previewBooks.first()
         val rating = previewRatings.first()
 
         composeTestRule.apply {
-
             setContent {
                 createTestScreen(
                     BookDetailUiState(
@@ -85,8 +81,8 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Reviews,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false
-                    )
+                        isInProgress = false,
+                    ),
                 )
             }
 
@@ -108,11 +104,9 @@ class BookDetailScreenTest {
      */
     @Test
     fun detail_check_correctShelvesTabDisplayed() {
-
         val book = previewBooks.first()
 
         composeTestRule.apply {
-
             setContent {
                 createTestScreen(
                     BookDetailUiState(
@@ -123,8 +117,8 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Shelves,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false
-                    )
+                        isInProgress = false,
+                    ),
                 )
             }
 
@@ -139,7 +133,6 @@ class BookDetailScreenTest {
         }
     }
 
-
     @SuppressLint("ComposableNaming")
     @Composable
     private fun createTestScreen(state: BookDetailUiState) {
@@ -151,7 +144,7 @@ class BookDetailScreenTest {
             onNewShelfClick = {},
             onReviewClick = {},
             onShelfCheckedChange = { _, _ -> },
-            onTabClick = {}
+            onTabClick = {},
         )
     }
 }

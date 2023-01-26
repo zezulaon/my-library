@@ -62,7 +62,7 @@ class SearchBarcodeViewModel(
                     },
                     onFailure = {
                         _errorMessage.value = R.string.error_failed_get_data
-                    }
+                    },
                 )
             _isInProgress.value = false
         }

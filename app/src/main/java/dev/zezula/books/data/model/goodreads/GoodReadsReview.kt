@@ -22,5 +22,5 @@ data class GoodReadsReview @JvmOverloads constructor(
     var spoiler_flag: Boolean? = null,
 
     @field:Element(required = false)
-    var user: User? = null
+    var user: User? = null,
 )

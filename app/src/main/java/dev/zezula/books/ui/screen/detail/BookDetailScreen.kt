@@ -110,7 +110,7 @@ fun BookDetailScreen(
                 Column {
                     BookDetailAppBar(uiState, onNavigateBack, onNewShelfClick, onDeleteClick, onEditBookClick)
                     Column(
-                        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 0.dp, bottom = 24.dp)
+                        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 0.dp, bottom = 24.dp),
                     ) {
                         Text(text = uiState.book?.title ?: "", style = MaterialTheme.typography.headlineSmall)
                         Text(text = uiState.book?.author ?: "")
@@ -122,17 +122,17 @@ fun BookDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             TabRow(
                 selectedTabIndex = uiState.selectedTab.tabIndex,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ) {
                 DetailTab.values().forEachIndexed { index, tab ->
                     Tab(
                         selected = uiState.selectedTab.tabIndex == index,
                         onClick = { onTabClick(tab) },
-                        text = { Text(text = stringResource(tab.tabName)) }
+                        text = { Text(text = stringResource(tab.tabName)) },
                     )
                 }
             }
@@ -140,14 +140,14 @@ fun BookDetailScreen(
             when (uiState.selectedTab) {
                 DetailTab.Shelves -> TabShelves(
                     uiState = uiState,
-                    onShelfCheckedChange = onShelfCheckedChange
+                    onShelfCheckedChange = onShelfCheckedChange,
                 )
                 DetailTab.Detail -> TabBookDetail(
-                    uiState = uiState
+                    uiState = uiState,
                 )
                 DetailTab.Reviews -> TabReviews(
                     uiState = uiState,
-                    onReviewClick = onReviewClick
+                    onReviewClick = onReviewClick,
                 )
             }
         }
@@ -162,19 +162,19 @@ private fun BookDetailAppBar(
     onNewShelfClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEditBookClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         modifier = modifier,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         title = {},
         navigationIcon = {
             IconButton(onClick = { onNavigateBack() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.content_desc_navigate_back)
+                    contentDescription = stringResource(R.string.content_desc_navigate_back),
                 )
             }
         },
@@ -184,7 +184,7 @@ private fun BookDetailAppBar(
                     IconButton(onClick = { onNewShelfClick() }) {
                         Icon(
                             imageVector = Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.content_add_new_shelf)
+                            contentDescription = stringResource(R.string.content_add_new_shelf),
                         )
                     }
                 }
@@ -192,19 +192,19 @@ private fun BookDetailAppBar(
                     IconButton(onClick = { onDeleteClick() }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.content_desc_delete)
+                            contentDescription = stringResource(R.string.content_desc_delete),
                         )
                     }
                     IconButton(onClick = { onEditBookClick() }) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(R.string.content_desc_edit)
+                            contentDescription = stringResource(R.string.content_desc_edit),
                         )
                     }
                 }
                 DetailTab.Reviews -> {}
             }
-        }
+        },
     )
 }
 
@@ -227,8 +227,8 @@ private fun DefaultPreview() {
                     1989,
                     565,
                     null,
-                    "1999"
-                )
+                    "1999",
+                ),
             ),
             snackbarHostState = remember { SnackbarHostState() },
             onNavigateBack = {},
@@ -237,7 +237,7 @@ private fun DefaultPreview() {
             onNewShelfClick = {},
             onReviewClick = {},
             onShelfCheckedChange = { _, _ -> },
-            onTabClick = {}
+            onTabClick = {},
         )
     }
 }

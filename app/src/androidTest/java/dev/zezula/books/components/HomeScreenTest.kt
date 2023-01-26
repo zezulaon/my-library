@@ -37,21 +37,20 @@ class HomeScreenTest {
                     shelves = previewShelves,
                     errorMessage = null,
                     selectedShelf = null,
-                    managedShelvesClicked = true
+                    managedShelvesClicked = true,
                 ),
                 onAddBookClick = {},
                 onScanBookClick = {},
                 onBookClick = {},
                 onManageShelvesClick = {},
                 onAllBooksClick = {},
-                onShelfClick = {}
+                onShelfClick = {},
             )
         }
     }
 
     @Test
     fun bookList_isDisplayed() {
-
         composeTestRule.apply {
             // App name exists (in navigation drawer) but is not displayed (nav drawer starts in closed state)
             onNodeWithText(text = activity.getString(R.string.app_name), ignoreCase = true).assertExists()
@@ -69,7 +68,6 @@ class HomeScreenTest {
 
     @Test
     fun bookList_bottomBarHasButtons() {
-
         composeTestRule.apply {
             onNodeWithContentDescription(activity.getString(R.string.content_open_drawer))
                 .assertIsDisplayed()

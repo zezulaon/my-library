@@ -35,9 +35,8 @@ import kotlin.coroutines.resumeWithException
 @Composable
 fun BarcodeScannerComponent(
     onBarcodeScanned: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -49,7 +48,7 @@ fun BarcodeScannerComponent(
             context.startImageAnalysis(
                 lifeCycleOwner = lifecycleOwner,
                 previewView = previewView,
-                onBarcodeScanned = onBarcodeScanned
+                onBarcodeScanned = onBarcodeScanned,
             )
         }
     }
@@ -57,7 +56,7 @@ fun BarcodeScannerComponent(
     if (showScanner.value) {
         Box(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             AndroidView(modifier = modifier.fillMaxSize(), factory = { previewView })
         }
@@ -67,7 +66,7 @@ fun BarcodeScannerComponent(
 suspend fun Context.startImageAnalysis(
     lifeCycleOwner: LifecycleOwner,
     previewView: PreviewView,
-    onBarcodeScanned: (String) -> Unit
+    onBarcodeScanned: (String) -> Unit,
 ) {
     val cameraProvider = this.getCameraProvider()
 
@@ -78,12 +77,13 @@ suspend fun Context.startImageAnalysis(
 
     val imageAnalyzer = ImageAnalysis.Builder().build().also {
         it.setAnalyzer(
-            ContextCompat.getMainExecutor(this), BarcodeAnalyzer(
+            ContextCompat.getMainExecutor(this),
+            BarcodeAnalyzer(
                 onBarcodeScanned = { barcode ->
                     cameraProvider.unbindAll()
                     onBarcodeScanned(barcode)
-                }
-            )
+                },
+            ),
         )
     }
 
@@ -112,7 +112,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider {
                     continuation.resumeWithException(e)
                 }
             },
-            ContextCompat.getMainExecutor(this)
+            ContextCompat.getMainExecutor(this),
         )
     }
 }
@@ -123,7 +123,7 @@ private class BarcodeAnalyzer(val onBarcodeScanned: (String) -> Unit) : ImageAna
 
     val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
-            Barcode.FORMAT_EAN_13
+            Barcode.FORMAT_EAN_13,
         )
         .build()
 
@@ -135,7 +135,6 @@ private class BarcodeAnalyzer(val onBarcodeScanned: (String) -> Unit) : ImageAna
 
         val image = imageProxy.image
         if (image != null) {
-
             val inputImage = InputImage.fromMediaImage(image, imageProxy.imageInfo.rotationDegrees)
             barcodeScanner.process(inputImage).addOnCompleteListener { task ->
 

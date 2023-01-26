@@ -70,16 +70,16 @@ fun SearchBarcodeScreen(
             TopAppBar(
                 title = { Text(text = stringResource(R.string.search_title)) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
                 navigationIcon = {
                     IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_desc_navigate_back)
+                            contentDescription = stringResource(R.string.content_desc_navigate_back),
                         )
                     }
-                }
+                },
             )
         },
     ) { innerPadding ->
@@ -95,13 +95,13 @@ fun SearchBarcodeScreen(
             if (uiState.noBookFound) {
                 Column(
                     modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(text = stringResource(R.string.search_no_book_found_for_isbn))
                     Text(
                         modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
                         text = uiState.barcode,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
                     FilledTonalButton(onClick = onScanAgainClick) {
                         Text(stringResource(R.string.search_btn_scan_again))
@@ -119,7 +119,7 @@ fun DefaultPreview() {
         SearchBarcodeScreen(
             uiState = SearchBarcodeUiState(noBookFound = true, barcode = "978555444777"),
             onScanAgainClick = {},
-            onNavigateBack = {}
+            onNavigateBack = {},
         )
     }
 }

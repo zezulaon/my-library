@@ -54,7 +54,7 @@ fun GoodreadsBook.toBookFormData(): BookFormData {
         thumbnailLink = this.image_url,
         pageCount = this.num_pages,
         description = this.description?.trim(),
-        isbn = this.isbn13 ?: this.isbn
+        isbn = this.isbn13 ?: this.isbn,
     )
 }
 
@@ -62,7 +62,7 @@ private fun List<Author>?.mapToAuthor(): String? {
     return this?.filter {
         "writer".equals(
             it.role,
-            true
+            true,
         ) || it.role == null
     } // Filter out all "non-author" roles (eg translators)
         ?.mapNotNull { it.name }

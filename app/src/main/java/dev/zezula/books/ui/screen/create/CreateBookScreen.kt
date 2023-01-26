@@ -111,7 +111,7 @@ fun CreateBookScreen(
                     Text(stringResource(saveBtnRes))
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
                 actions = {
                     TextButton(onClick = onSaveButtonClick, enabled = uiState.isInProgress.not()) {
@@ -123,10 +123,10 @@ fun CreateBookScreen(
                     IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_desc_navigate_back)
+                            contentDescription = stringResource(R.string.content_desc_navigate_back),
                         )
                     }
-                }
+                },
             )
         },
     ) { innerPadding ->
@@ -134,7 +134,7 @@ fun CreateBookScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             if (uiState.isInProgress) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -165,8 +165,8 @@ fun DefaultPreview() {
                 BookFormData(
                     title = "Hobit",
                     author = "J. R. R. Tolkien",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing e aliquip ex ea commodo consuat."
-                )
+                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing e aliquip ex ea commodo consuat.",
+                ),
             ),
             snackbarHostState = remember { SnackbarHostState() },
             onNavigateBack = {},
@@ -177,6 +177,7 @@ fun DefaultPreview() {
             onAuthorValueChanged = {},
             onPublisherValueChanged = {},
             onPageCountValueChanged = {},
-            onYearPublishedValueChanged = {})
+            onYearPublishedValueChanged = {},
+        )
     }
 }

@@ -51,19 +51,19 @@ fun TabReviews(
             CircularProgressIndicator(
                 modifier = modifier
                     .padding(top = 32.dp)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
             )
         } else {
             LazyColumn(
                 contentPadding = PaddingValues(vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     RatingCard(
                         modifier = modifier
                             .padding(horizontal = 24.dp)
                             .fillMaxWidth(),
-                        uiState = uiState
+                        uiState = uiState,
                     )
                 }
                 itemsIndexed(items = uiState.reviews, key = { _, item -> item.id }) { _, review ->
@@ -88,19 +88,20 @@ private fun RatingCard(
     val rating = uiState.rating
     if (rating?.averageRating != null) {
         ElevatedCard(
-            modifier = modifier
+            modifier = modifier,
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = rating.averageRating, style = MaterialTheme.typography.headlineMedium)
@@ -108,7 +109,7 @@ private fun RatingCard(
                 val ratingReviewLabel = stringResource(
                     id = R.string.detail_label_rating_reviews_count,
                     rating.ratingsCountFormatted,
-                    rating.textReviewsCountFormatted
+                    rating.textReviewsCountFormatted,
                 )
                 Text(text = ratingReviewLabel)
             }
@@ -123,7 +124,7 @@ private fun ReviewCard(
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -139,11 +140,15 @@ private fun ReviewCard(
             Divider(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
-                    .fillMaxWidth(), thickness = .5.dp
+                    .fillMaxWidth(),
+                thickness = .5.dp,
             )
-            FilledTonalButton(modifier = Modifier
-                .padding(top = 0.dp)
-                .align(End), onClick = { onReviewClick(review) }) {
+            FilledTonalButton(
+                modifier = Modifier
+                    .padding(top = 0.dp)
+                    .align(End),
+                onClick = { onReviewClick(review) },
+            ) {
                 Text(text = stringResource(R.string.detail_reviews_btn_read_more))
             }
         }
@@ -153,7 +158,7 @@ private fun ReviewCard(
 @Composable
 private fun RatingLabel(
     review: Review,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(text = stringResource(R.string.detail_label_rated))
@@ -169,7 +174,7 @@ private fun RatingLabel(
                     imageVector = Icons.Filled.Star,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = color
+                    tint = color,
                 )
             }
         }
@@ -185,7 +190,7 @@ private fun UserImage(
     Box(
         modifier
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.secondaryContainer),
     ) {
         GlideImage(
             modifier = Modifier

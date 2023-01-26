@@ -16,8 +16,9 @@ import timber.log.Timber
         ReviewEntity::class,
         RatingEntity::class,
         ShelfEntity::class,
-        ShelfWithBookEntity::class],
-    version = 1
+        ShelfWithBookEntity::class,
+    ],
+    version = 1,
 )
 abstract class AppDatabase : RoomDatabase() {
 

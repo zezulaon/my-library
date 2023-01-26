@@ -35,7 +35,7 @@ import kotlin.test.assertNull
  * https://developer.android.com/kotlin/coroutines/test
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class BookListViewModelTest: KoinTest {
+class BookListViewModelTest : KoinTest {
 
     private val viewModel: BookListViewModel by inject()
     private val shelfAndBookDao: ShelfAndBookDao by inject()

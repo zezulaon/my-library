@@ -144,7 +144,8 @@ fun BookListScreen(
                 onAllBooksClick = onAllBooksClick,
                 onShelfClick = onShelfClick,
             )
-        }) {
+        },
+    ) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             modifier = modifier,
@@ -155,14 +156,14 @@ fun BookListScreen(
                     onScanBookClick = onScanBookClick,
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
-            }
+            },
         ) { innerPadding ->
             BookList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(innerPadding),
                 books = uiState.books,
-                onBookClick = onBookClick
+                onBookClick = onBookClick,
             )
         }
     }
@@ -172,16 +173,17 @@ fun BookListScreen(
 @Composable
 private fun BookListTopAppBar(
     uiState: BookListUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.testTag(homeAppBar),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         title = {
             Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
-        })
+        },
+    )
 }
 
 @Composable
@@ -203,7 +205,8 @@ private fun BookListBottomBar(
         },
         floatingActionButton = {
             ScanBookButton(onButtonClick = onScanBookClick)
-        })
+        },
+    )
 }
 
 @Composable
@@ -213,7 +216,7 @@ private fun BookList(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
     ) {
         itemsIndexed(key = { _, item -> item.id }, items = books) { index, book ->
             val isLast = books.isLastIndex(index)
@@ -227,7 +230,7 @@ private fun ScanBookButton(onButtonClick: () -> Unit) {
     ExtendedFloatingActionButton(
         icon = { Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null) },
         text = { Text(text = stringResource(R.string.home_btn_scan)) },
-        onClick = onButtonClick
+        onClick = onButtonClick,
     )
 }
 

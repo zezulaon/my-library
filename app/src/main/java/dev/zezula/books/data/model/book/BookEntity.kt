@@ -47,7 +47,7 @@ fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
         publisher = networkBook.publisher,
         yearPublished = networkBook.yearPublished,
         pageCount = networkBook.pageCount,
-        thumbnailLink = networkBook.thumbnailLink
+        thumbnailLink = networkBook.thumbnailLink,
     )
 }
 
@@ -62,7 +62,7 @@ val previewBookEntities = listOf(
         yearPublished = 2001,
         pageCount = 152,
         thumbnailLink = null,
-        dateAdded = "2022-01-05T17:43:25.629"
+        dateAdded = "2022-01-05T17:43:25.629",
     ),
     BookEntity(
         id = "2",
@@ -74,6 +74,6 @@ val previewBookEntities = listOf(
         yearPublished = 2001,
         pageCount = 152,
         thumbnailLink = null,
-        dateAdded = "2023-01-05T17:43:25.629"
+        dateAdded = "2023-01-05T17:43:25.629",
     ),
 )

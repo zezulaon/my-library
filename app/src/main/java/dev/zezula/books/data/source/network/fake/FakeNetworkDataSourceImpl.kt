@@ -21,7 +21,7 @@ class FakeNetworkDataSourceImpl : NetworkDataSource {
                 publisher = book.publisher,
                 yearPublished = book.yearPublished,
                 pageCount = book.pageCount,
-                thumbnailLink = book.thumbnailLink
+                thumbnailLink = book.thumbnailLink,
             )
         }
         .associateBy { book -> book.id!! }

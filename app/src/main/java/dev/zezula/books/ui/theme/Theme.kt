@@ -80,7 +80,7 @@ private val LightColors = lightColorScheme(
 @Composable
 fun MyLibraryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
         darkTheme -> DarkColors
@@ -98,6 +98,6 @@ fun MyLibraryTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
     )
 }

@@ -69,7 +69,7 @@ class FirestoreDataSource : NetworkDataSource {
     }
 
     override suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook {
-        Timber.d("addOrUpdate(book=${book})")
+        Timber.d("addOrUpdate(book=$book)")
         checkNotNull(book.id) { "Book needs [id] property" }
 
         booksCollection.document(book.id).set(book).await()
@@ -90,7 +90,7 @@ class FirestoreDataSource : NetworkDataSource {
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
-        Timber.d("addOrUpdateShelf(shelf=${shelf})")
+        Timber.d("addOrUpdateShelf(shelf=$shelf)")
 
         checkNotNull(shelf.id) { "Shelf needs [id] property" }
 
@@ -122,8 +122,7 @@ class FirestoreDataSource : NetworkDataSource {
         } else {
             shelvesWithBooksCollection.document(shelfWithBookId).delete().await()
         }
-
     }
 
-    private fun createShelfWithBookId(shelfId: String, bookId: String) = "${shelfId}_${bookId}"
+    private fun createShelfWithBookId(shelfId: String, bookId: String) = "${shelfId}_$bookId"
 }

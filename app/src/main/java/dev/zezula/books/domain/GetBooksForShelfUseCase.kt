@@ -12,7 +12,6 @@ import timber.log.Timber
 class GetBooksForShelfUseCase(private val repository: BooksRepository) {
 
     operator fun invoke(selectedShelf: Shelf?): Flow<Response<List<Book>>> {
-
         return if (selectedShelf == null) {
             repository.getAllBooksStream()
         } else {

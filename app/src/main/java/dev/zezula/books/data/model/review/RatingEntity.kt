@@ -14,8 +14,8 @@ import dev.zezula.books.data.model.book.BookEntity
     ],
     indices = [
         // Unique constraint - all [bookId] values in this table has to be unique
-        Index(value = ["bookId"], unique = true)
-    ]
+        Index(value = ["bookId"], unique = true),
+    ],
 )
 data class RatingEntity(
     @PrimaryKey

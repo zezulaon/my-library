@@ -80,20 +80,20 @@ fun SignInScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             if (uiState.isSignInProgress) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(16.dp),
             ) {
                 Box(
                     modifier = Modifier
@@ -104,7 +104,7 @@ fun SignInScreen(
                     Image(
                         modifier = Modifier.size(300.dp),
                         painter = painterResource(id = R.drawable.image_logo),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
                 Box(
@@ -115,7 +115,7 @@ fun SignInScreen(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         OutlinedButton(
                             modifier = Modifier.width(220.dp),
@@ -145,7 +145,7 @@ private fun DefaultPreview() {
         SignInScreen(
             uiState = SignInUiState(isSignInProgress = false),
             onGoogleSignInClick = {},
-            onAnonymousSignInClick = {}
+            onAnonymousSignInClick = {},
         )
     }
 }

@@ -40,7 +40,6 @@ class BookListViewModel(
     private val shelves: Flow<Response<List<Shelf>>> = getShelvesUseCase()
         .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
 
-
     val uiState: StateFlow<BookListUiState> =
         combine(
             _errorMessage,
@@ -54,13 +53,13 @@ class BookListViewModel(
                 shelves = shelves.getOrDefault(emptyList()),
                 selectedShelf = selectedShelfId,
                 managedShelvesClicked = managedShelvesClicked,
-                errorMessage = errorMsg
+                errorMessage = errorMsg,
             )
         }
             .stateIn(
                 scope = this.viewModelScope,
                 started = whileSubscribedInActivity,
-                initialValue = BookListUiState()
+                initialValue = BookListUiState(),
             )
 
     init {
@@ -77,7 +76,7 @@ class BookListViewModel(
         viewModelScope.launch {
             refreshLibraryUseCase().fold(
                 onSuccess = { Timber.d("refresh() - successful") },
-                onFailure = { _errorMessage.value = R.string.home_failed_to_refresh }
+                onFailure = { _errorMessage.value = R.string.home_failed_to_refresh },
             )
         }
     }

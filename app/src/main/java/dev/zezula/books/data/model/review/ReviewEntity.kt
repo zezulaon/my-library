@@ -13,8 +13,8 @@ import dev.zezula.books.data.model.book.BookEntity
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
     ],
     indices = [
-        Index(value = ["bookId"])
-    ]
+        Index(value = ["bookId"]),
+    ],
 )
 data class ReviewEntity(
     @PrimaryKey

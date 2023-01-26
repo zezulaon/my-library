@@ -10,7 +10,7 @@ import org.koin.core.module.Module
 import timber.log.Timber
 
 class KoinTestRule(
-    private val modules: List<Module>
+    private val modules: List<Module>,
 ) : TestWatcher() {
 
     override fun starting(description: Description) {

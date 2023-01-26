@@ -34,23 +34,23 @@ fun TabBookDetail(
         modifier = modifier
             .verticalScroll(scrollState)
             .padding(vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         ElevatedCard(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Column {
                 Row {
                     Box(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         ImageThumbnail(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .defaultMinSize(minHeight = 270.dp),
-                            bookThumbnailUri = uiState.book?.thumbnailLink
+                            bookThumbnailUri = uiState.book?.thumbnailLink,
                         )
                     }
                     Spacer(modifier = Modifier.width(24.dp))
@@ -58,27 +58,27 @@ fun TabBookDetail(
                         modifier = Modifier
                             .weight(1f)
                             .padding(top = 16.dp, end = 16.dp, bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         BookCoverItem(
                             value = uiState.book?.pageCount?.toString() ?: "",
-                            labelRes = R.string.detail_label_page_count
+                            labelRes = R.string.detail_label_page_count,
                         )
                         BookCoverItem(
                             value = uiState.book?.publisher ?: "",
-                            labelRes = R.string.detail_label_publisher
+                            labelRes = R.string.detail_label_publisher,
                         )
                         BookCoverItem(
                             value = uiState.book?.yearPublished?.toString() ?: "",
-                            labelRes = R.string.detail_label_year_published
+                            labelRes = R.string.detail_label_year_published,
                         )
                         BookCoverItem(
                             value = uiState.book?.isbn ?: "",
-                            labelRes = R.string.detail_label_year_isbn
+                            labelRes = R.string.detail_label_year_isbn,
                         )
                         BookCoverItem(
                             value = uiState.book?.dateAddedFormatted ?: "",
-                            labelRes = R.string.detail_label_year_added_on
+                            labelRes = R.string.detail_label_year_added_on,
                         )
                     }
                 }
@@ -89,7 +89,7 @@ fun TabBookDetail(
             ElevatedCard(
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = description)

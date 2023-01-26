@@ -116,7 +116,6 @@ class BooksRepositoryImpl(
     }
 
     override suspend fun addBook(fetchBookNetworkResponse: FindBookOnlineResponse): Book? {
-
         // Search in GoodReads online DB
         val goodReadsBook = fetchBookNetworkResponse.goodreadsBook
         val bookFormData = goodReadsBook?.toBookFormData()

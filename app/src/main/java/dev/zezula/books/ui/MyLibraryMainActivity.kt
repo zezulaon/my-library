@@ -51,7 +51,6 @@ class MyLibraryMainActivity : ComponentActivity() {
         try {
             val oneTapClient = Identity.getSignInClient(this)
             oneTapClient.beginSignIn(getGoogleSignInRequest()).addOnCompleteListener {
-
                 if (it.isSuccessful) {
                     Timber.d("beginSignIn() completed successfully -> launching Google Sign In UI")
                     val intentSender = it.result.pendingIntent.intentSender

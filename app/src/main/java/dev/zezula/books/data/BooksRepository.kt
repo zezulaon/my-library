@@ -28,5 +28,4 @@ interface BooksRepository {
     suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
 
     suspend fun refreshBooks()
-
 }

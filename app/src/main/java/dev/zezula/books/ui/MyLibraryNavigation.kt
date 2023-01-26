@@ -47,7 +47,7 @@ object Destinations {
 fun NavHostController.navigateFromOnboardingToHome() {
     navigateReplaceTo(
         targetDestination = bookListRoute,
-        destinationToReplace = signInRoute
+        destinationToReplace = signInRoute,
     )
 }
 
@@ -92,9 +92,11 @@ fun NavHostController.navigateReplaceTo(targetDestination: String, destinationTo
 
 // External destinations
 fun NavHostController.navigateToReviewDetail(reviewLink: String) {
-    context.startActivity(Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse(reviewLink)
-    })
+    context.startActivity(
+        Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(reviewLink)
+        },
+    )
 }
 
 fun NavHostController.navigateToGoogleSignIn() {

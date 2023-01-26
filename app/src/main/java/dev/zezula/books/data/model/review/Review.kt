@@ -20,7 +20,7 @@ val previewReviews = listOf(
         votes = null,
         spoilerFlag = false,
         userName = "John",
-        userImageLink = null
+        userImageLink = null,
     ),
     Review(
         id = "2",
@@ -30,6 +30,6 @@ val previewReviews = listOf(
         votes = null,
         spoilerFlag = false,
         userName = "Peter",
-        userImageLink = null
+        userImageLink = null,
     ),
 )

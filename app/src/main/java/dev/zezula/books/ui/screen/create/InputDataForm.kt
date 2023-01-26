@@ -44,7 +44,7 @@ internal fun InputDataForm(
     val bookFormData = uiState.bookFormData
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         val invalidTitle = uiState.invalidForm && bookFormData.title.isNullOrEmpty()
         OutlinedTextField(
@@ -56,7 +56,7 @@ internal fun InputDataForm(
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
             onValueChange = { newValue -> onTitleValueChanged(newValue) },
-            label = { Text(stringResource(R.string.create_book_label_title)) }
+            label = { Text(stringResource(R.string.create_book_label_title)) },
         )
 
         OutlinedTextField(
@@ -67,7 +67,7 @@ internal fun InputDataForm(
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
             onValueChange = { newValue -> onAuthorValueChanged(newValue) },
-            label = { Text(stringResource(R.string.create_book_label_author)) }
+            label = { Text(stringResource(R.string.create_book_label_author)) },
         )
 
         OutlinedTextField(
@@ -78,7 +78,7 @@ internal fun InputDataForm(
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
             onValueChange = { newValue -> onPublisherValueChanged(newValue) },
-            label = { Text(stringResource(R.string.create_book_label_publisher)) }
+            label = { Text(stringResource(R.string.create_book_label_publisher)) },
         )
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -90,7 +90,7 @@ internal fun InputDataForm(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = enabled,
                 onValueChange = { newValue -> onYearPublishedValueChanged(newValue) },
-                label = { Text(stringResource(R.string.create_book_label_year)) }
+                label = { Text(stringResource(R.string.create_book_label_year)) },
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -100,7 +100,7 @@ internal fun InputDataForm(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = enabled,
                 onValueChange = { newValue -> onPageCountValueChanged(newValue) },
-                label = { Text(stringResource(R.string.create_book_label_no_pages)) }
+                label = { Text(stringResource(R.string.create_book_label_no_pages)) },
             )
         }
 
@@ -111,11 +111,11 @@ internal fun InputDataForm(
             value = bookFormData.isbn.orEmpty(),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
             ),
             enabled = enabled,
             onValueChange = { newValue -> onIsbnValueChanged(newValue) },
-            label = { Text(stringResource(R.string.create_book_label_isbn)) }
+            label = { Text(stringResource(R.string.create_book_label_isbn)) },
         )
 
         OutlinedTextField(
@@ -127,7 +127,7 @@ internal fun InputDataForm(
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
             onValueChange = { newValue -> onDescValueChanged(newValue) },
-            label = { Text(stringResource(R.string.create_book_label_desc)) }
+            label = { Text(stringResource(R.string.create_book_label_desc)) },
         )
     }
 }

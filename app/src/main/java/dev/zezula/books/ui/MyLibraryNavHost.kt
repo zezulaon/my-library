@@ -22,47 +22,41 @@ import timber.log.Timber
 fun MyLibraryNavHost(
     modifier: Modifier = Modifier,
     startDestination: String,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
-
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
     ) {
-
         composable(route = Destinations.signInRoute) {
-
             SignInRoute(
                 onSignInSuccess = { navController.navigateFromOnboardingToHome() },
                 onGoogleSignIn = { navController.navigateToGoogleSignIn() },
                 // Get same ViewModel as in main activity
-                viewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity())
+                viewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
             )
         }
 
         composable(route = Destinations.bookListRoute) {
-
             BookListRoute(
                 onAddBookClick = { navController.navigateToAddOrEdit() },
                 onScanBookClick = { navController.navigateToScanBarcode() },
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
-                viewModel = koinViewModel()
+                viewModel = koinViewModel(),
             )
         }
 
         composable(route = Destinations.bookFormRoute) {
-
             CreateBookRoute(
                 onNavigateBack = { navController.popBackStack() },
                 onItemSavedSuccess = { navController.popBackStack() },
-                viewModel = koinViewModel()
+                viewModel = koinViewModel(),
             )
         }
 
         composable(route = Destinations.bookDetailRoute) {
-
             BookDetailRoute(
                 onNavigateBack = { navController.popBackStack() },
                 onBookDeletedSuccess = { navController.popBackStack() },
@@ -76,32 +70,29 @@ fun MyLibraryNavHost(
                     navController.navigateToAddOrEdit(bookId)
                 },
                 onNewShelfClick = { navController.navigateToManageShelves() },
-                viewModel = koinViewModel()
+                viewModel = koinViewModel(),
             )
         }
 
         composable(route = Destinations.shelvesRoute) {
-
             ShelvesRoute(
                 onNavigateBack = { navController.popBackStack() },
-                viewModel = koinViewModel()
+                viewModel = koinViewModel(),
             )
         }
 
         composable(route = Destinations.searchBarcodeRoute) {
-
             SearchBarcodeRoute(
                 onNavigateBack = { navController.popBackStack() },
                 onBookFound = { bookId ->
                     navController.navigateToBookDetail(bookId)
                 },
                 onScanAgainClick = { navController.navigateToScanBarcode() },
-                viewModel = koinViewModel()
+                viewModel = koinViewModel(),
             )
         }
 
         composable(route = Destinations.scanBarcodeRoute) {
-
             ScanBarcodeRoute(
                 onNavigateBack = { navController.popBackStack() },
                 onBarcodeScanned = { barcode ->

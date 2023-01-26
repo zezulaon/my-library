@@ -10,7 +10,6 @@ import timber.log.Timber
 @Composable
 fun MyLibraryUiApp(startDestination: String = Destinations.signInRoute) {
     MyLibraryTheme {
-
         val navController = rememberNavController()
 
         if (BuildConfig.DEBUG) {
@@ -24,7 +23,7 @@ fun MyLibraryUiApp(startDestination: String = Destinations.signInRoute) {
 
         MyLibraryNavHost(
             startDestination = startDestination,
-            navController = navController
+            navController = navController,
         )
     }
 }

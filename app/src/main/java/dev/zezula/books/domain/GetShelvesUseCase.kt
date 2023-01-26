@@ -11,7 +11,6 @@ import timber.log.Timber
 class GetShelvesUseCase(private val repository: ShelvesRepository) {
 
     operator fun invoke(): Flow<Response<List<Shelf>>> {
-
         return repository.getShelvesAsStream()
             .asResponse()
             .onResponseError {

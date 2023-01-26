@@ -31,9 +31,9 @@ suspend fun String.removeHtmlTags(): String {
         withContext(context = Dispatchers.IO) {
             var result = this@removeHtmlTags
             if (result.isNotEmpty()) {
-                result = result.replace("<(.*?)>".toRegex(), " ") //Removes all items in brackets
-                result = result.replace("<(.*?)\n".toRegex(), " ") //Must be underneath
-                result = result.replaceFirst("(.*?)>".toRegex(), " ") //Removes any connected item to the last bracket
+                result = result.replace("<(.*?)>".toRegex(), " ") // Removes all items in brackets
+                result = result.replace("<(.*?)\n".toRegex(), " ") // Must be underneath
+                result = result.replaceFirst("(.*?)>".toRegex(), " ") // Removes any connected item to the last bracket
                 result = result.replace("&nbsp;".toRegex(), " ")
                 result = result.replace("&amp;".toRegex(), " ")
             }

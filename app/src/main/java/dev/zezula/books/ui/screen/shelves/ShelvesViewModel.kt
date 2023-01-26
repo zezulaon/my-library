@@ -51,7 +51,7 @@ class ShelvesViewModel(
             .stateIn(
                 scope = this.viewModelScope,
                 started = whileSubscribedInActivity,
-                initialValue = ShelvesUiState()
+                initialValue = ShelvesUiState(),
             )
 
     init {

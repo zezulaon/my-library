@@ -108,13 +108,11 @@ class BookDetailViewModelTest : KoinTest {
 
     @Test
     fun after_delete_click_book_was_deleted() = runTest {
-
         // Check that there is a book before deleting it
         bookDao.getBook(bookTestData.id).test {
             assertEquals(bookTestData, awaitItem())
             cancelAndConsumeRemainingEvents()
         }
-
 
         viewModel.deleteBook()
         // Check that the UI state is aware the book was deleted

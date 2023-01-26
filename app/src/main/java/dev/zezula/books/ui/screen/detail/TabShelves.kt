@@ -26,7 +26,7 @@ fun TabShelves(
     ElevatedCard(
         modifier = modifier
             .padding(24.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         LazyColumn(modifier = modifier.padding(16.dp)) {
             items(items = uiState.shelves, key = { shelf -> shelf.id }) { shelfForBook ->
@@ -36,7 +36,7 @@ fun TabShelves(
                     Checkbox(
                         modifier = Modifier.testTag(detailShelfCheckbox),
                         checked = shelfForBook.isBookAdded,
-                        onCheckedChange = { onShelfCheckedChange(shelfForBook, it) }
+                        onCheckedChange = { onShelfCheckedChange(shelfForBook, it) },
                     )
                 }
             }

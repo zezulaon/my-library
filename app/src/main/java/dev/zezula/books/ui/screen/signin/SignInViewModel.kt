@@ -20,12 +20,12 @@ class SignInViewModel(private val authService: AuthService) : ViewModel() {
     val uiState = combine(
         _isUserSignedIn,
         _isInProgress,
-        _errorMessage
+        _errorMessage,
     ) { userSignedIn, isInProgress, errorMessage ->
         SignInUiState(
             isUserSignedIn = userSignedIn,
             isSignInProgress = isInProgress,
-            errorMessage = errorMessage
+            errorMessage = errorMessage,
         )
     }
         .stateIn(viewModelScope, whileSubscribedInActivity, SignInUiState())

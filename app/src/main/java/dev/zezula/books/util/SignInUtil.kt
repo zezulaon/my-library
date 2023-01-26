@@ -12,6 +12,6 @@ fun getGoogleSignInRequest(): BeginSignInRequest = BeginSignInRequest.builder()
             .setServerClientId(BuildConfig.ML_FIREBASE_CLIENT_ID)
             // Show all available accounts.
             .setFilterByAuthorizedAccounts(false)
-            .build()
+            .build(),
     )
     .build()

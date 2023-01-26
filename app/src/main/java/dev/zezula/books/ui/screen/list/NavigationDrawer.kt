@@ -45,7 +45,7 @@ internal fun NavigationDrawer(
             },
             selected = false,
             onClick = onManageShelvesClick,
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(
             label = { Text(stringResource(R.string.drawer_item_all_books)) },
@@ -54,13 +54,13 @@ internal fun NavigationDrawer(
             },
             selected = uiState.selectedShelf == null,
             onClick = onAllBooksClick,
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         Divider(modifier = Modifier.padding(vertical = 16.dp, horizontal = 28.dp), thickness = 1.dp)
         Text(
             modifier = Modifier.padding(start = 24.dp, bottom = 16.dp),
             text = stringResource(R.string.drawer_label_shelves),
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
         uiState.shelves.forEach { shelf ->
             NavigationDrawerItem(
@@ -70,7 +70,7 @@ internal fun NavigationDrawer(
                     Text(text = shelf.numberOfBooks.toString(), style = MaterialTheme.typography.labelLarge)
                 },
                 onClick = { onShelfClick(shelf) },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
             )
         }
     }

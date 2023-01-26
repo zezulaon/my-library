@@ -40,7 +40,7 @@ internal fun ShelfListItem(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        tonalElevation = if (isExpanded) 8.dp else 0.dp
+        tonalElevation = if (isExpanded) 8.dp else 0.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             ListItem(
@@ -50,14 +50,14 @@ internal fun ShelfListItem(
                         text = pluralStringResource(
                             R.plurals.shelves_label_books_count,
                             shelf.numberOfBooks,
-                            shelf.numberOfBooks
-                        )
+                            shelf.numberOfBooks,
+                        ),
                     )
                 },
                 trailingContent = {
                     IconButton(
                         onClick = onExpandClick,
-                        modifier = Modifier.testTag(manageShelvesBtnExpand)
+                        modifier = Modifier.testTag(manageShelvesBtnExpand),
                     ) {
                         val expandIonRes = if (isExpanded) {
                             R.drawable.ic_shelf_item_expand_less
@@ -66,7 +66,7 @@ internal fun ShelfListItem(
                         }
                         Icon(
                             painter = painterResource(id = expandIonRes),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -76,7 +76,7 @@ internal fun ShelfListItem(
                 Row(
                     modifier = Modifier
                         .padding(end = 24.dp, bottom = 16.dp)
-                        .align(End)
+                        .align(End),
                 ) {
                     TextButton(onClick = { onDeleteClick(shelf) }) {
                         Text(stringResource(R.string.shelves_btn_remove))

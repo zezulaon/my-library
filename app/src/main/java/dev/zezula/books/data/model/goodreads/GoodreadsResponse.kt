@@ -7,5 +7,5 @@ import org.simpleframework.xml.Root
 data class GoodreadsResponse @JvmOverloads constructor(
 
     @field:Element(required = false)
-    var book: GoodreadsBook? = null
+    var book: GoodreadsBook? = null,
 )

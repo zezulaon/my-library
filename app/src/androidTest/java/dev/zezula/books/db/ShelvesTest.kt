@@ -32,7 +32,8 @@ class ShelvesTest {
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, AppDatabase::class.java
+            context,
+            AppDatabase::class.java,
         ).build()
         bookDao = db.bookDao()
         shelfAndBookDao = db.shelfAndBookDao()
@@ -148,8 +149,8 @@ class ShelvesTest {
         shelfAndBookDao.addBookToShelf(
             ShelfWithBookEntity(
                 bookId = previewBookEntities[0].id,
-                shelfId = previewShelfEntities[0].id
-            )
+                shelfId = previewShelfEntities[0].id,
+            ),
         )
 
         val retrievedShelves = shelfAndBookDao.getShelvesForBookAsStream(previewBookEntities[0].id).first()
@@ -170,7 +171,6 @@ class ShelvesTest {
 
     @Test
     fun shelf_can_be_added_and_retrieved() = runTest {
-
         // Insert shelves
         shelfAndBookDao.addOrUpdate(previewShelfEntities)
 
@@ -178,13 +178,12 @@ class ShelvesTest {
         // Check that shelves are in DB
         assertEquals(
             previewShelfEntities.sortedByDescending { entity -> entity.dateAdded }.map { entity -> entity.id },
-            retrievedShelves.map { entity -> entity.id }
+            retrievedShelves.map { entity -> entity.id },
         )
     }
 
     @Test
     fun shelf_can_be_deleted() = runTest {
-
         // Insert shelves
         shelfAndBookDao.addOrUpdate(previewShelfEntities.first())
         shelfAndBookDao.delete(previewBookEntities.first().id)
@@ -196,7 +195,6 @@ class ShelvesTest {
 
     @Test
     fun shelf_can_be_updated() = runTest {
-
         // Insert shelves
         val shelfToAdd = previewShelfEntities.first()
         val updatedTitle = "updated title"

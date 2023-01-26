@@ -22,7 +22,6 @@ class SearchBookScreenTest {
      */
     @Test
     fun searchBook_check_that_correctNotFoundInfoIsDisplayed() {
-
         composeTestRule.apply {
             setContent {
                 createTestScreen(
@@ -31,8 +30,8 @@ class SearchBookScreenTest {
                         isInProgress = true,
                         noBookFound = true,
                         errorMessage = null,
-                        foundBookId = null
-                    )
+                        foundBookId = null,
+                    ),
                 )
             }
 
@@ -47,7 +46,7 @@ class SearchBookScreenTest {
         SearchBarcodeScreen(
             uiState = state,
             onNavigateBack = {},
-            onScanAgainClick = {}
+            onScanAgainClick = {},
         )
     }
 }

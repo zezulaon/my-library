@@ -85,12 +85,12 @@ fun ShelvesListScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = modifier,
         topBar = { ShelvesListTopAppBar(onNavigateBack = onNavigateBack) },
-        bottomBar = { ShelvesBottomBar(onAddShelfClick = onAddShelfClick) }
+        bottomBar = { ShelvesBottomBar(onAddShelfClick = onAddShelfClick) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             ShelvesList(
                 modifier = modifier
@@ -98,7 +98,7 @@ fun ShelvesListScreen(
                     .padding(top = 16.dp),
                 shelves = uiState.shelves,
                 onEditShelfClick = onEditShelfClick,
-                onDeleteClick = onDeleteShelfClick
+                onDeleteClick = onDeleteShelfClick,
             )
 
             if (uiState.showAddOrEditShelfDialog) {
@@ -123,13 +123,13 @@ private fun ShelvesListTopAppBar(
         modifier = modifier,
         title = { Text(stringResource(R.string.shelves_screen_title)) },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         navigationIcon = {
             IconButton(onClick = { onNavigateBack() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.content_desc_navigate_back)
+                    contentDescription = stringResource(R.string.content_desc_navigate_back),
                 )
             }
         },
@@ -146,7 +146,8 @@ private fun ShelvesBottomBar(
         floatingActionButton = {
             NewShelfButton(onButtonClick = onAddShelfClick)
         },
-        actions = {})
+        actions = {},
+    )
 }
 
 @Composable
@@ -158,7 +159,7 @@ private fun ShelvesList(
 ) {
     val expandedShelfItem = remember { mutableStateOf<Shelf?>(null) }
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
     ) {
         itemsIndexed(items = shelves, key = { _, item -> item.id }) { _, shelf ->
             val isExpanded = expandedShelfItem.value == shelf
@@ -168,7 +169,7 @@ private fun ShelvesList(
                 onDeleteClick = onDeleteClick,
                 onEditShelfClick = onEditShelfClick,
                 onExpandClick = { expandedShelfItem.value = if (isExpanded) null else shelf },
-                isExpanded = expandedShelfItem.value == shelf
+                isExpanded = expandedShelfItem.value == shelf,
             )
         }
     }
@@ -179,7 +180,6 @@ fun NewShelfButton(onButtonClick: () -> Unit) {
     ExtendedFloatingActionButton(
         icon = { Icon(Icons.Filled.Add, null) },
         text = { Text(text = stringResource(R.string.shelves_btn_new_shelf)) },
-        onClick = onButtonClick
+        onClick = onButtonClick,
     )
 }
-

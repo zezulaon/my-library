@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class CheckReviewsDownloadedUseCase(
     private val booksRepository: BooksRepository,
-    private val repository: ReviewsRepository
+    private val repository: ReviewsRepository,
 ) {
 
     suspend operator fun invoke(bookId: String): Response<Unit> {
