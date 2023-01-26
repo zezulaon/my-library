@@ -2,8 +2,16 @@ package dev.zezula.books.components
 
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertAny
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onSiblings
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.previewShelves

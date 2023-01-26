@@ -1,9 +1,15 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.shelf.*
+import dev.zezula.books.data.model.shelf.ShelfEntity
+import dev.zezula.books.data.model.shelf.ShelfForBookEntity
+import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
+import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.source.db.ShelfAndBookDao
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 
 class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
 

@@ -4,7 +4,11 @@ import dev.zezula.books.data.model.FindBookOnlineResponse
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.goodreads.GoodReadsReview
 import dev.zezula.books.data.model.goodreads.GoodreadsBook
-import dev.zezula.books.data.model.review.*
+import dev.zezula.books.data.model.review.Rating
+import dev.zezula.books.data.model.review.RatingEntity
+import dev.zezula.books.data.model.review.Review
+import dev.zezula.books.data.model.review.ReviewEntity
+import dev.zezula.books.data.model.review.asExternalModel
 import dev.zezula.books.data.source.db.RatingDao
 import dev.zezula.books.data.source.db.ReviewDao
 import dev.zezula.books.data.source.network.OnlineBookFinderService
@@ -12,7 +16,7 @@ import dev.zezula.books.util.removeHtmlTags
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import java.util.*
+import java.util.UUID
 
 class ReviewsRepositoryImpl(
     private val reviewsDao: ReviewDao,

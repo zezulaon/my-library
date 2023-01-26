@@ -1,6 +1,12 @@
 package dev.zezula.books.data.source.db
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfForBookEntity

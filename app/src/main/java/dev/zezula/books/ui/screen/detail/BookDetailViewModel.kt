@@ -5,13 +5,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
 import dev.zezula.books.data.model.shelf.ShelfForBook
-import dev.zezula.books.domain.*
+import dev.zezula.books.domain.AllBookDetailResult
+import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
+import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.GetAllBookDetailUseCase
+import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.ui.DestinationArgs
 import dev.zezula.books.ui.whileSubscribedInActivity
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

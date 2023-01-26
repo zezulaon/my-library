@@ -2,7 +2,11 @@ package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.source.db.BookDao
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 
 class FakeBookDaoImpl : BookDao {
 

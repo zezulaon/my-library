@@ -3,10 +3,10 @@ package dev.zezula.books.components
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import dev.zezula.books.R
-import dev.zezula.books.data.model.*
 import dev.zezula.books.ui.screen.search.SearchBarcodeScreen
 import dev.zezula.books.ui.screen.search.SearchBarcodeUiState
 import org.junit.Rule

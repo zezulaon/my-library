@@ -1,7 +1,7 @@
 package dev.zezula.books.data.model.review
 
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 data class Rating(
     val id: String,

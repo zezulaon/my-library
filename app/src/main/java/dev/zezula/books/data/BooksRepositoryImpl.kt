@@ -1,7 +1,12 @@
 package dev.zezula.books.data
 
 import dev.zezula.books.data.model.FindBookOnlineResponse
-import dev.zezula.books.data.model.book.*
+import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.data.model.book.NetworkBook
+import dev.zezula.books.data.model.book.asExternalModel
+import dev.zezula.books.data.model.book.fromNetworkBook
 import dev.zezula.books.data.model.goodreads.toBookFormData
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
@@ -14,7 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 class BooksRepositoryImpl(
     private val booksDao: BookDao,

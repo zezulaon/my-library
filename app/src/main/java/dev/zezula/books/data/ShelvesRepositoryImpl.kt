@@ -1,13 +1,19 @@
 package dev.zezula.books.data
 
-import dev.zezula.books.data.model.shelf.*
+import dev.zezula.books.data.model.shelf.NetworkShelf
+import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.data.model.shelf.ShelfForBook
+import dev.zezula.books.data.model.shelf.ShelfForBookEntity
+import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
+import dev.zezula.books.data.model.shelf.asExternalModel
+import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 class ShelvesRepositoryImpl(
     private val shelvesAndBooksDao: ShelfAndBookDao,
