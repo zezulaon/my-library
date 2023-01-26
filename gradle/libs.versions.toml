@@ -34,6 +34,8 @@ glideCompose = "1.0.0-alpha.1"
 timber = "5.0.1"
 turbine = "0.12.1"
 #ksp = "1.7.20-1.0.8"
+ktlint = "0.48.2"
+spotless = "6.13.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -130,6 +132,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-gms-services = { id = "com.google.gms.google-services", version.ref = "googleGmsServices" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }
+diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 # TODO https://kotlinlang.org/docs/ksp-overview.html

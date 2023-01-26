@@ -27,13 +27,13 @@ android {
         buildConfigField(
             type = "String",
             name = "ML_GOODREADS_API_KEY",
-            value = getStringProperty("myLibrary.goodreadsApiKey", true)
+            value = getStringProperty("myLibrary.goodreadsApiKey", true),
         )
 
         buildConfigField(
             type = "String",
             name = "ML_FIREBASE_CLIENT_ID",
-            value = getStringProperty("myLibrary.firebaseClientId", true)
+            value = getStringProperty("myLibrary.firebaseClientId", true),
         )
     }
 
