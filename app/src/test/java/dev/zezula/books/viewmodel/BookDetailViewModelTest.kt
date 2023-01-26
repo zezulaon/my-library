@@ -1,4 +1,4 @@
-package dev.zezula.books.vm
+package dev.zezula.books.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
