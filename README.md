@@ -21,7 +21,7 @@ Detail     | Shelves   | Book List | Reviews
 
 * [Jetpack Compose](https://developer.android.com/jetpack/compose)
 * [Jetpack Navigation](https://developer.android.com/jetpack/compose/navigation)
-* [Koint for DI](https://insert-koin.io/)
+* [Koin for DI](https://insert-koin.io/)
 * [ML Kit](https://developers.google.com/ml-kit/vision/barcode-scanning) (Barcode scanning)
 * [Camera X](https://developer.android.com/training/camerax)
 * [Firebase](https://firebase.google.com/) (Firestore, Auth, Crashlytics)
@@ -35,7 +35,7 @@ Android **Room DB** is used as a _single source of truth_ for the user data. All
 
 #### Fireabase
 **Firebase Firestore** is used to back up and sync a user's data. Currently the Firestore is used only for simple Add/Remove queries. (Complex search/join quires are handled by Room DB).
-**Firebase Auth** is also used to sign user in the app. (Either via google or as an Anonymous user).
+**Firebase Auth** is also used to sign user in the app. (Either via Google or as an Anonymous user).
 
 #### Architecture
 *My Library* tries to follow latest Android architecture recommendation and separates code into several layers: **UI Layer** (Compose and ViewModels), **Domain Layer**, **Data Layer** (Repositores and Data Sources). (Though use of **Domain Layer** is perhaps redundant - because of the small portion of business logic, the _Use Cases_ are mostly just delegating call to _Repositories_).
