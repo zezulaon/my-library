@@ -1,12 +1,10 @@
-package dev.zezula.books.vm
+package dev.zezula.books.viewmodel
 
 import dev.zezula.books.MainDispatcherRule
-import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.model.shelf.previewShelfEntities
-import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.di.appUnitTestModule
-import dev.zezula.books.ui.screen.list.BookListViewModel
+import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -19,7 +17,9 @@ import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * The [androidx.lifecycle.ViewModel] tests use Repositories/UseCases initialized with fake data sources (DAO, Network)
@@ -35,11 +35,10 @@ import kotlin.test.assertNull
  * https://developer.android.com/kotlin/coroutines/test
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class BookListViewModelTest : KoinTest {
+class ShelvesViewModelTest : KoinTest {
 
-    private val viewModel: BookListViewModel by inject()
+    private val viewModel: ShelvesViewModel by inject()
     private val shelfAndBookDao: ShelfAndBookDao by inject()
-    private val bookDao: BookDao by inject()
 
     // Rule that replaces main dispatcher used in ViewModel's scope with a test dispatcher used in these tests.
     @get:Rule
@@ -50,49 +49,77 @@ class BookListViewModelTest : KoinTest {
         modules(appUnitTestModule)
     }
 
-    private val booksTestData = listOf(previewBookEntities.first())
     private val shelvesTestData = previewShelfEntities
 
     @Before
     fun setupRepository() = runTest {
-        bookDao.addOrUpdate(booksTestData)
         shelfAndBookDao.addOrUpdate(shelvesTestData)
     }
 
     @Test
     fun shelves_are_initialized() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+        // Check that UI state in viewModel has same amount of shelves as test data
         assertEquals(shelvesTestData.size, viewModel.uiState.value.shelves.size)
         collectJob.cancel()
     }
 
     @Test
-    fun shelf_is_selected_after_navigation_drawer_shelf_is_clicked() = runTest {
+    fun new_shelf_can_be_created() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
-        val shelfToSelect = viewModel.uiState.value.shelves.last()
+        val createdShelfTitle = "test shelf title"
+        viewModel.createShelf(createdShelfTitle)
 
-        // Check that no shelf is selected (default)
-        assertNull(viewModel.uiState.value.selectedShelf)
-
-        viewModel.onShelfSelected(shelfToSelect)
-        // Check that shelf is selected
-        assertEquals(shelfToSelect, viewModel.uiState.value.selectedShelf)
+        // Check that the UI state was updated with the new shelf
+        assertTrue(viewModel.uiState.value.shelves.any { it.title == createdShelfTitle })
 
         collectJob.cancel()
     }
 
     @Test
-    fun all_books_are_displayed_after_all_books_shelf_item_is_clicked() = runTest {
+    fun shelf_can_be_updated() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
-        viewModel.onAllBooksShelfSelected()
-        with(viewModel.uiState.value) {
-            // Check that "all books" (no shelf) is selected
-            assertEquals(null, selectedShelf)
-            // Check that all books are displayed
-            assertEquals(booksTestData.size, books.size)
-        }
+        val shelfToUpdate = viewModel.uiState.value.shelves.first()
+
+        val updatedShelfTitle = "test update shelf title"
+        viewModel.updateShelf(shelfToUpdate, updatedShelfTitle)
+
+        // Check that the UI state was updated with the new shelf
+        assertTrue(viewModel.uiState.value.shelves.any { it.title == updatedShelfTitle })
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun shelf_can_be_deleted() = runTest {
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        val shelfToDelete = viewModel.uiState.value.shelves.first()
+
+        viewModel.deleteShelf(shelfToDelete)
+
+        // Check that the UI state was updated with the new shelf
+        assertFalse(viewModel.uiState.value.shelves.contains(shelfToDelete))
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun on_edit_button_click_shows_dialog() = runTest {
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        // Check initial state -> no shelf is selected and no dialog is being shown
+        assertNull(viewModel.uiState.value.selectedShelf)
+        assertFalse(viewModel.uiState.value.showAddOrEditShelfDialog)
+
+        val shelfToEdit = viewModel.uiState.value.shelves.first()
+        viewModel.onEditShelfClicked(shelfToEdit)
+
+        // Check that correct shelf is selected and the dialog is being shown
+        assertEquals(shelfToEdit, viewModel.uiState.value.selectedShelf)
+        assertTrue(viewModel.uiState.value.showAddOrEditShelfDialog)
 
         collectJob.cancel()
     }

@@ -1,4 +1,4 @@
-package dev.zezula.books
+package dev.zezula.books.repository
 
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.model.book.BookEntity

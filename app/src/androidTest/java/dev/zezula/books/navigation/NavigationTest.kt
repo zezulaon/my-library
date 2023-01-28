@@ -26,8 +26,8 @@ import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.previewShelves
 import dev.zezula.books.data.source.db.AppDatabase
+import dev.zezula.books.di.appInstrumentedTestModule
 import dev.zezula.books.di.appModule
-import dev.zezula.books.navigation.di.appInstrumentedTestModule
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.util.createBookInputAuthor
 import dev.zezula.books.util.createBookInputDesc

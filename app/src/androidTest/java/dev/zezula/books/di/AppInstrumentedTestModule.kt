@@ -1,4 +1,4 @@
-package dev.zezula.books.navigation.di
+package dev.zezula.books.di
 
 import androidx.room.Room
 import dev.zezula.books.data.source.db.AppDatabase
