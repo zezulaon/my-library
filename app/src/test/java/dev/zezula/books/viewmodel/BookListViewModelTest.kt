@@ -1,10 +1,14 @@
 package dev.zezula.books.viewmodel
 
+import app.cash.turbine.test
 import dev.zezula.books.MainDispatcherRule
+import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.model.shelf.previewShelfEntities
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
+import dev.zezula.books.data.source.network.NetworkDataSource
+import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
 import dev.zezula.books.di.appUnitTestModule
 import dev.zezula.books.ui.screen.list.BookListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,10 +19,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.core.context.loadKoinModules
+import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 import org.koin.test.inject
+import java.io.IOException
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 /**
@@ -57,6 +65,34 @@ class BookListViewModelTest : KoinTest {
     fun setupRepository() = runTest {
         bookDao.addOrUpdate(booksTestData)
         shelfAndBookDao.addOrUpdate(shelvesTestData)
+    }
+
+    @Test
+    fun error_message_is_displayed_after_refresh_fails_with_ioException() = runTest {
+        // Override module with custom data source that throws exception for GET call
+        loadKoinModules(
+            module {
+                single<NetworkDataSource> {
+                    object : FakeNetworkDataSourceImpl() {
+                        override suspend fun getBooks(): List<NetworkBook> {
+                            throw IOException("Failed to fetch books")
+                        }
+                    }
+                }
+            },
+        )
+
+        // Refresh is only launched when DB is empty
+        bookDao.deleteAll()
+        // Refresh DB from network source
+        viewModel.refresh()
+
+        viewModel.uiState.test {
+            val uiState = awaitItem()
+            // Check that there is error message in UI state after the exception was thrown
+            assertNotNull(uiState.errorMessage)
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test

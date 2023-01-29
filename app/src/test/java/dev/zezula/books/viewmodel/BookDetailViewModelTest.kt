@@ -94,6 +94,7 @@ class BookDetailViewModelTest : KoinTest {
             assertEquals(bookTestData.id, uiState.book?.id)
             // Check that the detail tab is selected
             assertEquals(DetailTab.Detail, uiState.selectedTab)
+            cancelAndConsumeRemainingEvents()
         }
     }
 
