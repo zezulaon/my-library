@@ -40,6 +40,9 @@ interface ShelfAndBookDao {
     @Delete
     suspend fun removeBookFromShelf(shelvesWithBooksEntity: ShelfWithBookEntity)
 
+    @Query("SELECT * FROM shelf_with_book")
+    suspend fun getAllShelfWithBookEntity(): List<ShelfWithBookEntity>
+
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT id, dateAdded, title, CASE WHEN bookId=:bookId THEN '1' ELSE '0' END AS isBookAdded FROM shelves LEFT JOIN (SELECT * FROM shelf_with_book WHERE bookId=:bookId) ON id=shelfId")
     fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>>
