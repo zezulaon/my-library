@@ -272,6 +272,10 @@ class NavigationTest : KoinTest {
             onAllNodesWithTag(manageShelvesBtnExpand).onFirst().performClick()
             // AND user clicks on delete button
             onNodeWithText(activity.getString(R.string.shelves_btn_remove)).performClick()
+            // AND user goes back to home screen and back to "Manage Shelves" screen
+            onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back)).performClick()
+            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
             // THEN the shelves list is updated (shelf is deleted)
             onAllNodesWithTag(manageShelvesShelfItem).assertCountEquals(previewShelves.size - 1)
         }
