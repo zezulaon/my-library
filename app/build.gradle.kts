@@ -2,14 +2,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
     namespace = "dev.zezula.books"
-    compileSdk = 33
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "dev.zezula.books"
@@ -112,7 +113,7 @@ dependencies {
     // Room DB
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     // DI
     implementation(libs.koin.androidx.compose)
@@ -132,7 +133,7 @@ dependencies {
 
     // Glide
     implementation(libs.bumptech.glide)
-    kapt(libs.bumptech.glide.compiler)
+    ksp(libs.bumptech.glide.compiler)
     implementation(libs.bumptech.glide.compose)
 
     // HTTP/REST/XML/JSON

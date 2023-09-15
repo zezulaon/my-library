@@ -25,13 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import org.jetbrains.annotations.VisibleForTesting
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SearchBarcodeRoute(
     viewModel: SearchBarcodeViewModel,

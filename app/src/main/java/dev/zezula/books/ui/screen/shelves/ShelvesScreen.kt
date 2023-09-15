@@ -30,13 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.util.manageShelvesShelfItem
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ShelvesRoute(
     viewModel: ShelvesViewModel,

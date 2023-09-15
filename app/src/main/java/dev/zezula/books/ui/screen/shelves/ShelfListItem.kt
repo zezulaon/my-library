@@ -44,8 +44,8 @@ internal fun ShelfListItem(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             ListItem(
-                headlineText = { Text(text = shelf.title) },
-                supportingText = {
+                headlineContent = { Text(text = shelf.title) },
+                supportingContent = {
                     Text(
                         text = pluralStringResource(
                             R.plurals.shelves_label_books_count,
