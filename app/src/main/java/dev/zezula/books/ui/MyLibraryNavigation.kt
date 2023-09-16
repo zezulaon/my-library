@@ -6,12 +6,14 @@ import androidx.navigation.NavHostController
 import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.Destinations.bookListRoute
+import dev.zezula.books.ui.Destinations.findBookRoute
 import dev.zezula.books.ui.Destinations.scanBarcodeRoute
 import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
 import dev.zezula.books.ui.MyLibraryScreens.bookDetail
 import dev.zezula.books.ui.MyLibraryScreens.bookForm
 import dev.zezula.books.ui.MyLibraryScreens.bookList
+import dev.zezula.books.ui.MyLibraryScreens.findBook
 import dev.zezula.books.ui.MyLibraryScreens.scanBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
 import dev.zezula.books.ui.MyLibraryScreens.shelves
@@ -26,6 +28,7 @@ private object MyLibraryScreens {
     const val bookDetail = "bookDetail"
     const val shelves = "shelves"
     const val scanBarcode = "scanBarcode"
+    const val findBook = "findBook"
     const val searchBarcode = "searchBarcode"
 }
 
@@ -41,6 +44,7 @@ object Destinations {
     const val bookDetailRoute = "$bookDetail/{$bookIdArg}"
     const val shelvesRoute = shelves
     const val scanBarcodeRoute = scanBarcode
+    const val findBookRoute = findBook
     const val searchBarcodeRoute = "$searchBarcode/{$barcodeArg}"
 }
 
@@ -53,6 +57,10 @@ fun NavHostController.navigateFromOnboardingToHome() {
 
 fun NavHostController.navigateToScanBarcode() {
     navigate(scanBarcodeRoute)
+}
+
+fun NavHostController.navigateToFindBookOnline() {
+    navigate(findBookRoute)
 }
 
 fun NavHostController.navigateToSearchBarcode(barcode: String) {
@@ -68,11 +76,13 @@ fun NavHostController.navigateToAddOrEdit(bookId: String? = null) {
     navigate("$bookForm/$bookId")
 }
 
-fun NavHostController.navigateToBookDetail(bookId: String) {
+fun NavHostController.navigateToBookDetail(bookId: String, popupToBookList: Boolean = true) {
     navigate("$bookDetail/$bookId") {
-        // popUpTo() ensures that there will be only one book detail screen right after book list screen
-        popUpTo(bookListRoute) {
-            inclusive = false
+        if (popupToBookList) {
+            // popUpTo() ensures that there will be only one book detail screen right after book list screen
+            popUpTo(bookListRoute) {
+                inclusive = false
+            }
         }
     }
 }

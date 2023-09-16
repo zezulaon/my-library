@@ -40,7 +40,10 @@ class HomeScreenTest {
                     managedShelvesClicked = true,
                 ),
                 onAddBookClick = {},
-                onScanBookClick = {},
+                onAddManuallyClick = {},
+                onAddBookSheetCloseRequested = {},
+                onFindOnlineClick = {},
+                onScanBarcodeClick = {},
                 onBookClick = {},
                 onManageShelvesClick = {},
                 onAllBooksClick = {},
@@ -71,9 +74,7 @@ class HomeScreenTest {
         composeTestRule.apply {
             onNodeWithContentDescription(activity.getString(R.string.content_open_drawer))
                 .assertIsDisplayed()
-            onNodeWithContentDescription(activity.getString(R.string.content_add_new_book))
-                .assertIsDisplayed()
-            onNodeWithText(text = activity.getString(R.string.home_btn_scan), useUnmergedTree = true)
+            onNodeWithText(text = activity.getString(R.string.home_btn_add), useUnmergedTree = true)
                 .assertIsDisplayed()
         }
     }

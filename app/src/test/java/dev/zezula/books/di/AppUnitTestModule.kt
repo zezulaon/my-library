@@ -23,7 +23,7 @@ import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
-import dev.zezula.books.domain.FindBookOnlineUseCase
+import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetBooksUseCase
@@ -62,7 +62,7 @@ val appUnitTestModule = module {
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
-    single { FindBookOnlineUseCase(get(), get(), get()) }
+    single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
     single { GetBooksUseCase(get()) }
     single { AddOrUpdateBookUseCase(get()) }
 

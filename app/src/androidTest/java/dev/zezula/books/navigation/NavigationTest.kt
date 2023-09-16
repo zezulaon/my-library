@@ -38,7 +38,9 @@ import dev.zezula.books.util.createBookInputTitle
 import dev.zezula.books.util.createBookInputYear
 import dev.zezula.books.util.createShelfInputTitle
 import dev.zezula.books.util.detailShelfCheckbox
+import dev.zezula.books.util.homeBtnAddBook
 import dev.zezula.books.util.homeBtnAddBookManually
+import dev.zezula.books.util.homeBtnScanBarcode
 import dev.zezula.books.util.homeNavDrawer
 import dev.zezula.books.util.manageShelvesBtnExpand
 import dev.zezula.books.util.manageShelvesShelfItem
@@ -94,8 +96,8 @@ class NavigationTest : KoinTest {
     fun scannerScreen_firstLaunch_showsMissingPermissionInfo() {
         composeTestRule.apply {
             // GIVEN the user is on "Scan a book" screen
-            onNodeWithText(text = activity.getString(R.string.home_btn_scan), useUnmergedTree = true)
-                .performClick()
+            onNodeWithTag(homeBtnAddBook).performClick()
+            onNodeWithTag(homeBtnScanBarcode).performClick()
             // THEN information about missing camera permission is displayed
             onNodeWithText(activity.getString(R.string.scanner_perm_required))
                 .assertIsDisplayed()
@@ -110,6 +112,7 @@ class NavigationTest : KoinTest {
     fun createBookScreen_saveEmptyForm_showsError() {
         composeTestRule.apply {
             // GIVEN the user is on "Create" screen
+            onNodeWithTag(homeBtnAddBook).performClick()
             onNodeWithTag(homeBtnAddBookManually).performClick()
             // WHEN user tries to save the empty form
             onNodeWithText(activity.getString(R.string.btn_add))
@@ -124,6 +127,7 @@ class NavigationTest : KoinTest {
     fun createBookScreen_fillAndSaveForm_addsABook() {
         composeTestRule.apply {
             // GIVEN the user is on "Create" screen
+            onNodeWithTag(homeBtnAddBook).performClick()
             onNodeWithTag(homeBtnAddBookManually).performClick()
             // WHEN user fills in all required data
             onNodeWithTag(createBookInputTitle).performTextInput(bookToCreate.title!!)
