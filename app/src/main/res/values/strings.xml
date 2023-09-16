@@ -34,9 +34,14 @@
     <string name="create_book_failed_to_save">An error has occurred - the book wasn\t saved.</string>
 
     <!-- Home/Book list -->
-    <string name="home_btn_scan">Scan a Barcode</string>
+    <string name="home_btn_add">Add Book</string>
     <string name="home_shelf_title_all_books">All Books</string>
     <string name="home_failed_to_refresh">Failed to refresh My Library</string>
+    <string name="home_btn_add_manually">Add Book Details Manually</string>
+    <string name="home_btn_find_online">Find Book Online</string>
+    <string name="home_btn_add_book">Add Book</string>
+    <string name="home_btn_scan_barcode"><![CDATA[Scan Barcode & Add]]></string>
+
     <!-- Drawer -->
     <string name="drawer_item_manage_shelves">Manage Shelves</string>
     <string name="drawer_item_all_books">All Books</string>
@@ -93,12 +98,16 @@
     <string name="content_add_new_shelf">New Shelf</string>
     <string name="content_open_drawer">Open Navigation Drawer</string>
     <string name="content_open_drawer_menu">Open Drawer Menu</string>
-    <string name="content_add_new_book">Add a Book</string>
 
     <!-- Search -->
     <string name="search_title">Search a Barcode</string>
     <string name="search_btn_scan_again">Scan Again</string>
     <string name="search_no_book_found_for_isbn">No book was found for ISBN:</string>
+    <string name="search_no_book_found_for_query">No books were found.</string>
+    <string name="search_result_btn_add">Add Book</string>
+    <string name="search_result_btn_view">View</string>
+    <string name="find_book_online_title">Find Book Online</string>
+    <string name="find_book_search_placeholder">Search by title, isbn or keywords…</string>
 
     <!-- Generic errors -->
     <string name="error_failed_get_data">Failed to load data</string>

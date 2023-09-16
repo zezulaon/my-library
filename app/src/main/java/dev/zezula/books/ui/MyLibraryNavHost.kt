@@ -11,6 +11,7 @@ import dev.zezula.books.ui.screen.create.CreateBookRoute
 import dev.zezula.books.ui.screen.detail.BookDetailRoute
 import dev.zezula.books.ui.screen.list.BookListRoute
 import dev.zezula.books.ui.screen.scanner.ScanBarcodeRoute
+import dev.zezula.books.ui.screen.search.FindBookRoute
 import dev.zezula.books.ui.screen.search.SearchBarcodeRoute
 import dev.zezula.books.ui.screen.shelves.ShelvesRoute
 import dev.zezula.books.ui.screen.signin.SignInRoute
@@ -40,8 +41,9 @@ fun MyLibraryNavHost(
 
         composable(route = Destinations.bookListRoute) {
             BookListRoute(
-                onAddBookClick = { navController.navigateToAddOrEdit() },
+                onAddBookManuallyClick = { navController.navigateToAddOrEdit() },
                 onScanBookClick = { navController.navigateToScanBarcode() },
+                onFindBookOnlineClick = { navController.navigateToFindBookOnline() },
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
                 viewModel = koinViewModel(),
@@ -77,6 +79,16 @@ fun MyLibraryNavHost(
         composable(route = Destinations.shelvesRoute) {
             ShelvesRoute(
                 onNavigateBack = { navController.popBackStack() },
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(route = Destinations.findBookRoute) {
+            FindBookRoute(
+                onNavigateBack = { navController.popBackStack() },
+                onViewBookClick = { bookId ->
+                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
+                },
                 viewModel = koinViewModel(),
             )
         }

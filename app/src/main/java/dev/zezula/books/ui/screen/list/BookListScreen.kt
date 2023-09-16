@@ -1,14 +1,21 @@
 package dev.zezula.books.ui.screen.list
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -16,14 +23,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +48,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -47,15 +59,19 @@ import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.homeAppBar
+import dev.zezula.books.util.homeBtnAddBook
 import dev.zezula.books.util.homeBtnAddBookManually
+import dev.zezula.books.util.homeBtnScanBarcode
 import dev.zezula.books.util.isLastIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookListRoute(
     viewModel: BookListViewModel,
-    onAddBookClick: () -> Unit,
+    onAddBookManuallyClick: () -> Unit,
+    onFindBookOnlineClick: () -> Unit,
     onScanBookClick: () -> Unit,
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
@@ -99,8 +115,16 @@ fun BookListRoute(
         snackbarHostState = snackbarHostState,
         drawerState = drawerState,
         scope = scope,
-        onAddBookClick = onAddBookClick,
-        onScanBookClick = onScanBookClick,
+        onAddBookClick = {
+            viewModel.onAddBookSheetOpenRequest()
+        },
+        onAddBookSheetCloseRequested = {
+            viewModel.onAddBookSheetDismissRequest()
+        },
+        onScanBarcodeClick = onScanBookClick,
+        onAddManuallyClick = onAddBookManuallyClick,
+        onFindOnlineClick = onFindBookOnlineClick,
+
         onBookClick = onBookClick,
         onAllBooksClick = {
             scope.launch { drawerState.close() }
@@ -123,13 +147,17 @@ fun BookListRoute(
 fun BookListScreen(
     uiState: BookListUiState,
     onAddBookClick: () -> Unit,
-    onScanBookClick: () -> Unit,
+    onAddBookSheetCloseRequested: () -> Unit,
+    onScanBarcodeClick: () -> Unit,
+    onAddManuallyClick: () -> Unit,
+    onFindOnlineClick: () -> Unit,
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllBooksClick: () -> Unit,
     onShelfClick: (Shelf) -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    bottomSheetState: SheetState = rememberModalBottomSheetState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -151,7 +179,6 @@ fun BookListScreen(
             bottomBar = {
                 BookListBottomBar(
                     onAddBookClick = onAddBookClick,
-                    onScanBookClick = onScanBookClick,
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
             },
@@ -162,6 +189,74 @@ fun BookListScreen(
                     .padding(innerPadding),
                 books = uiState.books,
                 onBookClick = onBookClick,
+            )
+
+            if (uiState.addBookSheetOpened) {
+                AddBookBottomSheet(
+                    uiState,
+                    onAddBookSheetCloseRequested,
+                    onScanBarcodeClick,
+                    onAddManuallyClick,
+                    onFindOnlineClick,
+                    bottomSheetState,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun AddBookBottomSheet(
+    uiState: BookListUiState,
+    onAddBookSheetCloseRequested: () -> Unit,
+    onScanBarcodeClick: () -> Unit,
+    onAddManuallyClick: () -> Unit,
+    onFindOnlineClick: () -> Unit,
+    bottomSheetState: SheetState,
+) {
+    ModalBottomSheet(
+        onDismissRequest = { onAddBookSheetCloseRequested() },
+        sheetState = bottomSheetState,
+        windowInsets = BottomSheetDefaults.windowInsets,
+    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Text(stringResource(R.string.home_btn_add_book), style = MaterialTheme.typography.titleMedium)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+        ) {
+            ListItem(
+                modifier = Modifier
+                    .testTag(homeBtnAddBookManually)
+                    .clickable {
+                        onAddManuallyClick()
+                        onAddBookSheetCloseRequested()
+                    },
+                headlineContent = { Text(stringResource(R.string.home_btn_add_manually)) },
+                leadingContent = { Icon(Icons.Default.Create, contentDescription = null) },
+            )
+            ListItem(
+                modifier = Modifier.clickable {
+                    onFindOnlineClick()
+                    onAddBookSheetCloseRequested()
+                },
+                headlineContent = { Text(stringResource(R.string.home_btn_find_online)) },
+                leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
+            )
+            ListItem(
+                modifier = Modifier
+                    .testTag(homeBtnScanBarcode)
+                    .clickable {
+                        onScanBarcodeClick()
+                        onAddBookSheetCloseRequested()
+                    },
+                headlineContent = { Text(stringResource(R.string.home_btn_scan_barcode)) },
+                leadingContent = {
+                    Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null)
+                },
             )
         }
     }
@@ -187,7 +282,6 @@ private fun BookListTopAppBar(
 @Composable
 private fun BookListBottomBar(
     onAddBookClick: () -> Unit,
-    onScanBookClick: () -> Unit,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -197,12 +291,9 @@ private fun BookListBottomBar(
             IconButton(onClick = onMenuClick) {
                 Icon(Icons.Filled.Menu, contentDescription = stringResource(id = R.string.content_open_drawer))
             }
-            IconButton(onClick = onAddBookClick, modifier = Modifier.testTag(homeBtnAddBookManually)) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.content_add_new_book))
-            }
         },
         floatingActionButton = {
-            ScanBookButton(onButtonClick = onScanBookClick)
+            AddBookButton(onButtonClick = onAddBookClick)
         },
     )
 }
@@ -224,10 +315,11 @@ private fun BookList(
 }
 
 @Composable
-private fun ScanBookButton(onButtonClick: () -> Unit) {
+private fun AddBookButton(onButtonClick: () -> Unit) {
     ExtendedFloatingActionButton(
-        icon = { Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null) },
-        text = { Text(text = stringResource(R.string.home_btn_scan)) },
+        modifier = Modifier.testTag(homeBtnAddBook),
+        icon = { Icon(Icons.Default.Add, contentDescription = null) },
+        text = { Text(text = stringResource(R.string.home_btn_add)) },
         onClick = onButtonClick,
     )
 }
@@ -235,16 +327,19 @@ private fun ScanBookButton(onButtonClick: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun PreviewSportItemList() {
+fun PreviewBookListScreen() {
     MyLibraryTheme {
         BookListScreen(
             uiState = BookListUiState(books = previewBooks, emptyList(), null),
             onAddBookClick = {},
-            onScanBookClick = {},
+            onAddManuallyClick = {},
+            onFindOnlineClick = {},
+            onScanBarcodeClick = {},
             onBookClick = {},
             onManageShelvesClick = {},
             onAllBooksClick = {},
             onShelfClick = {},
+            onAddBookSheetCloseRequested = {},
         )
     }
 }

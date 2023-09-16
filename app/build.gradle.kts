@@ -138,6 +138,7 @@ dependencies {
 
     // HTTP/REST/XML/JSON
     implementation(libs.squareup.retrofit2)
+    implementation(libs.squareup.retrofit2.converter.gson)
     implementation(libs.squareup.retrofit2.converter.simplexml) {
         // XmlPullParser (Since it is already included: https://issuetracker.google.com/issues/289087852)
         exclude(group = "xpp3", module = "xpp3")

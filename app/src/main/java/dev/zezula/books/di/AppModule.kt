@@ -17,12 +17,14 @@ import dev.zezula.books.data.source.network.GoodreadsApi
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
+import dev.zezula.books.data.source.network.OpenLibraryApi
 import dev.zezula.books.domain.AddOrUpdateBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
-import dev.zezula.books.domain.FindBookOnlineUseCase
+import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
+import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetBooksUseCase
@@ -33,6 +35,7 @@ import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
 import dev.zezula.books.ui.screen.detail.BookDetailViewModel
 import dev.zezula.books.ui.screen.list.BookListViewModel
+import dev.zezula.books.ui.screen.search.FindBookViewModel
 import dev.zezula.books.ui.screen.search.SearchBarcodeViewModel
 import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
 import dev.zezula.books.ui.screen.signin.SignInViewModel
@@ -40,19 +43,27 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 val appModule = module {
 
     // Network services
-    single {
+    single<GoodreadsApi> {
         Retrofit.Builder()
             .addConverterFactory(SimpleXmlConverterFactory.create())
             .baseUrl("https://www.goodreads.com/")
             .build()
+            .create(GoodreadsApi::class.java)
     }
-    single<GoodreadsApi> { get<Retrofit>().create(GoodreadsApi::class.java) }
-    single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get()) }
+    single<OpenLibraryApi> {
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://openlibrary.org/")
+            .build()
+            .create(OpenLibraryApi::class.java)
+    }
+    single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
 
     // Database and DAOs
@@ -95,7 +106,8 @@ val appModule = module {
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
-    single { FindBookOnlineUseCase(get(), get(), get()) }
+    single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
+    single { FindBookForQueryOnlineUseCase(get()) }
     single { GetBooksUseCase(get()) }
     single { AddOrUpdateBookUseCase(get()) }
 
@@ -110,5 +122,7 @@ val appModule = module {
     viewModel { CreateBookViewModel(get(), get(), get()) }
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
+    viewModel { FindBookViewModel(get(), get()) }
+    viewModel { SearchBarcodeViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }

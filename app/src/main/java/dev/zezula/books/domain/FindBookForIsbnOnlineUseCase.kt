@@ -7,7 +7,7 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import timber.log.Timber
 
-class FindBookOnlineUseCase(
+class FindBookForIsbnOnlineUseCase(
     private val booksRepository: BooksRepository,
     private val reviewsRepository: ReviewsRepository,
     private val onlineBookFinderService: OnlineBookFinderService,
@@ -27,7 +27,7 @@ class FindBookOnlineUseCase(
         val existingId = booksRepository.getBookId(isbn)
         if (existingId != null) return existingId
 
-        val response = onlineBookFinderService.findBookOnline(isbn)
+        val response = onlineBookFinderService.findBookForIsbnOnline(isbn)
         val addedBook = booksRepository.addBook(response)
         if (addedBook != null) {
             reviewsRepository.addReviews(addedBook, response)

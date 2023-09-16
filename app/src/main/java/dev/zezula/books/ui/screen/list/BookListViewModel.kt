@@ -12,11 +12,11 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.ui.whileSubscribedInActivity
+import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -31,6 +31,7 @@ class BookListViewModel(
     private val _errorMessage = MutableStateFlow<Int?>(null)
     private val _selectedShelf = MutableStateFlow<Shelf?>(null)
     private val _managedShelvesClicked = MutableStateFlow(false)
+    private val _addBookSheetOpened = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val booksForShelf: Flow<Response<List<Book>>> = _selectedShelf
@@ -45,14 +46,16 @@ class BookListViewModel(
             _errorMessage,
             _selectedShelf,
             _managedShelvesClicked,
+            _addBookSheetOpened,
             booksForShelf,
             shelves,
-        ) { errorMsg, selectedShelfId, managedShelvesClicked, books, shelves ->
+        ) { errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, books, shelves ->
             BookListUiState(
                 books = books.getOrDefault(emptyList()),
                 shelves = shelves.getOrDefault(emptyList()),
                 selectedShelf = selectedShelfId,
                 managedShelvesClicked = managedShelvesClicked,
+                addBookSheetOpened = addBookSheetOpened,
                 errorMessage = errorMsg,
             )
         }
@@ -99,5 +102,13 @@ class BookListViewModel(
 
     fun onManagedShelvesClickedHandled() {
         _managedShelvesClicked.value = false
+    }
+
+    fun onAddBookSheetOpenRequest() {
+        _addBookSheetOpened.value = true
+    }
+
+    fun onAddBookSheetDismissRequest() {
+        _addBookSheetOpened.value = false
     }
 }

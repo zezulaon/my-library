@@ -4,7 +4,9 @@ package dev.zezula.books.util
 
 const val homeAppBar = "homeAppBar"
 const val homeNavDrawer = "homeNavDrawer"
+const val homeBtnAddBook = "homeBtnAddBook"
 const val homeBtnAddBookManually = "homeBtnAddBookManually"
+const val homeBtnScanBarcode = "homeBtnScanBarcode"
 const val createBookInputTitle = "createBookInputTitle"
 const val createBookInputAuthor = "createBookInputAuthor"
 const val createBookInputPublisher = "createBookInputPublisher"

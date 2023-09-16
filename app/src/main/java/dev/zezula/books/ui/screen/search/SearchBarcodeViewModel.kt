@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
-import dev.zezula.books.domain.FindBookOnlineUseCase
+import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.ui.DestinationArgs
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SearchBarcodeViewModel(
-    private val findBookOnlineUseCase: FindBookOnlineUseCase,
+    private val findBookOnlineUseCase: FindBookForIsbnOnlineUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

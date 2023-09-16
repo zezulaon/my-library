@@ -4,5 +4,7 @@ import dev.zezula.books.data.model.FindBookOnlineResponse
 
 interface OnlineBookFinderService {
 
-    suspend fun findBookOnline(isbn: String): FindBookOnlineResponse
+    suspend fun findBookForIsbnOnline(isbn: String): FindBookOnlineResponse
+
+    suspend fun findBookForQueryOnline(query: String): FindBookOnlineResponse
 }
