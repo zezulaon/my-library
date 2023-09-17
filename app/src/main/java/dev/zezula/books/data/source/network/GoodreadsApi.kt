@@ -13,29 +13,33 @@ import timber.log.Timber
 interface GoodreadsApi {
 
     @GET("/book/isbn/{isbn}?text_only=true&key=" + BuildConfig.ML_GOODREADS_API_KEY)
-    suspend fun goodreadsBook(@Path("isbn") isbn: String): GoodreadsResponse
+    suspend fun goodreadsBookWithReviews(@Path("isbn") isbn: String): GoodreadsResponse
+
+    @GET("/search/index.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    // https://www.goodreads.com/search/index.xml?key=PlC7PrkWiK79dB8Q2PGkiA&q=9788087950494
+    suspend fun searchBookByQuery(@Query("q") query: String): GoodreadsResponse
 
     @GET("/book/title.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
     // https://www.goodreads.com/book/title.xml?key=KEY&title=TITLE
     suspend fun goodreadsBookByTitle(@Query("title") title: String): GoodreadsResponse
 }
 
-suspend fun GoodreadsApi.findBookOrNull(isbn: String): GoodreadsBook? {
+suspend fun GoodreadsApi.findReviewsOrNull(isbn: String): GoodreadsBook? {
     // Search in GoodReads online DB
     return try {
-        goodreadsBook(isbn).book
+        goodreadsBookWithReviews(isbn).book
     } catch (e: HttpException) {
-        Timber.w(e, "Failed to find a book for isbn: $isbn")
+        Timber.w(e, "Failed to find reviews for isbn: $isbn")
         null
     }
 }
 
-suspend fun GoodreadsApi.findBookByTitleOrNull(title: String): GoodreadsBook? {
+suspend fun GoodreadsApi.findBookByIsbnOrNull(isbn: String): GoodreadsBook? {
     // Search in GoodReads online DB
     return try {
-        goodreadsBookByTitle(title).book
+        searchBookByQuery(isbn).search?.results?.firstOrNull()?.best_book
     } catch (e: HttpException) {
-        Timber.w(e, "Failed to find a book for title: $title")
+        Timber.w(e, "Failed to find a book for isbn: $isbn")
         null
     }
 }

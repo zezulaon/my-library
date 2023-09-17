@@ -1,7 +1,7 @@
 package dev.zezula.books
 
 import dev.zezula.books.data.source.network.GoodreadsApi
-import dev.zezula.books.data.source.network.findBookOrNull
+import dev.zezula.books.data.source.network.findReviewsOrNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody
@@ -31,18 +31,18 @@ class GoodReads {
     @Before
     fun setupRepository() = runTest {
         goodreadsApi = Mockito.mock()
-        whenever(goodreadsApi.goodreadsBook(any())).thenAnswer {
+        whenever(goodreadsApi.goodreadsBookWithReviews(any())).thenAnswer {
             throw HttpException(Response.error<String>(400, ResponseBody.create(null, "Error")))
         }
     }
 
     @Test(expected = HttpException::class)
     fun mocked_api_throws_httpException() = runTest {
-        goodreadsApi.goodreadsBook("yyy")
+        goodreadsApi.goodreadsBookWithReviews("yyy")
     }
 
     @Test
     fun find_books_is_mapped_to_null_when_goodreads_throws_httpException() = runTest {
-        assertNull(goodreadsApi.findBookOrNull("xxx"))
+        assertNull(goodreadsApi.findReviewsOrNull("xxx"))
     }
 }

@@ -11,4 +11,7 @@ data class Work @JvmOverloads constructor(
 
     @field:Element(required = false)
     var text_reviews_count: Int? = null,
+
+    @field:Element(required = false)
+    var best_book: GoodreadsBook? = null,
 )

@@ -1,5 +1,6 @@
 package dev.zezula.books.data.source.network
 
+import dev.zezula.books.data.model.openLibrary.OpenLibraryBibKeyItem
 import dev.zezula.books.data.model.openLibrary.OpenLibraryIsbnResponse
 import dev.zezula.books.data.model.openLibrary.OpenLibrarySearchResponse
 import retrofit2.http.GET
@@ -14,4 +15,12 @@ interface OpenLibraryApi {
 
     @GET("/isbn/{isbn}.json")
     suspend fun searchByIsbn(@Path("isbn") isbn: String): OpenLibraryIsbnResponse?
+
+    // https://openlibrary.org/api/books?bibkeys=ISBN:9781401208417&jscmd=data&format=json
+    @GET("/api/books?jscmd=data&format=json")
+    suspend fun searchByBibKey(@Query("bibkeys") key: String): Map<String, OpenLibraryBibKeyItem>?
+}
+
+suspend fun OpenLibraryApi.searchByBibKeyIsbn(key: String): Map<String, OpenLibraryBibKeyItem>? {
+    return searchByBibKey("ISBN:$key")
 }

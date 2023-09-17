@@ -1,6 +1,5 @@
 package dev.zezula.books.data
 
-import dev.zezula.books.data.model.FindBookOnlineResponse
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +19,6 @@ interface BooksRepository {
     suspend fun addBook(bookFormData: BookFormData): Book
 
     suspend fun addOrUpdateBook(bookId: String, bookFormData: BookFormData): Book
-
-    suspend fun addBook(fetchBookNetworkResponse: FindBookOnlineResponse): Book?
 
     suspend fun deleteBook(bookId: String)
 

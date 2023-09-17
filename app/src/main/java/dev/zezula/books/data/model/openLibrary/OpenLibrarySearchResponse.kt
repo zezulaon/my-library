@@ -2,6 +2,8 @@ package dev.zezula.books.data.model.openLibrary
 
 import com.google.gson.annotations.SerializedName
 import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.util.openLibraryEditionKeyThumbnailUrl
+import dev.zezula.books.util.openLibraryIdThumbnailUrl
 
 data class OpenLibrarySearchResponse(
     val docs: List<Doc>? = null,
@@ -18,16 +20,16 @@ data class Doc(
 
 fun Doc.thumbnailUrl(): String? {
     return if (coverId != null) {
-        "https://covers.openlibrary.org/b/id/$coverId-M.jpg"
+        openLibraryIdThumbnailUrl(coverId)
     } else if (coverEditionKey != null) {
-        "https://covers.openlibrary.org/b/olid/$coverEditionKey-M.jpg"
+        openLibraryEditionKeyThumbnailUrl(coverEditionKey)
     } else {
         null
     }
 }
 
 fun Doc.toBookFormData(): BookFormData = BookFormData(
-    title = title,
+    title = title.orEmpty(),
     author = author?.firstOrNull(),
     pageCount = numberOfPages,
     thumbnailLink = thumbnailUrl(),
