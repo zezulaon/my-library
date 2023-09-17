@@ -1,13 +1,11 @@
 package dev.zezula.books.data
 
-import dev.zezula.books.data.model.FindBookOnlineResponse
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.fromNetworkBook
-import dev.zezula.books.data.model.goodreads.toBookFormData
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
@@ -113,17 +111,5 @@ class BooksRepositoryImpl(
     override suspend fun getBookId(isbn: String): String? {
         val dbBooks = booksDao.getForIsbn(isbn)
         return dbBooks.firstOrNull()?.id
-    }
-
-    override suspend fun addBook(fetchBookNetworkResponse: FindBookOnlineResponse): Book? {
-        // Search in GoodReads online DB
-        val goodReadsBook = fetchBookNetworkResponse.goodreadsBook
-        val bookFormData = goodReadsBook?.toBookFormData()
-        return if (bookFormData != null) {
-            val addedBook = addBook(bookFormData)
-            addedBook
-        } else {
-            null
-        }
     }
 }

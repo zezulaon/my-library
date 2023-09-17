@@ -1,7 +1,6 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
-import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -9,7 +8,6 @@ import timber.log.Timber
 
 class FindBookForIsbnOnlineUseCase(
     private val booksRepository: BooksRepository,
-    private val reviewsRepository: ReviewsRepository,
     private val onlineBookFinderService: OnlineBookFinderService,
 ) {
 
@@ -27,12 +25,12 @@ class FindBookForIsbnOnlineUseCase(
         val existingId = booksRepository.getBookId(isbn)
         if (existingId != null) return existingId
 
-        val response = onlineBookFinderService.findBookForIsbnOnline(isbn)
-        val addedBook = booksRepository.addBook(response)
-        if (addedBook != null) {
-            reviewsRepository.addReviews(addedBook, response)
+        val bookFormData = onlineBookFinderService.findBookForIsbnOnline(isbn)
+        return if (bookFormData != null) {
+            val addedBook = booksRepository.addBook(bookFormData)
+            addedBook.id
+        } else {
+            null
         }
-
-        return addedBook?.id
     }
 }

@@ -35,7 +35,6 @@ fun BookEntity.asExternalModel(): Book {
 
 fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
     checkNotNull(networkBook.id) { "Book needs [id] property" }
-    checkNotNull(networkBook.title) { "Book needs [title] property" }
     checkNotNull(networkBook.dateAdded) { "Book needs [dateAdded] property" }
     return BookEntity(
         id = networkBook.id,

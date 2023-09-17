@@ -43,19 +43,39 @@ data class GoodreadsBook @JvmOverloads constructor(
 
     @field:ElementList(required = false)
     var authors: List<Author>? = null,
+
+    @field:Element(required = false)
+    var author: Author? = null,
 )
 
 fun GoodreadsBook.toBookFormData(): BookFormData {
     return BookFormData(
         title = this.title ?: "",
-        author = this.authors.mapToAuthor(),
+        author = this.author(),
         publisher = this.publisher,
         yearPublished = this.publication_year?.toIntOrNull(),
-        thumbnailLink = this.image_url,
+        thumbnailLink = this.thumbnailUrl(),
         pageCount = this.num_pages,
         description = this.description?.trim(),
         isbn = this.isbn13 ?: this.isbn,
     )
+}
+
+fun GoodreadsBook.thumbnailUrl(): String? {
+    val tmpUrl = image_url
+    return if (tmpUrl != null && tmpUrl.contains("nophoto").not()) {
+        tmpUrl
+    } else {
+        null
+    }
+}
+
+private fun GoodreadsBook.author(): String? {
+    return if (authors.isNullOrEmpty().not()) {
+        this.authors?.mapToAuthor()
+    } else {
+        this.author?.name
+    }
 }
 
 private fun List<Author>?.mapToAuthor(): String? {

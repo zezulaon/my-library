@@ -8,4 +8,7 @@ data class GoodreadsResponse @JvmOverloads constructor(
 
     @field:Element(required = false)
     var book: GoodreadsBook? = null,
+
+    @field:Element(required = false)
+    var search: Search? = null,
 )

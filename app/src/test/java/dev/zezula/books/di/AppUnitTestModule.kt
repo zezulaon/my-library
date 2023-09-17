@@ -62,7 +62,7 @@ val appUnitTestModule = module {
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
-    single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
+    single { FindBookForIsbnOnlineUseCase(get(), get()) }
     single { GetBooksUseCase(get()) }
     single { AddOrUpdateBookUseCase(get()) }
 
