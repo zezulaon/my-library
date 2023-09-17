@@ -35,6 +35,8 @@ fun MyLibraryNavHost(
                 onSignInSuccess = { navController.navigateFromOnboardingToHome() },
                 onGoogleSignIn = { navController.navigateToGoogleSignIn() },
                 // Get same ViewModel as in main activity
+                onContactClicked = { navController.navigateToContactEmailDraft() },
+                onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 viewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
             )
         }
@@ -46,6 +48,8 @@ fun MyLibraryNavHost(
                 onFindBookOnlineClick = { navController.navigateToFindBookOnline() },
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
+                onContactClicked = { navController.navigateToContactEmailDraft() },
+                onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 viewModel = koinViewModel(),
             )
         }

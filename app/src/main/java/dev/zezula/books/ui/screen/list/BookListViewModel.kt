@@ -32,6 +32,7 @@ class BookListViewModel(
     private val _selectedShelf = MutableStateFlow<Shelf?>(null)
     private val _managedShelvesClicked = MutableStateFlow(false)
     private val _addBookSheetOpened = MutableStateFlow(false)
+    private val _moreDialogDisplayed = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val booksForShelf: Flow<Response<List<Book>>> = _selectedShelf
@@ -47,15 +48,17 @@ class BookListViewModel(
             _selectedShelf,
             _managedShelvesClicked,
             _addBookSheetOpened,
+            _moreDialogDisplayed,
             booksForShelf,
             shelves,
-        ) { errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, books, shelves ->
+        ) { errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, moreDialogDisplayed, books, shelves ->
             BookListUiState(
                 books = books.getOrDefault(emptyList()),
                 shelves = shelves.getOrDefault(emptyList()),
                 selectedShelf = selectedShelfId,
                 managedShelvesClicked = managedShelvesClicked,
                 addBookSheetOpened = addBookSheetOpened,
+                moreDialogDisplayed = moreDialogDisplayed,
                 errorMessage = errorMsg,
             )
         }
@@ -110,5 +113,13 @@ class BookListViewModel(
 
     fun onAddBookSheetDismissRequest() {
         _addBookSheetOpened.value = false
+    }
+
+    fun onMoreClicked() {
+        _moreDialogDisplayed.value = true
+    }
+
+    fun onAboutDialogDismissRequest() {
+        _moreDialogDisplayed.value = false
     }
 }

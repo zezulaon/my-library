@@ -10,4 +10,5 @@ data class BookListUiState(
     val selectedShelf: Shelf? = null,
     val managedShelvesClicked: Boolean = false,
     val addBookSheetOpened: Boolean = false,
+    val moreDialogDisplayed: Boolean = false,
 )

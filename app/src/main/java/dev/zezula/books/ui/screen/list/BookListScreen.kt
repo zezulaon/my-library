@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomSheetDefaults
@@ -57,6 +58,7 @@ import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.ui.screen.about.AboutDialog
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.homeAppBar
 import dev.zezula.books.util.homeBtnAddBook
@@ -75,6 +77,8 @@ fun BookListRoute(
     onScanBookClick: () -> Unit,
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
+    onContactClicked: () -> Unit,
+    onReleaseNotesClicked: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -138,6 +142,14 @@ fun BookListRoute(
             scope.launch { drawerState.close() }
             viewModel.onShelfSelected(it)
         },
+        onMoreClicked = {
+            viewModel.onMoreClicked()
+        },
+        onAboutDialogDismissRequested = {
+            viewModel.onAboutDialogDismissRequest()
+        },
+        onContactClicked = onContactClicked,
+        onReleaseNotesClicked = onReleaseNotesClicked,
     )
 }
 
@@ -155,12 +167,23 @@ fun BookListScreen(
     onManageShelvesClick: () -> Unit,
     onAllBooksClick: () -> Unit,
     onShelfClick: (Shelf) -> Unit,
+    onMoreClicked: () -> Unit,
+    onReleaseNotesClicked: () -> Unit,
+    onContactClicked: () -> Unit,
+    onAboutDialogDismissRequested: () -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
+    if (uiState.moreDialogDisplayed) {
+        AboutDialog(
+            onDismissRequested = onAboutDialogDismissRequested,
+            onContactUsClicked = onContactClicked,
+            onReleaseNotesClicked = onReleaseNotesClicked,
+        )
+    }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -175,7 +198,7 @@ fun BookListScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             modifier = modifier,
-            topBar = { BookListTopAppBar(uiState = uiState) },
+            topBar = { BookListTopAppBar(uiState = uiState, onMoreClicked = onMoreClicked) },
             bottomBar = {
                 BookListBottomBar(
                     onAddBookClick = onAddBookClick,
@@ -266,6 +289,7 @@ private fun AddBookBottomSheet(
 @Composable
 private fun BookListTopAppBar(
     uiState: BookListUiState,
+    onMoreClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
@@ -275,6 +299,11 @@ private fun BookListTopAppBar(
         ),
         title = {
             Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
+        },
+        actions = {
+            IconButton(onClick = onMoreClicked) {
+                Icon(Icons.Filled.MoreVert, contentDescription = null)
+            }
         },
     )
 }
@@ -340,6 +369,10 @@ fun PreviewBookListScreen() {
             onAllBooksClick = {},
             onShelfClick = {},
             onAddBookSheetCloseRequested = {},
+            onMoreClicked = {},
+            onReleaseNotesClicked = {},
+            onContactClicked = {},
+            onAboutDialogDismissRequested = {},
         )
     }
 }
