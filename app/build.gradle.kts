@@ -36,6 +36,18 @@ android {
             name = "ML_FIREBASE_CLIENT_ID",
             value = getStringProperty("myLibrary.firebaseClientId", true),
         )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_CONTACT_EMAIL",
+            value = getStringProperty("myLibrary.contactEmail", true),
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_URL_RELEASE_INFO",
+            value = getStringProperty("myLibrary.releaseInfo", true),
+        )
     }
 
     signingConfigs {

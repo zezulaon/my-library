@@ -1,14 +1,11 @@
 package dev.zezula.books.ui.screen.signin
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -22,12 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.ui.screen.about.AboutCard
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
@@ -35,6 +32,8 @@ fun SignInRoute(
     viewModel: SignInViewModel,
     onSignInSuccess: () -> Unit,
     onGoogleSignIn: () -> Unit,
+    onContactClicked: () -> Unit,
+    onReleaseNotesClicked: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,15 +63,18 @@ fun SignInRoute(
         onAnonymousSignInClick = {
             viewModel.signInAnonymously()
         },
+        onContactClicked = onContactClicked,
+        onReleaseNotesClicked = onReleaseNotesClicked,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
     uiState: SignInUiState,
     onGoogleSignInClick: () -> Unit,
     onAnonymousSignInClick: () -> Unit,
+    onContactClicked: () -> Unit,
+    onReleaseNotesClicked: () -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -99,10 +101,9 @@ fun SignInScreen(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Image(
-                        modifier = Modifier.size(300.dp),
-                        painter = painterResource(id = R.drawable.image_logo),
-                        contentDescription = null,
+                    AboutCard(
+                        onContactUsClicked = onContactClicked,
+                        onReleaseNotesClicked = onReleaseNotesClicked,
                     )
                 }
                 Box(
@@ -144,6 +145,8 @@ private fun DefaultPreview() {
             uiState = SignInUiState(isSignInProgress = false),
             onGoogleSignInClick = {},
             onAnonymousSignInClick = {},
+            onContactClicked = {},
+            onReleaseNotesClicked = {},
         )
     }
 }

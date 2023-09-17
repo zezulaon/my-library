@@ -109,7 +109,16 @@
     <string name="find_book_online_title">Find Book Online</string>
     <string name="find_book_search_placeholder">Search by title, isbn or keywords…</string>
 
+    <!-- About dialog -->
+    <string name="about_changes_title">Latest Changes and Release Notes</string>
+    <string name="about_changes_desc">The app is currently undergoing a major update to enhance functionality. For detailed information, please check the \"Release Notes.\" If you have any questions or concerns, don\'t hesitate to contact us. Thank you for your patience and understanding.</string>
+    <string name="about_btn_release_notes">Release Notes</string>
+    <string name="about_btn_contact">Contact Us</string>
+
     <!-- Generic errors -->
     <string name="error_failed_get_data">Failed to load data</string>
+    <string name="error_message_no_email_client">No email app found.</string>
+    <string name="error_message_no_browser">No internet browser app found.</string>
+    <string name="error_email_contact_subject">My Library Assistance request.</string>
 
 </resources>

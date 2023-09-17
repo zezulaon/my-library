@@ -2,7 +2,10 @@ package dev.zezula.books.ui
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.navigation.NavHostController
+import dev.zezula.books.BuildConfig
+import dev.zezula.books.R
 import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.Destinations.bookListRoute
@@ -112,5 +115,35 @@ fun NavHostController.navigateToReviewDetail(reviewLink: String) {
 fun NavHostController.navigateToGoogleSignIn() {
     context.findMyLibraryMainActivity().apply {
         beginGoogleSignIn()
+    }
+}
+
+fun NavHostController.navigateToContactEmailDraft() {
+    val to = BuildConfig.ML_CONTACT_EMAIL
+    val subjectPrefix = context.getString(R.string.error_email_contact_subject)
+    val subjectFull = "$subjectPrefix (${BuildConfig.APPLICATION_ID}:${BuildConfig.VERSION_CODE})"
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:") // ensures only email apps should handle this
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
+        putExtra(Intent.EXTRA_SUBJECT, subjectFull)
+    }
+
+    if (intent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(intent)
+    } else {
+        Timber.w("No email client found")
+        Toast.makeText(context, context.getString(R.string.error_message_no_email_client), Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun NavHostController.navigateToReleaseNotes() {
+    val releaseInfoUrl = BuildConfig.ML_URL_RELEASE_INFO
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseInfoUrl))
+
+    if (intent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(intent)
+    } else {
+        Timber.w("No browser client found")
+        Toast.makeText(context, context.getString(R.string.error_message_no_browser), Toast.LENGTH_SHORT).show()
     }
 }
