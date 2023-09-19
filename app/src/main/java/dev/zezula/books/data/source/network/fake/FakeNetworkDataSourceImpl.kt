@@ -7,6 +7,7 @@ import dev.zezula.books.data.model.note.previewNotes
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.previewShelves
+import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.network.NetworkDataSource
 
 open class FakeNetworkDataSourceImpl : NetworkDataSource {
@@ -74,6 +75,14 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return shelvesMap.values.toList()
     }
 
+    override suspend fun getMigrationData(): NetworkMigrationData {
+        return NetworkMigrationData()
+    }
+
+    override suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData) {
+        // Not used in this fake
+    }
+
     override suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook> {
         // Starts without any book<->shelf connection
         return emptyList()
@@ -94,5 +103,9 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
         return notesMap.values.filter { it.bookId == bookId }
+    }
+
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+        TODO("Not yet implemented")
     }
 }

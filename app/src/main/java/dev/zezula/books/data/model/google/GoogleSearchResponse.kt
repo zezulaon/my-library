@@ -34,6 +34,10 @@ data class ImageLinks(
     val thumbnail: String? = null,
 )
 
+fun VolumeInfo.thumbnailUrl(): String? {
+    return imageLinks?.thumbnail?.replace("http://", "https://")
+}
+
 fun GoogleSearchItem.toBookFormData(): BookFormData {
     val book = this.volumeInfo
     val yearPublished = book?.publishedDate?.take(4)?.toIntOrNull()
@@ -47,7 +51,7 @@ fun GoogleSearchItem.toBookFormData(): BookFormData {
         author = book?.authors?.joinToString(separator = ", "),
         publisher = book?.publisher,
         yearPublished = yearPublished,
-        thumbnailLink = book?.imageLinks?.thumbnail?.replace("http://", "https://"),
+        thumbnailLink = book?.thumbnailUrl(),
         pageCount = positivePageCount,
         description = book?.description?.trim(),
         isbn = isbn,

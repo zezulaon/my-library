@@ -20,6 +20,12 @@ class UserRepositoryImpl : UserRepository {
         val userId = Firebase.auth.currentUser?.uid ?: return
 
         val valuesMap = mapOf(FIELD_LAST_SIGNED_IN_DATE to lastSignedInDate)
-        Firebase.firestore.collection(COLLECTION_ID_USERS).document(userId).set(valuesMap).await()
+        val userDocument = Firebase.firestore.collection(COLLECTION_ID_USERS).document(userId)
+        val userDocumentExists = userDocument.get().await().exists()
+        if (userDocumentExists) {
+            userDocument.update(valuesMap).await()
+        } else {
+            userDocument.set(valuesMap).await()
+        }
     }
 }

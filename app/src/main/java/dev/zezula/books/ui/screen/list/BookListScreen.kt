@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -73,6 +74,8 @@ import dev.zezula.books.R
 import dev.zezula.books.data.SortBooksBy
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.domain.MigrationProgress
+import dev.zezula.books.domain.MigrationType
 import dev.zezula.books.ui.screen.about.AboutDialog
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.screen.signin.SignInUiState
@@ -135,7 +138,7 @@ fun BookListRoute(
 
     signUiState.uiMessage?.let { msg ->
         val text = stringResource(msg)
-        LaunchedEffect(snackbarHostState, viewModel, msg, text, uiState) {
+        LaunchedEffect(snackbarHostState, viewModel, msg, text, signUiState) {
             snackbarHostState.showSnackbar(text)
             signInViewModel.snackbarMessageShown()
         }
@@ -287,10 +290,15 @@ fun BookListScreen(
                     .fillMaxWidth()
                     .padding(innerPadding),
             ) {
-                if (signUiState.isSignInProgress) {
+                if (signUiState.isSignInProgress || uiState.migrationProgress != null) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
+
                 Column {
+                    if (uiState.migrationProgress != null) {
+                        MigrationCard(uiState.migrationProgress)
+                    }
+
                     if (signUiState.anonymUpgradeRequired) {
                         UpgradeAnonymCard(
                             signUiState = signUiState,
@@ -321,6 +329,50 @@ fun BookListScreen(
                     bottomSheetState,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun MigrationCard(progress: MigrationProgress) {
+
+    val title = when (progress.type) {
+        MigrationType.BOOKS -> "Importing Books"
+        MigrationType.SHELVES -> "Importing Shelves"
+        MigrationType.GROUPING -> "Updating Shelves"
+        MigrationType.COMMENTS -> "Updating Comments and Quotations"
+    }
+    val progressValue = if (progress.total == 0) {
+        "Please wait..."
+    } else {
+        "${progress.current}/${progress.total}"
+    }
+
+    Card(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.CenterHorizontally),
+                imageVector = Icons.Rounded.Info,
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier.padding(top = 0.dp),
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                modifier = Modifier.padding(top = 0.dp),
+                text = progressValue,
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
@@ -602,7 +654,16 @@ private fun AddBookButton(onButtonClick: () -> Unit) {
 fun PreviewBookListScreen() {
     MyLibraryTheme {
         BookListScreen(
-            uiState = BookListUiState(books = previewBooks, DrawerNavigationState(), SortingState()),
+            uiState = BookListUiState(
+                books = previewBooks,
+                drawerNavigation = DrawerNavigationState(),
+                sorting = SortingState(),
+                migrationProgress = MigrationProgress(
+                    type = MigrationType.BOOKS,
+                    current = 1,
+                    total = 10,
+                )
+            ),
             signUiState = SignInUiState(),
         )
     }

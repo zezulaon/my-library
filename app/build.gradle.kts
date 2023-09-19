@@ -13,7 +13,7 @@ android {
     buildToolsVersion = "34.0.0"
 
     defaultConfig {
-        applicationId = "dev.zezula.books"
+        applicationId = "org.zezula.bookdiary"
         minSdk = 23
         targetSdk = 33
         versionCode = 301

@@ -97,4 +97,7 @@ interface BookDao {
 
     @Query("DELETE FROM books")
     suspend fun deleteAll()
+
+    @Query("UPDATE books SET thumbnailLink = :thumbnailLink WHERE id = :bookId")
+    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
 }

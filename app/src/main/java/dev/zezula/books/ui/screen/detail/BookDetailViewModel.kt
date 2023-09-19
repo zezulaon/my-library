@@ -15,6 +15,7 @@ import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.FetchSuggestionsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
+import dev.zezula.books.domain.RefreshBookCoverUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
@@ -39,6 +40,7 @@ class BookDetailViewModel(
     private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
+    private val refreshBookCoverUseCase: RefreshBookCoverUseCase,
     savedStateHandle: SavedStateHandle,
     getAllBookDetailUseCase: GetAllBookDetailUseCase,
 ) : ViewModel() {
@@ -131,6 +133,7 @@ class BookDetailViewModel(
     init {
         Timber.d("init{}")
         Timber.d("Received bookId: $bookId")
+        fetchBookCover()
     }
 
     fun fetchReviews() {
@@ -138,6 +141,12 @@ class BookDetailViewModel(
             _isReviewsSearchInProgress.value = true
             checkReviewsDownloadedUseCase(bookId)
             _isReviewsSearchInProgress.value = false
+        }
+    }
+
+    private fun fetchBookCover() {
+        viewModelScope.launch {
+            refreshBookCoverUseCase(bookId)
         }
     }
 

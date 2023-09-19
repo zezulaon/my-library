@@ -17,4 +17,8 @@ class FakeOnlineBookFinderServiceImpl : OnlineBookFinderService {
     override suspend fun findBookForQueryOnline(query: String): List<BookFormData> {
         return emptyList()
     }
+
+    override suspend fun findBookCoverLinkForIsbn(isbn: String): String? {
+        return null
+    }
 }

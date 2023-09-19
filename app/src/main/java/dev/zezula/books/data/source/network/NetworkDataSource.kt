@@ -4,8 +4,15 @@ import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
+import dev.zezula.books.data.model.user.NetworkMigrationData
 
 interface NetworkDataSource {
+
+    suspend fun getMigrationData(): NetworkMigrationData
+
+    suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData)
+
+    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
 
     suspend fun getBooks(): List<NetworkBook>
 

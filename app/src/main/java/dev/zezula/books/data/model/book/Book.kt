@@ -41,6 +41,10 @@ data class BookFormData(
     val thumbnailLink: String? = null,
     val userRating: Int? = null,
     val dateAdded: String? = null,
+    // Subject is legacy property from older version of the app. It's not used right now.
+    val subject: String? = null,
+    // Binding is legacy property from older version of the app. It's not used right now.
+    val binding: String? = null,
 )
 
 fun BookFormData.asNetworkBook(id: String): NetworkBook {
