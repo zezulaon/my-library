@@ -13,4 +13,5 @@ data class NetworkBook(
     val yearPublished: Int? = null,
     val pageCount: Int? = null,
     val thumbnailLink: String? = null,
+    val userRating: Int? = null,
 )

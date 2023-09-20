@@ -13,6 +13,7 @@ data class Book(
     val yearPublished: Int? = null,
     val pageCount: Int? = null,
     val thumbnailLink: String? = null,
+    val userRating: Int? = null,
     val dateAdded: String,
 ) {
     val dateAddedFormatted: String =
@@ -28,6 +29,8 @@ data class BookFormData(
     val yearPublished: Int? = null,
     val pageCount: Int? = null,
     val thumbnailLink: String? = null,
+    val userRating: Int? = null,
+    val dateAdded: String? = null,
 )
 
 /**
@@ -72,6 +75,7 @@ val previewBooks = listOf(
         yearPublished = 2001,
         pageCount = 152,
         thumbnailLink = null,
+        userRating = 4,
         dateAdded = "2023-01-05T17:43:25.629",
     ),
     Book(
@@ -84,6 +88,7 @@ val previewBooks = listOf(
         yearPublished = 2001,
         pageCount = 152,
         thumbnailLink = null,
+        userRating = 4,
         dateAdded = "2023-01-05T17:43:25.629",
     ),
 )

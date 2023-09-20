@@ -58,6 +58,7 @@
 
     <string name="detail_label_rated">Rated</string>
     <string name="detail_label_rating_reviews_count">%1s ratings and %2s reviews</string>
+    <string name="detail_label_your_rating">Your Rating</string>
 
     <string name="detail_failed_to_delete">An error has occurred - the book wasn\'t deleted.</string>
     <string name="detail_failed_to_update_shelf">An error has occurred - the shelf wasn\'t updated.</string>

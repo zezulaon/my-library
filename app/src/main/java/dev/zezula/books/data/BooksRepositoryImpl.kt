@@ -56,11 +56,12 @@ class BooksRepositoryImpl(
             author = bookFormData.author,
             isbn = bookFormData.isbn,
             description = bookFormData.description,
-            dateAdded = LocalDateTime.now().toString(),
+            dateAdded = bookFormData.dateAdded ?: LocalDateTime.now().toString(),
             publisher = bookFormData.publisher,
             thumbnailLink = bookFormData.thumbnailLink,
             yearPublished = bookFormData.yearPublished,
             pageCount = bookFormData.pageCount,
+            userRating = bookFormData.userRating,
         )
         networkDataSource.addOrUpdateBook(networkBook)
 

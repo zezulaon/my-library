@@ -54,6 +54,10 @@ android {
             name = "ML_URL_RELEASE_INFO",
             value = getStringProperty("myLibrary.releaseInfo", true),
         )
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     signingConfigs {
