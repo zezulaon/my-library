@@ -30,6 +30,37 @@ data class BookFormData(
     val thumbnailLink: String? = null,
 )
 
+/**
+ * Returns true if book has all important data set to non null values
+ */
+fun BookFormData.isComplete(): Boolean {
+    return title != null &&
+        author != null &&
+        isbn != null &&
+        publisher != null &&
+        yearPublished != null &&
+        pageCount != null &&
+        thumbnailLink != null
+}
+
+/**
+ * Returns new copy of the book that has all null values replaced by the values from the [other] book.
+ * @param other Book to copy non null values from
+ */
+fun BookFormData.updateNullValues(other: BookFormData?): BookFormData {
+    if (other == null) return this
+    return BookFormData(
+        title = title ?: other.title,
+        author = author ?: other.author,
+        description = description ?: other.description,
+        isbn = isbn ?: other.isbn,
+        publisher = publisher ?: other.publisher,
+        yearPublished = yearPublished ?: other.yearPublished,
+        pageCount = pageCount ?: other.pageCount,
+        thumbnailLink = thumbnailLink ?: other.thumbnailLink,
+    )
+}
+
 val previewBooks = listOf(
     Book(
         id = "1",

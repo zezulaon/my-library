@@ -14,6 +14,7 @@ import dev.zezula.books.data.source.network.AuthService
 import dev.zezula.books.data.source.network.AuthServiceImpl
 import dev.zezula.books.data.source.network.FirestoreDataSource
 import dev.zezula.books.data.source.network.GoodreadsApi
+import dev.zezula.books.data.source.network.GoogleApi
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
@@ -63,7 +64,14 @@ val appModule = module {
             .build()
             .create(OpenLibraryApi::class.java)
     }
-    single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get()) }
+    single<GoogleApi> {
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://www.googleapis.com/")
+            .build()
+            .create(GoogleApi::class.java)
+    }
+    single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
 
     // Database and DAOs
