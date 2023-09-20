@@ -3,6 +3,7 @@ package dev.zezula.books.data.model.shelf
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.Index
 import dev.zezula.books.data.model.book.BookEntity
 
 // https://sqlite.org/foreignkeys.html
@@ -14,6 +15,10 @@ import dev.zezula.books.data.model.book.BookEntity
     foreignKeys = [
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
         ForeignKey(entity = ShelfEntity::class, parentColumns = ["id"], childColumns = ["shelfId"], onDelete = CASCADE),
+    ],
+    indices = [
+        Index(value = ["shelfId"]),
+        Index(value = ["bookId"]),
     ],
 )
 data class ShelfWithBookEntity(

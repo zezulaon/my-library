@@ -15,6 +15,7 @@ data class BookEntity(
     val publisher: String? = null,
     val yearPublished: Int? = null,
     val thumbnailLink: String? = null,
+    val userRating: Int? = null,
     val pageCount: Int? = null,
 )
 
@@ -30,6 +31,7 @@ fun BookEntity.asExternalModel(): Book {
         yearPublished = this.yearPublished,
         pageCount = this.pageCount,
         thumbnailLink = this.thumbnailLink,
+        userRating = this.userRating,
     )
 }
 
@@ -47,6 +49,7 @@ fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
         yearPublished = networkBook.yearPublished,
         pageCount = networkBook.pageCount,
         thumbnailLink = networkBook.thumbnailLink,
+        userRating = networkBook.userRating,
     )
 }
 

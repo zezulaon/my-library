@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -17,8 +18,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.ui.screen.components.UserRatingComponent
+import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.createBookInputAuthor
 import dev.zezula.books.util.createBookInputDesc
 import dev.zezula.books.util.createBookInputIsbn
@@ -38,6 +43,7 @@ internal fun InputDataForm(
     onPublisherValueChanged: (String) -> Unit,
     onYearPublishedValueChanged: (String) -> Unit,
     onPageCountValueChanged: (String) -> Unit,
+    onRatingStarSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val enabled = uiState.isInProgress.not()
@@ -118,6 +124,13 @@ internal fun InputDataForm(
             label = { Text(stringResource(R.string.create_book_label_isbn)) },
         )
 
+        UserRatingComponent(
+            userRating = uiState.bookFormData.userRating,
+            onRatingStarSelected = onRatingStarSelected,
+            modifier = Modifier
+                .padding(top = 16.dp),
+        )
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,6 +141,30 @@ internal fun InputDataForm(
             enabled = enabled,
             onValueChange = { newValue -> onDescValueChanged(newValue) },
             label = { Text(stringResource(R.string.create_book_label_desc)) },
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FormPreview() {
+    MyLibraryTheme {
+        InputDataForm(
+            uiState = CreateBookUiState(
+                BookFormData(
+                    title = "Hobit",
+                    author = "J. R. R. Tolkien",
+                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing e aliquip ex ea commodo consuat.",
+                ),
+            ),
+            onTitleValueChanged = {},
+            onDescValueChanged = {},
+            onIsbnValueChanged = {},
+            onAuthorValueChanged = {},
+            onPublisherValueChanged = {},
+            onPageCountValueChanged = {},
+            onYearPublishedValueChanged = {},
+            onRatingStarSelected = {},
         )
     }
 }

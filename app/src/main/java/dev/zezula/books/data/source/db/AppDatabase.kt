@@ -1,5 +1,6 @@
 package dev.zezula.books.data.source.db
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.DatabaseConfiguration
 import androidx.room.RoomDatabase
@@ -18,7 +19,11 @@ import timber.log.Timber
         ShelfEntity::class,
         ShelfWithBookEntity::class,
     ],
-    version = 1,
+    version = 2,
+    // https://developer.android.com/training/data-storage/room/migrating-db-versions
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 abstract class AppDatabase : RoomDatabase() {
 

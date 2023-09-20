@@ -76,6 +76,7 @@ fun CreateBookRoute(
         onPublisherValueChanged = { viewModel.updatePublisher(it) },
         onYearPublishedValueChanged = { viewModel.updateYearPublished(it) },
         onPageCountValueChanged = { viewModel.updatePageCount(it) },
+        onRatingStarSelected = { viewModel.updateRating(it) },
     )
 }
 
@@ -93,6 +94,7 @@ fun CreateBookScreen(
     onPublisherValueChanged: (String) -> Unit,
     onYearPublishedValueChanged: (String) -> Unit,
     onPageCountValueChanged: (String) -> Unit,
+    onRatingStarSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -150,6 +152,7 @@ fun CreateBookScreen(
                 onPublisherValueChanged = onPublisherValueChanged,
                 onYearPublishedValueChanged = onYearPublishedValueChanged,
                 onPageCountValueChanged = onPageCountValueChanged,
+                onRatingStarSelected = onRatingStarSelected,
             )
         }
     }
@@ -177,6 +180,7 @@ fun DefaultPreview() {
             onPublisherValueChanged = {},
             onPageCountValueChanged = {},
             onYearPublishedValueChanged = {},
+            onRatingStarSelected = {},
         )
     }
 }

@@ -83,6 +83,9 @@ class CreateBookViewModel(
                         yearPublished = book.yearPublished,
                         pageCount = book.pageCount,
                         description = book.description,
+                        thumbnailLink = book.thumbnailLink,
+                        userRating = book.userRating,
+                        dateAdded = book.dateAdded,
                     )
                 }
 
@@ -138,5 +141,9 @@ class CreateBookViewModel(
     fun updatePageCount(updatedPageCount: String) {
         val pageCount: Int? = updatedPageCount.toIntOrNull()
         _bookFormData.update { it.copy(pageCount = pageCount) }
+    }
+
+    fun updateRating(rating: Int) {
+        _bookFormData.update { it.copy(userRating = rating) }
     }
 }

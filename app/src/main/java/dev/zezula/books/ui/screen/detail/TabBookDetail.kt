@@ -19,9 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.shelf.ShelfForBook
+import dev.zezula.books.ui.screen.components.UserRatingComponent
 import dev.zezula.books.ui.screen.list.ImageThumbnail
+import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
 fun TabBookDetail(
@@ -85,6 +90,16 @@ fun TabBookDetail(
             }
         }
 
+        uiState.book?.userRating?.let { rating ->
+            ElevatedCard(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth(),
+            ) {
+                UserRatingComponent(userRating = rating, modifier = Modifier.padding(16.dp))
+            }
+        }
+
         uiState.book?.description?.let { description ->
             ElevatedCard(
                 modifier = Modifier
@@ -108,5 +123,32 @@ private fun BookCoverItem(
     Column(modifier = modifier) {
         Text(text = stringResource(id = labelRes), style = MaterialTheme.typography.labelLarge)
         Text(text = value)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabDetailPreview() {
+    MyLibraryTheme {
+        TabBookDetail(
+            uiState = BookDetailUiState(
+                selectedTab = DetailTab.Detail,
+                shelves = listOf(ShelfForBook("1", "Test", true)),
+                isBookDeleted = false,
+                book = Book(
+                    id = "id",
+                    title = "Title",
+                    author = "Tolkien",
+                    description = "Desc",
+                    isbn = "545454",
+                    publisher = "",
+                    yearPublished = 1989,
+                    pageCount = 565,
+                    thumbnailLink = null,
+                    userRating = 5,
+                    dateAdded = "2023-01-05T17:43:25.629",
+                ),
+            ),
+        )
     }
 }
