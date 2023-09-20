@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.network
 import dev.zezula.books.data.model.openLibrary.OpenLibraryBibKeyItem
 import dev.zezula.books.data.model.openLibrary.OpenLibraryIsbnResponse
 import dev.zezula.books.data.model.openLibrary.OpenLibrarySearchResponse
+import dev.zezula.books.data.model.openLibrary.containsIsbn
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -21,6 +22,9 @@ interface OpenLibraryApi {
     suspend fun searchByBibKey(@Query("bibkeys") key: String): Map<String, OpenLibraryBibKeyItem>?
 }
 
-suspend fun OpenLibraryApi.searchByBibKeyIsbn(key: String): Map<String, OpenLibraryBibKeyItem>? {
-    return searchByBibKey("ISBN:$key")
+suspend fun OpenLibraryApi.searchByBibKeyIsbn(key: String): OpenLibraryBibKeyItem? {
+    return searchByBibKey("ISBN:$key")?.values?.firstOrNull { bibKeyItem ->
+        // Check if the isbn is in the list of identifiers
+        bibKeyItem.containsIsbn(key)
+    }
 }

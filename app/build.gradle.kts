@@ -33,6 +33,12 @@ android {
 
         buildConfigField(
             type = "String",
+            name = "ML_GOOGLE_API_KEY",
+            value = getStringProperty("myLibrary.googleApiKey", true),
+        )
+
+        buildConfigField(
+            type = "String",
             name = "ML_FIREBASE_CLIENT_ID",
             value = getStringProperty("myLibrary.firebaseClientId", true),
         )
