@@ -1,6 +1,5 @@
 package dev.zezula.books.data.source.network
 
-import dev.zezula.books.data.model.FindBookOnlineResponse
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.isComplete
 import dev.zezula.books.data.model.book.updateNullValues
@@ -60,10 +59,17 @@ class OnlineBookFinderServiceImpl(
         return goodreadsApi.findReviewsOrNull(isbn)
     }
 
-    override suspend fun findBookForQueryOnline(query: String): FindBookOnlineResponse {
+    override suspend fun findBookForQueryOnline(query: String): List<BookFormData> {
+        val googleBooksSearchResponse = googleApi.searchByQuery(query)
+        val googleBookFormDataList = googleBooksSearchResponse.take(10).map { it.toBookFormData() }
+        val result = mutableListOf<BookFormData>()
+        result.addAll(googleBookFormDataList)
+
         val openLibrarySearchResponse = openLibraryApi.searchByQuery(query)
-        return FindBookOnlineResponse(
-            openLibrary = openLibrarySearchResponse,
-        )
+        val openLibraryBookFormDataList: Collection<BookFormData> =
+            openLibrarySearchResponse?.docs?.take(10)?.map { it.toBookFormData() } ?: emptyList()
+        result.addAll(openLibraryBookFormDataList)
+
+        return result
     }
 }

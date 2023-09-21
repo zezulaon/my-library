@@ -38,7 +38,7 @@ fun GoogleSearchItem.toBookFormData(): BookFormData {
     val book = this.volumeInfo
     val yearPublished = book?.publishedDate?.take(4)?.toIntOrNull()
     val positivePageCount = book?.pageCount?.takeIf { it > 0 }
-    val isbn = book?.industryIdentifiers?.last()?.identifier
+    val isbn = book?.industryIdentifiers?.firstOrNull { (it.type == "ISBN_13" || it.type == "ISBN_10") }?.identifier
     return BookFormData(
         title = book?.title,
         author = book?.authors?.joinToString(separator = ", "),
