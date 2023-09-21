@@ -7,6 +7,7 @@
 
     <string name="screen_detail_tab_shelves">Shelves</string>
     <string name="screen_detail_tab_book">Detail</string>
+    <string name="screen_detail_tab_notes">Notes</string>
     <string name="screen_detail_tab_reviews">Reviews</string>
 
     <string name="btn_google_sign_in">Sign in with Google</string>
@@ -68,6 +69,17 @@
     <string name="detail_btn_confirm_delete">Delete</string>
     <string name="detail_btn_cancel_delete">Cancel</string>
 
+    <string name="detail_title_add_note">Add a New Note</string>
+    <string name="detail_title_edit_note">Edit the Note</string>
+    <string name="detail_notes_dialog_btn_cancel">Cancel</string>
+    <string name="detail_notes_dialog_btn_update">Update</string>
+    <string name="detail_notes_dialog_btn_save">Save</string>
+    <string name="detail_notes_btn_remove">Delete</string>
+    <string name="detail_notes_btn_edit">Edit</string>
+    <string name="detail_failed_to_create_note">An error has occurred - the note wasn\'t created.</string>
+    <string name="detail_failed_to_update_note">An error has occurred - the note wasn\'t updated.</string>
+    <string name="detail_failed_to_delete_note">An error has occurred - the note wasn\'t deleted.</string>
+
     <!-- Manage Shelves -->
     <string name="shelves_dialog_title_add">Add a New Shelf</string>
     <string name="shelves_dialog_title_edit">Edit the Shelf</string>
@@ -102,6 +114,7 @@
     <string name="content_desc_edit">Edit</string>
     <string name="content_desc_delete">Delete</string>
     <string name="content_add_new_shelf">New Shelf</string>
+    <string name="content_add_new_note">New Note</string>
     <string name="content_open_drawer">Open Navigation Drawer</string>
     <string name="content_open_drawer_menu">Open Drawer Menu</string>
 

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.review.Review
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.ui.theme.MyLibraryTheme
@@ -76,16 +77,18 @@ fun BookDetailRoute(
             onEditBookClick(id)
         },
         onDeleteClick = { viewModel.deleteBookRequested() },
+        onNoteDeleteClick = { viewModel.deleteNote(it) },
+        onNoteEditClick = { viewModel.editNoteRequested(it) },
         onDeleteConfirmClick = { viewModel.deleteBookConfirmed() },
         onDeleteDialogDismissed = { viewModel.dismissDeleteDialog() },
         onNewShelfClick = onNewShelfClick,
+        onNewNoteClick = { viewModel.createNoteRequested() },
+        onNoteDialogDismissed = { viewModel.dismissNoteDialog() },
+        onNoteDialogSaveClick = { text -> viewModel.createNote(text) },
+        onNoteDialogUpdateClick = { note, text -> viewModel.updateNote(note, text) },
         onReviewClick = onReviewClick,
-        onShelfCheckedChange = { shelf, isChecked ->
-            viewModel.onShelfCheckChange(shelf, isChecked)
-        },
-        onTabClick = {
-            viewModel.onTabClick(it)
-        },
+        onShelfCheckedChange = { shelf, isChecked -> viewModel.onShelfCheckChange(shelf, isChecked) },
+        onTabClick = { viewModel.onTabClick(it) },
     )
 }
 
@@ -100,6 +103,12 @@ fun BookDetailScreen(
     onDeleteConfirmClick: () -> Unit,
     onDeleteDialogDismissed: () -> Unit,
     onNewShelfClick: () -> Unit,
+    onNewNoteClick: () -> Unit,
+    onNoteDialogDismissed: () -> Unit,
+    onNoteDialogSaveClick: (String) -> Unit,
+    onNoteDialogUpdateClick: (Note, String) -> Unit,
+    onNoteEditClick: (Note) -> Unit,
+    onNoteDeleteClick: (Note) -> Unit,
     onReviewClick: (Review) -> Unit,
     onShelfCheckedChange: (ShelfForBook, Boolean) -> Unit,
     onTabClick: (DetailTab) -> Unit,
@@ -107,31 +116,14 @@ fun BookDetailScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     if (uiState.isDeleteDialogDisplayed) {
-        AlertDialog(
-            onDismissRequest = onDeleteDialogDismissed,
-            icon = { Icon(Icons.Filled.Delete, contentDescription = null) },
-            title = {
-                Text(text = stringResource(R.string.detail_title_delete))
-            },
-            text = {
-                Text(
-                    stringResource(R.string.detail_desc_delete_msg),
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = onDeleteConfirmClick,
-                ) {
-                    Text(stringResource(R.string.detail_btn_confirm_delete))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = onDeleteDialogDismissed,
-                ) {
-                    Text(stringResource(R.string.detail_btn_cancel_delete))
-                }
-            },
+        DeleteDialog(onDeleteDialogDismissed, onDeleteConfirmClick)
+    }
+    if (uiState.isNewNoteDialogDisplayed) {
+        AddOrEditNoteDialog(
+            onDialogDismiss = onNoteDialogDismissed,
+            onDialogSaveClick = onNoteDialogSaveClick,
+            onDialogUpdateClick = onNoteDialogUpdateClick,
+            selectedNote = uiState.selectedNote,
         )
     }
     Scaffold(
@@ -140,7 +132,14 @@ fun BookDetailScreen(
         topBar = {
             Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
                 Column {
-                    BookDetailAppBar(uiState, onNavigateBack, onNewShelfClick, onDeleteClick, onEditBookClick)
+                    BookDetailAppBar(
+                        uiState = uiState,
+                        onNavigateBack = onNavigateBack,
+                        onNewShelfClick = onNewShelfClick,
+                        onNewNoteClick = onNewNoteClick,
+                        onDeleteClick = onDeleteClick,
+                        onEditBookClick = onEditBookClick,
+                    )
                     Column(
                         modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 0.dp, bottom = 24.dp),
                     ) {
@@ -177,6 +176,11 @@ fun BookDetailScreen(
                 DetailTab.Detail -> TabBookDetail(
                     uiState = uiState,
                 )
+                DetailTab.Notes -> TabNotes(
+                    uiState = uiState,
+                    onEditClick = onNoteEditClick,
+                    onDeleteClick = onNoteDeleteClick,
+                )
                 DetailTab.Reviews -> TabReviews(
                     uiState = uiState,
                     onReviewClick = onReviewClick,
@@ -187,11 +191,42 @@ fun BookDetailScreen(
 }
 
 @Composable
+private fun DeleteDialog(onDeleteDialogDismissed: () -> Unit, onDeleteConfirmClick: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDeleteDialogDismissed,
+        icon = { Icon(Icons.Filled.Delete, contentDescription = null) },
+        title = {
+            Text(text = stringResource(R.string.detail_title_delete))
+        },
+        text = {
+            Text(
+                stringResource(R.string.detail_desc_delete_msg),
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onDeleteConfirmClick,
+            ) {
+                Text(stringResource(R.string.detail_btn_confirm_delete))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDeleteDialogDismissed,
+            ) {
+                Text(stringResource(R.string.detail_btn_cancel_delete))
+            }
+        },
+    )
+}
+
+@Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun BookDetailAppBar(
     uiState: BookDetailUiState,
     onNavigateBack: () -> Unit,
     onNewShelfClick: () -> Unit,
+    onNewNoteClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEditBookClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -217,6 +252,14 @@ private fun BookDetailAppBar(
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = stringResource(R.string.content_add_new_shelf),
+                        )
+                    }
+                }
+                DetailTab.Notes -> {
+                    IconButton(onClick = { onNewNoteClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = stringResource(R.string.content_add_new_note),
                         )
                     }
                 }
@@ -273,6 +316,12 @@ private fun DefaultPreview() {
             onTabClick = {},
             onDeleteConfirmClick = {},
             onDeleteDialogDismissed = {},
+            onNewNoteClick = {},
+            onNoteDialogDismissed = {},
+            onNoteDialogSaveClick = {},
+            onNoteDialogUpdateClick = { _, _ -> },
+            onNoteEditClick = { _ -> },
+            onNoteDeleteClick = { _ -> },
         )
     }
 }

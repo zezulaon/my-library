@@ -21,8 +21,10 @@ import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
 import dev.zezula.books.data.source.network.OpenLibraryApi
 import dev.zezula.books.domain.AddOrUpdateBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
+import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
@@ -108,6 +110,8 @@ val appModule = module {
     single { RefreshLibraryUseCase(get()) }
     single { GetShelvesUseCase(get()) }
     single { DeleteShelfUseCase(get()) }
+    single { CreateOrUpdateNoteUseCase(get()) }
+    single { DeleteNoteUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
     single { GetAllBookDetailUseCase(get(), get(), get()) }
@@ -128,7 +132,7 @@ val appModule = module {
     viewModel { BookListViewModel(get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { FindBookViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }

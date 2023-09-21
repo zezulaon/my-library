@@ -140,11 +140,19 @@ class BookDetailScreenTest {
             uiState = state,
             onNavigateBack = {},
             onEditBookClick = {},
-            onDeleteClick = {},
+            onNoteDeleteClick = {},
+            onDeleteConfirmClick = {},
+            onDeleteDialogDismissed = {},
             onNewShelfClick = {},
             onReviewClick = {},
+            onDeleteClick = {},
             onShelfCheckedChange = { _, _ -> },
             onTabClick = {},
+            onNewNoteClick = {},
+            onNoteDialogDismissed = {},
+            onNoteDialogSaveClick = { _ -> },
+            onNoteDialogUpdateClick = { _, _ -> },
+            onNoteEditClick = { _ -> },
         )
     }
 }

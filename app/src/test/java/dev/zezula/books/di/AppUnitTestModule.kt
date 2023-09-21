@@ -20,8 +20,10 @@ import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
 import dev.zezula.books.data.source.network.fake.FakeOnlineBookFinderServiceImpl
 import dev.zezula.books.domain.AddOrUpdateBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
+import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
@@ -58,6 +60,8 @@ val appUnitTestModule = module {
     single { DeleteShelfUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
+    single { CreateOrUpdateNoteUseCase(get()) }
+    single { DeleteNoteUseCase(get()) }
     single { GetAllBookDetailUseCase(get(), get(), get()) }
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
@@ -75,7 +79,7 @@ val appUnitTestModule = module {
     viewModel { BookListViewModel(get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }

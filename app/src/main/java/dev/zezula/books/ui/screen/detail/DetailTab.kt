@@ -7,4 +7,5 @@ enum class DetailTab(val tabIndex: Int, @StringRes val tabName: Int) {
     Shelves(0, R.string.screen_detail_tab_shelves),
     Detail(1, R.string.screen_detail_tab_book),
     Reviews(2, R.string.screen_detail_tab_reviews),
+    Notes(3, R.string.screen_detail_tab_notes),
 }

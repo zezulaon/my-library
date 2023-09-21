@@ -2,6 +2,7 @@ package dev.zezula.books.data.source.network.fake
 
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.previewShelves
@@ -67,5 +68,13 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     override suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
         // book<->shelf connection not used in this fake
+    }
+
+    override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
+        TODO("Note updates not yet implemented")
+    }
+
+    override suspend fun deleteNote(noteId: String, bookId: String) {
+        TODO("Note deletion not yet implemented")
     }
 }

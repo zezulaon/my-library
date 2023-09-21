@@ -1,7 +1,6 @@
 package dev.zezula.books.data.model.book
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import dev.zezula.books.util.formatDate
 
 data class Book(
     val id: String,
@@ -16,8 +15,7 @@ data class Book(
     val userRating: Int? = null,
     val dateAdded: String,
 ) {
-    val dateAddedFormatted: String =
-        LocalDateTime.parse(dateAdded).format(DateTimeFormatter.ofPattern("d/MM/uuuu"))
+    val dateAddedFormatted: String = formatDate(dateAdded)
 }
 
 data class BookFormData(
