@@ -71,7 +71,15 @@ class BookDetailViewModelTest : KoinTest {
             viewModel {
                 val savedStateHandle = SavedStateHandle()
                 savedStateHandle[DestinationArgs.bookIdArg] = bookTestData.id
-                BookDetailViewModel(get(), get(), get(), savedStateHandle, get())
+                BookDetailViewModel(
+                    deleteBookUseCase = get(),
+                    checkReviewsDownloadedUseCase = get(),
+                    createOrUpdateNoteUseCase = get(),
+                    deleteNoteUseCase = get(),
+                    toggleBookInShelfUseCase = get(),
+                    savedStateHandle = savedStateHandle,
+                    getAllBookDetailUseCase = get(),
+                )
             }
         }
         modules(appUnitTestModule, bookViewModuleOverride)

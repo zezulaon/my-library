@@ -4,6 +4,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.data.model.book.NetworkBook
+import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.bookIdProperty
@@ -13,6 +14,7 @@ import timber.log.Timber
 
 private const val collectionIdUsers = "users"
 private const val collectionIdBooks = "books"
+private const val collectionNotes = "notes"
 private const val collectionIdShelves = "shelves"
 private const val collectionIdShelvesWithBooks = "shelvesWithBooks"
 
@@ -76,6 +78,15 @@ class FirestoreDataSource : NetworkDataSource {
         return book
     }
 
+    override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
+        Timber.d("addOrUpdate(note=$note)")
+        checkNotNull(note.id) { "Note needs [id] property" }
+        checkNotNull(note.bookId) { "Note needs [bookId] property" }
+
+        booksCollection.document(note.bookId).collection(collectionNotes).document(note.id).set(note).await()
+        return note
+    }
+
     override suspend fun deleteBook(bookId: String) {
         Timber.d("deleteBook(bookId=$bookId)")
 
@@ -87,6 +98,11 @@ class FirestoreDataSource : NetworkDataSource {
         }
 
         booksCollection.document(bookId).delete().await()
+    }
+
+    override suspend fun deleteNote(noteId: String, bookId: String) {
+        Timber.d("deleteNote (noteId=$noteId)")
+        booksCollection.document(bookId).collection(collectionNotes).document(noteId).delete().await()
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {

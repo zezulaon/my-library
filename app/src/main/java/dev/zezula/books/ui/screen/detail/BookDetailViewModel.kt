@@ -4,10 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
+import dev.zezula.books.data.model.note.Note
+import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.domain.AllBookDetailResult
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
+import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.model.Response
@@ -26,6 +30,8 @@ import timber.log.Timber
 class BookDetailViewModel(
     private val deleteBookUseCase: DeleteBookUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
+    private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     savedStateHandle: SavedStateHandle,
     getAllBookDetailUseCase: GetAllBookDetailUseCase,
@@ -41,6 +47,8 @@ class BookDetailViewModel(
     private val _bookDeleted = MutableStateFlow(false)
     private val _isInProgress = MutableStateFlow(false)
     private val _isDeleteDialogDisplayed = MutableStateFlow(false)
+    private val _isNoteDialogDisplayed = MutableStateFlow(false)
+    private val _selectedNote = MutableStateFlow<Note?>(null)
 
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
@@ -54,13 +62,16 @@ class BookDetailViewModel(
         _errorMessage,
         _shelvesToggleProgressList,
         _isDeleteDialogDisplayed,
+        _isNoteDialogDisplayed,
+        _selectedNote,
     ) { bookResponse, selectedTab, bookDeleted, isInProgress, errorMessage, shelvesToggleProgressList,
-            isDeleteDialogDisplayed, ->
+            isDeleteDialogDisplayed, isNewNoteDialogDisplayed, selectedNote, ->
 
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
         BookDetailUiState(
             book = bookDetail.book,
             rating = bookDetail.rating,
+            notes = bookDetail.notes,
             shelves = mergeShelvesWithToggleProgress(bookDetail.shelves, shelvesToggleProgressList),
             reviews = bookDetail.reviews,
             selectedTab = selectedTab,
@@ -68,6 +79,8 @@ class BookDetailViewModel(
             errorMessage = errorMessage,
             isInProgress = isInProgress,
             isDeleteDialogDisplayed = isDeleteDialogDisplayed,
+            isNewNoteDialogDisplayed = isNewNoteDialogDisplayed,
+            selectedNote = selectedNote,
         )
     }.stateIn(viewModelScope, whileSubscribedInActivity, BookDetailUiState())
 
@@ -149,5 +162,50 @@ class BookDetailViewModel(
 
     fun snackbarMessageShown() {
         _errorMessage.value = null
+    }
+
+    fun createNoteRequested() {
+        _isNoteDialogDisplayed.value = true
+    }
+
+    fun dismissNoteDialog() {
+        _isNoteDialogDisplayed.value = false
+        _selectedNote.value = null
+    }
+
+    fun createNote(text: String) {
+        viewModelScope.launch {
+            val noteFormData = NoteFormData(text = text)
+            createOrUpdateNoteUseCase(noteId = null, noteFormData = noteFormData, bookId = bookId)
+                .onError {
+                    _errorMessage.value = R.string.detail_failed_to_create_note
+                }
+            _isNoteDialogDisplayed.value = false
+        }
+    }
+
+    fun updateNote(note: Note, text: String) {
+        dismissNoteDialog()
+        viewModelScope.launch {
+            val noteFormData = NoteFormData(text = text, dateAdded = note.dateAdded, page = note.page, type = note.type)
+            createOrUpdateNoteUseCase(noteId = note.id, noteFormData = noteFormData, bookId = bookId)
+                .onError {
+                    _errorMessage.value = R.string.detail_failed_to_update_note
+                }
+        }
+    }
+
+    fun deleteNote(note: Note) {
+        viewModelScope.launch {
+            deleteNoteUseCase(noteId = note.id, bookId = bookId)
+                .onError {
+                    _errorMessage.value = R.string.detail_failed_to_delete_note
+                }
+        }
+    }
+
+    fun editNoteRequested(note: Note) {
+        _isNoteDialogDisplayed.value = true
+        _selectedNote.value = note
     }
 }

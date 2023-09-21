@@ -11,6 +11,10 @@ data class BookEntity(
     val title: String? = null,
     val author: String? = null,
     val description: String? = null,
+    // Subject is legacy property from older version of the app. It's not used right now.
+    val subject: String? = null,
+    // Binding is legacy property from older version of the app. It's not used right now.
+    val binding: String? = null,
     val isbn: String? = null,
     val publisher: String? = null,
     val yearPublished: Int? = null,

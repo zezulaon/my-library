@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.note.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,6 +31,15 @@ interface BookDao {
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun delete(bookId: String)
 
+    @Query("DELETE FROM notes WHERE id = :noteId")
+    suspend fun deleteNote(noteId: String)
+
     @Query("DELETE FROM books")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM notes WHERE bookId = :bookId ORDER BY dateAdded DESC")
+    fun getNotesForBook(bookId: String): Flow<List<NoteEntity>>
+
+    @Upsert
+    suspend fun addOrUpdateNote(note: NoteEntity)
 }

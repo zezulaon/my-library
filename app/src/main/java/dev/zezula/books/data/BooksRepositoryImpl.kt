@@ -6,6 +6,11 @@ import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.fromNetworkBook
+import dev.zezula.books.data.model.note.NetworkNote
+import dev.zezula.books.data.model.note.Note
+import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.note.asExternalModel
+import dev.zezula.books.data.model.note.fromNetworkNote
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
@@ -29,6 +34,45 @@ class BooksRepositoryImpl(
         return shelfAndBookDao.getBooksForShelfAsStream(shelfId).map {
             it.map(BookEntity::asExternalModel)
         }
+    }
+
+    override fun getNotesStream(bookId: String): Flow<List<Note>> {
+        return booksDao.getNotesForBook(bookId).map {
+            it.map { noteEntity ->
+                Note(
+                    id = noteEntity.id,
+                    bookId = noteEntity.bookId,
+                    text = noteEntity.text,
+                    dateAdded = noteEntity.dateAdded,
+                    page = noteEntity.page,
+                    type = noteEntity.type,
+                )
+            }
+        }
+    }
+
+    override suspend fun addOrUpdateNote(
+        noteId: String?,
+        bookId: String,
+        noteFormData: NoteFormData,
+    ): Note {
+        val finalNoteId = noteId ?: UUID.randomUUID().toString()
+        val networkNote = NetworkNote(
+            id = finalNoteId,
+            bookId = bookId,
+            text = noteFormData.text,
+            dateAdded = noteFormData.dateAdded ?: LocalDateTime.now().toString(),
+            page = noteFormData.page,
+            type = noteFormData.type,
+        )
+        networkDataSource.addOrUpdateNote(networkNote)
+
+        val networkNoteEntity = fromNetworkNote(
+            networkNote = networkNote,
+            bookId = bookId,
+        )
+        booksDao.addOrUpdateNote(networkNoteEntity)
+        return networkNoteEntity.asExternalModel()
     }
 
     override fun getAllBooksStream(): Flow<List<Book>> {
@@ -95,6 +139,11 @@ class BooksRepositoryImpl(
     override suspend fun deleteBook(bookId: String) {
         networkDataSource.deleteBook(bookId)
         booksDao.delete(bookId)
+    }
+
+    override suspend fun deleteNote(noteId: String, bookId: String) {
+        networkDataSource.deleteNote(noteId = noteId, bookId = bookId)
+        booksDao.deleteNote(noteId)
     }
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
