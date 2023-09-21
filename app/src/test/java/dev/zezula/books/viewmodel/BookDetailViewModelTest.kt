@@ -115,7 +115,7 @@ class BookDetailViewModelTest : KoinTest {
             cancelAndConsumeRemainingEvents()
         }
 
-        viewModel.deleteBook()
+        viewModel.deleteBookRequested()
         // Check that the UI state is aware the book was deleted
         viewModel.uiState.test {
             assertTrue(awaitItem().isBookDeleted)

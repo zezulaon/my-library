@@ -63,6 +63,11 @@
     <string name="detail_failed_to_delete">An error has occurred - the book wasn\'t deleted.</string>
     <string name="detail_failed_to_update_shelf">An error has occurred - the shelf wasn\'t updated.</string>
 
+    <string name="detail_title_delete">Permanently delete?</string>
+    <string name="detail_desc_delete_msg">Deleting the book will also remove it from all associated shelves.</string>
+    <string name="detail_btn_confirm_delete">Delete</string>
+    <string name="detail_btn_cancel_delete">Cancel</string>
+
     <!-- Manage Shelves -->
     <string name="shelves_dialog_title_add">Add a New Shelf</string>
     <string name="shelves_dialog_title_edit">Edit the Shelf</string>
