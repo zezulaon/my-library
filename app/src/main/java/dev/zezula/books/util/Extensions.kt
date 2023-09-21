@@ -41,3 +41,18 @@ suspend fun String.removeHtmlTags(): String {
         }
     }
 }
+
+fun String.toIsbnDigits(): String {
+    return replace("-", "").replace(" ", "")
+}
+
+fun String.isIsbn(): Boolean {
+    // TODO: Naive implementation, should be improved based on:
+    //  https://en.wikipedia.org/wiki/International_Standard_Book_Number#ISBN-10_check_digit_calculation
+    val isbn = this.toIsbnDigits()
+    if (isbn.length != 10 && isbn.length != 13) return false
+    val numberPart = isbn.substring(0, isbn.length - 1)
+
+    // return true if all parts are digits
+    return numberPart.all { it.isDigit() }
+}

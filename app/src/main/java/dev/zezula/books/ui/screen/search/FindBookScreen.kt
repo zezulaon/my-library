@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -225,8 +226,19 @@ private fun SearchResultCard(
                 Column {
                     Text(text = bookFormData.title ?: "", style = MaterialTheme.typography.titleMedium)
                     Text(text = bookFormData.author ?: "", style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val isbn = "ISBN: ${bookFormData.isbn ?: ""}"
+                    Text(text = isbn, style = MaterialTheme.typography.bodyMedium)
+                    val publisher = "Publisher: ${bookFormData.publisher ?: ""}"
+                    Text(text = publisher, style = MaterialTheme.typography.bodyMedium)
+                    val yearPublished = "Published: ${bookFormData.yearPublished ?: ""}"
+                    Text(text = yearPublished, style = MaterialTheme.typography.bodyMedium)
+                    val numberOfPages = "Pages: ${bookFormData.pageCount ?: ""}"
+                    Text(text = numberOfPages, style = MaterialTheme.typography.bodyMedium)
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(text = bookFormData.description ?: "", maxLines = 4, overflow = TextOverflow.Ellipsis)
             Divider(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
