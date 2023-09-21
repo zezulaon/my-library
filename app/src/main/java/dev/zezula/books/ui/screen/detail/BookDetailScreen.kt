@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -73,7 +75,9 @@ fun BookDetailRoute(
             val id = checkNotNull(uiState.book?.id) { "Missing book id" }
             onEditBookClick(id)
         },
-        onDeleteClick = { viewModel.deleteBook() },
+        onDeleteClick = { viewModel.deleteBookRequested() },
+        onDeleteConfirmClick = { viewModel.deleteBookConfirmed() },
+        onDeleteDialogDismissed = { viewModel.dismissDeleteDialog() },
         onNewShelfClick = onNewShelfClick,
         onReviewClick = onReviewClick,
         onShelfCheckedChange = { shelf, isChecked ->
@@ -93,6 +97,8 @@ fun BookDetailScreen(
     onNavigateBack: () -> Unit,
     onEditBookClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onDeleteConfirmClick: () -> Unit,
+    onDeleteDialogDismissed: () -> Unit,
     onNewShelfClick: () -> Unit,
     onReviewClick: (Review) -> Unit,
     onShelfCheckedChange: (ShelfForBook, Boolean) -> Unit,
@@ -100,6 +106,34 @@ fun BookDetailScreen(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
+    if (uiState.isDeleteDialogDisplayed) {
+        AlertDialog(
+            onDismissRequest = onDeleteDialogDismissed,
+            icon = { Icon(Icons.Filled.Delete, contentDescription = null) },
+            title = {
+                Text(text = stringResource(R.string.detail_title_delete))
+            },
+            text = {
+                Text(
+                    stringResource(R.string.detail_desc_delete_msg),
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = onDeleteConfirmClick,
+                ) {
+                    Text(stringResource(R.string.detail_btn_confirm_delete))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDeleteDialogDismissed,
+                ) {
+                    Text(stringResource(R.string.detail_btn_cancel_delete))
+                }
+            },
+        )
+    }
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -237,6 +271,8 @@ private fun DefaultPreview() {
             onReviewClick = {},
             onShelfCheckedChange = { _, _ -> },
             onTabClick = {},
+            onDeleteConfirmClick = {},
+            onDeleteDialogDismissed = {},
         )
     }
 }

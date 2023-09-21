@@ -1,8 +1,11 @@
 package dev.zezula.books.ui.screen.list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,16 +65,19 @@ internal fun NavigationDrawer(
             text = stringResource(R.string.drawer_label_shelves),
             style = MaterialTheme.typography.labelLarge,
         )
-        uiState.shelves.forEach { shelf ->
-            NavigationDrawerItem(
-                label = { Text(shelf.title) },
-                selected = shelf.id == uiState.selectedShelf?.id,
-                badge = {
-                    Text(text = shelf.numberOfBooks.toString(), style = MaterialTheme.typography.labelLarge)
-                },
-                onClick = { onShelfClick(shelf) },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-            )
+        // Add scrollable Column
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            uiState.shelves.forEach { shelf ->
+                NavigationDrawerItem(
+                    label = { Text(shelf.title) },
+                    selected = shelf.id == uiState.selectedShelf?.id,
+                    badge = {
+                        Text(text = shelf.numberOfBooks.toString(), style = MaterialTheme.typography.labelLarge)
+                    },
+                    onClick = { onShelfClick(shelf) },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                )
+            }
         }
     }
 }

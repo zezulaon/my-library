@@ -14,4 +14,5 @@ data class BookDetailUiState(
     val errorMessage: Int? = null,
     val isBookDeleted: Boolean = false,
     val isInProgress: Boolean = false,
+    val isDeleteDialogDisplayed: Boolean = false,
 )

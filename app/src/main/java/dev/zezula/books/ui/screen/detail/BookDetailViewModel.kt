@@ -40,6 +40,7 @@ class BookDetailViewModel(
     private val _selectedTab = MutableStateFlow(DetailTab.Detail)
     private val _bookDeleted = MutableStateFlow(false)
     private val _isInProgress = MutableStateFlow(false)
+    private val _isDeleteDialogDisplayed = MutableStateFlow(false)
 
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
@@ -52,7 +53,10 @@ class BookDetailViewModel(
         _isInProgress,
         _errorMessage,
         _shelvesToggleProgressList,
-    ) { bookResponse, selectedTab, bookDeleted, isInProgress, errorMessage, shelvesToggleProgressList ->
+        _isDeleteDialogDisplayed,
+    ) { bookResponse, selectedTab, bookDeleted, isInProgress, errorMessage, shelvesToggleProgressList,
+            isDeleteDialogDisplayed, ->
+
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
         BookDetailUiState(
             book = bookDetail.book,
@@ -63,6 +67,7 @@ class BookDetailViewModel(
             isBookDeleted = bookDeleted,
             errorMessage = errorMessage,
             isInProgress = isInProgress,
+            isDeleteDialogDisplayed = isDeleteDialogDisplayed,
         )
     }.stateIn(viewModelScope, whileSubscribedInActivity, BookDetailUiState())
 
@@ -121,7 +126,11 @@ class BookDetailViewModel(
         }
     }
 
-    fun deleteBook() {
+    fun deleteBookRequested() {
+        _isDeleteDialogDisplayed.value = true
+    }
+
+    fun deleteBookConfirmed() {
         viewModelScope.launch {
             deleteBookUseCase(bookId)
                 .fold(
@@ -130,7 +139,12 @@ class BookDetailViewModel(
                     },
                     onFailure = { _errorMessage.value = R.string.detail_failed_to_delete },
                 )
+            _isDeleteDialogDisplayed.value = false
         }
+    }
+
+    fun dismissDeleteDialog() {
+        _isDeleteDialogDisplayed.value = false
     }
 
     fun snackbarMessageShown() {
