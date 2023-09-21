@@ -24,6 +24,7 @@ import timber.log.Timber
     version = 3,
     // https://developer.android.com/training/data-storage/room/migrating-db-versions
     autoMigrations = [
+        AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
     ],
 )
