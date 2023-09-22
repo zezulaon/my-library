@@ -1,6 +1,7 @@
 package dev.zezula.books.ui.screen.detail
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +39,7 @@ import dev.zezula.books.ui.theme.MyLibraryTheme
 fun TabBookDetail(
     uiState: BookDetailUiState,
     modifier: Modifier = Modifier,
+    onAmazonLinkClicked: (book: Book) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
@@ -111,6 +119,53 @@ fun TabBookDetail(
                 }
             }
         }
+        val title = uiState.book?.title
+        if (title != null) {
+            Links(onAmazonLinkClicked = {
+                onAmazonLinkClicked(uiState.book)
+            })
+        }
+    }
+}
+
+@Composable
+private fun Links(
+    onAmazonLinkClicked: () -> Unit,
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = stringResource(R.string.detail_links_title), style = MaterialTheme.typography.titleMedium)
+        }
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 0.dp)
+                .fillMaxWidth(),
+            thickness = .5.dp,
+        )
+        ListItem(
+            modifier = Modifier.clickable {
+                onAmazonLinkClicked()
+            },
+            headlineContent = {
+                Text(text = stringResource(R.string.detail_link_amazon), style = MaterialTheme.typography.bodyMedium)
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = null,
+                )
+            },
+            trailingContent = {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                )
+            },
+        )
     }
 }
 

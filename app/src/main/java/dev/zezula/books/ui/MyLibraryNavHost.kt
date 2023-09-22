@@ -76,6 +76,10 @@ fun MyLibraryNavHost(
                     navController.navigateToAddOrEdit(bookId)
                 },
                 onNewShelfClick = { navController.navigateToManageShelves() },
+                onAmazonLinkClicked = { book ->
+                    Timber.d("Navigate to Amazon")
+                    navController.navigateToAmazonSearch(book)
+                },
                 viewModel = koinViewModel(),
             )
         }

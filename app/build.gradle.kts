@@ -55,6 +55,12 @@ android {
             value = getStringProperty("myLibrary.releaseInfo", true),
         )
 
+        buildConfigField(
+            type = "String",
+            name = "ML_URL_AMAZON_SEARCH",
+            value = getStringProperty("myLibrary.linkAmazonSearch", true),
+        )
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }

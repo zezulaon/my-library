@@ -80,6 +80,9 @@
     <string name="detail_failed_to_update_note">An error has occurred - the note wasn\'t updated.</string>
     <string name="detail_failed_to_delete_note">An error has occurred - the note wasn\'t deleted.</string>
 
+    <string name="detail_link_amazon">Find On Amazon</string>
+    <string name="detail_links_title">Links</string>
+
     <!-- Manage Shelves -->
     <string name="shelves_dialog_title_add">Add a New Shelf</string>
     <string name="shelves_dialog_title_edit">Edit the Shelf</string>
