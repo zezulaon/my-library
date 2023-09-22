@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.navigation.NavHostController
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.Destinations.bookListRoute
@@ -108,6 +109,20 @@ fun NavHostController.navigateToReviewDetail(reviewLink: String) {
     context.startActivity(
         Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(reviewLink)
+        },
+    )
+}
+
+fun NavHostController.navigateToAmazonSearch(book: Book) {
+    val title = book.title
+    val author = book.author
+    var url = "${BuildConfig.ML_URL_AMAZON_SEARCH}$title"
+    if (author != null) {
+        url += " by $author"
+    }
+    context.startActivity(
+        Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(url)
         },
     )
 }

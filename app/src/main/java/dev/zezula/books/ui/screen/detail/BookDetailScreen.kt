@@ -49,6 +49,7 @@ fun BookDetailRoute(
     onEditBookClick: (String) -> Unit,
     onBookDeletedSuccess: () -> Unit,
     onNewShelfClick: () -> Unit,
+    onAmazonLinkClicked: (book: Book) -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -89,6 +90,7 @@ fun BookDetailRoute(
         onReviewClick = onReviewClick,
         onShelfCheckedChange = { shelf, isChecked -> viewModel.onShelfCheckChange(shelf, isChecked) },
         onTabClick = { viewModel.onTabClick(it) },
+        onAmazonLinkClicked = onAmazonLinkClicked,
     )
 }
 
@@ -113,6 +115,7 @@ fun BookDetailScreen(
     onShelfCheckedChange: (ShelfForBook, Boolean) -> Unit,
     onTabClick: (DetailTab) -> Unit,
     modifier: Modifier = Modifier,
+    onAmazonLinkClicked: (book: Book) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     if (uiState.isDeleteDialogDisplayed) {
@@ -175,6 +178,7 @@ fun BookDetailScreen(
                 )
                 DetailTab.Detail -> TabBookDetail(
                     uiState = uiState,
+                    onAmazonLinkClicked = onAmazonLinkClicked,
                 )
                 DetailTab.Notes -> TabNotes(
                     uiState = uiState,
