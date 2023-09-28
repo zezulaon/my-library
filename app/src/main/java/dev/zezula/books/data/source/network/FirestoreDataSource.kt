@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.note.NetworkNote
+import dev.zezula.books.data.model.reference.NetworkReference
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.bookIdProperty
@@ -15,6 +16,7 @@ import timber.log.Timber
 private const val collectionIdUsers = "users"
 private const val collectionIdBooks = "books"
 private const val collectionNotes = "notes"
+private const val collectionReferences = "references"
 private const val collectionIdShelves = "shelves"
 private const val collectionIdShelvesWithBooks = "shelvesWithBooks"
 
@@ -85,6 +87,24 @@ class FirestoreDataSource : NetworkDataSource {
 
         booksCollection.document(note.bookId).collection(collectionNotes).document(note.id).set(note).await()
         return note
+    }
+
+    override suspend fun addOrUpdateReference(reference: NetworkReference): NetworkReference {
+        Timber.d("addOrUpdate(reference=$reference)")
+        checkNotNull(reference.id) { "Reference needs [id] property" }
+        checkNotNull(reference.bookId) { "Reference needs [bookId] property" }
+
+        booksCollection
+            .document(reference.bookId)
+            .collection(collectionReferences)
+            .document(reference.id)
+            .set(reference).await()
+        return reference
+    }
+
+    override suspend fun updateBookCover(bookId: String, coverUrl: String) {
+        Timber.d("updateBookCover(bookId=$bookId, thumbnailLink=$coverUrl)")
+        booksCollection.document(bookId).update("thumbnailLink", coverUrl).await()
     }
 
     override suspend fun deleteBook(bookId: String) {

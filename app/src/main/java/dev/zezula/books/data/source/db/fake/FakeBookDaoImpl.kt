@@ -2,6 +2,7 @@ package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.reference.ReferenceEntity
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,18 @@ class FakeBookDaoImpl : BookDao {
 
     override suspend fun deleteNote(noteId: String) {
         TODO("Deleting notes is not yet implemented")
+    }
+
+    override fun getReferencesForBook(bookId: String): Flow<List<ReferenceEntity>> {
+        TODO("Getting references is not yet implemented")
+    }
+
+    override suspend fun addOrUpdateReference(reference: ReferenceEntity) {
+        TODO("Adding references is not yet implemented")
+    }
+
+    override suspend fun updateBookCover(bookId: String, coverUrl: String) {
+        TODO("Updating book cover is not yet implemented")
     }
 
     override suspend fun getForIsbn(isbn: String): List<BookEntity> =

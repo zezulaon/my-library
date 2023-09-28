@@ -6,6 +6,7 @@ import androidx.room.DatabaseConfiguration
 import androidx.room.RoomDatabase
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.reference.ReferenceEntity
 import dev.zezula.books.data.model.review.RatingEntity
 import dev.zezula.books.data.model.review.ReviewEntity
 import dev.zezula.books.data.model.shelf.ShelfEntity
@@ -20,12 +21,14 @@ import timber.log.Timber
         ShelfEntity::class,
         ShelfWithBookEntity::class,
         NoteEntity::class,
+        ReferenceEntity::class,
     ],
-    version = 3,
+    version = 4,
     // https://developer.android.com/training/data-storage/room/migrating-db-versions
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4),
     ],
 )
 abstract class AppDatabase : RoomDatabase() {

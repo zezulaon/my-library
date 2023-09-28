@@ -2,6 +2,7 @@ package dev.zezula.books.data.source.network
 
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.note.NetworkNote
+import dev.zezula.books.data.model.reference.NetworkReference
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 
@@ -12,6 +13,10 @@ interface NetworkDataSource {
     suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook
 
     suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote
+
+    suspend fun addOrUpdateReference(reference: NetworkReference): NetworkReference
+
+    suspend fun updateBookCover(bookId: String, coverUrl: String)
 
     suspend fun deleteBook(bookId: String)
 

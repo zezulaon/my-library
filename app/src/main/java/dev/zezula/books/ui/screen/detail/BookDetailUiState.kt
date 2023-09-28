@@ -2,6 +2,7 @@ package dev.zezula.books.ui.screen.detail
 
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
+import dev.zezula.books.data.model.reference.Reference
 import dev.zezula.books.data.model.review.Rating
 import dev.zezula.books.data.model.review.Review
 import dev.zezula.books.data.model.shelf.ShelfForBook
@@ -11,6 +12,7 @@ data class BookDetailUiState(
     val rating: Rating? = null,
     val shelves: List<ShelfForBook> = emptyList(),
     val notes: List<Note> = emptyList(),
+    val references: List<Reference> = emptyList(),
     val reviews: List<Review> = emptyList(),
     val selectedTab: DetailTab = DetailTab.Detail,
     val errorMessage: Int? = null,

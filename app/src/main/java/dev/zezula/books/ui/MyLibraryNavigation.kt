@@ -113,18 +113,8 @@ fun NavHostController.navigateToReviewDetail(reviewLink: String) {
     )
 }
 
-fun NavHostController.navigateToAmazonSearch(book: Book) {
-    val title = book.title
-    val author = book.author
-    var url = "${BuildConfig.ML_URL_AMAZON_SEARCH}$title"
-    if (author != null) {
-        url += " by $author"
-    }
-    context.startActivity(
-        Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(url)
-        },
-    )
+fun NavHostController.navigateToBookUrl(url: String) {
+    navigateToLink(url)
 }
 
 fun NavHostController.navigateToGoogleSignIn() {
@@ -153,7 +143,11 @@ fun NavHostController.navigateToContactEmailDraft() {
 
 fun NavHostController.navigateToReleaseNotes() {
     val releaseInfoUrl = BuildConfig.ML_URL_RELEASE_INFO
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseInfoUrl))
+    navigateToLink(releaseInfoUrl)
+}
+
+private fun NavHostController.navigateToLink(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 
     if (intent.resolveActivity(context.packageManager) != null) {
         context.startActivity(intent)

@@ -9,6 +9,9 @@ import org.simpleframework.xml.Root
 data class GoodreadsBook @JvmOverloads constructor(
 
     @field:Element(required = false)
+    var id: Int? = null,
+
+    @field:Element(required = false)
     var title: String? = null,
 
     @field:Element(required = false)

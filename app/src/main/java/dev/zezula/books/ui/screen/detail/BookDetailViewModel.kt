@@ -14,6 +14,7 @@ import dev.zezula.books.domain.DeleteBookUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
+import dev.zezula.books.domain.UpdateBookReferencesUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
@@ -30,6 +31,7 @@ import timber.log.Timber
 class BookDetailViewModel(
     private val deleteBookUseCase: DeleteBookUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
+    private val updateBookReferencesUseCase: UpdateBookReferencesUseCase,
     private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
@@ -72,6 +74,7 @@ class BookDetailViewModel(
             book = bookDetail.book,
             rating = bookDetail.rating,
             notes = bookDetail.notes,
+            references = bookDetail.references,
             shelves = mergeShelvesWithToggleProgress(bookDetail.shelves, shelvesToggleProgressList),
             reviews = bookDetail.reviews,
             selectedTab = selectedTab,
@@ -104,12 +107,21 @@ class BookDetailViewModel(
         Timber.d("init{}")
         Timber.d("Received bookId: $bookId")
         fetchReviews()
+        updateReferences()
     }
 
     private fun fetchReviews() {
         viewModelScope.launch {
             _isInProgress.value = true
             checkReviewsDownloadedUseCase(bookId)
+            _isInProgress.value = false
+        }
+    }
+
+    private fun updateReferences() {
+        viewModelScope.launch {
+            _isInProgress.value = true
+            updateBookReferencesUseCase(bookId)
             _isInProgress.value = false
         }
     }

@@ -4,6 +4,7 @@ import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.reference.Reference
 import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
@@ -22,6 +23,14 @@ interface BooksRepository {
         noteFormData: NoteFormData,
     ): Note
 
+    suspend fun addOrUpdateReference(
+        referenceId: String,
+        bookId: String,
+        value: String?,
+    ): Reference
+
+    fun getReferencesStream(bookId: String): Flow<List<Reference>>
+
     suspend fun getBook(bookId: String): Book?
 
     suspend fun getBookId(isbn: String): String?
@@ -35,6 +44,8 @@ interface BooksRepository {
     suspend fun deleteNote(noteId: String, bookId: String)
 
     suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
+
+    suspend fun updateBookCover(bookId: String, coverUrl: String)
 
     suspend fun refreshBooks()
 }

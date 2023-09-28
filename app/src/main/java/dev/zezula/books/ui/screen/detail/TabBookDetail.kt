@@ -30,16 +30,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.reference.Reference
+import dev.zezula.books.data.model.reference.ReferenceId
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.ui.screen.components.UserRatingComponent
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 import dev.zezula.books.ui.theme.MyLibraryTheme
+import dev.zezula.books.util.createAmazonSearchUrl
+import dev.zezula.books.util.createUrl
 
 @Composable
 fun TabBookDetail(
     uiState: BookDetailUiState,
     modifier: Modifier = Modifier,
-    onAmazonLinkClicked: (book: Book) -> Unit = {},
+    onLinkClicked: (url: String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -121,16 +125,18 @@ fun TabBookDetail(
         }
         val title = uiState.book?.title
         if (title != null) {
-            Links(onAmazonLinkClicked = {
-                onAmazonLinkClicked(uiState.book)
-            })
+            LinksCard(
+                uiState = uiState,
+                onLinkClicked = onLinkClicked,
+            )
         }
     }
 }
 
 @Composable
-private fun Links(
-    onAmazonLinkClicked: () -> Unit,
+private fun LinksCard(
+    uiState: BookDetailUiState,
+    onLinkClicked: (url: String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -146,26 +152,54 @@ private fun Links(
                 .fillMaxWidth(),
             thickness = .5.dp,
         )
-        ListItem(
-            modifier = Modifier.clickable {
-                onAmazonLinkClicked()
-            },
-            headlineContent = {
-                Text(text = stringResource(R.string.detail_link_amazon), style = MaterialTheme.typography.bodyMedium)
-            },
-            leadingContent = {
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = null,
-                )
-            },
-            trailingContent = {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                )
-            },
-        )
+        if (uiState.book != null) {
+            LinkItem(title = stringResource(R.string.detail_link_amazon), onLinkClicked = {
+                onLinkClicked(createAmazonSearchUrl(uiState.book))
+            })
+        }
+        for (reference in uiState.references) {
+            val url = reference.createUrl()
+            if (url != null) {
+                LinkItem(title = reference.getTitle(), onLinkClicked = {
+                    onLinkClicked(url)
+                })
+            }
+        }
+    }
+}
+
+@Composable
+private fun LinkItem(title: String, onLinkClicked: () -> Unit) {
+    ListItem(
+        modifier = Modifier.clickable {
+            onLinkClicked()
+        },
+        headlineContent = {
+            Text(text = title, style = MaterialTheme.typography.bodyMedium)
+        },
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = null,
+            )
+        },
+        trailingContent = {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null,
+            )
+        },
+    )
+}
+
+@Composable
+private fun Reference.getTitle(): String {
+    return when (this.id) {
+        ReferenceId.GOOGLE_VOLUME_ID.id -> stringResource(id = R.string.detail_link_google)
+        ReferenceId.OL_BOOK_KEY.id -> stringResource(R.string.detail_link_openlibrary)
+        ReferenceId.GOOGLE_VOLUME_PDF_LINK.id -> stringResource(R.string.detail_link_download_pdf)
+        ReferenceId.GOOGLE_VOLUME_EPUB_LINK.id -> stringResource(R.string.download_link_epub)
+        else -> this.id
     }
 }
 
@@ -204,6 +238,7 @@ private fun TabDetailPreview() {
                     dateAdded = "2023-01-05T17:43:25.629",
                 ),
             ),
+            onLinkClicked = {},
         )
     }
 }

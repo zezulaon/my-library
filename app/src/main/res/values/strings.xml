@@ -81,6 +81,10 @@
     <string name="detail_failed_to_delete_note">An error has occurred - the note wasn\'t deleted.</string>
 
     <string name="detail_link_amazon">Find On Amazon</string>
+    <string name="detail_link_google">View on Google Books</string>
+    <string name="detail_link_openlibrary">View on Open Library</string>
+    <string name="detail_link_download_pdf">Download PDF</string>
+    <string name="download_link_epub">Download EPUB</string>
     <string name="detail_links_title">Links</string>
 
     <!-- Manage Shelves -->

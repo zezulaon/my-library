@@ -34,6 +34,7 @@ import dev.zezula.books.domain.GetBooksUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
+import dev.zezula.books.domain.UpdateBookReferencesUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
 import dev.zezula.books.ui.screen.detail.BookDetailViewModel
@@ -118,6 +119,7 @@ val appModule = module {
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
+    single { UpdateBookReferencesUseCase(get(), get()) }
     single { FindBookForIsbnOnlineUseCase(get(), get()) }
     single { FindBookForQueryOnlineUseCase(get()) }
     single { GetBooksUseCase(get()) }
@@ -132,7 +134,7 @@ val appModule = module {
     viewModel { BookListViewModel(get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { FindBookViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }

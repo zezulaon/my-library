@@ -2,6 +2,8 @@ package dev.zezula.books.data.model.openLibrary
 
 import com.google.gson.annotations.SerializedName
 import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.data.model.google.GoogleSearchItem
+import dev.zezula.books.data.model.reference.ReferenceId
 
 data class OpenLibraryIsbnResponse(
     val title: String? = null,
@@ -10,6 +12,8 @@ data class OpenLibraryIsbnResponse(
 )
 
 data class OpenLibraryBibKeyItem(
+    val key: String? = null,
+    val url: String? = null,
     val title: String? = null,
     val authors: List<OpenLibraryAuthor>? = null,
     val publishers: List<OpenLibraryPublisher>? = null,
@@ -17,7 +21,8 @@ data class OpenLibraryBibKeyItem(
     @SerializedName("publish_date") val publishDate: String? = null,
     @SerializedName("number_of_pages") val numberOfPages: Int? = null,
     val identifiers: Map<String, List<String>>,
-)
+) {
+}
 
 fun OpenLibraryBibKeyItem.toBookFormData(): BookFormData {
     val yearPublished = this.publishDate?.take(4)?.toIntOrNull()
@@ -31,6 +36,13 @@ fun OpenLibraryBibKeyItem.toBookFormData(): BookFormData {
         thumbnailLink = this.cover?.medium,
         pageCount = positivePageCount,
         isbn = isbn,
+    )
+}
+
+fun OpenLibraryBibKeyItem?.getReferences(): Map<String, String?> {
+    return mutableMapOf(
+        ReferenceId.OL_BOOK_KEY.id to this?.key,
+        ReferenceId.OL_BOOK_COVER_M.id to this?.cover?.medium,
     )
 }
 

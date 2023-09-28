@@ -11,12 +11,17 @@ import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.note.asExternalModel
 import dev.zezula.books.data.model.note.fromNetworkNote
+import dev.zezula.books.data.model.reference.NetworkReference
+import dev.zezula.books.data.model.reference.Reference
+import dev.zezula.books.data.model.reference.ReferenceEntity
+import dev.zezula.books.data.model.reference.fromNetworkReference
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
+import dev.zezula.books.util.currentDateInIso
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -114,6 +119,32 @@ class BooksRepositoryImpl(
         return bookEntity.asExternalModel()
     }
 
+    override suspend fun addOrUpdateReference(
+        referenceId: String,
+        bookId: String,
+        value: String?,
+    ): Reference {
+        val networkReference = NetworkReference(
+            id = referenceId,
+            bookId = bookId,
+            value = value,
+            dateUpdated = currentDateInIso(),
+        )
+        networkDataSource.addOrUpdateReference(networkReference)
+        val referenceEntity = fromNetworkReference(
+            networkReference = networkReference,
+            bookId = bookId,
+        )
+        booksDao.addOrUpdateReference(referenceEntity)
+        return referenceEntity.asExternalModel()
+    }
+
+    override fun getReferencesStream(bookId: String): Flow<List<Reference>> {
+        return booksDao.getReferencesForBook(bookId).map {
+            it.map(ReferenceEntity::asExternalModel)
+        }
+    }
+
     override suspend fun addBook(bookFormData: BookFormData): Book {
         val createdId = UUID.randomUUID().toString()
         return addOrUpdateBook(createdId, bookFormData)
@@ -156,6 +187,11 @@ class BooksRepositoryImpl(
         } else {
             shelfAndBookDao.removeBookFromShelf(shelvesWithBooksEntity)
         }
+    }
+
+    override suspend fun updateBookCover(bookId: String, coverUrl: String) {
+        networkDataSource.updateBookCover(bookId, coverUrl)
+        booksDao.updateBookCover(bookId = bookId, coverUrl = coverUrl)
     }
 
     override suspend fun getBookId(isbn: String): String? {
