@@ -16,6 +16,9 @@ data class Book(
     val dateAdded: String,
 ) {
     val dateAddedFormatted: String = formatDate(dateAdded)
+
+    // TODO: Remove this once all old google books cover URLs are fixed in databases
+    val thumbnailLinkSecurityFix: String? = thumbnailLink?.replace("http://", "https://")
 }
 
 data class BookFormData(

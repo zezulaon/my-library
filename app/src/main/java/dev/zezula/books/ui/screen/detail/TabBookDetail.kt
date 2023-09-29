@@ -63,7 +63,7 @@ fun TabBookDetail(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .defaultMinSize(minHeight = 270.dp),
-                            bookThumbnailUri = uiState.book?.thumbnailLink,
+                            bookThumbnailUri = uiState.book?.thumbnailLinkSecurityFix,
                         )
                     }
                     Spacer(modifier = Modifier.width(24.dp))
