@@ -38,7 +38,7 @@ internal fun BookListItem(
                 modifier = Modifier
                     .width(64.dp)
                     .height(90.dp),
-                bookThumbnailUri = book.thumbnailLink,
+                bookThumbnailUri = book.thumbnailLinkSecurityFix,
             )
             Spacer(modifier = Modifier.width(24.dp))
             Column(modifier = Modifier.weight(weight = 1f, fill = true)) {
