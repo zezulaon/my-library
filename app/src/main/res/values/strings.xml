@@ -43,6 +43,15 @@
     <string name="home_btn_add_book">Add Book</string>
     <string name="home_btn_scan_barcode"><![CDATA[Scan Barcode & Add]]></string>
 
+    <!-- Number of books subtitle -->
+    <plurals name="home_number_of_books_subtitle">
+        <item quantity="zero">No books added</item>
+        <item quantity="one">1 book</item>
+        <item quantity="few">%s books</item>
+        <item quantity="many">%s books</item>
+        <item quantity="other">%s books</item>
+    </plurals>
+
     <!-- Drawer -->
     <string name="drawer_item_manage_shelves">Manage Shelves</string>
     <string name="drawer_item_all_books">All Books</string>

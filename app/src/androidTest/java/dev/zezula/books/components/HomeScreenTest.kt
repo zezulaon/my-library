@@ -48,6 +48,10 @@ class HomeScreenTest {
                 onManageShelvesClick = {},
                 onAllBooksClick = {},
                 onShelfClick = {},
+                onAboutDialogDismissRequested = {},
+                onContactClicked = {},
+                onMoreClicked = {},
+                onReleaseNotesClicked = {},
             )
         }
     }

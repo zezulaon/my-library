@@ -122,6 +122,7 @@ class CreateBookScreenTest {
             onPublisherValueChanged = {},
             onYearPublishedValueChanged = {},
             onPageCountValueChanged = {},
+            onRatingStarSelected = {},
         )
     }
 }
