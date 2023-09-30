@@ -208,10 +208,19 @@ class NavigationTest : KoinTest {
                 label = activity.getString(R.string.content_desc_delete),
                 useUnmergedTree = true,
             ).performClick()
+            // AND user confirms the deletion
+            onNodeWithText(activity.getString(R.string.detail_btn_confirm_delete)).performClick()
             // THEN "all books" home screen is displayed
             onAllNodesWithText(activity.getString(R.string.home_shelf_title_all_books)).onFirst().assertExists()
             // AND the book is not in the list (was deleted)
             onNodeWithText(bookToDelete.title!!).assertDoesNotExist()
+            // AND the subtitle has correct number of books string
+            onNodeWithText(
+                activity.resources.getQuantityString(
+                    R.plurals.home_number_of_books_subtitle,
+                    previewBooks.size - 1,
+                ),
+            ).assertIsDisplayed()
         }
     }
 
