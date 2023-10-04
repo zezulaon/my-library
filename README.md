@@ -3,7 +3,7 @@ My Library
 ==================
 **work in progress** 🚧
 
-**My Library** is an Android app for managing books and shelves built entirely with [Kotlin](https://kotlinlang.org/) and [Jetpack Compose](https://developer.android.com/jetpack/compose). I use it as a reference and blueprint for testing latest Android Jetpack libraries and components.
+**My Library** is an Android app for managing books and shelves built entirely with [Kotlin](https://kotlinlang.org/) and [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
 Some parts of the app were inspired by the [Now in Android](https://developer.android.com/series/now-in-android)
 Android showcase app.
