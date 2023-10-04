@@ -31,8 +31,9 @@
     <string name="create_book_label_no_pages">Number of Pages</string>
     <string name="create_book_label_isbn">Isbn</string>
     <string name="create_book_label_desc">Description</string>
+    <string name="create_book_placeholder_author">Author or authors (comma separated)</string>
 
-    <string name="create_book_failed_to_save">An error has occurred - the book wasn\t saved.</string>
+    <string name="create_book_failed_to_save">An error has occurred - the book wasn\'t saved.</string>
 
     <!-- Home/Book list -->
     <string name="home_btn_add">Add Book</string>
@@ -45,12 +46,19 @@
 
     <!-- Number of books subtitle -->
     <plurals name="home_number_of_books_subtitle">
-        <item quantity="zero">No books added</item>
-        <item quantity="one">1 book</item>
-        <item quantity="few">%s books</item>
-        <item quantity="many">%s books</item>
-        <item quantity="other">%s books</item>
+        <item quantity="zero">No Books Added</item>
+        <item quantity="one">1 Book</item>
+        <item quantity="few">%s Books</item>
+        <item quantity="many">%s Books</item>
+        <item quantity="other">%s Books</item>
     </plurals>
+
+    <string name="home_subtitle_sorted_by">sorted by %1s</string>
+    <string name="sort_books_by_dialog_title">Sort Books by</string>
+    <string name="sort_books_by_label_title">Title</string>
+    <string name="sort_books_by_label_author">Author</string>
+    <string name="sort_books_by_label_date">Date Added</string>
+    <string name="sort_books_by_label_rating">User Rating</string>
 
     <!-- Drawer -->
     <string name="drawer_item_manage_shelves">Manage Shelves</string>

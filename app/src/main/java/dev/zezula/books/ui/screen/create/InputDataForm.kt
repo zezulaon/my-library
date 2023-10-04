@@ -72,6 +72,7 @@ internal fun InputDataForm(
             value = bookFormData.author.orEmpty(),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
+            placeholder = { Text(stringResource(R.string.create_book_placeholder_author)) },
             onValueChange = { newValue -> onAuthorValueChanged(newValue) },
             label = { Text(stringResource(R.string.create_book_label_author)) },
         )

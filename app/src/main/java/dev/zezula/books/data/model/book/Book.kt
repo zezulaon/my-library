@@ -1,6 +1,8 @@
 package dev.zezula.books.data.model.book
 
 import dev.zezula.books.util.formatDate
+import dev.zezula.books.util.toSortingAuthor
+import dev.zezula.books.util.toSortingTitle
 
 data class Book(
     val id: String,
@@ -16,6 +18,12 @@ data class Book(
     val dateAdded: String,
 ) {
     val dateAddedFormatted: String = formatDate(dateAdded)
+
+    // Titles without articles (a, an, the) for sorting
+    val titleWithoutArticle by lazy { title?.toSortingTitle() }
+
+    // Author's last name for sorting
+    val authorLastName by lazy { author?.toSortingAuthor() }
 
     // TODO: Remove this once all old google books cover URLs are fixed in databases
     val thumbnailLinkSecurityFix: String? = thumbnailLink?.replace("http://", "https://")

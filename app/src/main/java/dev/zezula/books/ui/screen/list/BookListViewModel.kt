@@ -3,6 +3,7 @@ package dev.zezula.books.ui.screen.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
+import dev.zezula.books.data.SortBooksBy
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.domain.GetBooksForShelfUseCase
@@ -17,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,11 +35,17 @@ class BookListViewModel(
     private val _managedShelvesClicked = MutableStateFlow(false)
     private val _addBookSheetOpened = MutableStateFlow(false)
     private val _moreDialogDisplayed = MutableStateFlow(false)
+    private val _sortBooksDialogDisplayed = MutableStateFlow(false)
+    private val _sortBooksBy = MutableStateFlow(SortBooksBy.DATE_ADDED)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val booksForShelf: Flow<Response<List<Book>>> = _selectedShelf
-        .flatMapLatest { getBooksForShelfUseCase(it) }
-        .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
+    private val booksForShelf: Flow<Response<List<Book>>> =
+        combine(_selectedShelf, _sortBooksBy) { shelf, sortBooksBy -> ShelfAndSorting(shelf, sortBooksBy) }
+            .flatMapLatest { shelfAndSorting ->
+                Timber.d("Getting books for shelf and sorting: $shelfAndSorting")
+                getBooksForShelfUseCase(shelfAndSorting.shelf, shelfAndSorting.sortBooksBy)
+            }
+            .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
 
     private val shelves: Flow<Response<List<Shelf>>> = getShelvesUseCase()
         .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
@@ -49,9 +57,14 @@ class BookListViewModel(
             _managedShelvesClicked,
             _addBookSheetOpened,
             _moreDialogDisplayed,
+            _sortBooksDialogDisplayed,
+            _sortBooksBy,
             booksForShelf,
             shelves,
-        ) { errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, moreDialogDisplayed, books, shelves ->
+        ) {
+                errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, moreDialogDisplayed,
+                sortBooksDialogDisplayed, sortBooksBy, books, shelves,
+            ->
             BookListUiState(
                 books = books.getOrDefault(emptyList()),
                 shelves = shelves.getOrDefault(emptyList()),
@@ -59,6 +72,8 @@ class BookListViewModel(
                 managedShelvesClicked = managedShelvesClicked,
                 addBookSheetOpened = addBookSheetOpened,
                 moreDialogDisplayed = moreDialogDisplayed,
+                sortDialogDisplayed = sortBooksDialogDisplayed,
+                sortBooksBy = sortBooksBy,
                 errorMessage = errorMsg,
             )
         }
@@ -121,5 +136,18 @@ class BookListViewModel(
 
     fun onAboutDialogDismissRequest() {
         _moreDialogDisplayed.value = false
+    }
+
+    fun onSortBooksClicked() {
+        _sortBooksDialogDisplayed.value = true
+    }
+
+    fun onSortDialogDismissRequest() {
+        _sortBooksDialogDisplayed.value = false
+    }
+
+    fun onSortBooksSelected(selectedSorting: SortBooksBy) {
+        _sortBooksBy.value = selectedSorting
+        onSortDialogDismissRequest()
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -57,6 +58,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.data.SortBooksBy
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
@@ -147,6 +149,15 @@ fun BookListRoute(
         onMoreClicked = {
             viewModel.onMoreClicked()
         },
+        onSortBooksClick = {
+            viewModel.onSortBooksClicked()
+        },
+        onSortDialogDismissRequested = {
+            viewModel.onSortDialogDismissRequest()
+        },
+        onSortSelected = {
+            viewModel.onSortBooksSelected(it)
+        },
         onAboutDialogDismissRequested = {
             viewModel.onAboutDialogDismissRequest()
         },
@@ -173,6 +184,9 @@ fun BookListScreen(
     onReleaseNotesClicked: () -> Unit,
     onContactClicked: () -> Unit,
     onAboutDialogDismissRequested: () -> Unit,
+    onSortBooksClick: () -> Unit = {},
+    onSortDialogDismissRequested: () -> Unit = {},
+    onSortSelected: (SortBooksBy) -> Unit = {},
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
@@ -184,6 +198,13 @@ fun BookListScreen(
             onDismissRequested = onAboutDialogDismissRequested,
             onContactUsClicked = onContactClicked,
             onReleaseNotesClicked = onReleaseNotesClicked,
+        )
+    }
+    if (uiState.sortDialogDisplayed) {
+        SortBooksDialog(
+            uiState = uiState,
+            onDismissRequested = onSortDialogDismissRequested,
+            onSortSelected = onSortSelected,
         )
     }
     ModalNavigationDrawer(
@@ -200,11 +221,17 @@ fun BookListScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             modifier = modifier,
-            topBar = { BookListTopAppBar(uiState = uiState, onMoreClicked = onMoreClicked) },
+            topBar = {
+                BookListTopAppBar(
+                    uiState = uiState,
+                    onMoreClicked = onMoreClicked,
+                    onSortBooksClick = onSortBooksClick,
+                )
+            },
             bottomBar = {
                 BookListBottomBar(
                     onAddBookClick = onAddBookClick,
-                    onMenuClick = { scope.launch { drawerState.open() } },
+                    onOpenDrawerClick = { scope.launch { drawerState.open() } },
                 )
             },
         ) { innerPadding ->
@@ -292,6 +319,7 @@ private fun AddBookBottomSheet(
 private fun BookListTopAppBar(
     uiState: BookListUiState,
     onMoreClicked: () -> Unit,
+    onSortBooksClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
@@ -300,18 +328,12 @@ private fun BookListTopAppBar(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         title = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
-                val numberOfBooks = uiState.books.count()
-                val numberOfBooksFormatted = pluralStringResource(
-                    R.plurals.home_number_of_books_subtitle,
-                    numberOfBooks,
-                    numberOfBooks,
-                )
-                Text(numberOfBooksFormatted, style = MaterialTheme.typography.bodySmall)
-            }
+            HomeAppBarTitle(uiState)
         },
         actions = {
+            IconButton(onClick = onSortBooksClick) {
+                Icon(painterResource(id = R.drawable.ic_sort_books), contentDescription = null)
+            }
             IconButton(onClick = onMoreClicked) {
                 Icon(Icons.Filled.MoreVert, contentDescription = null)
             }
@@ -320,15 +342,46 @@ private fun BookListTopAppBar(
 }
 
 @Composable
+private fun HomeAppBarTitle(uiState: BookListUiState) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
+        val numberOfBooks = uiState.books.count()
+        val noBooksFormatted = pluralStringResource(
+            R.plurals.home_number_of_books_subtitle,
+            numberOfBooks,
+            numberOfBooks,
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(noBooksFormatted, style = MaterialTheme.typography.bodySmall)
+            if (numberOfBooks > 1) {
+                val sortType = when (uiState.sortBooksBy) {
+                    SortBooksBy.TITLE -> stringResource(R.string.sort_books_by_label_title, noBooksFormatted)
+                    SortBooksBy.AUTHOR -> stringResource(R.string.sort_books_by_label_author, noBooksFormatted)
+                    SortBooksBy.DATE_ADDED -> stringResource(R.string.sort_books_by_label_date, noBooksFormatted)
+                    SortBooksBy.USER_RATING -> stringResource(R.string.sort_books_by_label_rating, noBooksFormatted)
+                }
+                Text(", ", style = MaterialTheme.typography.bodySmall)
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(id = R.drawable.ic_sort_books),
+                    contentDescription = null,
+                )
+                Text(sortType, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
 private fun BookListBottomBar(
     onAddBookClick: () -> Unit,
-    onMenuClick: () -> Unit,
+    onOpenDrawerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BottomAppBar(
         modifier = modifier,
         actions = {
-            IconButton(onClick = onMenuClick) {
+            IconButton(onClick = onOpenDrawerClick) {
                 Icon(Icons.Filled.Menu, contentDescription = stringResource(id = R.string.content_open_drawer))
             }
         },
