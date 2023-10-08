@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -25,11 +24,11 @@ import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.util.homeNavDrawer
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 internal fun NavigationDrawer(
     uiState: BookListUiState,
     onManageShelvesClick: () -> Unit,
     onAllBooksClick: () -> Unit,
+    onAllAuthorsClick: () -> Unit,
     onShelfClick: (shelf: Shelf) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,6 +47,15 @@ internal fun NavigationDrawer(
             },
             selected = false,
             onClick = onManageShelvesClick,
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+        )
+        NavigationDrawerItem(
+            label = { Text(stringResource(R.string.drawer_item_all_authors)) },
+            icon = {
+                Icon(painter = painterResource(id = R.drawable.ic_all_authors), contentDescription = null)
+            },
+            selected = false,
+            onClick = onAllAuthorsClick,
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(

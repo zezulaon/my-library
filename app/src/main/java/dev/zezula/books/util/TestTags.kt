@@ -3,6 +3,7 @@ package dev.zezula.books.util
 // Tags used in compose UI test for node selection
 
 const val homeAppBar = "homeAppBar"
+const val allAuthorsAppBar = "allAuthorsAppBar"
 const val homeNavDrawer = "homeNavDrawer"
 const val homeBtnAddBook = "homeBtnAddBook"
 const val homeBtnAddBookManually = "homeBtnAddBookManually"

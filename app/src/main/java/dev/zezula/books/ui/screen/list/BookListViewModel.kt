@@ -33,6 +33,7 @@ class BookListViewModel(
     private val _errorMessage = MutableStateFlow<Int?>(null)
     private val _selectedShelf = MutableStateFlow<Shelf?>(null)
     private val _managedShelvesClicked = MutableStateFlow(false)
+    private val _allAuthorsClicked = MutableStateFlow(false)
     private val _addBookSheetOpened = MutableStateFlow(false)
     private val _moreDialogDisplayed = MutableStateFlow(false)
     private val _sortBooksDialogDisplayed = MutableStateFlow(false)
@@ -55,6 +56,7 @@ class BookListViewModel(
             _errorMessage,
             _selectedShelf,
             _managedShelvesClicked,
+            _allAuthorsClicked,
             _addBookSheetOpened,
             _moreDialogDisplayed,
             _sortBooksDialogDisplayed,
@@ -62,7 +64,8 @@ class BookListViewModel(
             booksForShelf,
             shelves,
         ) {
-                errorMsg, selectedShelfId, managedShelvesClicked, addBookSheetOpened, moreDialogDisplayed,
+                errorMsg, selectedShelfId, managedShelvesClicked, allAuthorsClicked,
+                addBookSheetOpened, moreDialogDisplayed,
                 sortBooksDialogDisplayed, sortBooksBy, books, shelves,
             ->
             BookListUiState(
@@ -70,6 +73,7 @@ class BookListViewModel(
                 shelves = shelves.getOrDefault(emptyList()),
                 selectedShelf = selectedShelfId,
                 managedShelvesClicked = managedShelvesClicked,
+                allAuthorsClicked = allAuthorsClicked,
                 addBookSheetOpened = addBookSheetOpened,
                 moreDialogDisplayed = moreDialogDisplayed,
                 sortDialogDisplayed = sortBooksDialogDisplayed,
@@ -120,6 +124,14 @@ class BookListViewModel(
 
     fun onManagedShelvesClickedHandled() {
         _managedShelvesClicked.value = false
+    }
+
+    fun onAllAuthorsClicked() {
+        _allAuthorsClicked.value = true
+    }
+
+    fun onAllAuthorsClickedHandled() {
+        _allAuthorsClicked.value = false
     }
 
     fun onAddBookSheetOpenRequest() {

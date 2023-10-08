@@ -51,13 +51,15 @@ fun SortBooksDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(modifier = Modifier.selectableGroup()) {
                     val selectedSortBooksBy = uiState.sortBooksBy
-                    SortBooksBy.entries.forEach { sortBooksBy ->
-                        SortItem(
-                            currentSort = sortBooksBy,
-                            isSelected = sortBooksBy == selectedSortBooksBy,
-                            onOptionsSelected = { onSortSelected(sortBooksBy) },
-                        )
-                    }
+                    SortBooksBy.entries
+                        .filter { it != SortBooksBy.USER_RATING || uiState.canSortByRating }
+                        .forEach { sortBooksBy ->
+                            SortItem(
+                                currentSort = sortBooksBy,
+                                isSelected = sortBooksBy == selectedSortBooksBy,
+                                onOptionsSelected = { onSortSelected(sortBooksBy) },
+                            )
+                        }
                 }
             }
         }

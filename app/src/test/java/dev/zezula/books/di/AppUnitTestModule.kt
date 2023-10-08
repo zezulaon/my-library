@@ -26,13 +26,17 @@ import dev.zezula.books.domain.DeleteBookUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
+import dev.zezula.books.domain.GetAllAuthorsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
+import dev.zezula.books.domain.GetBooksForAuthorUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetBooksUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
+import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
+import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
 import dev.zezula.books.ui.screen.detail.BookDetailViewModel
 import dev.zezula.books.ui.screen.list.BookListViewModel
@@ -69,6 +73,8 @@ val appUnitTestModule = module {
     single { FindBookForIsbnOnlineUseCase(get(), get()) }
     single { GetBooksUseCase(get()) }
     single { AddOrUpdateBookUseCase(get()) }
+    single { GetAllAuthorsUseCase(get()) }
+    single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
     single<BooksRepository> { BooksRepositoryImpl(get(), get(), get()) }
@@ -78,6 +84,8 @@ val appUnitTestModule = module {
     // ViewModels
     viewModel { BookListViewModel(get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
+    viewModel { AllAuthorsViewModel(get()) }
+    viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
