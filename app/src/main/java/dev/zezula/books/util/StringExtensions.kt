@@ -41,9 +41,26 @@ fun String.toSortingTitle(): String {
  */
 fun String.toSortingAuthor(): String {
     var author = this.trim()
-    val names = author.split(", ", ",")
+    val names = author.splitToAuthors()
     if (names.size > 1) {
         author = names.first()
     }
     return author.trim().split(" ").last()
+}
+
+/**
+ * Splits string to list of authors. (The input string can contain multiple authors separated by comma).
+ */
+fun String.splitToAuthors(): List<String> {
+    return this.split(",", ", ")
+        .map { it.trim() }
+        .filter { it.isNotBlank() }
+}
+
+/**
+ * Creates ID out of author's name. This is done by removing all spaces and converting the name to lowercase.
+ * For example both "J. R. R. Tolkien " and "j.r.r. tolkien" should result in same authorNameId: "j.r.r.tolkien".
+ */
+fun String.toAuthorNameId(): String {
+    return this.replace(" ", "").lowercase()
 }

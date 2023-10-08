@@ -10,6 +10,7 @@ data class BookListUiState(
     val errorMessage: Int? = null,
     val selectedShelf: Shelf? = null,
     val managedShelvesClicked: Boolean = false,
+    val allAuthorsClicked: Boolean = false,
     val addBookSheetOpened: Boolean = false,
     val moreDialogDisplayed: Boolean = false,
     val sortDialogDisplayed: Boolean = false,

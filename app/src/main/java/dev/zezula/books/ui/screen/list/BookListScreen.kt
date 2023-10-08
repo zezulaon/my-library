@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -59,16 +57,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.SortBooksBy
-import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.ui.screen.about.AboutDialog
+import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.homeAppBar
 import dev.zezula.books.util.homeBtnAddBook
 import dev.zezula.books.util.homeBtnAddBookManually
 import dev.zezula.books.util.homeBtnScanBarcode
-import dev.zezula.books.util.isLastIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -81,6 +78,7 @@ fun BookListRoute(
     onScanBookClick: () -> Unit,
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
+    onAllAuthorsShelvesClick: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
@@ -117,6 +115,13 @@ fun BookListRoute(
             rememberUpdatedClick()
         }
     }
+    if (drawerState.isClosed && uiState.allAuthorsClicked) {
+        val rememberUpdatedClick by rememberUpdatedState(onAllAuthorsShelvesClick)
+        LaunchedEffect(drawerState, uiState, viewModel) {
+            viewModel.onAllAuthorsClickedHandled()
+            rememberUpdatedClick()
+        }
+    }
 
     BookListScreen(
         uiState = uiState,
@@ -137,6 +142,10 @@ fun BookListRoute(
         onAllBooksClick = {
             scope.launch { drawerState.close() }
             viewModel.onAllBooksShelfSelected()
+        },
+        onAllAuthorsClick = {
+            scope.launch { drawerState.close() }
+            viewModel.onAllAuthorsClicked()
         },
         onManageShelvesClick = {
             scope.launch { drawerState.close() }
@@ -179,6 +188,7 @@ fun BookListScreen(
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllBooksClick: () -> Unit,
+    onAllAuthorsClick: () -> Unit,
     onShelfClick: (Shelf) -> Unit,
     onMoreClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
@@ -215,6 +225,7 @@ fun BookListScreen(
                 onManageShelvesClick = onManageShelvesClick,
                 onAllBooksClick = onAllBooksClick,
                 onShelfClick = onShelfClick,
+                onAllAuthorsClick = onAllAuthorsClick,
             )
         },
     ) {
@@ -392,22 +403,6 @@ private fun BookListBottomBar(
 }
 
 @Composable
-private fun BookList(
-    books: List<Book>,
-    onBookClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(
-        modifier = modifier,
-    ) {
-        itemsIndexed(key = { _, item -> item.id }, items = books) { index, book ->
-            val isLast = books.isLastIndex(index)
-            BookListItem(book = book, onBookClick = onBookClick, isLast = isLast)
-        }
-    }
-}
-
-@Composable
 private fun AddBookButton(onButtonClick: () -> Unit) {
     ExtendedFloatingActionButton(
         modifier = Modifier.testTag(homeBtnAddBook),
@@ -437,6 +432,7 @@ fun PreviewBookListScreen() {
             onReleaseNotesClicked = {},
             onContactClicked = {},
             onAboutDialogDismissRequested = {},
+            onAllAuthorsClick = {},
         )
     }
 }

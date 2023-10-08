@@ -7,13 +7,17 @@ import androidx.navigation.NavHostController
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.ui.DestinationArgs.authorNameIdArg
 import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
+import dev.zezula.books.ui.Destinations.allAuthorsRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
 import dev.zezula.books.ui.Destinations.scanBarcodeRoute
 import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
+import dev.zezula.books.ui.MyLibraryScreens.allAuthors
+import dev.zezula.books.ui.MyLibraryScreens.authorBookList
 import dev.zezula.books.ui.MyLibraryScreens.bookDetail
 import dev.zezula.books.ui.MyLibraryScreens.bookForm
 import dev.zezula.books.ui.MyLibraryScreens.bookList
@@ -30,7 +34,9 @@ private object MyLibraryScreens {
     const val bookList = "bookList"
     const val bookForm = "bookForm"
     const val bookDetail = "bookDetail"
+    const val authorBookList = "authorBookList"
     const val shelves = "shelves"
+    const val allAuthors = "allAuthors"
     const val scanBarcode = "scanBarcode"
     const val findBook = "findBook"
     const val searchBarcode = "searchBarcode"
@@ -38,6 +44,7 @@ private object MyLibraryScreens {
 
 object DestinationArgs {
     const val bookIdArg = "bookId"
+    const val authorNameIdArg = "authorNameIdArg"
     const val barcodeArg = "barcode"
 }
 
@@ -46,7 +53,9 @@ object Destinations {
     const val bookListRoute = bookList
     const val bookFormRoute = "$bookForm/{$bookIdArg}"
     const val bookDetailRoute = "$bookDetail/{$bookIdArg}"
+    const val authorBookListRoute = "$authorBookList/{$authorNameIdArg}"
     const val shelvesRoute = shelves
+    const val allAuthorsRoute = allAuthors
     const val scanBarcodeRoute = scanBarcode
     const val findBookRoute = findBook
     const val searchBarcodeRoute = "$searchBarcode/{$barcodeArg}"
@@ -91,8 +100,16 @@ fun NavHostController.navigateToBookDetail(bookId: String, popupToBookList: Bool
     }
 }
 
+fun NavHostController.navigateToAuthorBooks(authorId: String) {
+    navigate("$authorBookList/$authorId")
+}
+
 fun NavHostController.navigateToManageShelves() {
     navigate(shelvesRoute)
+}
+
+fun NavHostController.navigateToAllAuthorsShelves() {
+    navigate(allAuthorsRoute)
 }
 
 fun NavHostController.navigateReplaceTo(targetDestination: String, destinationToReplace: String) {

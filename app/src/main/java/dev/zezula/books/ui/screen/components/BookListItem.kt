@@ -1,4 +1,4 @@
-package dev.zezula.books.ui.screen.list
+package dev.zezula.books.ui.screen.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.ui.screen.list.ImageThumbnail
 
 @Composable
 internal fun BookListItem(

@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.zezula.books.ui.screen.authors.AllAuthorsRoute
+import dev.zezula.books.ui.screen.authors.AuthorBooksRoute
 import dev.zezula.books.ui.screen.create.CreateBookRoute
 import dev.zezula.books.ui.screen.detail.BookDetailRoute
 import dev.zezula.books.ui.screen.list.BookListRoute
@@ -48,6 +50,7 @@ fun MyLibraryNavHost(
                 onFindBookOnlineClick = { navController.navigateToFindBookOnline() },
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
+                onAllAuthorsShelvesClick = { navController.navigateToAllAuthorsShelves() },
                 onContactClicked = { navController.navigateToContactEmailDraft() },
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 viewModel = koinViewModel(),
@@ -87,6 +90,29 @@ fun MyLibraryNavHost(
         composable(route = Destinations.shelvesRoute) {
             ShelvesRoute(
                 onNavigateBack = { navController.popBackStack() },
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(route = Destinations.allAuthorsRoute) {
+            AllAuthorsRoute(
+                viewModel = koinViewModel(),
+                onNavigateBack = { navController.popBackStack() },
+                onAuthorClick = { authorNameId ->
+                    navController.navigateToAuthorBooks(authorNameId)
+                },
+            )
+        }
+
+        composable(route = Destinations.authorBookListRoute) {
+            AuthorBooksRoute(
+                onNavigateBack = { navController.popBackStack() },
+                onBookClick = { bookId ->
+                    navController.navigateToBookDetail(
+                        bookId = bookId,
+                        popupToBookList = false,
+                    )
+                },
                 viewModel = koinViewModel(),
             )
         }
