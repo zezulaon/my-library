@@ -54,26 +54,36 @@ fun TabReviews(
                     .align(Alignment.Center),
             )
         } else {
-            LazyColumn(
-                contentPadding = PaddingValues(vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                item {
-                    RatingCard(
-                        modifier = modifier
-                            .padding(horizontal = 24.dp)
-                            .fillMaxWidth(),
-                        uiState = uiState,
-                    )
-                }
-                itemsIndexed(items = uiState.reviews, key = { _, item -> item.id }) { _, review ->
-                    ReviewCard(
-                        modifier = modifier
-                            .padding(horizontal = 24.dp)
-                            .fillMaxWidth(),
-                        review = review,
-                        onReviewClick = onReviewClick,
-                    )
+            if (uiState.reviews.isEmpty()) {
+                Text(
+                    modifier = modifier
+                        .padding(top = 32.dp)
+                        .align(Alignment.Center),
+                    text = stringResource(R.string.detail_no_reviews_were_found),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(vertical = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    item {
+                        RatingCard(
+                            modifier = modifier
+                                .padding(horizontal = 24.dp)
+                                .fillMaxWidth(),
+                            uiState = uiState,
+                        )
+                    }
+                    itemsIndexed(items = uiState.reviews, key = { _, item -> item.id }) { _, review ->
+                        ReviewCard(
+                            modifier = modifier
+                                .padding(horizontal = 24.dp)
+                                .fillMaxWidth(),
+                            review = review,
+                            onReviewClick = onReviewClick,
+                        )
+                    }
                 }
             }
         }

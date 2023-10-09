@@ -86,6 +86,7 @@
     <string name="detail_label_year_isbn">ISBN</string>
     <string name="detail_label_year_added_on">Added on</string>
     <string name="detail_reviews_btn_read_more">Read More</string>
+    <string name="detail_no_reviews_were_found">No reviews were found.</string>
 
     <string name="detail_label_rated">Rated</string>
     <string name="detail_label_rating_reviews_count">%1s ratings and %2s reviews</string>
