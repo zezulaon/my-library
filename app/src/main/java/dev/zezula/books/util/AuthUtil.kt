@@ -1,7 +1,10 @@
 package dev.zezula.books.util
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.firebase.auth.FirebaseAuth
 import dev.zezula.books.BuildConfig
+import timber.log.Timber
+import java.lang.IllegalStateException
 
 fun getGoogleSignInRequest(): BeginSignInRequest = BeginSignInRequest.builder()
     .setGoogleIdTokenRequestOptions(
@@ -15,3 +18,14 @@ fun getGoogleSignInRequest(): BeginSignInRequest = BeginSignInRequest.builder()
             .build(),
     )
     .build()
+
+fun shortUserId(): String {
+    val id = try {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.substring(0, 4)
+    } catch (e: IllegalStateException) {
+        Timber.e(e)
+        null
+    }
+    return id ?: "n/a"
+}
