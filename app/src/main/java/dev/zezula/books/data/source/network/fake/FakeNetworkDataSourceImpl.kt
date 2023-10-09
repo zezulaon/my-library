@@ -77,4 +77,8 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     override suspend fun deleteNote(noteId: String, bookId: String) {
         TODO("Note deletion not yet implemented")
     }
+
+    override suspend fun getNotes(bookId: String): List<NetworkNote> {
+        return emptyList()
+    }
 }

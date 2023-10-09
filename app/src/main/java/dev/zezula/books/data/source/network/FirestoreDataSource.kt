@@ -78,6 +78,16 @@ class FirestoreDataSource : NetworkDataSource {
         return book
     }
 
+    override suspend fun getNotes(bookId: String): List<NetworkNote> {
+        return booksCollection.document(bookId).collection(collectionNotes).get().await()
+            .map {
+                it.toObject(NetworkNote::class.java)
+            }
+            .onEach {
+                Timber.d("Deserialized note: $it")
+            }
+    }
+
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
         Timber.d("addOrUpdate(note=$note)")
         checkNotNull(note.id) { "Note needs [id] property" }
