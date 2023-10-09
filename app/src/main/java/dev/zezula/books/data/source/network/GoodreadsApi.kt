@@ -12,7 +12,7 @@ import timber.log.Timber
 // https://www.goodreads.com/api/index#book.show_by_isbn (Unfortunately this API isn't maintained anymore)
 interface GoodreadsApi {
 
-    @GET("/book/isbn/{isbn}?text_only=true&key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    @GET("/book/isbn/{isbn}?key=" + BuildConfig.ML_GOODREADS_API_KEY)
     suspend fun goodreadsBookWithReviews(@Path("isbn") isbn: String): GoodreadsResponse
 
     @GET("/search/index.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
