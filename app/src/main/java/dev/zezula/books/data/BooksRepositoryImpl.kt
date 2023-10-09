@@ -125,7 +125,16 @@ class BooksRepositoryImpl(
         //  downloaded only when there are no books in the app database)
         if (numberOfBooks == 0) {
             networkDataSource.getBooks().forEach { networkBook ->
-                booksDao.addOrUpdate(fromNetworkBook(networkBook))
+                val bookEntity = fromNetworkBook(networkBook)
+                booksDao.addOrUpdate(bookEntity)
+
+                networkDataSource.getNotes(bookEntity.id).forEach { networkNote ->
+                    val networkNoteEntity = fromNetworkNote(
+                        networkNote = networkNote,
+                        bookId = bookEntity.id,
+                    )
+                    booksDao.addOrUpdateNote(networkNoteEntity)
+                }
             }
             networkDataSource.getShelves().forEach { networkShelf ->
                 shelfAndBookDao.addOrUpdate(fromNetworkShelf(networkShelf))
