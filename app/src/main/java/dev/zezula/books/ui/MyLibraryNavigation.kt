@@ -27,6 +27,7 @@ import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
 import dev.zezula.books.ui.MyLibraryScreens.shelves
 import dev.zezula.books.ui.MyLibraryScreens.signIn
 import dev.zezula.books.util.findMyLibraryMainActivity
+import dev.zezula.books.util.shortUserId
 import timber.log.Timber
 
 private object MyLibraryScreens {
@@ -153,7 +154,7 @@ fun NavHostController.navigateToGoogleSignIn() {
 fun NavHostController.navigateToContactEmailDraft() {
     val to = BuildConfig.ML_CONTACT_EMAIL
     val subjectPrefix = context.getString(R.string.error_email_contact_subject)
-    val subjectFull = "$subjectPrefix (${BuildConfig.APPLICATION_ID}:${BuildConfig.VERSION_CODE})"
+    val subjectFull = "$subjectPrefix (${BuildConfig.APPLICATION_ID}:${BuildConfig.VERSION_CODE}:${shortUserId()})"
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse("mailto:") // ensures only email apps should handle this
         putExtra(Intent.EXTRA_EMAIL, arrayOf(to))

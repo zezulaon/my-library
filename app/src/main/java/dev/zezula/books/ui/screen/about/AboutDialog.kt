@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
 import dev.zezula.books.ui.theme.MyLibraryTheme
+import dev.zezula.books.util.shortUserId
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +81,7 @@ private fun AboutContent(
         )
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+            text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}, ${shortUserId()})",
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
