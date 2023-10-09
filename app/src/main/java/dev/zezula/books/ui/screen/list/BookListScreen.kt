@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -281,7 +280,6 @@ private fun AddBookBottomSheet(
     ModalBottomSheet(
         onDismissRequest = { onAddBookSheetCloseRequested() },
         sheetState = bottomSheetState,
-        windowInsets = BottomSheetDefaults.windowInsets,
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(stringResource(R.string.home_btn_add_book), style = MaterialTheme.typography.titleMedium)
@@ -289,7 +287,8 @@ private fun AddBookBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .padding(bottom = 54.dp),
         ) {
             ListItem(
                 modifier = Modifier
