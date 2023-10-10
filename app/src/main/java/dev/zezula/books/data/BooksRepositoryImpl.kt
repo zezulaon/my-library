@@ -88,6 +88,10 @@ class BooksRepositoryImpl(
             }
     }
 
+    override suspend fun searchMyLibraryBooks(query: String): List<Book> {
+        return booksDao.getBooksForQuery(query).map(BookEntity::asExternalModel)
+    }
+
     override suspend fun getBook(bookId: String): Book? {
         return getBookStream(bookId).first()
     }

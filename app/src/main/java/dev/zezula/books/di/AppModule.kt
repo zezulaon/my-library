@@ -35,6 +35,7 @@ import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetBooksUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
+import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
@@ -44,6 +45,7 @@ import dev.zezula.books.ui.screen.detail.BookDetailViewModel
 import dev.zezula.books.ui.screen.list.BookListViewModel
 import dev.zezula.books.ui.screen.search.FindBookViewModel
 import dev.zezula.books.ui.screen.search.SearchBarcodeViewModel
+import dev.zezula.books.ui.screen.search.SearchMyLibraryViewModel
 import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
 import dev.zezula.books.ui.screen.signin.SignInViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -124,6 +126,7 @@ val appModule = module {
     single { CheckReviewsDownloadedUseCase(get(), get()) }
     single { FindBookForIsbnOnlineUseCase(get(), get()) }
     single { FindBookForQueryOnlineUseCase(get()) }
+    single { SearchMyLibraryBooksUseCase(get()) }
     single { GetBooksUseCase(get()) }
     single { AddOrUpdateBookUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
@@ -143,6 +146,7 @@ val appModule = module {
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { FindBookViewModel(get(), get()) }
+    viewModel { SearchMyLibraryViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }

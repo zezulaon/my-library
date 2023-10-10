@@ -22,6 +22,8 @@ interface BooksRepository {
         noteFormData: NoteFormData,
     ): Note
 
+    suspend fun searchMyLibraryBooks(query: String): List<Book>
+
     suspend fun getBook(bookId: String): Book?
 
     suspend fun getBookId(isbn: String): String?
