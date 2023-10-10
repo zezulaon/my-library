@@ -22,6 +22,10 @@ class FakeBookDaoImpl : BookDao {
         return notesFlow.map { it[bookId] ?: emptyList() }
     }
 
+    override suspend fun getBooksForQuery(query: String): List<BookEntity> {
+        TODO("Searching books is not yet implemented")
+    }
+
     override suspend fun addOrUpdateNote(note: NoteEntity) {
         TODO("Updating notes is not yet implemented")
     }

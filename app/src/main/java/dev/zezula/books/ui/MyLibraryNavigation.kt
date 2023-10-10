@@ -14,6 +14,7 @@ import dev.zezula.books.ui.Destinations.allAuthorsRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
 import dev.zezula.books.ui.Destinations.scanBarcodeRoute
+import dev.zezula.books.ui.Destinations.searchMyLibraryRoute
 import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
 import dev.zezula.books.ui.MyLibraryScreens.allAuthors
@@ -24,6 +25,7 @@ import dev.zezula.books.ui.MyLibraryScreens.bookList
 import dev.zezula.books.ui.MyLibraryScreens.findBook
 import dev.zezula.books.ui.MyLibraryScreens.scanBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
+import dev.zezula.books.ui.MyLibraryScreens.searchMyLibrary
 import dev.zezula.books.ui.MyLibraryScreens.shelves
 import dev.zezula.books.ui.MyLibraryScreens.signIn
 import dev.zezula.books.util.findMyLibraryMainActivity
@@ -37,6 +39,7 @@ private object MyLibraryScreens {
     const val bookDetail = "bookDetail"
     const val authorBookList = "authorBookList"
     const val shelves = "shelves"
+    const val searchMyLibrary = "searchMyLibrary"
     const val allAuthors = "allAuthors"
     const val scanBarcode = "scanBarcode"
     const val findBook = "findBook"
@@ -56,6 +59,7 @@ object Destinations {
     const val bookDetailRoute = "$bookDetail/{$bookIdArg}"
     const val authorBookListRoute = "$authorBookList/{$authorNameIdArg}"
     const val shelvesRoute = shelves
+    const val searchMyLibraryRoute = searchMyLibrary
     const val allAuthorsRoute = allAuthors
     const val scanBarcodeRoute = scanBarcode
     const val findBookRoute = findBook
@@ -107,6 +111,10 @@ fun NavHostController.navigateToAuthorBooks(authorId: String) {
 
 fun NavHostController.navigateToManageShelves() {
     navigate(shelvesRoute)
+}
+
+fun NavHostController.navigateToSearchMyLibrary() {
+    navigate(searchMyLibraryRoute)
 }
 
 fun NavHostController.navigateToAllAuthorsShelves() {

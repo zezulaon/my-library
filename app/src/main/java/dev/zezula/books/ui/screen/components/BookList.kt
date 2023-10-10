@@ -14,14 +14,20 @@ fun BookList(
     books: List<Book>,
     onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    animateItemChanges: Boolean = true,
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
         itemsIndexed(key = { _, item -> item.id }, items = books) { index, book ->
             val isLast = books.isLastIndex(index)
+            val itemModifier = if (animateItemChanges) {
+                Modifier.animateItemPlacement()
+            } else {
+                Modifier
+            }
             BookListItem(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = itemModifier,
                 book = book,
                 onBookClick = onBookClick,
                 isLast = isLast,

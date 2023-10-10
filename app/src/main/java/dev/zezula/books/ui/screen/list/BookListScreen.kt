@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
@@ -80,6 +79,7 @@ fun BookListRoute(
     onAllAuthorsShelvesClick: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
+    onSearchMyLibraryClick: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -169,6 +169,7 @@ fun BookListRoute(
         onAboutDialogDismissRequested = {
             viewModel.onAboutDialogDismissRequest()
         },
+        onSearchMyLibraryClick = onSearchMyLibraryClick,
         onContactClicked = onContactClicked,
         onReleaseNotesClicked = onReleaseNotesClicked,
     )
@@ -193,10 +194,11 @@ fun BookListScreen(
     onReleaseNotesClicked: () -> Unit,
     onContactClicked: () -> Unit,
     onAboutDialogDismissRequested: () -> Unit,
+    modifier: Modifier = Modifier,
     onSortBooksClick: () -> Unit = {},
     onSortDialogDismissRequested: () -> Unit = {},
     onSortSelected: (SortBooksBy) -> Unit = {},
-    modifier: Modifier = Modifier,
+    onSearchMyLibraryClick: () -> Unit = {},
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -235,13 +237,14 @@ fun BookListScreen(
                 BookListTopAppBar(
                     uiState = uiState,
                     onMoreClicked = onMoreClicked,
-                    onSortBooksClick = onSortBooksClick,
                 )
             },
             bottomBar = {
                 BookListBottomBar(
                     onAddBookClick = onAddBookClick,
                     onOpenDrawerClick = { scope.launch { drawerState.open() } },
+                    onSortBooksClick = onSortBooksClick,
+                    onSearchMyLibraryClick = onSearchMyLibraryClick,
                 )
             },
         ) { innerPadding ->
@@ -329,7 +332,6 @@ private fun AddBookBottomSheet(
 private fun BookListTopAppBar(
     uiState: BookListUiState,
     onMoreClicked: () -> Unit,
-    onSortBooksClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
@@ -341,9 +343,6 @@ private fun BookListTopAppBar(
             HomeAppBarTitle(uiState)
         },
         actions = {
-            IconButton(onClick = onSortBooksClick) {
-                Icon(painterResource(id = R.drawable.ic_sort_books), contentDescription = null)
-            }
             IconButton(onClick = onMoreClicked) {
                 Icon(Icons.Filled.MoreVert, contentDescription = null)
             }
@@ -386,13 +385,21 @@ private fun HomeAppBarTitle(uiState: BookListUiState) {
 private fun BookListBottomBar(
     onAddBookClick: () -> Unit,
     onOpenDrawerClick: () -> Unit,
+    onSortBooksClick: () -> Unit,
+    onSearchMyLibraryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BottomAppBar(
         modifier = modifier,
         actions = {
             IconButton(onClick = onOpenDrawerClick) {
-                Icon(Icons.Filled.Menu, contentDescription = stringResource(id = R.string.content_open_drawer))
+                Icon(painterResource(id = R.drawable.ic_shelves), contentDescription = stringResource(id = R.string.content_open_drawer))
+            }
+            IconButton(onClick = onSearchMyLibraryClick) {
+                Icon(Icons.Filled.Search, contentDescription = null)
+            }
+            IconButton(onClick = onSortBooksClick) {
+                Icon(painterResource(id = R.drawable.ic_sort_books), contentDescription = null)
             }
         },
         floatingActionButton = {

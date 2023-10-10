@@ -162,6 +162,8 @@
     <string name="find_book_online_title">Find Book Online</string>
     <string name="find_book_search_placeholder">Search by title, isbn or keywords…</string>
 
+    <string name="search_my_library_placeholder">Search your books by title or author</string>
+
     <!-- About dialog -->
     <string name="about_changes_title">Latest Changes and Release Notes</string>
     <string name="about_changes_desc">The app is currently undergoing a major update to enhance functionality. For detailed information, please check the \"Release Notes.\" If you have any questions or concerns, don\'t hesitate to contact us. Thank you for your patience and understanding.</string>

@@ -15,6 +15,7 @@ import dev.zezula.books.ui.screen.list.BookListRoute
 import dev.zezula.books.ui.screen.scanner.ScanBarcodeRoute
 import dev.zezula.books.ui.screen.search.FindBookRoute
 import dev.zezula.books.ui.screen.search.SearchBarcodeRoute
+import dev.zezula.books.ui.screen.search.SearchMyLibraryRoute
 import dev.zezula.books.ui.screen.shelves.ShelvesRoute
 import dev.zezula.books.ui.screen.signin.SignInRoute
 import dev.zezula.books.util.findMyLibraryMainActivity
@@ -53,6 +54,17 @@ fun MyLibraryNavHost(
                 onAllAuthorsShelvesClick = { navController.navigateToAllAuthorsShelves() },
                 onContactClicked = { navController.navigateToContactEmailDraft() },
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
+                onSearchMyLibraryClick = { navController.navigateToSearchMyLibrary() },
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(route = Destinations.searchMyLibraryRoute) {
+            SearchMyLibraryRoute(
+                onNavigateBack = { navController.popBackStack() },
+                onBookClick = { bookId ->
+                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
+                },
                 viewModel = koinViewModel(),
             )
         }

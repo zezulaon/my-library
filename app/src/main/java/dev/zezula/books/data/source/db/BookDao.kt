@@ -42,4 +42,11 @@ interface BookDao {
 
     @Upsert
     suspend fun addOrUpdateNote(note: NoteEntity)
+
+    /**
+     * Returns book for a given search query. Searches title and author columns.
+     * @param query search query
+     */
+    @Query("SELECT * FROM books WHERE title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%' ORDER BY dateAdded DESC")
+    suspend fun getBooksForQuery(query: String): List<BookEntity>
 }
