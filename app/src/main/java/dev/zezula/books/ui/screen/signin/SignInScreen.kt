@@ -32,6 +32,7 @@ fun SignInRoute(
     viewModel: SignInViewModel,
     onSignInSuccess: () -> Unit,
     onGoogleSignIn: () -> Unit,
+    onEmailSignIn: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
 ) {
@@ -60,6 +61,7 @@ fun SignInRoute(
             onGoogleSignIn()
             viewModel.onGoogleSignInClick()
         },
+        onEmailSignInClick = onEmailSignIn,
         onAnonymousSignInClick = {
             viewModel.signInAnonymously()
         },
@@ -72,6 +74,7 @@ fun SignInRoute(
 fun SignInScreen(
     uiState: SignInUiState,
     onGoogleSignInClick: () -> Unit,
+    onEmailSignInClick: () -> Unit,
     onAnonymousSignInClick: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
@@ -125,6 +128,13 @@ fun SignInScreen(
                         }
                         OutlinedButton(
                             modifier = Modifier.width(220.dp),
+                            onClick = onEmailSignInClick,
+                            enabled = uiState.isSignInProgress.not(),
+                        ) {
+                            Text(text = stringResource(id = R.string.btn_email_sign_in))
+                        }
+                        OutlinedButton(
+                            modifier = Modifier.width(220.dp),
                             onClick = onAnonymousSignInClick,
                             enabled = uiState.isSignInProgress.not(),
                         ) {
@@ -147,6 +157,7 @@ private fun DefaultPreview() {
             onAnonymousSignInClick = {},
             onContactClicked = {},
             onReleaseNotesClicked = {},
+            onEmailSignInClick = {},
         )
     }
 }

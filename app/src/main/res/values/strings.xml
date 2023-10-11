@@ -11,6 +11,7 @@
     <string name="screen_detail_tab_reviews">Reviews</string>
 
     <string name="btn_google_sign_in">Sign in with Google</string>
+    <string name="btn_email_sign_in">Sign in with Email</string>
     <string name="btn_anonymous_sign_in">Try anonymously</string>
 
     <string name="invalid_input_form">Please fill in all required fields.</string>
@@ -18,8 +19,25 @@
     <!-- Sign In -->
     <string name="sign_in_google_sign_in_failed">Google Sign In Failed</string>
     <string name="sign_in_anonymous_sign_in_failed">Anonymous Sign In Failed</string>
+    <string name="sign_in_email_register_failed">Account Creation Failed - Please check your email and password and try again.</string>
+    <string name="sign_in_password_reset_failed">Password Reset Failed - Please check your email and try again.</string>
+    <string name="sign_in_password_reset_sent_to">Password reset email was sent - Please check your inbox.</string>
+    <string name="sign_in_email_failed_invalid_user">Sign In Failed - Email address is not registered.</string>
+    <string name="sign_in_email_failed_invalid_credentials">Sign In Failed - Please check your email and password and try again.</string>
+    <string name="sign_in_email_sign_in_failed">Sign In Failed - Please check your email and password and try again.</string>
+    <string name="sign_in_email_register_collision">Account Creation Failed - An account with this email address already exists.</string>
 
-    <string name="error_no_book_found">Failed to find the book</string>
+    <string name="sign_in_email_label">Email</string>
+    <string name="sign_in_password_label">Password</string>
+    <string name="sign_in_button_text">Sign In</string>
+    <string name="sign_in_button_register">Create Account</string>
+    <string name="sign_in_label_or">Or</string>
+    <string name="create_account_button_text">Create New Account</string>
+    <string name="request_new_password_button_text">Request New Password</string>
+    <string name="email_sign_in_label_invalid_password">Password has to be at least 6 characters long.</string>
+    <string name="email_sign_in_label_invalid_email">Please enter a valid email address.</string>
+    <string name="screen_title_email_sign_in">Sign In with Email</string>
+    <string name="screen_title_email_register">Create New Account</string>
 
     <!-- Create/Update book -->
     <string name="screen_title_create_new_book">Add a New Book</string>
