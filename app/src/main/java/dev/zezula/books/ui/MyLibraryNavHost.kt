@@ -17,6 +17,7 @@ import dev.zezula.books.ui.screen.search.FindBookRoute
 import dev.zezula.books.ui.screen.search.SearchBarcodeRoute
 import dev.zezula.books.ui.screen.search.SearchMyLibraryRoute
 import dev.zezula.books.ui.screen.shelves.ShelvesRoute
+import dev.zezula.books.ui.screen.signin.EmailSignInRoute
 import dev.zezula.books.ui.screen.signin.SignInRoute
 import dev.zezula.books.util.findMyLibraryMainActivity
 import org.koin.androidx.compose.koinViewModel
@@ -37,10 +38,19 @@ fun MyLibraryNavHost(
             SignInRoute(
                 onSignInSuccess = { navController.navigateFromOnboardingToHome() },
                 onGoogleSignIn = { navController.navigateToGoogleSignIn() },
+                onEmailSignIn = { navController.navigateToEmailSignIn() },
                 // Get same ViewModel as in main activity
                 onContactClicked = { navController.navigateToContactEmailDraft() },
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 viewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
+            )
+        }
+
+        composable(route = Destinations.emailSignInRoute) {
+            EmailSignInRoute(
+                onSignInSuccess = { navController.navigateFromOnboardingToHome() },
+                onNavigateBack = { navController.popBackStack() },
+                viewModel = koinViewModel(),
             )
         }
 

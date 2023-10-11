@@ -101,7 +101,7 @@ class CreateBookViewModel(
 
     fun saveBook() {
         // Continue only if we have all form input data
-        if (isInvalidFormValid()) return
+        if (isInvalidForm()) return
 
         viewModelScope.launch {
             _isInProgress.value = true
@@ -114,7 +114,7 @@ class CreateBookViewModel(
         }
     }
 
-    private fun isInvalidFormValid(): Boolean {
+    private fun isInvalidForm(): Boolean {
         val isInvalid = _bookFormData.value.title.isNullOrEmpty()
         if (isInvalid) {
             _invalidForm.value = true

@@ -1,5 +1,7 @@
 package dev.zezula.books.util
 
+import android.util.Patterns
+
 /**
  * List of articles in different languages. Used for sorting - if a book title contains an article, it should be
  * ignored (removed) when sorting.
@@ -63,4 +65,15 @@ fun String.splitToAuthors(): List<String> {
  */
 fun String.toAuthorNameId(): String {
     return this.replace(" ", "").lowercase()
+}
+
+/**
+ * Checks if the string is a valid email address. (Uses [Patterns.EMAIL_ADDRESS] to validate the email address).
+ */
+fun String.isValidEmail(): Boolean {
+    return if (this.isEmpty()) {
+        false
+    } else {
+        Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    }
 }

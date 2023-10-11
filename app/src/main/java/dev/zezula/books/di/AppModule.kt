@@ -47,6 +47,7 @@ import dev.zezula.books.ui.screen.search.FindBookViewModel
 import dev.zezula.books.ui.screen.search.SearchBarcodeViewModel
 import dev.zezula.books.ui.screen.search.SearchMyLibraryViewModel
 import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
+import dev.zezula.books.ui.screen.signin.EmailSignInViewModel
 import dev.zezula.books.ui.screen.signin.SignInViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -145,6 +146,7 @@ val appModule = module {
     viewModel { CreateBookViewModel(get(), get(), get()) }
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
+    viewModel { EmailSignInViewModel(get()) }
     viewModel { FindBookViewModel(get(), get()) }
     viewModel { SearchMyLibraryViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }

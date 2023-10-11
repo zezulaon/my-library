@@ -12,6 +12,7 @@ import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.Destinations.allAuthorsRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
+import dev.zezula.books.ui.Destinations.emailSignInRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
 import dev.zezula.books.ui.Destinations.scanBarcodeRoute
 import dev.zezula.books.ui.Destinations.searchMyLibraryRoute
@@ -22,6 +23,7 @@ import dev.zezula.books.ui.MyLibraryScreens.authorBookList
 import dev.zezula.books.ui.MyLibraryScreens.bookDetail
 import dev.zezula.books.ui.MyLibraryScreens.bookForm
 import dev.zezula.books.ui.MyLibraryScreens.bookList
+import dev.zezula.books.ui.MyLibraryScreens.emailSignIn
 import dev.zezula.books.ui.MyLibraryScreens.findBook
 import dev.zezula.books.ui.MyLibraryScreens.scanBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
@@ -34,6 +36,7 @@ import timber.log.Timber
 
 private object MyLibraryScreens {
     const val signIn = "signIn"
+    const val emailSignIn = "emailSignIn"
     const val bookList = "bookList"
     const val bookForm = "bookForm"
     const val bookDetail = "bookDetail"
@@ -54,6 +57,7 @@ object DestinationArgs {
 
 object Destinations {
     const val signInRoute = signIn
+    const val emailSignInRoute = emailSignIn
     const val bookListRoute = bookList
     const val bookFormRoute = "$bookForm/{$bookIdArg}"
     const val bookDetailRoute = "$bookDetail/{$bookIdArg}"
@@ -119,6 +123,10 @@ fun NavHostController.navigateToSearchMyLibrary() {
 
 fun NavHostController.navigateToAllAuthorsShelves() {
     navigate(allAuthorsRoute)
+}
+
+fun NavHostController.navigateToEmailSignIn() {
+    navigate(emailSignInRoute)
 }
 
 fun NavHostController.navigateReplaceTo(targetDestination: String, destinationToReplace: String) {
