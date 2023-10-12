@@ -4,6 +4,8 @@ interface AuthService {
 
     fun getUserId(): String?
 
+    fun isAccountAnonymous(): Boolean
+
     fun isUserSignedIn(): Boolean
 
     suspend fun googleSignIn(googleIdToken: String): Boolean

@@ -9,6 +9,8 @@ class FakeAuthServiceImpl : AuthService {
 
     override fun isUserSignedIn(): Boolean = true
 
+    override fun isAccountAnonymous(): Boolean = false
+
     override suspend fun googleSignIn(googleIdToken: String): Boolean = true
 
     override suspend fun signInAnonymously(): Boolean = true

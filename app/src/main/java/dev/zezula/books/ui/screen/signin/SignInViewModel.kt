@@ -13,19 +13,22 @@ import timber.log.Timber
 
 class SignInViewModel(private val authService: AuthService) : ViewModel() {
 
-    private val _errorMessage = MutableStateFlow<Int?>(null)
-    private val _isUserSignedIn = MutableStateFlow(false)
-    private val _isInProgress = MutableStateFlow(false)
+    private val uiMessage = MutableStateFlow<Int?>(null)
+    private val isUserSignedIn = MutableStateFlow(false)
+    private val isInProgress = MutableStateFlow(false)
+    private val anonymUpgradeRequired = MutableStateFlow(false)
 
     val uiState = combine(
-        _isUserSignedIn,
-        _isInProgress,
-        _errorMessage,
-    ) { userSignedIn, isInProgress, errorMessage ->
+        isUserSignedIn,
+        isInProgress,
+        uiMessage,
+        anonymUpgradeRequired,
+    ) { userSignedIn, isInProgress, uiMessage, upgradeAnonymCardDismissed ->
         SignInUiState(
             isUserSignedIn = userSignedIn,
             isSignInProgress = isInProgress,
-            errorMessage = errorMessage,
+            uiMessage = uiMessage,
+            anonymUpgradeRequired = upgradeAnonymCardDismissed,
         )
     }
         .stateIn(viewModelScope, whileSubscribedInActivity, SignInUiState())
@@ -33,6 +36,7 @@ class SignInViewModel(private val authService: AuthService) : ViewModel() {
     init {
         Timber.d("init{}")
         Timber.d("Current user: ${authService.getUserId()}")
+        anonymUpgradeRequired.value = authService.isAccountAnonymous()
     }
 
     override fun onCleared() {
@@ -40,18 +44,24 @@ class SignInViewModel(private val authService: AuthService) : ViewModel() {
         Timber.d("onCleared()")
     }
 
+    fun onAnonymUpgradeDismissed() {
+        anonymUpgradeRequired.value = false
+    }
+
     fun isSignedIn() = authService.isUserSignedIn()
 
     fun googleSignIn(googleIdToken: String) {
         viewModelScope.launch {
-            _isInProgress.value = true
+            isInProgress.value = true
             val isSuccess = authService.googleSignIn(googleIdToken)
-            _isInProgress.value = false
+            isInProgress.value = false
             if (isSuccess) {
                 Timber.d("Sign In successful: ${authService.getUserId()}")
-                _isUserSignedIn.value = true
+                isUserSignedIn.value = true
+                anonymUpgradeRequired.value = authService.isAccountAnonymous()
+                uiMessage.value = R.string.sign_in_google_sign_in_successful
             } else {
-                _errorMessage.value = R.string.sign_in_google_sign_in_failed
+                uiMessage.value = R.string.sign_in_google_sign_in_failed
                 Timber.d("Sign In failed")
             }
         }
@@ -59,29 +69,30 @@ class SignInViewModel(private val authService: AuthService) : ViewModel() {
 
     fun signInAnonymously() {
         viewModelScope.launch {
-            _isInProgress.value = true
+            isInProgress.value = true
             val isSuccess = authService.signInAnonymously()
-            _isInProgress.value = false
+            isInProgress.value = false
             if (isSuccess) {
                 Timber.d("Anonymous Sign In successful: ${authService.getUserId()}")
-                _isUserSignedIn.value = true
+                isUserSignedIn.value = true
+                anonymUpgradeRequired.value = authService.isAccountAnonymous()
             } else {
-                _errorMessage.value = R.string.sign_in_anonymous_sign_in_failed
+                uiMessage.value = R.string.sign_in_anonymous_sign_in_failed
                 Timber.d("Anonymous Sign In failed")
             }
         }
     }
 
     fun onGoogleSignInClick() {
-        _isInProgress.value = true
+        isInProgress.value = true
     }
 
     fun onGoogleSignInFailed() {
-        _isInProgress.value = false
-        _errorMessage.value = R.string.sign_in_google_sign_in_failed
+        isInProgress.value = false
+        uiMessage.value = R.string.sign_in_google_sign_in_failed
     }
 
     fun snackbarMessageShown() {
-        _errorMessage.value = null
+        uiMessage.value = null
     }
 }

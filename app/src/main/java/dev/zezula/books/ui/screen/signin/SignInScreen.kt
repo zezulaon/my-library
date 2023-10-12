@@ -46,7 +46,7 @@ fun SignInRoute(
         }
     }
 
-    uiState.errorMessage?.let { msg ->
+    uiState.uiMessage?.let { msg ->
         val text = stringResource(msg)
         LaunchedEffect(snackbarHostState, viewModel, msg, text) {
             snackbarHostState.showSnackbar(text)

@@ -3,17 +3,24 @@ package dev.zezula.books.ui.screen.list
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -21,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -30,6 +38,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -59,6 +68,8 @@ import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.ui.screen.about.AboutDialog
 import dev.zezula.books.ui.screen.components.BookList
+import dev.zezula.books.ui.screen.signin.SignInUiState
+import dev.zezula.books.ui.screen.signin.SignInViewModel
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.homeAppBar
 import dev.zezula.books.util.homeBtnAddBook
@@ -66,11 +77,14 @@ import dev.zezula.books.util.homeBtnAddBookManually
 import dev.zezula.books.util.homeBtnScanBarcode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookListRoute(
     viewModel: BookListViewModel,
+    signInViewModel: SignInViewModel,
+    onGoogleSignIn: () -> Unit,
     onAddBookManuallyClick: () -> Unit,
     onFindBookOnlineClick: () -> Unit,
     onScanBookClick: () -> Unit,
@@ -84,11 +98,13 @@ fun BookListRoute(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val signUiState by signInViewModel.uiState.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     DisposableEffect(lifecycleOwner, viewModel) {
         val observer = LifecycleEventObserver { _, event ->
+            Timber.d("Lifecycle event: $event")
             if (event == Lifecycle.Event.ON_CREATE) {
                 viewModel.refresh()
             }
@@ -99,7 +115,7 @@ fun BookListRoute(
         }
     }
 
-    uiState.errorMessage?.let { msg ->
+    uiState.infoMessages.errorMessage?.let { msg ->
         val text = stringResource(msg)
         LaunchedEffect(snackbarHostState, viewModel, msg, text, uiState) {
             snackbarHostState.showSnackbar(text)
@@ -107,14 +123,23 @@ fun BookListRoute(
         }
     }
 
-    if (drawerState.isClosed && uiState.managedShelvesClicked) {
+    signUiState.uiMessage?.let { msg ->
+        val text = stringResource(msg)
+        LaunchedEffect(snackbarHostState, viewModel, msg, text, uiState) {
+            snackbarHostState.showSnackbar(text)
+            signInViewModel.snackbarMessageShown()
+        }
+    }
+
+    if (drawerState.isClosed && uiState.drawerNavigation.managedShelvesClicked) {
         val rememberUpdatedClick by rememberUpdatedState(onManageShelvesClick)
         LaunchedEffect(drawerState, uiState, viewModel) {
             viewModel.onManagedShelvesClickedHandled()
             rememberUpdatedClick()
         }
     }
-    if (drawerState.isClosed && uiState.allAuthorsClicked) {
+
+    if (drawerState.isClosed && uiState.drawerNavigation.allAuthorsClicked) {
         val rememberUpdatedClick by rememberUpdatedState(onAllAuthorsShelvesClick)
         LaunchedEffect(drawerState, uiState, viewModel) {
             viewModel.onAllAuthorsClickedHandled()
@@ -124,15 +149,12 @@ fun BookListRoute(
 
     BookListScreen(
         uiState = uiState,
+        signUiState = signUiState,
         snackbarHostState = snackbarHostState,
         drawerState = drawerState,
         scope = scope,
-        onAddBookClick = {
-            viewModel.onAddBookSheetOpenRequest()
-        },
-        onAddBookSheetCloseRequested = {
-            viewModel.onAddBookSheetDismissRequest()
-        },
+        onAddBookClick = { viewModel.onAddBookSheetOpenRequest() },
+        onAddBookSheetCloseRequested = { viewModel.onAddBookSheetDismissRequest() },
         onScanBarcodeClick = onScanBookClick,
         onAddManuallyClick = onAddBookManuallyClick,
         onFindOnlineClick = onFindBookOnlineClick,
@@ -154,24 +176,16 @@ fun BookListRoute(
             scope.launch { drawerState.close() }
             viewModel.onShelfSelected(it)
         },
-        onMoreClicked = {
-            viewModel.onMoreClicked()
-        },
-        onSortBooksClick = {
-            viewModel.onSortBooksClicked()
-        },
-        onSortDialogDismissRequested = {
-            viewModel.onSortDialogDismissRequest()
-        },
-        onSortSelected = {
-            viewModel.onSortBooksSelected(it)
-        },
-        onAboutDialogDismissRequested = {
-            viewModel.onAboutDialogDismissRequest()
-        },
+        onMoreClicked = { viewModel.onMoreClicked() },
+        onSortBooksClick = { viewModel.onSortBooksClicked() },
+        onSortDialogDismissRequested = { viewModel.onSortDialogDismissRequest() },
+        onSortSelected = { viewModel.onSortBooksSelected(it) },
+        onAboutDialogDismissRequested = { viewModel.onAboutDialogDismissRequest() },
         onSearchMyLibraryClick = onSearchMyLibraryClick,
         onContactClicked = onContactClicked,
         onReleaseNotesClicked = onReleaseNotesClicked,
+        onAnonymUpgradeSignUpClick = onGoogleSignIn,
+        onAnonymUpgradeDismissClick = { signInViewModel.onAnonymUpgradeDismissed() },
     )
 }
 
@@ -180,38 +194,41 @@ fun BookListRoute(
 @VisibleForTesting
 fun BookListScreen(
     uiState: BookListUiState,
-    onAddBookClick: () -> Unit,
-    onAddBookSheetCloseRequested: () -> Unit,
-    onScanBarcodeClick: () -> Unit,
-    onAddManuallyClick: () -> Unit,
-    onFindOnlineClick: () -> Unit,
-    onBookClick: (String) -> Unit,
-    onManageShelvesClick: () -> Unit,
-    onAllBooksClick: () -> Unit,
-    onAllAuthorsClick: () -> Unit,
-    onShelfClick: (Shelf) -> Unit,
-    onMoreClicked: () -> Unit,
-    onReleaseNotesClicked: () -> Unit,
-    onContactClicked: () -> Unit,
-    onAboutDialogDismissRequested: () -> Unit,
+    signUiState: SignInUiState,
     modifier: Modifier = Modifier,
+    onAddBookClick: () -> Unit = {},
+    onAddBookSheetCloseRequested: () -> Unit = {},
+    onScanBarcodeClick: () -> Unit = {},
+    onAddManuallyClick: () -> Unit = {},
+    onFindOnlineClick: () -> Unit = {},
+    onBookClick: (String) -> Unit = {},
+    onManageShelvesClick: () -> Unit = {},
+    onAllBooksClick: () -> Unit = {},
+    onAllAuthorsClick: () -> Unit = {},
+    onShelfClick: (Shelf) -> Unit = {},
+    onMoreClicked: () -> Unit = {},
+    onReleaseNotesClicked: () -> Unit = {},
+    onContactClicked: () -> Unit = {},
+    onAboutDialogDismissRequested: () -> Unit = {},
     onSortBooksClick: () -> Unit = {},
     onSortDialogDismissRequested: () -> Unit = {},
     onSortSelected: (SortBooksBy) -> Unit = {},
     onSearchMyLibraryClick: () -> Unit = {},
+    onAnonymUpgradeDismissClick: () -> Unit = {},
+    onAnonymUpgradeSignUpClick: () -> Unit = {},
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    if (uiState.moreDialogDisplayed) {
+    if (uiState.infoMessages.moreDialogDisplayed) {
         AboutDialog(
             onDismissRequested = onAboutDialogDismissRequested,
             onContactUsClicked = onContactClicked,
             onReleaseNotesClicked = onReleaseNotesClicked,
         )
     }
-    if (uiState.sortDialogDisplayed) {
+    if (uiState.sorting.sortDialogDisplayed) {
         SortBooksDialog(
             uiState = uiState,
             onDismissRequested = onSortDialogDismissRequested,
@@ -248,17 +265,33 @@ fun BookListScreen(
                 )
             },
         ) { innerPadding ->
-            BookList(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(innerPadding),
-                books = uiState.books,
-                onBookClick = onBookClick,
-            )
+            ) {
+                if (signUiState.isSignInProgress) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+                Column {
+                    if (signUiState.anonymUpgradeRequired) {
+                        UpgradeAnonymCard(
+                            signUiState = signUiState,
+                            onAnonymUpgradeDismissClick = onAnonymUpgradeDismissClick,
+                            onAnonymUpgradeSignUpClick = onAnonymUpgradeSignUpClick,
+                        )
+                    }
 
-            if (uiState.addBookSheetOpened) {
+                    BookList(
+                        modifier = Modifier.fillMaxWidth(),
+                        books = uiState.books,
+                        onBookClick = onBookClick,
+                    )
+                }
+            }
+
+            if (uiState.infoMessages.addBookSheetOpened) {
                 AddBookBottomSheet(
-                    uiState,
                     onAddBookSheetCloseRequested,
                     onScanBarcodeClick,
                     onAddManuallyClick,
@@ -271,9 +304,50 @@ fun BookListScreen(
 }
 
 @Composable
+private fun UpgradeAnonymCard(
+    signUiState: SignInUiState,
+    onAnonymUpgradeDismissClick: () -> Unit,
+    onAnonymUpgradeSignUpClick: () -> Unit,
+) {
+    Card(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.CenterHorizontally),
+                imageVector = Icons.Rounded.Warning,
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier.padding(top = 0.dp),
+                text = stringResource(R.string.upgrade_anonymous_text),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.align(Alignment.End)) {
+                TextButton(onClick = onAnonymUpgradeDismissClick) {
+                    Text(stringResource(R.string.upgrade_anonymous_btn_dismiss))
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    enabled = signUiState.isSignInProgress.not(),
+                    onClick = onAnonymUpgradeSignUpClick,
+                ) {
+                    Text(stringResource(R.string.upgrade_anonymous_btn_sign_up))
+                }
+            }
+        }
+    }
+}
+
+@Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun AddBookBottomSheet(
-    uiState: BookListUiState,
     onAddBookSheetCloseRequested: () -> Unit,
     onScanBarcodeClick: () -> Unit,
     onAddManuallyClick: () -> Unit,
@@ -363,7 +437,7 @@ private fun HomeAppBarTitle(uiState: BookListUiState) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(noBooksFormatted, style = MaterialTheme.typography.bodySmall)
             if (numberOfBooks > 1) {
-                val sortType = when (uiState.sortBooksBy) {
+                val sortType = when (uiState.sorting.sortBooksBy) {
                     SortBooksBy.TITLE -> stringResource(R.string.sort_books_by_label_title, noBooksFormatted)
                     SortBooksBy.AUTHOR -> stringResource(R.string.sort_books_by_label_author, noBooksFormatted)
                     SortBooksBy.DATE_ADDED -> stringResource(R.string.sort_books_by_label_date, noBooksFormatted)
@@ -393,7 +467,10 @@ private fun BookListBottomBar(
         modifier = modifier,
         actions = {
             IconButton(onClick = onOpenDrawerClick) {
-                Icon(painterResource(id = R.drawable.ic_shelves), contentDescription = stringResource(id = R.string.content_open_drawer))
+                Icon(
+                    painterResource(id = R.drawable.ic_shelves),
+                    contentDescription = stringResource(id = R.string.content_open_drawer),
+                )
             }
             IconButton(onClick = onSearchMyLibraryClick) {
                 Icon(Icons.Filled.Search, contentDescription = null)
@@ -424,21 +501,16 @@ private fun AddBookButton(onButtonClick: () -> Unit) {
 fun PreviewBookListScreen() {
     MyLibraryTheme {
         BookListScreen(
-            uiState = BookListUiState(books = previewBooks, emptyList(), null),
-            onAddBookClick = {},
-            onAddManuallyClick = {},
-            onFindOnlineClick = {},
-            onScanBarcodeClick = {},
-            onBookClick = {},
-            onManageShelvesClick = {},
-            onAllBooksClick = {},
-            onShelfClick = {},
-            onAddBookSheetCloseRequested = {},
-            onMoreClicked = {},
-            onReleaseNotesClicked = {},
-            onContactClicked = {},
-            onAboutDialogDismissRequested = {},
-            onAllAuthorsClick = {},
+            uiState = BookListUiState(books = previewBooks, DrawerNavigationState(), SortingState()),
+            signUiState = SignInUiState(),
         )
+    }
+}
+
+@Composable
+@Preview
+fun PreviewUpgradeAnonymCard() {
+    MyLibraryTheme {
+        UpgradeAnonymCard(SignInUiState(), {}, {})
     }
 }
