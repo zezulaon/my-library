@@ -14,10 +14,21 @@ class AuthServiceImpl(private val auth: FirebaseAuth) : AuthService {
 
     override fun isUserSignedIn(): Boolean = auth.currentUser != null
 
+    override fun isAccountAnonymous(): Boolean {
+        return auth.currentUser?.isAnonymous == true
+    }
+
     override suspend fun googleSignIn(googleIdToken: String): Boolean {
         val firebaseCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
         return try {
-            auth.signInWithCredential(firebaseCredential).await()?.user?.uid != null
+            val existingUser = auth.currentUser
+            if (existingUser != null && existingUser.isAnonymous) {
+                Timber.d("Linking anonymous account with Google.")
+                existingUser.linkWithCredential(firebaseCredential).await()?.user?.uid != null
+            } else {
+                Timber.d("Signing in with Google.")
+                auth.signInWithCredential(firebaseCredential).await()?.user?.uid != null
+            }
         } catch (e: Exception) {
             Timber.e("Failed to sign in with Google.", e)
             false

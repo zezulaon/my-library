@@ -13,7 +13,6 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.ui.whileSubscribedInActivity
-import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,55 +29,77 @@ class BookListViewModel(
     private val refreshLibraryUseCase: RefreshLibraryUseCase,
 ) : ViewModel() {
 
-    private val _errorMessage = MutableStateFlow<Int?>(null)
-    private val _selectedShelf = MutableStateFlow<Shelf?>(null)
-    private val _managedShelvesClicked = MutableStateFlow(false)
-    private val _allAuthorsClicked = MutableStateFlow(false)
-    private val _addBookSheetOpened = MutableStateFlow(false)
-    private val _moreDialogDisplayed = MutableStateFlow(false)
-    private val _sortBooksDialogDisplayed = MutableStateFlow(false)
-    private val _sortBooksBy = MutableStateFlow(SortBooksBy.DATE_ADDED)
+    private val errorMessage = MutableStateFlow<Int?>(null)
+    private val selectedShelf = MutableStateFlow<Shelf?>(null)
+    private val managedShelvesClicked = MutableStateFlow(false)
+    private val allAuthorsClicked = MutableStateFlow(false)
+    private val addBookSheetOpened = MutableStateFlow(false)
+    private val moreDialogDisplayed = MutableStateFlow(false)
+    private val sortBooksDialogDisplayed = MutableStateFlow(false)
+    private val sortBooksBy = MutableStateFlow(SortBooksBy.DATE_ADDED)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val booksForShelf: Flow<Response<List<Book>>> =
-        combine(_selectedShelf, _sortBooksBy) { shelf, sortBooksBy -> ShelfAndSorting(shelf, sortBooksBy) }
+        combine(selectedShelf, sortBooksBy) { shelf, sortBooksBy -> ShelfAndSorting(shelf, sortBooksBy) }
             .flatMapLatest { shelfAndSorting ->
                 Timber.d("Getting books for shelf and sorting: $shelfAndSorting")
                 getBooksForShelfUseCase(shelfAndSorting.shelf, shelfAndSorting.sortBooksBy)
             }
-            .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
+            .onResponseError { errorMessage.value = R.string.error_failed_get_data }
 
     private val shelves: Flow<Response<List<Shelf>>> = getShelvesUseCase()
-        .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
+        .onResponseError { errorMessage.value = R.string.error_failed_get_data }
+
+    private val drawerNavigationFlow = combine(
+        managedShelvesClicked,
+        allAuthorsClicked,
+        shelves,
+    ) { managedShelvesClicked, allAuthorsClicked, shelves ->
+        DrawerNavigationState(
+            shelves = shelves.getOrDefault(emptyList()),
+            managedShelvesClicked = managedShelvesClicked,
+            allAuthorsClicked = allAuthorsClicked,
+        )
+    }
+
+    private val sortingFlow = combine(
+        sortBooksDialogDisplayed,
+        sortBooksBy,
+        booksForShelf,
+    ) { sortDialogDisplayed, sortBooksBy, books ->
+        SortingState(
+            sortDialogDisplayed = sortDialogDisplayed,
+            sortBooksBy = sortBooksBy,
+            canSortByRating = books.getOrDefault(emptyList()).any { it.userRating != null },
+        )
+    }
+
+    private val infoMessagesFlow = combine(
+        addBookSheetOpened,
+        moreDialogDisplayed,
+        errorMessage,
+    ) { addBookSheetOpened, moreDialogDisplayed, errorMessage ->
+        InfoMessagesState(
+            addBookSheetOpened = addBookSheetOpened,
+            moreDialogDisplayed = moreDialogDisplayed,
+            errorMessage = errorMessage,
+        )
+    }
 
     val uiState: StateFlow<BookListUiState> =
         combine(
-            _errorMessage,
-            _selectedShelf,
-            _managedShelvesClicked,
-            _allAuthorsClicked,
-            _addBookSheetOpened,
-            _moreDialogDisplayed,
-            _sortBooksDialogDisplayed,
-            _sortBooksBy,
             booksForShelf,
-            shelves,
-        ) {
-                errorMsg, selectedShelfId, managedShelvesClicked, allAuthorsClicked,
-                addBookSheetOpened, moreDialogDisplayed,
-                sortBooksDialogDisplayed, sortBooksBy, books, shelves,
-            ->
+            drawerNavigationFlow,
+            sortingFlow,
+            infoMessagesFlow,
+            selectedShelf,
+        ) { books, drawerNavigation, sorting, infoMessages, selectedShelfId ->
             BookListUiState(
                 books = books.getOrDefault(emptyList()),
-                shelves = shelves.getOrDefault(emptyList()),
+                drawerNavigation = drawerNavigation,
+                sorting = sorting,
+                infoMessages = infoMessages,
                 selectedShelf = selectedShelfId,
-                managedShelvesClicked = managedShelvesClicked,
-                allAuthorsClicked = allAuthorsClicked,
-                addBookSheetOpened = addBookSheetOpened,
-                moreDialogDisplayed = moreDialogDisplayed,
-                sortDialogDisplayed = sortBooksDialogDisplayed,
-                sortBooksBy = sortBooksBy,
-                errorMessage = errorMsg,
             )
         }
             .stateIn(
@@ -101,65 +122,65 @@ class BookListViewModel(
         viewModelScope.launch {
             refreshLibraryUseCase().fold(
                 onSuccess = { Timber.d("refresh() - successful") },
-                onFailure = { _errorMessage.value = R.string.home_failed_to_refresh },
+                onFailure = { errorMessage.value = R.string.home_failed_to_refresh },
             )
         }
     }
 
     fun onShelfSelected(selectedShelf: Shelf) {
-        _selectedShelf.value = selectedShelf
+        this.selectedShelf.value = selectedShelf
     }
 
     fun onAllBooksShelfSelected() {
-        _selectedShelf.value = null
+        selectedShelf.value = null
     }
 
     fun snackbarMessageShown() {
-        _errorMessage.value = null
+        errorMessage.value = null
     }
 
     fun onManagedShelvesClicked() {
-        _managedShelvesClicked.value = true
+        managedShelvesClicked.value = true
     }
 
     fun onManagedShelvesClickedHandled() {
-        _managedShelvesClicked.value = false
+        managedShelvesClicked.value = false
     }
 
     fun onAllAuthorsClicked() {
-        _allAuthorsClicked.value = true
+        allAuthorsClicked.value = true
     }
 
     fun onAllAuthorsClickedHandled() {
-        _allAuthorsClicked.value = false
+        allAuthorsClicked.value = false
     }
 
     fun onAddBookSheetOpenRequest() {
-        _addBookSheetOpened.value = true
+        addBookSheetOpened.value = true
     }
 
     fun onAddBookSheetDismissRequest() {
-        _addBookSheetOpened.value = false
+        addBookSheetOpened.value = false
     }
 
     fun onMoreClicked() {
-        _moreDialogDisplayed.value = true
+        moreDialogDisplayed.value = true
     }
 
     fun onAboutDialogDismissRequest() {
-        _moreDialogDisplayed.value = false
+        moreDialogDisplayed.value = false
     }
 
     fun onSortBooksClicked() {
-        _sortBooksDialogDisplayed.value = true
+        sortBooksDialogDisplayed.value = true
     }
 
     fun onSortDialogDismissRequest() {
-        _sortBooksDialogDisplayed.value = false
+        sortBooksDialogDisplayed.value = false
     }
 
     fun onSortBooksSelected(selectedSorting: SortBooksBy) {
-        _sortBooksBy.value = selectedSorting
+        sortBooksBy.value = selectedSorting
         onSortDialogDismissRequest()
     }
 }

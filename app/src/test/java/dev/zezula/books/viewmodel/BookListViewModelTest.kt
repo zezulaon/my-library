@@ -90,7 +90,7 @@ class BookListViewModelTest : KoinTest {
         viewModel.uiState.test {
             val uiState = awaitItem()
             // Check that there is error message in UI state after the exception was thrown
-            assertNotNull(uiState.errorMessage)
+            assertNotNull(uiState.infoMessages.errorMessage)
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -98,7 +98,7 @@ class BookListViewModelTest : KoinTest {
     @Test
     fun shelves_are_initialized() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
-        assertEquals(shelvesTestData.size, viewModel.uiState.value.shelves.size)
+        assertEquals(shelvesTestData.size, viewModel.uiState.value.drawerNavigation.shelves.size)
         collectJob.cancel()
     }
 
@@ -106,7 +106,7 @@ class BookListViewModelTest : KoinTest {
     fun shelf_is_selected_after_navigation_drawer_shelf_is_clicked() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
-        val shelfToSelect = viewModel.uiState.value.shelves.last()
+        val shelfToSelect = viewModel.uiState.value.drawerNavigation.shelves.last()
 
         // Check that no shelf is selected (default)
         assertNull(viewModel.uiState.value.selectedShelf)

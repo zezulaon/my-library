@@ -39,9 +39,9 @@ fun MyLibraryNavHost(
                 onSignInSuccess = { navController.navigateFromOnboardingToHome() },
                 onGoogleSignIn = { navController.navigateToGoogleSignIn() },
                 onEmailSignIn = { navController.navigateToEmailSignIn() },
-                // Get same ViewModel as in main activity
                 onContactClicked = { navController.navigateToContactEmailDraft() },
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
+                // Get the same ViewModel as in main activity
                 viewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
             )
         }
@@ -56,6 +56,7 @@ fun MyLibraryNavHost(
 
         composable(route = Destinations.bookListRoute) {
             BookListRoute(
+                onGoogleSignIn = { navController.navigateToGoogleSignIn() },
                 onAddBookManuallyClick = { navController.navigateToAddOrEdit() },
                 onScanBookClick = { navController.navigateToScanBarcode() },
                 onFindBookOnlineClick = { navController.navigateToFindBookOnline() },
@@ -66,6 +67,8 @@ fun MyLibraryNavHost(
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 onSearchMyLibraryClick = { navController.navigateToSearchMyLibrary() },
                 viewModel = koinViewModel(),
+                // Get the same ViewModel as in main activity
+                signInViewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
             )
         }
 

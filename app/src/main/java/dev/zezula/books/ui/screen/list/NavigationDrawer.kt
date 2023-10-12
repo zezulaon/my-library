@@ -75,7 +75,7 @@ internal fun NavigationDrawer(
         )
         // Add scrollable Column
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-            uiState.shelves.forEach { shelf ->
+            uiState.drawerNavigation.shelves.forEach { shelf ->
                 NavigationDrawerItem(
                     label = { Text(shelf.title) },
                     selected = shelf.id == uiState.selectedShelf?.id,

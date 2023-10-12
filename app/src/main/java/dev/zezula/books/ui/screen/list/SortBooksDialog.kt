@@ -50,9 +50,9 @@ fun SortBooksDialog(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(modifier = Modifier.selectableGroup()) {
-                    val selectedSortBooksBy = uiState.sortBooksBy
+                    val selectedSortBooksBy = uiState.sorting.sortBooksBy
                     SortBooksBy.entries
-                        .filter { it != SortBooksBy.USER_RATING || uiState.canSortByRating }
+                        .filter { it != SortBooksBy.USER_RATING || uiState.sorting.canSortByRating }
                         .forEach { sortBooksBy ->
                             SortItem(
                                 currentSort = sortBooksBy,
