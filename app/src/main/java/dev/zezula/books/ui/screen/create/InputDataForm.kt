@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.ui.screen.components.UserRatingComponent
+import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.createBookInputAuthor
 import dev.zezula.books.util.createBookInputDesc
@@ -125,7 +125,7 @@ internal fun InputDataForm(
             label = { Text(stringResource(R.string.create_book_label_isbn)) },
         )
 
-        UserRatingComponent(
+        EditableStarRating(
             userRating = uiState.bookFormData.userRating,
             onRatingStarSelected = onRatingStarSelected,
             modifier = Modifier
