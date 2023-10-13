@@ -16,8 +16,8 @@ android {
         applicationId = "dev.zezula.books"
         minSdk = 23
         targetSdk = 33
-        versionCode = 104
-        versionName = "1.0.4"
+        versionCode = 301
+        versionName = "3.1.0"
 
         testInstrumentationRunner = "dev.zezula.books.InstrumentationTestRunner"
 
