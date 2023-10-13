@@ -32,7 +32,7 @@
     <string name="sign_in_password_label">Password</string>
     <string name="sign_in_button_text">Sign In</string>
     <string name="sign_in_button_register">Create Account</string>
-    <string name="sign_in_label_or">Or</string>
+    <string name="sign_in_label_or">or</string>
     <string name="create_account_button_text">Create New Account</string>
     <string name="request_new_password_button_text">Request New Password</string>
     <string name="email_sign_in_label_invalid_password">Password has to be at least 6 characters long.</string>

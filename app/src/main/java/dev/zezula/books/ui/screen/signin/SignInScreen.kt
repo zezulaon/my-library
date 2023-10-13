@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.ui.screen.about.AboutCard
 import dev.zezula.books.ui.theme.MyLibraryTheme
+import dev.zezula.books.util.PHONE_MOTO_G5_PLUS
 
 @Composable
 fun SignInRoute(
@@ -119,26 +121,19 @@ fun SignInScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        OutlinedButton(
+                        Button(
                             modifier = Modifier.width(220.dp),
                             onClick = onGoogleSignInClick,
                             enabled = uiState.isSignInProgress.not(),
                         ) {
                             Text(text = stringResource(id = R.string.btn_google_sign_in))
                         }
-                        OutlinedButton(
-                            modifier = Modifier.width(220.dp),
+                        Text(text = stringResource(id = R.string.sign_in_label_or))
+                        TextButton(
                             onClick = onEmailSignInClick,
                             enabled = uiState.isSignInProgress.not(),
                         ) {
                             Text(text = stringResource(id = R.string.btn_email_sign_in))
-                        }
-                        OutlinedButton(
-                            modifier = Modifier.width(220.dp),
-                            onClick = onAnonymousSignInClick,
-                            enabled = uiState.isSignInProgress.not(),
-                        ) {
-                            Text(text = stringResource(id = R.string.btn_anonymous_sign_in))
                         }
                     }
                 }
@@ -147,7 +142,11 @@ fun SignInScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    device = PHONE_MOTO_G5_PLUS,
+)
 @Composable
 private fun DefaultPreview() {
     MyLibraryTheme {
