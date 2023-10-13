@@ -17,6 +17,8 @@ import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.previewShelves
 import dev.zezula.books.ui.screen.list.BookListScreen
 import dev.zezula.books.ui.screen.list.BookListUiState
+import dev.zezula.books.ui.screen.list.DrawerNavigationState
+import dev.zezula.books.ui.screen.signin.SignInUiState
 import dev.zezula.books.util.homeAppBar
 import org.junit.Before
 import org.junit.Rule
@@ -34,24 +36,9 @@ class HomeScreenTest {
             BookListScreen(
                 uiState = BookListUiState(
                     books = previewBooks,
-                    shelves = previewShelves,
-                    errorMessage = null,
-                    selectedShelf = null,
-                    managedShelvesClicked = true,
+                    drawerNavigation = DrawerNavigationState(shelves = previewShelves, managedShelvesClicked = true),
                 ),
-                onAddBookClick = {},
-                onAddManuallyClick = {},
-                onAddBookSheetCloseRequested = {},
-                onFindOnlineClick = {},
-                onScanBarcodeClick = {},
-                onBookClick = {},
-                onManageShelvesClick = {},
-                onAllBooksClick = {},
-                onShelfClick = {},
-                onAboutDialogDismissRequested = {},
-                onContactClicked = {},
-                onMoreClicked = {},
-                onReleaseNotesClicked = {},
+                signUiState = SignInUiState()
             )
         }
     }
