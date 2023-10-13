@@ -38,7 +38,7 @@ class HomeScreenTest {
                     books = previewBooks,
                     drawerNavigation = DrawerNavigationState(shelves = previewShelves, managedShelvesClicked = true),
                 ),
-                signUiState = SignInUiState()
+                signUiState = SignInUiState(),
             )
         }
     }
