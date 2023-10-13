@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 
 @Composable
@@ -50,10 +52,23 @@ internal fun BookListItem(
                     maxLines = 2,
                 )
                 Text(text = book.author ?: "", style = MaterialTheme.typography.bodyMedium)
+                if (book.userRating != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    StarRating(userRating = book.userRating, modifier = Modifier.height(16.dp))
+                }
             }
         }
         if (isLast.not()) {
             Divider(thickness = 1.dp, modifier = Modifier.padding(start = 100.dp))
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun BookListItemPreview() {
+    BookListItem(
+        book = previewBooks.first(),
+        onBookClick = {},
+    )
 }

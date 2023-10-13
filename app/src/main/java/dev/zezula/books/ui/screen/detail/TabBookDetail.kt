@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.ShelfForBook
-import dev.zezula.books.ui.screen.components.UserRatingComponent
+import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
@@ -104,7 +104,7 @@ fun TabBookDetail(
                     .padding(horizontal = 24.dp)
                     .fillMaxWidth(),
             ) {
-                UserRatingComponent(userRating = rating, modifier = Modifier.padding(16.dp))
+                EditableStarRating(userRating = rating, modifier = Modifier.padding(16.dp))
             }
         }
 
