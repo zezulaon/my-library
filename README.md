@@ -9,7 +9,7 @@ Some parts of the app were inspired by the [Now in Android](https://developer.an
 Android showcase app.
 
 # Download
-<a href="https://play.google.com/store/apps/details?id=dev.zezula.books"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70"></a>
+<a href="https://play.google.com/store/apps/details?id=org.zezula.bookdiary"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70"></a>
 
 # Features
 
