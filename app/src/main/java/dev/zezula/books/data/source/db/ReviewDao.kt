@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface ReviewDao {
 
     @Query("SELECT * FROM reviews WHERE bookId = :bookId")
-    fun getReviews(bookId: String): Flow<List<ReviewEntity>>
+    fun getReviewsForBookStream(bookId: String): Flow<List<ReviewEntity>>
 
     @Upsert
     suspend fun addReviews(reviews: List<ReviewEntity>)

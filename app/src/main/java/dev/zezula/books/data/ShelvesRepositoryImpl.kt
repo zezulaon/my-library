@@ -20,14 +20,14 @@ class ShelvesRepositoryImpl(
     private val networkDataSource: NetworkDataSource,
 ) : ShelvesRepository {
 
-    override fun getShelvesAsStream(): Flow<List<Shelf>> {
-        return shelvesAndBooksDao.getAllShelvesAsStream().map { shelfEntities ->
+    override fun getShelvesStream(): Flow<List<Shelf>> {
+        return shelvesAndBooksDao.getAllShelvesStream().map { shelfEntities ->
             shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
         }
     }
 
-    override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBook>> {
-        return shelvesAndBooksDao.getShelvesForBookAsStream(bookId).map { list ->
+    override fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBook>> {
+        return shelvesAndBooksDao.getShelvesForBookStream(bookId).map { list ->
             list.map(ShelfForBookEntity::asExternalModel)
         }
     }

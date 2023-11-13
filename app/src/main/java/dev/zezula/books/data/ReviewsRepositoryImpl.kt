@@ -24,14 +24,14 @@ class ReviewsRepositoryImpl(
     private val onlineBookFinderService: OnlineBookFinderService,
 ) : ReviewsRepository {
 
-    override fun getReviewsForBookAsStream(bookId: String): Flow<List<Review>> {
-        return reviewsDao.getReviews(bookId).mapNotNull {
+    override fun getReviewsForBookStream(bookId: String): Flow<List<Review>> {
+        return reviewsDao.getReviewsForBookStream(bookId).mapNotNull {
             it.map(ReviewEntity::asExternalModel)
         }
     }
 
     override fun getRatingStream(bookId: String): Flow<Rating?> {
-        return ratingsDao.getRating(bookId)
+        return ratingsDao.getRatingForBookStream(bookId)
             .map {
                 it?.asExternalModel()
             }

@@ -9,7 +9,7 @@ class FakeReviewDaoImpl : ReviewDao {
 
     private var reviewFlow: MutableStateFlow<List<ReviewEntity>> = MutableStateFlow(emptyList())
 
-    override fun getReviews(bookId: String): Flow<List<ReviewEntity>> {
+    override fun getReviewsForBookStream(bookId: String): Flow<List<ReviewEntity>> {
         return reviewFlow
     }
 

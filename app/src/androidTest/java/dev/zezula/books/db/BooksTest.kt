@@ -47,7 +47,7 @@ class BooksTest {
         val booksToAdd = previewBookEntities
         bookDao.addOrUpdate(booksToAdd)
 
-        val storedBooks = bookDao.getAllBooksAsStream().first()
+        val storedBooks = bookDao.getAllBooksStream().first()
         assertFalse(storedBooks.isEmpty())
 
         // Check that books are returned sorted by date added descending
@@ -61,7 +61,7 @@ class BooksTest {
         val bookToAdd = previewBookEntities.first()
         bookDao.addOrUpdate(bookToAdd)
 
-        val storedBook = bookDao.getBook(bookToAdd.id).first()
+        val storedBook = bookDao.getBookStream(bookToAdd.id).first()
         // Checked that we got the previously inserted book from DB
         assertNotNull(storedBook)
         assertEquals(bookToAdd, storedBook)
@@ -69,14 +69,14 @@ class BooksTest {
 
     @Test
     fun bookDao_get_with_wrong_id_returns_null() = runTest {
-        val storedBook = bookDao.getBook("wrong_id").first()
+        val storedBook = bookDao.getBookStream("wrong_id").first()
         assertNull(storedBook)
     }
 
     @Test
     fun bookDao_get_all_returns_correct_count() = runTest {
         bookDao.addOrUpdate(previewBookEntities)
-        val storedBooks = bookDao.getAllBooksAsStream().first()
+        val storedBooks = bookDao.getAllBooksStream().first()
         assertEquals(previewBooks.size, storedBooks.size)
     }
 
@@ -84,19 +84,19 @@ class BooksTest {
     fun bookDao_delete_removes_books() = runTest {
         bookDao.addOrUpdate(previewBookEntities)
 
-        val booksSizeBeforeDelete = bookDao.getAllBooksAsStream().first().size
+        val booksSizeBeforeDelete = bookDao.getAllBooksStream().first().size
         assertEquals(previewBookEntities.size, booksSizeBeforeDelete)
 
         val bookToDelete = previewBookEntities.first()
         bookDao.delete(bookToDelete.id)
         // There is one less book in the DB
-        assertEquals(booksSizeBeforeDelete - 1, bookDao.getAllBooksAsStream().first().size)
+        assertEquals(booksSizeBeforeDelete - 1, bookDao.getAllBooksStream().first().size)
         // Deleted book is not in the DB anymore
-        assertNull(bookDao.getBook(bookToDelete.id).first())
+        assertNull(bookDao.getBookStream(bookToDelete.id).first())
 
         bookDao.deleteAll()
         // Check all books were deleted
-        assertEquals(0, bookDao.getAllBooksAsStream().first().size)
+        assertEquals(0, bookDao.getAllBooksStream().first().size)
     }
 
     @Test
@@ -108,9 +108,9 @@ class BooksTest {
         val updatedBook = BookEntity(id = bookToAdd.id, title = updatedTitle, dateAdded = "2003")
         bookDao.addOrUpdate(updatedBook)
         // Check that after upsert there is only one item in DB
-        assertEquals(1, bookDao.getAllBooksAsStream().first().size)
+        assertEquals(1, bookDao.getAllBooksStream().first().size)
 
-        val storedBook = bookDao.getBook(bookToAdd.id).first()
+        val storedBook = bookDao.getBookStream(bookToAdd.id).first()
         // Check that updated book exists
         assertNotNull(storedBook)
         // Updated book isn't same as previous one

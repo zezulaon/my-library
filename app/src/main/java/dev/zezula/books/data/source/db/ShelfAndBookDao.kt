@@ -28,11 +28,11 @@ interface ShelfAndBookDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT *, Count(bookId) as numberOfBooks FROM shelves LEFT JOIN shelf_with_book ON shelfId=id GROUP BY id ORDER BY dateAdded DESC")
-    fun getAllShelvesAsStream(): Flow<List<ShelfWithBookCountEntity>>
+    fun getAllShelvesStream(): Flow<List<ShelfWithBookCountEntity>>
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM books INNER JOIN shelf_with_book ON bookId=id WHERE shelfId=:shelfId ORDER BY dateAdded DESC")
-    fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>>
+    fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBookToShelf(shelvesWithBooksEntity: ShelfWithBookEntity)
@@ -42,5 +42,5 @@ interface ShelfAndBookDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT id, dateAdded, title, CASE WHEN bookId=:bookId THEN '1' ELSE '0' END AS isBookAdded FROM shelves LEFT JOIN (SELECT * FROM shelf_with_book WHERE bookId=:bookId) ON id=shelfId")
-    fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBookEntity>>
+    fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>>
 }

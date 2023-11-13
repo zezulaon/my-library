@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReviewsRepository {
 
-    fun getReviewsForBookAsStream(bookId: String): Flow<List<Review>>
+    fun getReviewsForBookStream(bookId: String): Flow<List<Review>>
 
     fun getRatingStream(bookId: String): Flow<Rating?>
 

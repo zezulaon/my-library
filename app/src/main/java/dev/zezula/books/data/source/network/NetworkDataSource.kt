@@ -11,7 +11,7 @@ interface NetworkDataSource {
 
     suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook
 
-    suspend fun getNotes(bookId: String): List<NetworkNote>
+    suspend fun getNotesForBook(bookId: String): List<NetworkNote>
 
     suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote
 

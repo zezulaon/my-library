@@ -8,7 +8,6 @@ import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.di.appUnitTestModule
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,7 +21,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class BooksRepositoryTest : KoinTest {
 
     private val booksRepository: BooksRepository by inject()
@@ -44,7 +42,7 @@ class BooksRepositoryTest : KoinTest {
     @Test
     fun books_stream_is_backed_by_book_dao() = runTest {
         assertEquals(
-            bookDao.getAllBooksAsStream()
+            bookDao.getAllBooksStream()
                 .first()
                 .map(BookEntity::asExternalModel),
             booksRepository.getAllBooksStream()
@@ -59,7 +57,7 @@ class BooksRepositoryTest : KoinTest {
 
         // Check that book was added to DB
         assertTrue(
-            bookDao.getAllBooksAsStream()
+            bookDao.getAllBooksStream()
                 .first()
                 .any { entity ->
                     bookFormData.title == entity.title
@@ -76,7 +74,7 @@ class BooksRepositoryTest : KoinTest {
 
         // Check that repository returns same IDs as DB
         assertEquals(
-            bookDao.getAllBooksAsStream()
+            bookDao.getAllBooksStream()
                 .first()
                 .map(BookEntity::asExternalModel)
                 .first { book -> book.title == bookFormData.title }.id,
@@ -94,7 +92,7 @@ class BooksRepositoryTest : KoinTest {
         // Check that the book in the repository was updated
         assertEquals(updatedTitle, booksRepository.getBook(bookToUpdate.id)!!.title)
         // Check that the book in DB was updated
-        assertEquals(updatedTitle, bookDao.getBook(bookToUpdate.id).first()!!.title)
+        assertEquals(updatedTitle, bookDao.getBookStream(bookToUpdate.id).first()!!.title)
         // Check that the book in network data source was updated
         assertTrue(
             networkDataSource.getBooks()
@@ -111,7 +109,7 @@ class BooksRepositoryTest : KoinTest {
 
         // Check that the book was deleted from all data sources
         assertNull(booksRepository.getBook(bookToDelete.id))
-        assertNull(bookDao.getBook(bookToDelete.id).first())
+        assertNull(bookDao.getBookStream(bookToDelete.id).first())
         assertFalse(
             networkDataSource.getBooks()
                 .any { book ->

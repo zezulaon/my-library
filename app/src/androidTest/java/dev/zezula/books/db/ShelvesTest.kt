@@ -62,12 +62,12 @@ class ShelvesTest {
         shelfAndBookDao.addBookToShelf(ShelfWithBookEntity(bookId = booksToAdd[0].id, shelfId = shelfToAdd.id))
         shelfAndBookDao.addBookToShelf(ShelfWithBookEntity(bookId = booksToAdd[1].id, shelfId = shelfToAdd.id))
 
-        val retrievedBooks = shelfAndBookDao.getBooksForShelfAsStream(shelfToAdd.id).first()
+        val retrievedBooks = shelfAndBookDao.getBooksForShelfStream(shelfToAdd.id).first()
         // Check that correct books were retrieved
         assertEquals(booksToAdd.sortedByDescending { entity -> entity.dateAdded }, retrievedBooks)
 
         // Check that wrong shelf id returns nothing
-        assertTrue(shelfAndBookDao.getBooksForShelfAsStream("wrong id").first().isEmpty())
+        assertTrue(shelfAndBookDao.getBooksForShelfStream("wrong id").first().isEmpty())
     }
 
     @Test
@@ -86,7 +86,7 @@ class ShelvesTest {
 
         bookDao.delete(booksToAdd.first().id)
 
-        val retrievedBooks = shelfAndBookDao.getBooksForShelfAsStream(shelfToAdd.id).first()
+        val retrievedBooks = shelfAndBookDao.getBooksForShelfStream(shelfToAdd.id).first()
         // Check that only 1 book is in the shelf
         assertEquals(1, retrievedBooks.size)
     }
@@ -110,7 +110,7 @@ class ShelvesTest {
         shelfAndBookDao.addBookToShelf(ShelfWithBookEntity(bookId = booksToAdd[0].id, shelfId = shelfToAdd.id))
 
         // Check that only one book is in the shelf
-        val retrievedBooks = shelfAndBookDao.getBooksForShelfAsStream(shelfToAdd.id).first()
+        val retrievedBooks = shelfAndBookDao.getBooksForShelfStream(shelfToAdd.id).first()
         assertEquals(1, retrievedBooks.size)
     }
 
@@ -133,7 +133,7 @@ class ShelvesTest {
         shelfAndBookDao.removeBookFromShelf(ShelfWithBookEntity(bookId = booksToAdd[0].id, shelfId = shelfToAdd.id))
 
         // Check that the shelf is empty
-        val retrievedBooks = shelfAndBookDao.getBooksForShelfAsStream(shelfToAdd.id).first()
+        val retrievedBooks = shelfAndBookDao.getBooksForShelfStream(shelfToAdd.id).first()
         assertTrue(retrievedBooks.isEmpty())
     }
 
@@ -153,7 +153,7 @@ class ShelvesTest {
             ),
         )
 
-        val retrievedShelves = shelfAndBookDao.getShelvesForBookAsStream(previewBookEntities[0].id).first()
+        val retrievedShelves = shelfAndBookDao.getShelvesForBookStream(previewBookEntities[0].id).first()
         // Check that shelves are in DB
         assertEquals(previewShelfEntities.size, retrievedShelves.size)
         // Check that the shelf is associated with the book
@@ -165,7 +165,7 @@ class ShelvesTest {
         shelfAndBookDao.addBookToShelf(ShelfWithBookEntity(bookId = "xxx", shelfId = "yyy"))
 
         // Check that only one book is in the shelf
-        val retrievedBooks = shelfAndBookDao.getBooksForShelfAsStream("yyy").first()
+        val retrievedBooks = shelfAndBookDao.getBooksForShelfStream("yyy").first()
         assertEquals(1, retrievedBooks.size)
     }
 
@@ -174,7 +174,7 @@ class ShelvesTest {
         // Insert shelves
         shelfAndBookDao.addOrUpdate(previewShelfEntities)
 
-        val retrievedShelves = shelfAndBookDao.getAllShelvesAsStream().first()
+        val retrievedShelves = shelfAndBookDao.getAllShelvesStream().first()
         // Check that shelves are in DB
         assertEquals(
             previewShelfEntities.sortedByDescending { entity -> entity.dateAdded }.map { entity -> entity.id },
@@ -188,7 +188,7 @@ class ShelvesTest {
         shelfAndBookDao.addOrUpdate(previewShelfEntities.first())
         shelfAndBookDao.delete(previewBookEntities.first().id)
 
-        val retrievedShelves = shelfAndBookDao.getAllShelvesAsStream().first()
+        val retrievedShelves = shelfAndBookDao.getAllShelvesStream().first()
         // Check that no shelf is in DB
         assertTrue(retrievedShelves.isEmpty())
     }
@@ -201,7 +201,7 @@ class ShelvesTest {
         shelfAndBookDao.addOrUpdate(shelfToAdd)
         shelfAndBookDao.addOrUpdate(ShelfEntity(id = shelfToAdd.id, dateAdded = "x", title = updatedTitle))
 
-        val retrievedShelves = shelfAndBookDao.getAllShelvesAsStream().first()
+        val retrievedShelves = shelfAndBookDao.getAllShelvesStream().first()
         // Check that shelf is in DB and is updated
         assertTrue(retrievedShelves.any { entity -> entity.title == updatedTitle })
         assertEquals(1, retrievedShelves.size)
