@@ -17,7 +17,7 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
     private var booksForShelfFlow: MutableStateFlow<Map<String, List<BookEntity>>> = MutableStateFlow(emptyMap())
     private var shelvesForBook: MutableStateFlow<Map<String, List<ShelfForBookEntity>>> = MutableStateFlow(emptyMap())
 
-    override fun getAllShelvesAsStream(): Flow<List<ShelfWithBookCountEntity>> {
+    override fun getAllShelvesStream(): Flow<List<ShelfWithBookCountEntity>> {
         return shelvesFlow.map { shelfMap ->
             shelfMap.map { (key, value) ->
                 ShelfWithBookCountEntity(
@@ -58,9 +58,9 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         throw NotImplementedError("Unused in tests")
     }
 
-    override fun getShelvesForBookAsStream(bookId: String): Flow<List<ShelfForBookEntity>> =
+    override fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>> =
         shelvesForBook.map { it.getOrDefault(bookId, emptyList()) }
 
-    override fun getBooksForShelfAsStream(shelfId: String): Flow<List<BookEntity>> =
+    override fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>> =
         booksForShelfFlow.map { it.getOrDefault(shelfId, emptyList()) }
 }

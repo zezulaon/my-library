@@ -5,6 +5,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.BooksRepositoryImpl
+import dev.zezula.books.data.NotesRepository
+import dev.zezula.books.data.NotesRepositoryImpl
 import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
@@ -98,6 +100,10 @@ val appModule = module {
     }
     single {
         val database = get<AppDatabase>()
+        database.noteDao()
+    }
+    single {
+        val database = get<AppDatabase>()
         database.reviewDao()
     }
     single {
@@ -121,7 +127,7 @@ val appModule = module {
     single { DeleteNoteUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
-    single { GetAllBookDetailUseCase(get(), get(), get()) }
+    single { GetAllBookDetailUseCase(get(), get(), get(), get()) }
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
@@ -134,7 +140,8 @@ val appModule = module {
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get(), get(), get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get(), get(), get(), get()) }
+    single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get()) }
 

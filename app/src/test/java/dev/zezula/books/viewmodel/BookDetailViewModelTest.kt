@@ -118,7 +118,7 @@ class BookDetailViewModelTest : KoinTest {
     @Test
     fun after_delete_click_book_was_deleted() = runTest {
         // Check that there is a book before deleting it
-        bookDao.getBook(bookTestData.id).test {
+        bookDao.getBookStream(bookTestData.id).test {
             assertEquals(bookTestData, awaitItem())
             cancelAndConsumeRemainingEvents()
         }
@@ -131,7 +131,7 @@ class BookDetailViewModelTest : KoinTest {
         }
 
         // Check that the book was also removed from repository
-        bookDao.getBook(bookTestData.id).test {
+        bookDao.getBookStream(bookTestData.id).test {
             assertNull(awaitItem())
             cancelAndConsumeRemainingEvents()
         }

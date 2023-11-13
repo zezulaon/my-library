@@ -14,24 +14,12 @@ class FakeBookDaoImpl : BookDao {
     private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
     private var notesFlow: MutableStateFlow<Map<String, List<NoteEntity>>> = MutableStateFlow(emptyMap())
 
-    override fun getAllBooksAsStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
+    override fun getAllBooksStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
 
-    override fun getBook(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
-
-    override fun getNotesForBook(bookId: String): Flow<List<NoteEntity>> {
-        return notesFlow.map { it[bookId] ?: emptyList() }
-    }
+    override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
     override suspend fun getBooksForQuery(query: String): List<BookEntity> {
         TODO("Searching books is not yet implemented")
-    }
-
-    override suspend fun addOrUpdateNote(note: NoteEntity) {
-        TODO("Updating notes is not yet implemented")
-    }
-
-    override suspend fun deleteNote(noteId: String) {
-        TODO("Deleting notes is not yet implemented")
     }
 
     override suspend fun getForIsbn(isbn: String): List<BookEntity> =

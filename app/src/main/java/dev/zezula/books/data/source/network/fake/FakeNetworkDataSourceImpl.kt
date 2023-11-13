@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.network.fake
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.note.NetworkNote
+import dev.zezula.books.data.model.note.previewNotes
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.previewShelves
@@ -33,6 +34,18 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
             NetworkShelf(id = shelf.id, dateAdded = shelf.dateAdded, title = shelf.title)
         }
         .associateBy { book -> book.id!! }
+        .toMutableMap()
+
+    private val notesMap: MutableMap<String, NetworkNote> = previewNotes
+        .map { note ->
+            NetworkNote(
+                id = note.id,
+                bookId = note.bookId,
+                dateAdded = note.dateAdded,
+                text = note.text,
+            )
+        }
+        .associateBy { note -> note.id!! }
         .toMutableMap()
 
     override suspend fun getBooks(): List<NetworkBook> {
@@ -71,14 +84,15 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     }
 
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
-        TODO("Note updates not yet implemented")
+        notesMap[note.id!!] = note
+        return note
     }
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
-        TODO("Note deletion not yet implemented")
+        notesMap.remove(noteId)
     }
 
-    override suspend fun getNotes(bookId: String): List<NetworkNote> {
-        return emptyList()
+    override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
+        return notesMap.values.filter { it.bookId == bookId }
     }
 }

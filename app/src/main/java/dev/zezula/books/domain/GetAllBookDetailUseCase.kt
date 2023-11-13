@@ -1,6 +1,7 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
+import dev.zezula.books.data.NotesRepository
 import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.model.book.Book
@@ -27,15 +28,16 @@ class GetAllBookDetailUseCase(
     private val shelvesRepository: ShelvesRepository,
     private val booksRepository: BooksRepository,
     private val reviewsRepository: ReviewsRepository,
+    private val notesRepository: NotesRepository,
 ) {
 
     operator fun invoke(bookId: String): Flow<Response<AllBookDetailResult>> {
         return combine(
             booksRepository.getBookStream(bookId),
-            booksRepository.getNotesStream(bookId),
-            shelvesRepository.getShelvesForBookAsStream(bookId),
+            notesRepository.getNotesForBookStream(bookId),
+            shelvesRepository.getShelvesForBookStream(bookId),
             reviewsRepository.getRatingStream(bookId),
-            reviewsRepository.getReviewsForBookAsStream(bookId),
+            reviewsRepository.getReviewsForBookStream(bookId),
         ) { book, notes, shelves, rating, reviews ->
             AllBookDetailResult(
                 book = book,

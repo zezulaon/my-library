@@ -2,15 +2,19 @@ package dev.zezula.books.di
 
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.BooksRepositoryImpl
+import dev.zezula.books.data.NotesRepository
+import dev.zezula.books.data.NotesRepositoryImpl
 import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
 import dev.zezula.books.data.source.db.BookDao
+import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.RatingDao
 import dev.zezula.books.data.source.db.ReviewDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.fake.FakeBookDaoImpl
+import dev.zezula.books.data.source.db.fake.FakeNoteDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeRatingDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeReviewDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeShelfAndBookDaoImpl
@@ -51,6 +55,7 @@ val appUnitTestModule = module {
     single<OnlineBookFinderService> { FakeOnlineBookFinderServiceImpl() }
 
     single<BookDao> { FakeBookDaoImpl() }
+    single<NoteDao> { FakeNoteDaoImpl() }
     single<RatingDao> { FakeRatingDaoImpl() }
     single<ReviewDao> { FakeReviewDaoImpl() }
     single<ShelfAndBookDao> { FakeShelfAndBookDaoImpl() }
@@ -66,7 +71,7 @@ val appUnitTestModule = module {
     single { CreateShelfUseCase(get()) }
     single { CreateOrUpdateNoteUseCase(get()) }
     single { DeleteNoteUseCase(get()) }
-    single { GetAllBookDetailUseCase(get(), get(), get()) }
+    single { GetAllBookDetailUseCase(get(), get(), get(), get()) }
     single { DeleteBookUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
@@ -77,7 +82,8 @@ val appUnitTestModule = module {
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get(), get(), get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get(), get(), get(), get()) }
+    single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get()) }
 

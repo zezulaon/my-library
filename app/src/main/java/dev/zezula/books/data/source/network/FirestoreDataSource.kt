@@ -78,7 +78,7 @@ class FirestoreDataSource : NetworkDataSource {
         return book
     }
 
-    override suspend fun getNotes(bookId: String): List<NetworkNote> {
+    override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
         return booksCollection.document(bookId).collection(collectionNotes).get().await()
             .map {
                 it.toObject(NetworkNote::class.java)
