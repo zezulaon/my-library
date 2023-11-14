@@ -4,10 +4,23 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.review.LibraryBookEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
+
+    /**
+     * Returns books that are also added in "library_books" reference table.
+     */
+    @Query("SELECT * FROM books INNER JOIN library_books ON books.id = bookId ORDER BY dateAdded DESC")
+    fun getAllLibraryBooksStream(): Flow<List<BookEntity>>
+
+    /**
+     * Add the book to the "library_books" reference table (Table with user's personal book collection).
+     */
+    @Upsert
+    suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity)
 
     @Query("SELECT * FROM books ORDER BY dateAdded DESC")
     fun getAllBooksStream(): Flow<List<BookEntity>>

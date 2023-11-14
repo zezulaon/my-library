@@ -13,11 +13,14 @@ import dev.zezula.books.data.model.book.BookEntity
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
     ],
     indices = [
-        // Unique constraint - all [bookId] values in this table has to be unique
+        // Index on [bookId] column is used to improve the performance of queries that filter by [bookId]
+        // Unique constraint - all [bookId] values in this table has to be unique (a book can have only one rating)
         Index(value = ["bookId"], unique = true),
     ],
 )
 data class RatingEntity(
+    // TODO: Primary [id] key and foreign [bookId] key could be combined into one property since book can have exactly
+    //  one rating
     @PrimaryKey
     val id: String,
     val bookId: String,

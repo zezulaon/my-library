@@ -22,7 +22,7 @@ import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
 import dev.zezula.books.data.source.network.fake.FakeOnlineBookFinderServiceImpl
-import dev.zezula.books.domain.AddOrUpdateBookUseCase
+import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
@@ -77,7 +77,7 @@ val appUnitTestModule = module {
     single { CheckReviewsDownloadedUseCase(get(), get()) }
     single { FindBookForIsbnOnlineUseCase(get(), get()) }
     single { GetBooksUseCase(get()) }
-    single { AddOrUpdateBookUseCase(get()) }
+    single { AddOrUpdateLibraryBookUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
 
