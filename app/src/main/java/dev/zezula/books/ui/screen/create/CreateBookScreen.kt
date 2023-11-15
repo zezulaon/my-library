@@ -20,20 +20,26 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.ui.theme.MyLibraryTheme
+import timber.log.Timber
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -41,10 +47,24 @@ fun CreateBookRoute(
     viewModel: CreateBookViewModel,
     onNavigateBack: () -> Unit,
     onItemSavedSuccess: () -> Unit,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            Timber.d("Lifecycle event: $event")
+            if (event == Lifecycle.Event.ON_CREATE) {
+                viewModel.loadBook()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     if (uiState.isBookSaved) {
         val latestOnItemSavedSuccess by rememberUpdatedState(onItemSavedSuccess)
