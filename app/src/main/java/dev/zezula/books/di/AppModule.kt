@@ -12,6 +12,7 @@ import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
 import dev.zezula.books.data.source.db.AppDatabase
+import dev.zezula.books.data.source.db.MIGRATION_3_4
 import dev.zezula.books.data.source.network.AuthService
 import dev.zezula.books.data.source.network.AuthServiceImpl
 import dev.zezula.books.data.source.network.FirestoreDataSource
@@ -21,7 +22,7 @@ import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
 import dev.zezula.books.data.source.network.OpenLibraryApi
-import dev.zezula.books.domain.AddOrUpdateBookUseCase
+import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
@@ -92,6 +93,7 @@ val appModule = module {
             AppDatabase::class.java,
             "app_database",
         )
+            .addMigrations(MIGRATION_3_4)
             .build()
     }
     single {
@@ -135,7 +137,7 @@ val appModule = module {
     single { FindBookForQueryOnlineUseCase(get()) }
     single { SearchMyLibraryBooksUseCase(get()) }
     single { GetBooksUseCase(get()) }
-    single { AddOrUpdateBookUseCase(get()) }
+    single { AddOrUpdateLibraryBookUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
 

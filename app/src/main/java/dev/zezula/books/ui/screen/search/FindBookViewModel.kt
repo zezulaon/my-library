@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.domain.AddOrUpdateBookUseCase
+import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import timber.log.Timber
 data class BookFormWithId(val bookFormData: BookFormData, val bookId: String? = null)
 
 class FindBookViewModel(
-    private val addOrUpdateBookUseCase: AddOrUpdateBookUseCase,
+    private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
     private val findBookForQueryOnlineUseCase: FindBookForQueryOnlineUseCase,
 ) : ViewModel() {
 

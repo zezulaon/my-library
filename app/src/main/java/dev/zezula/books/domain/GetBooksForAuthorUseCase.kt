@@ -19,7 +19,7 @@ class GetBooksForAuthorUseCase(private val repository: BooksRepository) {
      */
     operator fun invoke(authorNameId: String): Flow<Response<List<Book>>> {
         return repository
-            .getAllBooksStream()
+            .getAllLibraryBooksStream()
             .map { books ->
                 // Filter the books to only those that have the authorNameId in the list of authors
                 books.filter { book ->

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class BookEntity(
     @PrimaryKey
     val id: String,
+    // TODO: [LibraryBookEntity] would be better place for this property.
     val dateAdded: String,
     val title: String? = null,
     val author: String? = null,

@@ -7,6 +7,7 @@ import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.fromNetworkBook
 import dev.zezula.books.data.model.note.fromNetworkNote
+import dev.zezula.books.data.model.review.LibraryBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
@@ -28,14 +29,24 @@ class BooksRepositoryImpl(
     private val networkDataSource: NetworkDataSource,
 ) : BooksRepository {
 
-    override fun getBooksForShelfStream(shelfId: String): Flow<List<Book>> {
-        return shelfAndBookDao.getBooksForShelfStream(shelfId).map {
+    override suspend fun addBookToLibrary(bookId: String) {
+        bookDao.addToLibraryBooks(LibraryBookEntity(bookId = bookId))
+    }
+
+    override fun getAllLibraryBooksStream(): Flow<List<Book>> {
+        return bookDao.getAllLibraryBooksStream().map {
             it.map(BookEntity::asExternalModel)
         }
     }
 
     override fun getAllBooksStream(): Flow<List<Book>> {
         return bookDao.getAllBooksStream().map {
+            it.map(BookEntity::asExternalModel)
+        }
+    }
+
+    override fun getBooksForShelfStream(shelfId: String): Flow<List<Book>> {
+        return shelfAndBookDao.getBooksForShelfStream(shelfId).map {
             it.map(BookEntity::asExternalModel)
         }
     }
@@ -108,6 +119,7 @@ class BooksRepositoryImpl(
             networkDataSource.getBooks().forEach { networkBook ->
                 val bookEntity = fromNetworkBook(networkBook)
                 bookDao.addOrUpdate(bookEntity)
+                addBookToLibrary(bookEntity.id)
 
                 networkDataSource.getNotesForBook(bookEntity.id).forEach { networkNote ->
                     val networkNoteEntity = fromNetworkNote(

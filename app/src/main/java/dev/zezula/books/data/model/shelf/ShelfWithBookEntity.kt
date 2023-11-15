@@ -17,6 +17,7 @@ import dev.zezula.books.data.model.book.BookEntity
         ForeignKey(entity = ShelfEntity::class, parentColumns = ["id"], childColumns = ["shelfId"], onDelete = CASCADE),
     ],
     indices = [
+        // Index on [bookId] and [shelfId] column is used to improve the performance of queries that use these columns.
         Index(value = ["shelfId"]),
         Index(value = ["bookId"]),
     ],

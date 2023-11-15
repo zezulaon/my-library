@@ -15,7 +15,7 @@ class GetBooksForShelfUseCase(private val repository: BooksRepository) {
 
     operator fun invoke(selectedShelf: Shelf?, sortBooksBy: SortBooksBy): Flow<Response<List<Book>>> {
         val booksFlow = if (selectedShelf == null) {
-            repository.getAllBooksStream()
+            repository.getAllLibraryBooksStream()
         } else {
             repository.getBooksForShelfStream(selectedShelf.id)
         }

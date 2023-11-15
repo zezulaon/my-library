@@ -18,7 +18,7 @@ class GetAllAuthorsUseCase(private val repository: BooksRepository) {
      * Returns a list of all authors with the number of their books.
      */
     operator fun invoke(): Flow<Response<List<AuthorAndBooks>>> {
-        val booksFlow = repository.getAllBooksStream()
+        val booksFlow = repository.getAllLibraryBooksStream()
         // Maps the list of books to a list of all authors with the number of books
         return booksFlow.map { books ->
             val idToAuthorMap = mutableMapOf<String, AuthorAndBooks>()

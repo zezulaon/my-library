@@ -1,7 +1,7 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.review.LibraryBookEntity
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,13 @@ import kotlinx.coroutines.flow.update
 class FakeBookDaoImpl : BookDao {
 
     private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
-    private var notesFlow: MutableStateFlow<Map<String, List<NoteEntity>>> = MutableStateFlow(emptyMap())
+
+    override suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity) {
+    }
+
+    override fun getAllLibraryBooksStream(): Flow<List<BookEntity>> {
+        return getAllBooksStream()
+    }
 
     override fun getAllBooksStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
 

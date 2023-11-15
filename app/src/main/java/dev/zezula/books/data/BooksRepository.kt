@@ -6,9 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
 
-    fun getBooksForShelfStream(shelfId: String): Flow<List<Book>>
+    suspend fun addBookToLibrary(bookId: String)
+
+    fun getAllLibraryBooksStream(): Flow<List<Book>>
 
     fun getAllBooksStream(): Flow<List<Book>>
+
+    fun getBooksForShelfStream(shelfId: String): Flow<List<Book>>
 
     fun getBookStream(bookId: String): Flow<Book?>
 
