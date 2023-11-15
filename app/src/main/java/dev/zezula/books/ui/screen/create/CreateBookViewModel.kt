@@ -63,11 +63,11 @@ class CreateBookViewModel(
         } else {
             Timber.d("Create mode - no [bookId] received")
         }
-        loadBook()
         Timber.d("init{}")
     }
 
-    private fun loadBook() {
+    fun loadBook() {
+        Timber.d("loadBook() - Loading book for [bookId=$bookId]")
         if (bookId != null) {
             viewModelScope.launch {
                 _isInProgress.value = true
