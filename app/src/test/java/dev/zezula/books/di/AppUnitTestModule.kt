@@ -8,6 +8,8 @@ import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
+import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.UserLibraryRepositoryImpl
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.RatingDao
@@ -26,16 +28,17 @@ import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
-import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.GetAllAuthorsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
+import dev.zezula.books.domain.GetBookUseCase
 import dev.zezula.books.domain.GetBooksForAuthorUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
-import dev.zezula.books.domain.GetBooksUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
+import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
@@ -71,18 +74,20 @@ val appUnitTestModule = module {
     single { CreateShelfUseCase(get()) }
     single { CreateOrUpdateNoteUseCase(get()) }
     single { DeleteNoteUseCase(get()) }
-    single { GetAllBookDetailUseCase(get(), get(), get(), get()) }
-    single { DeleteBookUseCase(get()) }
+    single { GetAllBookDetailUseCase(get(), get(), get(), get(), get()) }
+    single { DeleteBookFromLibraryUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
-    single { FindBookForIsbnOnlineUseCase(get(), get()) }
-    single { GetBooksUseCase(get()) }
+    single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
+    single { GetBookUseCase(get()) }
     single { AddOrUpdateLibraryBookUseCase(get()) }
+    single { MoveBookToLibraryUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get(), get(), get(), get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get()) }
+    single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get()) }
@@ -93,7 +98,7 @@ val appUnitTestModule = module {
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }

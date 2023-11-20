@@ -1,6 +1,6 @@
 package dev.zezula.books.domain
 
-import dev.zezula.books.data.BooksRepository
+import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import dev.zezula.books.domain.model.onResponseError
@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 
-class GetAllAuthorsUseCase(private val repository: BooksRepository) {
+class GetAllAuthorsUseCase(private val userLibraryRepository: UserLibraryRepository) {
 
     /**
      * Returns a list of all authors with the number of their books.
      */
     operator fun invoke(): Flow<Response<List<AuthorAndBooks>>> {
-        val booksFlow = repository.getAllLibraryBooksStream()
+        val booksFlow = userLibraryRepository.getAllLibraryBooksStream()
         // Maps the list of books to a list of all authors with the number of books
         return booksFlow.map { books ->
             val idToAuthorMap = mutableMapOf<String, AuthorAndBooks>()

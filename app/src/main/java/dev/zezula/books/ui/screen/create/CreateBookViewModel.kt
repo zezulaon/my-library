@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
-import dev.zezula.books.domain.GetBooksUseCase
+import dev.zezula.books.domain.GetBookUseCase
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.ui.DestinationArgs
 import dev.zezula.books.ui.whileSubscribedInActivity
@@ -19,7 +19,7 @@ import timber.log.Timber
 
 class CreateBookViewModel(
     savedStateHandle: SavedStateHandle,
-    private val GetBooksUseCase: GetBooksUseCase,
+    private val getBookUseCase: GetBookUseCase,
     private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
 ) : ViewModel() {
 
@@ -72,7 +72,7 @@ class CreateBookViewModel(
             viewModelScope.launch {
                 _isInProgress.value = true
 
-                val book = GetBooksUseCase(bookId).getOrDefault(null)
+                val book = getBookUseCase(bookId).getOrDefault(null)
                 if (book != null) {
                     _isInEditMode.value = true
                     _bookFormData.value = BookFormData(

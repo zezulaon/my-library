@@ -107,6 +107,9 @@
     <string name="detail_reviews_btn_read_more">Read More</string>
     <string name="detail_no_reviews_were_found">No reviews were found.</string>
 
+    <string name="detail_add_to_my_library_btn">Add to My Library</string>
+    <string name="detail_add_to_my_library_btn_content_desc">Add to my library button</string>
+
     <string name="detail_label_rated">Rated</string>
     <string name="detail_label_rating_reviews_count">%1s ratings and %2s reviews</string>
     <string name="detail_label_your_rating">Your Rating</string>
@@ -129,6 +132,7 @@
     <string name="detail_failed_to_create_note">An error has occurred - the note wasn\'t created.</string>
     <string name="detail_failed_to_update_note">An error has occurred - the note wasn\'t updated.</string>
     <string name="detail_failed_to_delete_note">An error has occurred - the note wasn\'t deleted.</string>
+    <string name="detail_failed_to_add_book">An error has occurred - the book wasn\'t added.</string>
 
     <string name="detail_link_amazon">Find On Amazon</string>
     <string name="detail_links_title">Links</string>

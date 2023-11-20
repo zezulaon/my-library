@@ -10,9 +10,10 @@ import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.domain.AllBookDetailResult
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
-import dev.zezula.books.domain.DeleteBookUseCase
+import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
+import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
@@ -28,7 +29,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class BookDetailViewModel(
-    private val deleteBookUseCase: DeleteBookUseCase,
+    private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
+    private val deleteBookUseCase: DeleteBookFromLibraryUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
     private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
@@ -49,6 +51,7 @@ class BookDetailViewModel(
     private val _isDeleteDialogDisplayed = MutableStateFlow(false)
     private val _isNoteDialogDisplayed = MutableStateFlow(false)
     private val _selectedNote = MutableStateFlow<Note?>(null)
+    private val _addBookToLibraryInProgress = MutableStateFlow(false)
 
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
@@ -70,6 +73,7 @@ class BookDetailViewModel(
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
         BookDetailUiState(
             book = bookDetail.book,
+            isBookInLibrary = bookDetail.isBookInLibrary,
             rating = bookDetail.rating,
             notes = bookDetail.notes,
             shelves = mergeShelvesWithToggleProgress(bookDetail.shelves, shelvesToggleProgressList),
@@ -207,5 +211,18 @@ class BookDetailViewModel(
     fun editNoteRequested(note: Note) {
         _isNoteDialogDisplayed.value = true
         _selectedNote.value = note
+    }
+
+    fun addBookToLibrary() {
+        if (_addBookToLibraryInProgress.value) return
+
+        viewModelScope.launch {
+            _addBookToLibraryInProgress.value = true
+            moveBookToLibraryUseCase(bookId)
+                .onError {
+                    _errorMessage.value = R.string.detail_failed_to_add_book
+                }
+            _addBookToLibraryInProgress.value = false
+        }
     }
 }

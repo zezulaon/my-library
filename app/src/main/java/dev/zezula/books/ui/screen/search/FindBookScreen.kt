@@ -1,7 +1,7 @@
 package dev.zezula.books.ui.screen.search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,16 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,18 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 import dev.zezula.books.ui.theme.MyLibraryTheme
@@ -70,9 +63,6 @@ fun FindBookRoute(
     FindBookScreen(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onAddBookClick = { index ->
-            viewModel.addBook(index)
-        },
         onViewBookClick = onViewBookClick,
         onSearchRequested = { query ->
             viewModel.searchBooks(query)
@@ -87,7 +77,6 @@ fun FindBookRoute(
 fun FindBookScreen(
     uiState: FindBookUiState,
     onNavigateBack: () -> Unit,
-    onAddBookClick: (index: Int) -> Unit,
     onViewBookClick: (id: String) -> Unit,
     onSearchRequested: (query: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -132,7 +121,6 @@ fun FindBookScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     books = uiState.foundBooks,
-                    onAddBookClick = onAddBookClick,
                     onViewBookClick = onViewBookClick,
                 )
             }
@@ -179,8 +167,7 @@ private fun SearchBooksBar(onSearchRequested: (query: String) -> Unit) {
 
 @Composable
 private fun ResultList(
-    books: List<BookFormWithId>,
-    onAddBookClick: (index: Int) -> Unit,
+    books: List<Book>,
     onViewBookClick: (id: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -189,14 +176,11 @@ private fun ResultList(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        itemsIndexed(items = books) { index, books ->
+        items(items = books) { book ->
             SearchResultCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                bookFormWithId = books,
-                onAddBookClick = {
-                    onAddBookClick(index)
-                },
+                book = book,
                 onViewBookClick = onViewBookClick,
             )
         }
@@ -205,89 +189,53 @@ private fun ResultList(
 
 @Composable
 private fun SearchResultCard(
-    bookFormWithId: BookFormWithId,
-    onAddBookClick: () -> Unit,
+    book: Book,
     onViewBookClick: (id: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
         modifier = modifier,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            val bookFormData = bookFormWithId.bookFormData
-            Row() {
-                ImageThumbnail(
-                    modifier = Modifier
-                        .width(92.dp)
-                        .height(140.dp),
-                    bookThumbnailUri = bookFormData.thumbnailLink,
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(text = bookFormData.title ?: "", style = MaterialTheme.typography.titleMedium)
-                    Text(text = bookFormData.author ?: "", style = MaterialTheme.typography.bodyMedium)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    val isbn = "ISBN: ${bookFormData.isbn ?: ""}"
-                    Text(text = isbn, style = MaterialTheme.typography.bodyMedium)
-                    val publisher = "Publisher: ${bookFormData.publisher ?: ""}"
-                    Text(text = publisher, style = MaterialTheme.typography.bodyMedium)
-                    val yearPublished = "Published: ${bookFormData.yearPublished ?: ""}"
-                    Text(text = yearPublished, style = MaterialTheme.typography.bodyMedium)
-                    val numberOfPages = "Pages: ${bookFormData.pageCount ?: ""}"
-                    Text(text = numberOfPages, style = MaterialTheme.typography.bodyMedium)
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = bookFormData.description ?: "", maxLines = 4, overflow = TextOverflow.Ellipsis)
-            Divider(
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .fillMaxWidth(),
-                thickness = .5.dp,
-            )
-            FilledTonalButton(
-                modifier = Modifier
-                    .padding(top = 0.dp)
-                    .align(Alignment.End),
-                onClick = {
-                    if (bookFormWithId.bookId != null) {
-                        onViewBookClick(bookFormWithId.bookId)
-                    } else {
-                        onAddBookClick()
+        Box(modifier = Modifier.clickable { onViewBookClick(book.id) }) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row {
+                    ImageThumbnail(
+                        modifier = Modifier
+                            .width(92.dp)
+                            .height(140.dp),
+                        bookThumbnailUri = book.thumbnailLink,
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(text = book.title ?: "", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = book.author ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        val isbn = "ISBN: ${book.isbn ?: "-"}"
+                        Text(text = isbn, style = MaterialTheme.typography.bodyMedium)
+                        val publisher = "Publisher: ${book.publisher ?: "-"}"
+                        Text(
+                            text = publisher,
+                            style = MaterialTheme.typography.bodyMedium,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                        val yearPublished = "Published: ${book.yearPublished ?: "-"}"
+                        Text(text = yearPublished, style = MaterialTheme.typography.bodyMedium)
+                        val numberOfPages = "Pages: ${book.pageCount ?: "-"}"
+                        Text(text = numberOfPages, style = MaterialTheme.typography.bodyMedium)
                     }
-                },
-            ) {
-                if (bookFormWithId.bookId != null) {
-                    Text(text = stringResource(R.string.search_result_btn_view))
-                } else {
-                    Text(text = stringResource(R.string.search_result_btn_add))
+                }
+                if (book.description.isNullOrEmpty().not()) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(text = book.description ?: "", maxLines = 4, overflow = TextOverflow.Ellipsis)
                 }
             }
         }
-    }
-}
-
-@Composable
-@OptIn(ExperimentalGlideComposeApi::class)
-private fun BookCover(
-    bookFormData: BookFormData,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondaryContainer),
-    ) {
-        GlideImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-                .border(4.dp, MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                .padding(4.dp),
-            contentScale = ContentScale.Crop,
-            model = bookFormData.thumbnailLink,
-            contentDescription = null,
-        )
     }
 }
 
@@ -296,9 +244,8 @@ private fun BookCover(
 fun FindBookPreview() {
     MyLibraryTheme {
         FindBookScreen(
-            uiState = FindBookUiState(foundBooks = previewBooks.map { BookFormWithId(BookFormData()) }),
+            uiState = FindBookUiState(foundBooks = previewBooks),
             onNavigateBack = {},
-            onAddBookClick = {},
             onViewBookClick = {},
             onSearchRequested = {},
         )

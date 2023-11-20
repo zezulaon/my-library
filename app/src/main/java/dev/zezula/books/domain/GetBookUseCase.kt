@@ -6,7 +6,7 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import timber.log.Timber
 
-class GetBooksUseCase(private val repository: BooksRepository) {
+class GetBookUseCase(private val repository: BooksRepository) {
 
     suspend operator fun invoke(bookId: String): Response<Book?> {
         return asResponse {

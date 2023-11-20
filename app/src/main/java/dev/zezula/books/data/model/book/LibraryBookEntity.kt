@@ -1,10 +1,9 @@
-package dev.zezula.books.data.model.review
+package dev.zezula.books.data.model.book
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
-import dev.zezula.books.data.model.book.BookEntity
 
 /**
  * Represents a record of a book that has been added to the user's library collection in the database.

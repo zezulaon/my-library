@@ -1,7 +1,7 @@
 package dev.zezula.books.domain
 
-import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.domain.model.Response
@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 
-class GetBooksForShelfUseCase(private val repository: BooksRepository) {
+class GetBooksForShelfUseCase(private val userLibraryRepository: UserLibraryRepository) {
 
     operator fun invoke(selectedShelf: Shelf?, sortBooksBy: SortBooksBy): Flow<Response<List<Book>>> {
         val booksFlow = if (selectedShelf == null) {
-            repository.getAllLibraryBooksStream()
+            userLibraryRepository.getAllLibraryBooksStream()
         } else {
-            repository.getBooksForShelfStream(selectedShelf.id)
+            userLibraryRepository.getBooksForShelfStream(selectedShelf.id)
         }
         return booksFlow.map { books ->
             val sortedBooks = when (sortBooksBy) {
