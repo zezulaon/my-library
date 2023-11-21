@@ -150,7 +150,7 @@ val appModule = module {
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
-    single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get()) }
+    single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
     viewModel { BookListViewModel(get(), get(), get()) }
