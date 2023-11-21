@@ -9,18 +9,22 @@ import dev.zezula.books.data.model.review.RatingEntity
 import dev.zezula.books.data.model.review.Review
 import dev.zezula.books.data.model.review.ReviewEntity
 import dev.zezula.books.data.model.review.asExternalModel
+import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.RatingDao
 import dev.zezula.books.data.source.db.ReviewDao
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.util.removeHtmlTags
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import timber.log.Timber
 import java.util.UUID
 
 class ReviewsRepositoryImpl(
     private val reviewsDao: ReviewDao,
     private val ratingsDao: RatingDao,
+    private val bookDao: BookDao,
     private val onlineBookFinderService: OnlineBookFinderService,
 ) : ReviewsRepository {
 
@@ -38,7 +42,7 @@ class ReviewsRepositoryImpl(
     }
 
     override suspend fun refreshReviews(book: Book) {
-        if (book.isbn != null && book.isbn.isNotEmpty()) {
+        if (!book.isbn.isNullOrEmpty()) {
             val goodreadsBook = onlineBookFinderService.findReviewsForIsbn(book.isbn)
             if (goodreadsBook != null) {
                 addReviews(book, FindBookOnlineResponse(goodreadsBook = goodreadsBook))
@@ -50,6 +54,13 @@ class ReviewsRepositoryImpl(
         book: Book,
         fetchBookNetworkResponse: FindBookOnlineResponse,
     ) {
+        val existingBook = bookDao.getBookStream(book.id).first()
+        // Check if there is a book in the database
+        if (existingBook == null) {
+            Timber.w("Cannot save reviews -> Book with id: [${book.id}] not found in database.")
+            return
+        }
+
         val goodreadsBook = fetchBookNetworkResponse.goodreadsBook
         if (goodreadsBook?.reviews != null) {
             insertRating(book.id, goodreadsBook)
