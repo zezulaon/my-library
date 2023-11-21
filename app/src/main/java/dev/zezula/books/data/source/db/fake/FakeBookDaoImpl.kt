@@ -1,7 +1,8 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.review.LibraryBookEntity
+import dev.zezula.books.data.model.book.LibraryBookEntity
+import dev.zezula.books.data.model.book.SearchBookResultEntity
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +21,34 @@ class FakeBookDaoImpl : BookDao {
         return getAllBooksStream()
     }
 
+    override fun getLibraryBookStream(bookId: String): Flow<LibraryBookEntity?> {
+        return getAllBooksStream().map { bookList ->
+            val book = bookList.firstOrNull { book -> book.id == bookId }
+            if (book != null) {
+                LibraryBookEntity(book.id)
+            } else {
+                null
+            }
+        }
+    }
+
+    override fun getAllSearchResultBooksStream(): Flow<List<BookEntity>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addToSearchBookResults(searchBookResultEntity: SearchBookResultEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAllSearchBookResults() {
+        TODO("Not yet implemented")
+    }
+
     override fun getAllBooksStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
 
     override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
-    override suspend fun getBooksForQuery(query: String): List<BookEntity> {
+    override suspend fun getLibraryBooksForForQuery(query: String): List<BookEntity> {
         TODO("Searching books is not yet implemented")
     }
 

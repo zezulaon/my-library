@@ -64,7 +64,7 @@ fun TabReviews(
                 )
             } else {
                 LazyColumn(
-                    contentPadding = PaddingValues(vertical = 24.dp),
+                    contentPadding = PaddingValues(top = 24.dp, bottom = 88.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     item {

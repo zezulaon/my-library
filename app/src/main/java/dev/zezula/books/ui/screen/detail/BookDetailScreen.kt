@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -90,11 +92,11 @@ fun BookDetailRoute(
         onReviewClick = onReviewClick,
         onShelfCheckedChange = { shelf, isChecked -> viewModel.onShelfCheckChange(shelf, isChecked) },
         onTabClick = { viewModel.onTabClick(it) },
+        onAddBookToLibraryClick = { viewModel.addBookToLibrary() },
         onAmazonLinkClicked = onAmazonLinkClicked,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @VisibleForTesting
 fun BookDetailScreen(
@@ -115,6 +117,7 @@ fun BookDetailScreen(
     onShelfCheckedChange: (ShelfForBook, Boolean) -> Unit,
     onTabClick: (DetailTab) -> Unit,
     modifier: Modifier = Modifier,
+    onAddBookToLibraryClick: () -> Unit = {},
     onAmazonLinkClicked: (book: Book) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -152,21 +155,39 @@ fun BookDetailScreen(
                 }
             }
         },
+        floatingActionButton = {
+            if (uiState.isBookInLibrary.not()) {
+                ExtendedFloatingActionButton(
+                    onClick = onAddBookToLibraryClick,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = stringResource(R.string.detail_add_to_my_library_btn_content_desc),
+                        )
+                    },
+                    text = { Text(text = stringResource(R.string.detail_add_to_my_library_btn)) },
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding),
         ) {
+            // Filter tabs - if the book isn't part of user's library, some tabs are hidden.
+            val tabs = DetailTab.entries.filter { uiState.isBookInLibrary || it.isVisibleOutsideLibrary }
+            val currentlySelectedIndex = tabs.indexOf(uiState.selectedTab)
             TabRow(
-                selectedTabIndex = uiState.selectedTab.tabIndex,
+                selectedTabIndex = currentlySelectedIndex,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ) {
-                DetailTab.values().forEachIndexed { index, tab ->
+                tabs.forEach { tab ->
                     Tab(
-                        selected = uiState.selectedTab.tabIndex == index,
+                        selected = uiState.selectedTab == tab,
                         onClick = { onTabClick(tab) },
-                        text = { Text(text = stringResource(tab.tabName)) },
+                        text = { Text(text = stringResource(tab.tabTitle)) },
                     )
                 }
             }
@@ -176,15 +197,18 @@ fun BookDetailScreen(
                     uiState = uiState,
                     onShelfCheckedChange = onShelfCheckedChange,
                 )
+
                 DetailTab.Detail -> TabBookDetail(
                     uiState = uiState,
                     onAmazonLinkClicked = onAmazonLinkClicked,
                 )
+
                 DetailTab.Notes -> TabNotes(
                     uiState = uiState,
                     onEditClick = onNoteEditClick,
                     onDeleteClick = onNoteDeleteClick,
                 )
+
                 DetailTab.Reviews -> TabReviews(
                     uiState = uiState,
                     onReviewClick = onReviewClick,
@@ -250,38 +274,44 @@ private fun BookDetailAppBar(
             }
         },
         actions = {
-            when (uiState.selectedTab) {
-                DetailTab.Shelves -> {
-                    IconButton(onClick = { onNewShelfClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.content_add_new_shelf),
-                        )
+            // Actions are visible only if the book is in the library (user's personal collection)
+            if (uiState.isBookInLibrary) {
+                when (uiState.selectedTab) {
+                    DetailTab.Shelves -> {
+                        IconButton(onClick = { onNewShelfClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.content_add_new_shelf),
+                            )
+                        }
                     }
+
+                    DetailTab.Notes -> {
+                        IconButton(onClick = { onNewNoteClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.content_add_new_note),
+                            )
+                        }
+                    }
+
+                    DetailTab.Detail -> {
+                        IconButton(onClick = { onDeleteClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = stringResource(R.string.content_desc_delete),
+                            )
+                        }
+                        IconButton(onClick = { onEditBookClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = stringResource(R.string.content_desc_edit),
+                            )
+                        }
+                    }
+
+                    DetailTab.Reviews -> {}
                 }
-                DetailTab.Notes -> {
-                    IconButton(onClick = { onNewNoteClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.content_add_new_note),
-                        )
-                    }
-                }
-                DetailTab.Detail -> {
-                    IconButton(onClick = { onDeleteClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.content_desc_delete),
-                        )
-                    }
-                    IconButton(onClick = { onEditBookClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(R.string.content_desc_edit),
-                        )
-                    }
-                }
-                DetailTab.Reviews -> {}
             }
         },
     )

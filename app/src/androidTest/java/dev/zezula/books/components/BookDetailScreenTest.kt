@@ -118,6 +118,7 @@ class BookDetailScreenTest {
                         errorMessage = null,
                         isBookDeleted = false,
                         isInProgress = false,
+                        isBookInLibrary = true,
                     ),
                 )
             }

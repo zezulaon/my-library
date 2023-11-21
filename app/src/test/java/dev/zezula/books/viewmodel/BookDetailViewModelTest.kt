@@ -72,6 +72,7 @@ class BookDetailViewModelTest : KoinTest {
                 val savedStateHandle = SavedStateHandle()
                 savedStateHandle[DestinationArgs.bookIdArg] = bookTestData.id
                 BookDetailViewModel(
+                    moveBookToLibraryUseCase = get(),
                     deleteBookUseCase = get(),
                     checkReviewsDownloadedUseCase = get(),
                     createOrUpdateNoteUseCase = get(),

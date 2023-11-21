@@ -40,6 +40,22 @@ fun BookEntity.asExternalModel(): Book {
     )
 }
 
+fun BookEntity.asNetworkBook(): NetworkBook {
+    return NetworkBook(
+        id = this.id,
+        dateAdded = this.dateAdded,
+        title = this.title,
+        author = this.author,
+        description = this.description,
+        isbn = this.isbn,
+        publisher = this.publisher,
+        yearPublished = this.yearPublished,
+        pageCount = this.pageCount,
+        thumbnailLink = this.thumbnailLink,
+        userRating = this.userRating,
+    )
+}
+
 fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
     checkNotNull(networkBook.id) { "Book needs [id] property" }
     checkNotNull(networkBook.dateAdded) { "Book needs [dateAdded] property" }
@@ -55,6 +71,22 @@ fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
         pageCount = networkBook.pageCount,
         thumbnailLink = networkBook.thumbnailLink,
         userRating = networkBook.userRating,
+    )
+}
+
+fun fromBookFormData(id: String, dateAdded: String, bookFormData: BookFormData): BookEntity {
+    return BookEntity(
+        id = id,
+        dateAdded = dateAdded,
+        title = bookFormData.title,
+        author = bookFormData.author,
+        description = bookFormData.description,
+        isbn = bookFormData.isbn,
+        publisher = bookFormData.publisher,
+        yearPublished = bookFormData.yearPublished,
+        pageCount = bookFormData.pageCount,
+        thumbnailLink = bookFormData.thumbnailLink,
+        userRating = bookFormData.userRating,
     )
 }
 

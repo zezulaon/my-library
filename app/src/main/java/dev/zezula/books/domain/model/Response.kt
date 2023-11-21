@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
@@ -49,9 +50,12 @@ fun <T> Flow<Response<T>>.onResponseError(action: (Throwable) -> Unit): Flow<Res
 inline fun <T, R> T.asResponse(block: T.() -> R): Response<R> {
     return try {
         Response.Success(block())
-    } catch (e: IOException) {
-        Timber.w("Failed to get data: ${e.message}")
-        Response.Error(e)
+    } catch (e1: HttpException) {
+        Timber.w("Failed to get data: ${e1.message}")
+        Response.Error(e1)
+    } catch (e2: IOException) {
+        Timber.w("Failed to get data: ${e2.message}")
+        Response.Error(e2)
     }
 }
 
@@ -59,11 +63,14 @@ fun <T> Flow<T>.asResponse(): Flow<Response<T>> {
     return this.map<T, Response<T>> {
         Response.Success(it)
     }.catch { e ->
-        if (e is IOException) {
-            Timber.w("Failed to get data: ${e.message}")
-            emit(Response.Error(e))
-        } else {
-            throw e
+        when (e) {
+            is HttpException, is IOException -> {
+                Timber.w("Failed to get data: ${e.message}")
+                emit(Response.Error(e))
+            }
+            else -> {
+                throw e
+            }
         }
     }
 }

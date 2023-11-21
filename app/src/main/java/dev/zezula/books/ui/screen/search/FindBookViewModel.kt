@@ -3,8 +3,7 @@ package dev.zezula.books.ui.screen.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,14 +12,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class BookFormWithId(val bookFormData: BookFormData, val bookId: String? = null)
-
 class FindBookViewModel(
-    private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
     private val findBookForQueryOnlineUseCase: FindBookForQueryOnlineUseCase,
 ) : ViewModel() {
 
-    private val _searchResultBooks = MutableStateFlow<List<BookFormWithId>>(emptyList())
+    private val _searchResultBooks = MutableStateFlow<List<Book>>(emptyList())
     private val _errorMessage = MutableStateFlow<Int?>(null)
     private val _isInProgress = MutableStateFlow(false)
     private val _noResultsMsgDisplayed = MutableStateFlow(false)
@@ -54,7 +50,7 @@ class FindBookViewModel(
                     onSuccess = { books ->
                         if (books.isNotEmpty()) {
                             Timber.d("Found books: $books")
-                            _searchResultBooks.value = books.map { BookFormWithId(it) }
+                            _searchResultBooks.value = books
                         } else {
                             Timber.d("No books found")
                             _noResultsMsgDisplayed.value = true
@@ -71,27 +67,5 @@ class FindBookViewModel(
     override fun onCleared() {
         super.onCleared()
         Timber.d("onCleared()")
-    }
-
-    fun addBook(bookFormIndex: Int) {
-        viewModelScope.launch {
-            val bookFormData = _searchResultBooks.value[bookFormIndex].bookFormData
-            addOrUpdateBookUseCase(null, bookFormData)
-                .fold(
-                    onSuccess = { book ->
-                        Timber.d("Book added: $book")
-                        _searchResultBooks.value = _searchResultBooks.value.mapIndexed { i, bookFormWithId ->
-                            if (i == bookFormIndex) {
-                                BookFormWithId(bookFormWithId.bookFormData, book.id)
-                            } else {
-                                bookFormWithId
-                            }
-                        }
-                    },
-                    onFailure = {
-                        Timber.e(it, "Failed to add book.")
-                    },
-                )
-        }
     }
 }

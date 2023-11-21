@@ -6,29 +6,23 @@ import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
 
-    suspend fun addBookToLibrary(bookId: String)
+    suspend fun addBookToSearchResults(bookId: String)
 
-    fun getAllLibraryBooksStream(): Flow<List<Book>>
+    fun getAllSearchResultBooksStream(): Flow<List<Book>>
+
+    suspend fun deleteAllSearchBookResults()
 
     fun getAllBooksStream(): Flow<List<Book>>
 
-    fun getBooksForShelfStream(shelfId: String): Flow<List<Book>>
-
     fun getBookStream(bookId: String): Flow<Book?>
+
+    suspend fun addBook(bookFormData: BookFormData): Book
+
+    suspend fun updateBook(bookId: String, bookFormData: BookFormData): Book
 
     suspend fun getBook(bookId: String): Book?
 
     suspend fun getBookId(isbn: String): String?
 
-    suspend fun addBook(bookFormData: BookFormData): Book
-
-    suspend fun addOrUpdateBook(bookId: String, bookFormData: BookFormData): Book
-
-    suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
-
     suspend fun deleteBook(bookId: String)
-
-    suspend fun refreshBooks()
-
-    suspend fun searchMyLibraryBooks(query: String): List<Book>
 }

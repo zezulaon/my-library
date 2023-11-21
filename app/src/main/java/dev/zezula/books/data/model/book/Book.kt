@@ -3,6 +3,7 @@ package dev.zezula.books.data.model.book
 import dev.zezula.books.util.formatDate
 import dev.zezula.books.util.toSortingAuthor
 import dev.zezula.books.util.toSortingTitle
+import java.time.LocalDateTime
 
 data class Book(
     val id: String,
@@ -41,6 +42,22 @@ data class BookFormData(
     val userRating: Int? = null,
     val dateAdded: String? = null,
 )
+
+fun BookFormData.asNetworkBook(id: String): NetworkBook {
+    return NetworkBook(
+        id = id,
+        title = this.title,
+        author = this.author,
+        description = this.description,
+        isbn = this.isbn,
+        publisher = this.publisher,
+        yearPublished = this.yearPublished,
+        pageCount = this.pageCount,
+        thumbnailLink = this.thumbnailLink,
+        userRating = this.userRating,
+        dateAdded = this.dateAdded ?: LocalDateTime.now().toString(),
+    )
+}
 
 /**
  * Returns true if book has all important data set to non null values

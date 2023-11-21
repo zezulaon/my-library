@@ -46,7 +46,7 @@ fun TabBookDetail(
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
-            .padding(vertical = 24.dp),
+            .padding(top = 24.dp, bottom = 88.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         ElevatedCard(
