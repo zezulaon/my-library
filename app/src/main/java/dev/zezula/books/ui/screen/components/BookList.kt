@@ -1,6 +1,7 @@
 package dev.zezula.books.ui.screen.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -15,9 +16,11 @@ fun BookList(
     onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     animateItemChanges: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     LazyColumn(
         modifier = modifier,
+        contentPadding = contentPadding,
     ) {
         itemsIndexed(key = { _, item -> item.id }, items = books) { index, book ->
             val isLast = books.isLastIndex(index)

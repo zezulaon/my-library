@@ -75,6 +75,7 @@ class BookDetailViewModelTest : KoinTest {
                     moveBookToLibraryUseCase = get(),
                     deleteBookUseCase = get(),
                     checkReviewsDownloadedUseCase = get(),
+                    fetchSuggestionsUseCase = get(),
                     createOrUpdateNoteUseCase = get(),
                     deleteNoteUseCase = get(),
                     toggleBookInShelfUseCase = get(),

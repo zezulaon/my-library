@@ -23,6 +23,7 @@ data class AllBookDetailResult(
     val rating: Rating? = null,
     val shelves: List<ShelfForBook> = emptyList(),
     val reviews: List<Review> = emptyList(),
+    val suggestions: List<Book> = emptyList(),
     val isBookInLibrary: Boolean = false,
 )
 
@@ -42,7 +43,8 @@ class GetAllBookDetailUseCase(
             shelvesRepository.getShelvesForBookStream(bookId),
             reviewsRepository.getRatingStream(bookId),
             reviewsRepository.getReviewsForBookStream(bookId),
-        ) { book, isBookInLibrary, notes, shelves, rating, reviews ->
+            booksRepository.getAllSuggestionsForBook(bookId),
+        ) { book, isBookInLibrary, notes, shelves, rating, reviews, suggestions ->
             AllBookDetailResult(
                 book = book,
                 isBookInLibrary = isBookInLibrary,
@@ -50,6 +52,7 @@ class GetAllBookDetailUseCase(
                 rating = rating,
                 shelves = shelves,
                 reviews = reviews,
+                suggestions = suggestions,
             )
         }
             .asResponse()

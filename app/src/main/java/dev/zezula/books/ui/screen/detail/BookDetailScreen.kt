@@ -16,25 +16,30 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
@@ -42,6 +47,7 @@ import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.review.Review
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.ui.theme.MyLibraryTheme
+import timber.log.Timber
 
 @Composable
 fun BookDetailRoute(
@@ -50,8 +56,10 @@ fun BookDetailRoute(
     onReviewClick: (Review) -> Unit,
     onEditBookClick: (String) -> Unit,
     onBookDeletedSuccess: () -> Unit,
+    onSuggestedBookClick: (bookId: String) -> Unit,
     onNewShelfClick: () -> Unit,
     onAmazonLinkClicked: (book: Book) -> Unit = {},
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,6 +76,19 @@ fun BookDetailRoute(
         LaunchedEffect(snackbarHostState, viewModel, msg, text) {
             snackbarHostState.showSnackbar(text)
             viewModel.snackbarMessageShown()
+        }
+    }
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            Timber.d("Lifecycle event: $event")
+            if (event == Lifecycle.Event.ON_CREATE) {
+                viewModel.fetchReviews()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -94,9 +115,12 @@ fun BookDetailRoute(
         onTabClick = { viewModel.onTabClick(it) },
         onAddBookToLibraryClick = { viewModel.addBookToLibrary() },
         onAmazonLinkClicked = onAmazonLinkClicked,
+        onSuggestedBookClick = onSuggestedBookClick,
+        onSuggestionsGenerateClick = { viewModel.generateSuggestions() },
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @VisibleForTesting
 fun BookDetailScreen(
@@ -119,6 +143,8 @@ fun BookDetailScreen(
     modifier: Modifier = Modifier,
     onAddBookToLibraryClick: () -> Unit = {},
     onAmazonLinkClicked: (book: Book) -> Unit = {},
+    onSuggestedBookClick: (bookId: String) -> Unit = {},
+    onSuggestionsGenerateClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     if (uiState.isDeleteDialogDisplayed) {
@@ -179,7 +205,7 @@ fun BookDetailScreen(
             // Filter tabs - if the book isn't part of user's library, some tabs are hidden.
             val tabs = DetailTab.entries.filter { uiState.isBookInLibrary || it.isVisibleOutsideLibrary }
             val currentlySelectedIndex = tabs.indexOf(uiState.selectedTab)
-            TabRow(
+            PrimaryScrollableTabRow(
                 selectedTabIndex = currentlySelectedIndex,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ) {
@@ -212,6 +238,12 @@ fun BookDetailScreen(
                 DetailTab.Reviews -> TabReviews(
                     uiState = uiState,
                     onReviewClick = onReviewClick,
+                )
+
+                DetailTab.Suggestions -> TabSuggestions(
+                    uiState = uiState.suggestionsUiState,
+                    onBookClick = onSuggestedBookClick,
+                    onGenerateSuggestionsClick = onSuggestionsGenerateClick,
                 )
             }
         }
@@ -311,6 +343,7 @@ private fun BookDetailAppBar(
                     }
 
                     DetailTab.Reviews -> {}
+                    DetailTab.Suggestions -> {}
                 }
             }
         },

@@ -16,10 +16,12 @@ import dev.zezula.books.data.source.db.RatingDao
 import dev.zezula.books.data.source.db.ReviewDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.fake.FakeBookDaoImpl
+import dev.zezula.books.data.source.db.fake.FakeMyLibraryApi
 import dev.zezula.books.data.source.db.fake.FakeNoteDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeRatingDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeReviewDaoImpl
 import dev.zezula.books.data.source.db.fake.FakeShelfAndBookDaoImpl
+import dev.zezula.books.data.source.network.MyLibraryApi
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
@@ -31,6 +33,7 @@ import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
+import dev.zezula.books.domain.FetchSuggestionsUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.GetAllAuthorsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
@@ -56,6 +59,7 @@ import org.koin.dsl.module
 val appUnitTestModule = module {
 
     single<OnlineBookFinderService> { FakeOnlineBookFinderServiceImpl() }
+    single<MyLibraryApi> { FakeMyLibraryApi() }
 
     single<BookDao> { FakeBookDaoImpl() }
     single<NoteDao> { FakeNoteDaoImpl() }
@@ -69,6 +73,7 @@ val appUnitTestModule = module {
     single { GetBooksForShelfUseCase(get()) }
     single { RefreshLibraryUseCase(get()) }
     single { GetShelvesUseCase(get()) }
+    single { FetchSuggestionsUseCase(get()) }
     single { DeleteShelfUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
@@ -86,7 +91,7 @@ val appUnitTestModule = module {
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get(), get()) }
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
@@ -98,7 +103,7 @@ val appUnitTestModule = module {
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }
