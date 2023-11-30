@@ -3,6 +3,7 @@ package dev.zezula.books.di
 import androidx.room.Room
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dev.zezula.books.BuildConfig
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.BooksRepositoryImpl
 import dev.zezula.books.data.NotesRepository
@@ -20,6 +21,7 @@ import dev.zezula.books.data.source.network.AuthServiceImpl
 import dev.zezula.books.data.source.network.FirestoreDataSource
 import dev.zezula.books.data.source.network.GoodreadsApi
 import dev.zezula.books.data.source.network.GoogleApi
+import dev.zezula.books.data.source.network.MyLibraryApi
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
@@ -31,6 +33,7 @@ import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.DeleteShelfUseCase
+import dev.zezula.books.domain.FetchSuggestionsUseCase
 import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
 import dev.zezula.books.domain.GetAllAuthorsUseCase
@@ -55,12 +58,15 @@ import dev.zezula.books.ui.screen.search.SearchMyLibraryViewModel
 import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
 import dev.zezula.books.ui.screen.signin.EmailSignInViewModel
 import dev.zezula.books.ui.screen.signin.SignInViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import java.util.concurrent.TimeUnit
 
 val appModule = module {
 
@@ -85,6 +91,23 @@ val appModule = module {
             .baseUrl("https://www.googleapis.com/")
             .build()
             .create(GoogleApi::class.java)
+    }
+    single<MyLibraryApi> {
+
+        val clientBuilder = OkHttpClient.Builder()
+            .readTimeout(90, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        }
+
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BuildConfig.ML_BASE_API_URL)
+            .client(clientBuilder.build())
+            .build()
+            .create(MyLibraryApi::class.java)
     }
     single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
@@ -126,6 +149,7 @@ val appModule = module {
     // UseCases
     single { GetBooksForShelfUseCase(get()) }
     single { RefreshLibraryUseCase(get()) }
+    single { FetchSuggestionsUseCase(get()) }
     single { GetShelvesUseCase(get()) }
     single { DeleteShelfUseCase(get()) }
     single { CreateOrUpdateNoteUseCase(get()) }
@@ -146,7 +170,7 @@ val appModule = module {
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get(), get()) }
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
@@ -158,7 +182,7 @@ val appModule = module {
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { EmailSignInViewModel(get()) }
     viewModel { FindBookViewModel(get()) }

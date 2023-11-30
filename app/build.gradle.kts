@@ -61,6 +61,12 @@ android {
             value = getStringProperty("myLibrary.linkAmazonSearch", true),
         )
 
+        buildConfigField(
+            type = "String",
+            name = "ML_BASE_API_URL",
+            value = getStringProperty("myLibrary.myLibraryBaseApiUrl", true),
+        )
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
@@ -171,6 +177,8 @@ dependencies {
         // XmlPullParser (Since it is already included: https://issuetracker.google.com/issues/289087852)
         exclude(group = "xpp3", module = "xpp3")
     }
+    implementation(libs.squareup.okhttp3.okhttp)
+    implementation(libs.squareup.okhttp3.logging)
 
     // Accompanist - permissions
     implementation(libs.google.accompanist.permissions)

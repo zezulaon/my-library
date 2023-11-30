@@ -108,6 +108,9 @@ fun MyLibraryNavHost(
                     Timber.d("Navigate to Amazon")
                     navController.navigateToAmazonSearch(book)
                 },
+                onSuggestedBookClick = { bookId ->
+                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
+                },
                 viewModel = koinViewModel(),
             )
         }

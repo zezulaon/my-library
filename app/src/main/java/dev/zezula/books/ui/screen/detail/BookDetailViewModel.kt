@@ -12,6 +12,7 @@ import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
 import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
+import dev.zezula.books.domain.FetchSuggestionsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
@@ -20,9 +21,11 @@ import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.ui.DestinationArgs
 import dev.zezula.books.ui.whileSubscribedInActivity
+import dev.zezula.books.util.combine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,6 +35,7 @@ class BookDetailViewModel(
     private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
     private val deleteBookUseCase: DeleteBookFromLibraryUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
+    private val fetchSuggestionsUseCase: FetchSuggestionsUseCase,
     private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
@@ -53,12 +57,31 @@ class BookDetailViewModel(
     private val _selectedNote = MutableStateFlow<Note?>(null)
     private val _addBookToLibraryInProgress = MutableStateFlow(false)
 
+    private val _suggestionsInProgress = MutableStateFlow(false)
+    private val _suggestionsProgress = MutableStateFlow(.0f)
+    private val _suggestionsRefreshFailed = MutableStateFlow(false)
+    private val suggestionsUiState: Flow<SuggestionsUiState> = combine(
+        _suggestionsInProgress,
+        _suggestionsProgress,
+        _suggestionsRefreshFailed,
+        allBookDetail,
+    ) { suggestionsInProgress, suggestionsProgress, suggestionsRefreshFailed, bookResponse ->
+        val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
+        SuggestionsUiState(
+            suggestions = bookDetail.suggestions,
+            progress = suggestionsProgress,
+            refreshFailed = suggestionsRefreshFailed,
+            isGeneratingInProgress = suggestionsInProgress,
+        )
+    }
+
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
     private val _shelvesToggleProgressList = MutableStateFlow<Map<String, Boolean>>(emptyMap())
 
-    val uiState: StateFlow<BookDetailUiState> = dev.zezula.books.util.combine(
+    val uiState: StateFlow<BookDetailUiState> = combine(
         allBookDetail,
+        suggestionsUiState,
         _selectedTab,
         _bookDeleted,
         _isInProgress,
@@ -67,8 +90,8 @@ class BookDetailViewModel(
         _isDeleteDialogDisplayed,
         _isNoteDialogDisplayed,
         _selectedNote,
-    ) { bookResponse, selectedTab, bookDeleted, isInProgress, errorMessage, shelvesToggleProgressList,
-            isDeleteDialogDisplayed, isNewNoteDialogDisplayed, selectedNote, ->
+    ) { bookResponse, suggestionUiState, selectedTab, bookDeleted, isInProgress, errorMessage,
+            shelvesToggleProgressList, isDeleteDialogDisplayed, isNewNoteDialogDisplayed, selectedNote, ->
 
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
         BookDetailUiState(
@@ -78,6 +101,7 @@ class BookDetailViewModel(
             notes = bookDetail.notes,
             shelves = mergeShelvesWithToggleProgress(bookDetail.shelves, shelvesToggleProgressList),
             reviews = bookDetail.reviews,
+            suggestionsUiState = suggestionUiState,
             selectedTab = selectedTab,
             isBookDeleted = bookDeleted,
             errorMessage = errorMessage,
@@ -107,10 +131,9 @@ class BookDetailViewModel(
     init {
         Timber.d("init{}")
         Timber.d("Received bookId: $bookId")
-        fetchReviews()
     }
 
-    private fun fetchReviews() {
+    fun fetchReviews() {
         viewModelScope.launch {
             _isInProgress.value = true
             checkReviewsDownloadedUseCase(bookId)
@@ -223,6 +246,25 @@ class BookDetailViewModel(
                     _errorMessage.value = R.string.detail_failed_to_add_book
                 }
             _addBookToLibraryInProgress.value = false
+        }
+    }
+
+    fun generateSuggestions() {
+        viewModelScope.launch {
+            _suggestionsInProgress.value = true
+            _suggestionsProgress.value = .95f
+
+            fetchSuggestionsUseCase(bookId).fold(
+                onSuccess = {
+                    if (it.isNullOrEmpty()) {
+                        _suggestionsRefreshFailed.value = true
+                    }
+                },
+                onFailure = {
+                    _suggestionsRefreshFailed.value = true
+                },
+            )
+            _suggestionsInProgress.value = false
         }
     }
 }

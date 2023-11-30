@@ -13,6 +13,7 @@ data class BookDetailUiState(
     val shelves: List<ShelfForBook> = emptyList(),
     val notes: List<Note> = emptyList(),
     val reviews: List<Review> = emptyList(),
+    val suggestionsUiState: SuggestionsUiState = SuggestionsUiState(),
     val selectedTab: DetailTab = DetailTab.Detail,
     val errorMessage: Int? = null,
     val isBookDeleted: Boolean = false,
@@ -20,4 +21,11 @@ data class BookDetailUiState(
     val isDeleteDialogDisplayed: Boolean = false,
     val isNewNoteDialogDisplayed: Boolean = false,
     val selectedNote: Note? = null,
+)
+
+data class SuggestionsUiState(
+    val suggestions: List<Book> = emptyList(),
+    val isGeneratingInProgress: Boolean = false,
+    val progress: Float = 0f,
+    val refreshFailed: Boolean = false,
 )

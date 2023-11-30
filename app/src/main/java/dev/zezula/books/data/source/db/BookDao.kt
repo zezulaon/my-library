@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.book.BookSuggestionEntity
 import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.SearchBookResultEntity
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,18 @@ interface BookDao {
      */
     @Query("DELETE FROM search_book_results")
     suspend fun deleteAllSearchBookResults()
+
+    /**
+     * Returns suggestions for a given book ID.
+     */
+    @Query("SELECT * FROM books INNER JOIN book_suggestions ON books.id = book_suggestions.bookId WHERE book_suggestions.parentBookId = :bookId")
+    fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>>
+
+    /**
+     * Add the book to the "book_suggestions" reference table (Table with book suggestions).
+     */
+    @Upsert
+    suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity)
 
     @Query("SELECT * FROM books ORDER BY dateAdded DESC")
     fun getAllBooksStream(): Flow<List<BookEntity>>

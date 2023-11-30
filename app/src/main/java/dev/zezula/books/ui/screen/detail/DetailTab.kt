@@ -12,5 +12,6 @@ enum class DetailTab(@StringRes val tabTitle: Int, val isVisibleOutsideLibrary: 
     Shelves(tabTitle = R.string.screen_detail_tab_shelves, isVisibleOutsideLibrary = false),
     Detail(tabTitle = R.string.screen_detail_tab_book, isVisibleOutsideLibrary = true),
     Reviews(tabTitle = R.string.screen_detail_tab_reviews, isVisibleOutsideLibrary = true),
+    Suggestions(tabTitle = R.string.screen_detail_tab_suggestions, isVisibleOutsideLibrary = false),
     Notes(tabTitle = R.string.screen_detail_tab_notes, isVisibleOutsideLibrary = false),
 }

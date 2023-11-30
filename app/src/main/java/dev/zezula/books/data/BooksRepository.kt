@@ -10,6 +10,10 @@ interface BooksRepository {
 
     fun getAllSearchResultBooksStream(): Flow<List<Book>>
 
+    suspend fun fetchSuggestions(bookId: String): List<Book>?
+
+    fun getAllSuggestionsForBook(bookId: String): Flow<List<Book>>
+
     suspend fun deleteAllSearchBookResults()
 
     fun getAllBooksStream(): Flow<List<Book>>

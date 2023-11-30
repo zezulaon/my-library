@@ -1,6 +1,7 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.book.BookSuggestionEntity
 import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.SearchBookResultEntity
 import dev.zezula.books.data.source.db.BookDao
@@ -41,6 +42,14 @@ class FakeBookDaoImpl : BookDao {
     }
 
     override suspend fun deleteAllSearchBookResults() {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>> {
+        return getAllBooksStream()
+    }
+
+    override suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity) {
         TODO("Not yet implemented")
     }
 
