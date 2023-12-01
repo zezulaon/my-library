@@ -12,12 +12,6 @@ import dev.zezula.books.data.model.shelf.shelfIdProperty
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
-private const val collectionIdUsers = "users"
-private const val collectionIdBooks = "books"
-private const val collectionNotes = "notes"
-private const val collectionIdShelves = "shelves"
-private const val collectionIdShelvesWithBooks = "shelvesWithBooks"
-
 class FirestoreDataSource : NetworkDataSource {
 
     private val auth = Firebase.auth
@@ -26,13 +20,13 @@ class FirestoreDataSource : NetworkDataSource {
     private val userId: String by lazy { auth.currentUser?.uid ?: throw IllegalStateException("Missing firebase user") }
 
     private val booksCollection =
-        db.collection(collectionIdUsers).document(userId).collection(collectionIdBooks)
+        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_BOOKS)
 
     private val shelvesCollection =
-        db.collection(collectionIdUsers).document(userId).collection(collectionIdShelves)
+        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES)
 
     private val shelvesWithBooksCollection =
-        db.collection(collectionIdUsers).document(userId).collection(collectionIdShelvesWithBooks)
+        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES_WITH_BOOKS)
 
     override suspend fun getBooks(): List<NetworkBook> {
         Timber.d("getBooks()")
@@ -79,7 +73,7 @@ class FirestoreDataSource : NetworkDataSource {
     }
 
     override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
-        return booksCollection.document(bookId).collection(collectionNotes).get().await()
+        return booksCollection.document(bookId).collection(COLLECTION_NOTES).get().await()
             .map {
                 it.toObject(NetworkNote::class.java)
             }
@@ -93,7 +87,7 @@ class FirestoreDataSource : NetworkDataSource {
         checkNotNull(note.id) { "Note needs [id] property" }
         checkNotNull(note.bookId) { "Note needs [bookId] property" }
 
-        booksCollection.document(note.bookId).collection(collectionNotes).document(note.id).set(note).await()
+        booksCollection.document(note.bookId).collection(COLLECTION_NOTES).document(note.id).set(note).await()
         return note
     }
 
@@ -112,7 +106,7 @@ class FirestoreDataSource : NetworkDataSource {
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
         Timber.d("deleteNote (noteId=$noteId)")
-        booksCollection.document(bookId).collection(collectionNotes).document(noteId).delete().await()
+        booksCollection.document(bookId).collection(COLLECTION_NOTES).document(noteId).delete().await()
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
