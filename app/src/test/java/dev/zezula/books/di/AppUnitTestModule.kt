@@ -10,6 +10,8 @@ import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
 import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.UserLibraryRepositoryImpl
+import dev.zezula.books.data.UserRepository
+import dev.zezula.books.data.UserRepositoryImpl
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.RatingDao
@@ -44,6 +46,7 @@ import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
+import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
@@ -86,6 +89,7 @@ val appUnitTestModule = module {
     single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
     single { GetBookUseCase(get()) }
     single { AddOrUpdateLibraryBookUseCase(get()) }
+    single { UpdateLastSignedInDateUseCase(get()) }
     single { MoveBookToLibraryUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
@@ -95,6 +99,7 @@ val appUnitTestModule = module {
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl() }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
@@ -104,6 +109,6 @@ val appUnitTestModule = module {
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { SignInViewModel(get()) }
+    viewModel { SignInViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }

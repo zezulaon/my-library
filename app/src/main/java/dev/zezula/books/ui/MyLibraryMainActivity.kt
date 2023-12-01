@@ -7,10 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
 import dev.zezula.books.ui.screen.signin.SignInViewModel
 import dev.zezula.books.util.getGoogleSignInRequest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -26,6 +28,10 @@ class MyLibraryMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate($savedInstanceState)")
+
+        lifecycleScope.launch {
+            userViewModel.updateLastSignedInDate()
+        }
 
         setContent {
             MyLibraryUiApp(getStartDestination())

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
 import dev.zezula.books.data.source.network.AuthService
+import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -11,7 +12,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SignInViewModel(private val authService: AuthService) : ViewModel() {
+class SignInViewModel(
+    private val authService: AuthService,
+    private val updateLastSignedInDateUseCase: UpdateLastSignedInDateUseCase,
+) : ViewModel() {
 
     private val uiMessage = MutableStateFlow<Int?>(null)
     private val isUserSignedIn = MutableStateFlow(false)
@@ -49,6 +53,10 @@ class SignInViewModel(private val authService: AuthService) : ViewModel() {
     }
 
     fun isSignedIn() = authService.isUserSignedIn()
+
+    suspend fun updateLastSignedInDate() {
+        updateLastSignedInDateUseCase()
+    }
 
     fun googleSignIn(googleIdToken: String) {
         viewModelScope.launch {
