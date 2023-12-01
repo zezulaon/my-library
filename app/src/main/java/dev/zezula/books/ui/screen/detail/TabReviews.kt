@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,11 +35,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import dev.zezula.books.R
 import dev.zezula.books.data.model.review.Review
+import dev.zezula.books.data.model.review.previewReviews
+import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
 fun TabReviews(
@@ -47,17 +51,22 @@ fun TabReviews(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
-        if (uiState.isInProgress) {
-            CircularProgressIndicator(
-                modifier = modifier
-                    .padding(top = 32.dp)
+        if (uiState.isReviewsSearchInProgress) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 24.dp)
                     .align(Alignment.Center),
-            )
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(stringResource(R.string.detail_reviews_searching))
+                Spacer(Modifier.requiredHeight(16.dp))
+                CircularProgressIndicator()
+            }
         } else {
             if (uiState.reviews.isEmpty()) {
                 Text(
                     modifier = modifier
-                        .padding(top = 32.dp)
+                        .padding(top = 24.dp)
                         .align(Alignment.Center),
                     text = stringResource(R.string.detail_no_reviews_were_found),
                     style = MaterialTheme.typography.bodyMedium,
@@ -211,6 +220,33 @@ private fun UserImage(
             contentScale = ContentScale.Crop,
             model = review.userImageLink,
             contentDescription = null,
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewTabReviewsLoading() {
+    MyLibraryTheme {
+        TabReviews(
+            uiState = BookDetailUiState(
+                reviews = emptyList(),
+                isReviewsSearchInProgress = true,
+            ),
+            onReviewClick = {},
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewTabReviewsLoaded() {
+    MyLibraryTheme {
+        TabReviews(
+            uiState = BookDetailUiState(
+                reviews = previewReviews,
+            ),
+            onReviewClick = {},
         )
     }
 }

@@ -55,8 +55,8 @@ class OnlineBookFinderServiceImpl(
         return result
     }
 
-    override suspend fun findReviewsForIsbn(isbn: String): GoodreadsBook? {
-        return goodreadsApi.findReviewsOrNull(isbn)
+    override suspend fun findReviewsForIsbn(isbn: String?, title: String?, author: String?): GoodreadsBook? {
+        return goodreadsApi.findReviewsOrNull(isbn = isbn, title = title, author = author)
     }
 
     override suspend fun findBookForQueryOnline(query: String): List<BookFormData> {

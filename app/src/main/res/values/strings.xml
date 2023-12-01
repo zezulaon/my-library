@@ -107,6 +107,7 @@
     <string name="detail_label_year_added_on">Added on</string>
     <string name="detail_reviews_btn_read_more">Read More</string>
     <string name="detail_no_reviews_were_found">No reviews were found.</string>
+    <string name="detail_reviews_searching">Searching for reviews…</string>
 
     <string name="detail_add_to_my_library_btn">Add to My Library</string>
     <string name="detail_add_to_my_library_btn_content_desc">Add to my library button</string>

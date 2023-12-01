@@ -98,7 +98,7 @@ val appModule = module {
     single<MyLibraryApi> {
 
         val clientBuilder = OkHttpClient.Builder()
-            .readTimeout(90, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG) {

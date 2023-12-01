@@ -42,11 +42,13 @@ class ReviewsRepositoryImpl(
     }
 
     override suspend fun refreshReviews(book: Book) {
-        if (!book.isbn.isNullOrEmpty()) {
-            val goodreadsBook = onlineBookFinderService.findReviewsForIsbn(book.isbn)
-            if (goodreadsBook != null) {
-                addReviews(book, FindBookOnlineResponse(goodreadsBook = goodreadsBook))
-            }
+        val goodreadsBook = onlineBookFinderService.findReviewsForIsbn(
+            isbn = book.isbn,
+            title = book.title,
+            author = book.author,
+        )
+        if (goodreadsBook != null) {
+            addReviews(book, FindBookOnlineResponse(goodreadsBook = goodreadsBook))
         }
     }
 

@@ -6,11 +6,11 @@ import dev.zezula.books.data.source.network.OnlineBookFinderService
 
 class FakeOnlineBookFinderServiceImpl : OnlineBookFinderService {
 
-    override suspend fun findBookForIsbnOnline(isbn: String): BookFormData? {
+    override suspend fun findBookForIsbnOnline(isbn: String): BookFormData {
         return BookFormData()
     }
 
-    override suspend fun findReviewsForIsbn(isbn: String): GoodreadsBook? {
+    override suspend fun findReviewsForIsbn(isbn: String?, title: String?, author: String?): GoodreadsBook {
         return GoodreadsBook()
     }
 
