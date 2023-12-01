@@ -17,7 +17,7 @@ data class BookDetailUiState(
     val selectedTab: DetailTab = DetailTab.Detail,
     val errorMessage: Int? = null,
     val isBookDeleted: Boolean = false,
-    val isInProgress: Boolean = false,
+    val isReviewsSearchInProgress: Boolean = false,
     val isDeleteDialogDisplayed: Boolean = false,
     val isNewNoteDialogDisplayed: Boolean = false,
     val selectedNote: Note? = null,

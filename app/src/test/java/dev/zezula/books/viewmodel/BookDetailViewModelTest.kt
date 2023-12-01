@@ -149,7 +149,7 @@ class BookDetailViewModelTest : KoinTest {
             // Check UI state has some review data
             assertTrue(uiState.reviews.isNotEmpty())
             // Check that there is no progress for reviews fetch
-            assertFalse(uiState.isInProgress)
+            assertFalse(uiState.isReviewsSearchInProgress)
             cancelAndConsumeRemainingEvents()
         }
     }

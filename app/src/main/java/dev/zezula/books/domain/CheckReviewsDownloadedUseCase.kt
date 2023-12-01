@@ -18,7 +18,7 @@ class CheckReviewsDownloadedUseCase(
             // Try to download reviews if we don't have any
             if (existingReviews.isEmpty()) {
                 val book = booksRepository.getBook(bookId)
-                if (book?.isbn != null) {
+                if (book != null) {
                     repository.refreshReviews(book)
                 }
             }

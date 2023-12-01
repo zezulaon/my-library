@@ -51,7 +51,7 @@ class BookDetailViewModel(
     private val _errorMessage = MutableStateFlow<Int?>(null)
     private val _selectedTab = MutableStateFlow(DetailTab.Detail)
     private val _bookDeleted = MutableStateFlow(false)
-    private val _isInProgress = MutableStateFlow(false)
+    private val _isReviewsSearchInProgress = MutableStateFlow(false)
     private val _isDeleteDialogDisplayed = MutableStateFlow(false)
     private val _isNoteDialogDisplayed = MutableStateFlow(false)
     private val _selectedNote = MutableStateFlow<Note?>(null)
@@ -84,13 +84,13 @@ class BookDetailViewModel(
         suggestionsUiState,
         _selectedTab,
         _bookDeleted,
-        _isInProgress,
+        _isReviewsSearchInProgress,
         _errorMessage,
         _shelvesToggleProgressList,
         _isDeleteDialogDisplayed,
         _isNoteDialogDisplayed,
         _selectedNote,
-    ) { bookResponse, suggestionUiState, selectedTab, bookDeleted, isInProgress, errorMessage,
+    ) { bookResponse, suggestionUiState, selectedTab, bookDeleted, isReviewsSearchInProgress, errorMessage,
             shelvesToggleProgressList, isDeleteDialogDisplayed, isNewNoteDialogDisplayed, selectedNote, ->
 
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
@@ -105,7 +105,7 @@ class BookDetailViewModel(
             selectedTab = selectedTab,
             isBookDeleted = bookDeleted,
             errorMessage = errorMessage,
-            isInProgress = isInProgress,
+            isReviewsSearchInProgress = isReviewsSearchInProgress,
             isDeleteDialogDisplayed = isDeleteDialogDisplayed,
             isNewNoteDialogDisplayed = isNewNoteDialogDisplayed,
             selectedNote = selectedNote,
@@ -135,9 +135,9 @@ class BookDetailViewModel(
 
     fun fetchReviews() {
         viewModelScope.launch {
-            _isInProgress.value = true
+            _isReviewsSearchInProgress.value = true
             checkReviewsDownloadedUseCase(bookId)
-            _isInProgress.value = false
+            _isReviewsSearchInProgress.value = false
         }
     }
 

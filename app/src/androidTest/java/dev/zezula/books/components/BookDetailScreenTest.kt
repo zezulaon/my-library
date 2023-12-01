@@ -42,7 +42,7 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Detail,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false,
+                        isReviewsSearchInProgress = false,
                     ),
                 )
             }
@@ -81,7 +81,7 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Reviews,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false,
+                        isReviewsSearchInProgress = false,
                     ),
                 )
             }
@@ -117,7 +117,7 @@ class BookDetailScreenTest {
                         selectedTab = DetailTab.Shelves,
                         errorMessage = null,
                         isBookDeleted = false,
-                        isInProgress = false,
+                        isReviewsSearchInProgress = false,
                         isBookInLibrary = true,
                     ),
                 )
