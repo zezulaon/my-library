@@ -74,23 +74,23 @@ fun TabBookDetail(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         BookCoverItem(
-                            value = uiState.book?.pageCount?.toString() ?: "",
+                            value = uiState.book?.pageCount?.toString(),
                             labelRes = R.string.detail_label_page_count,
                         )
                         BookCoverItem(
-                            value = uiState.book?.publisher ?: "",
+                            value = uiState.book?.publisher,
                             labelRes = R.string.detail_label_publisher,
                         )
                         BookCoverItem(
-                            value = uiState.book?.yearPublished?.toString() ?: "",
+                            value = uiState.book?.yearPublished?.toString(),
                             labelRes = R.string.detail_label_year_published,
                         )
                         BookCoverItem(
-                            value = uiState.book?.isbn ?: "",
+                            value = uiState.book?.isbn,
                             labelRes = R.string.detail_label_year_isbn,
                         )
                         BookCoverItem(
-                            value = uiState.book?.dateAddedFormatted ?: "",
+                            value = uiState.book?.dateAddedFormatted,
                             labelRes = R.string.detail_label_year_added_on,
                         )
                     }
@@ -171,13 +171,15 @@ private fun Links(
 
 @Composable
 private fun BookCoverItem(
-    value: String,
+    value: String?,
     @StringRes labelRes: Int,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Text(text = stringResource(id = labelRes), style = MaterialTheme.typography.labelLarge)
-        Text(text = value)
+    if (value != null) {
+        Column(modifier = modifier) {
+            Text(text = stringResource(id = labelRes), style = MaterialTheme.typography.labelLarge)
+            Text(text = value)
+        }
     }
 }
 
