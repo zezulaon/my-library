@@ -24,8 +24,13 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
@@ -114,9 +119,7 @@ fun TabBookDetail(
                     .padding(horizontal = 24.dp)
                     .fillMaxWidth(),
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = description)
-                }
+                ExpandableDescription(description)
             }
         }
         val title = uiState.book?.title
@@ -124,6 +127,42 @@ fun TabBookDetail(
             Links(onAmazonLinkClicked = {
                 onAmazonLinkClicked(uiState.book)
             })
+        }
+    }
+}
+
+@Composable
+private fun ExpandableDescription(description: String) {
+    val isExpandable = description.length > 300
+    val isExpanded = remember { mutableStateOf(isExpandable.not()) }
+    val expandIconRes = if (isExpanded.value) {
+        R.drawable.ic_shelf_item_expand_less
+    } else {
+        R.drawable.ic_shelf_item_expand_more
+    }
+    val tmpModifier = if (isExpandable) {
+        Modifier.clickable { isExpanded.value = !isExpanded.value }
+    } else {
+        Modifier
+    }
+    Column(
+        modifier = tmpModifier
+            .fillMaxWidth()
+            .padding(16.dp),
+    ) {
+        if (isExpanded.value) {
+            Text(text = description)
+        } else {
+            Text(text = description, maxLines = 5, overflow = TextOverflow.Ellipsis)
+        }
+        if (isExpandable) {
+            Icon(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .align(Alignment.End),
+                painter = painterResource(id = expandIconRes),
+                contentDescription = null,
+            )
         }
     }
 }
