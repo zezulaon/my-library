@@ -91,6 +91,7 @@ fun BookListRoute(
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllAuthorsShelvesClick: () -> Unit,
+    onAllNotesClick: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
     onSearchMyLibraryClick: () -> Unit,
@@ -131,19 +132,18 @@ fun BookListRoute(
         }
     }
 
-    if (drawerState.isClosed && uiState.drawerNavigation.managedShelvesClicked) {
-        val rememberUpdatedClick by rememberUpdatedState(onManageShelvesClick)
+    val drawerItemClick = uiState.drawerNavigation.drawerItemClicked
+    if (drawerState.isClosed && drawerItemClick != null) {
+        val rememberOnManageShelvesClick by rememberUpdatedState(onManageShelvesClick)
+        val rememberOnAllAuthorsClick by rememberUpdatedState(onAllAuthorsShelvesClick)
+        val rememberOnAllNotesClick by rememberUpdatedState(onAllNotesClick)
         LaunchedEffect(drawerState, uiState, viewModel) {
-            viewModel.onManagedShelvesClickedHandled()
-            rememberUpdatedClick()
-        }
-    }
-
-    if (drawerState.isClosed && uiState.drawerNavigation.allAuthorsClicked) {
-        val rememberUpdatedClick by rememberUpdatedState(onAllAuthorsShelvesClick)
-        LaunchedEffect(drawerState, uiState, viewModel) {
-            viewModel.onAllAuthorsClickedHandled()
-            rememberUpdatedClick()
+            viewModel.onDrawerItemClickedHandled()
+            when (drawerItemClick) {
+                DrawerClickItem.MANAGED_SHELVES -> rememberOnManageShelvesClick()
+                DrawerClickItem.ALL_AUTHORS -> rememberOnAllAuthorsClick()
+                DrawerClickItem.ALL_NOTES -> rememberOnAllNotesClick()
+            }
         }
     }
 
@@ -166,11 +166,15 @@ fun BookListRoute(
         },
         onAllAuthorsClick = {
             scope.launch { drawerState.close() }
-            viewModel.onAllAuthorsClicked()
+            viewModel.onDrawerItemClicked(DrawerClickItem.ALL_AUTHORS)
+        },
+        onAllNotesClick = {
+            scope.launch { drawerState.close() }
+            viewModel.onDrawerItemClicked(DrawerClickItem.ALL_NOTES)
         },
         onManageShelvesClick = {
             scope.launch { drawerState.close() }
-            viewModel.onManagedShelvesClicked()
+            viewModel.onDrawerItemClicked(DrawerClickItem.MANAGED_SHELVES)
         },
         onShelfClick = {
             scope.launch { drawerState.close() }
@@ -205,6 +209,7 @@ fun BookListScreen(
     onManageShelvesClick: () -> Unit = {},
     onAllBooksClick: () -> Unit = {},
     onAllAuthorsClick: () -> Unit = {},
+    onAllNotesClick: () -> Unit = {},
     onShelfClick: (Shelf) -> Unit = {},
     onMoreClicked: () -> Unit = {},
     onReleaseNotesClicked: () -> Unit = {},
@@ -244,6 +249,7 @@ fun BookListScreen(
                 onAllBooksClick = onAllBooksClick,
                 onShelfClick = onShelfClick,
                 onAllAuthorsClick = onAllAuthorsClick,
+                onAllNotesClick = onAllNotesClick,
             )
         },
     ) {

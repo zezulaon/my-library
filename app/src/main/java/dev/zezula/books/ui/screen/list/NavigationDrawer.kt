@@ -29,6 +29,7 @@ internal fun NavigationDrawer(
     onManageShelvesClick: () -> Unit,
     onAllBooksClick: () -> Unit,
     onAllAuthorsClick: () -> Unit,
+    onAllNotesClick: () -> Unit,
     onShelfClick: (shelf: Shelf) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -56,6 +57,15 @@ internal fun NavigationDrawer(
             },
             selected = false,
             onClick = onAllAuthorsClick,
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+        )
+        NavigationDrawerItem(
+            label = { Text(stringResource(R.string.drawer_item_all_notes)) },
+            icon = {
+                Icon(painter = painterResource(id = R.drawable.ic_all_notes), contentDescription = null)
+            },
+            selected = false,
+            onClick = onAllNotesClick,
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(

@@ -12,6 +12,7 @@ import dev.zezula.books.ui.screen.authors.AuthorBooksRoute
 import dev.zezula.books.ui.screen.create.CreateBookRoute
 import dev.zezula.books.ui.screen.detail.BookDetailRoute
 import dev.zezula.books.ui.screen.list.BookListRoute
+import dev.zezula.books.ui.screen.notes.AllNotesRoute
 import dev.zezula.books.ui.screen.scanner.ScanBarcodeRoute
 import dev.zezula.books.ui.screen.search.FindBookRoute
 import dev.zezula.books.ui.screen.search.SearchBarcodeRoute
@@ -63,6 +64,7 @@ fun MyLibraryNavHost(
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
                 onAllAuthorsShelvesClick = { navController.navigateToAllAuthorsShelves() },
+                onAllNotesClick = { navController.navigateToAllNotes() },
                 onContactClicked = { navController.navigateToContactEmailDraft() },
                 onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 onSearchMyLibraryClick = { navController.navigateToSearchMyLibrary() },
@@ -75,9 +77,7 @@ fun MyLibraryNavHost(
         composable(route = Destinations.searchMyLibraryRoute) {
             SearchMyLibraryRoute(
                 onNavigateBack = { navController.popBackStack() },
-                onBookClick = { bookId ->
-                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
-                },
+                onBookClick = { bookId -> navController.navigateToBookDetail(bookId = bookId) },
                 viewModel = koinViewModel(),
             )
         }
@@ -108,9 +108,7 @@ fun MyLibraryNavHost(
                     Timber.d("Navigate to Amazon")
                     navController.navigateToAmazonSearch(book)
                 },
-                onSuggestedBookClick = { bookId ->
-                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
-                },
+                onSuggestedBookClick = { bookId -> navController.navigateToBookDetail(bookId = bookId) },
                 viewModel = koinViewModel(),
             )
         }
@@ -132,15 +130,18 @@ fun MyLibraryNavHost(
             )
         }
 
+        composable(route = Destinations.allNotesRoute) {
+            AllNotesRoute(
+                viewModel = koinViewModel(),
+                onNavigateBack = { navController.popBackStack() },
+                onNoteClick = { bookId -> navController.navigateToBookDetail(bookId = bookId) },
+            )
+        }
+
         composable(route = Destinations.authorBookListRoute) {
             AuthorBooksRoute(
                 onNavigateBack = { navController.popBackStack() },
-                onBookClick = { bookId ->
-                    navController.navigateToBookDetail(
-                        bookId = bookId,
-                        popupToBookList = false,
-                    )
-                },
+                onBookClick = { bookId -> navController.navigateToBookDetail(bookId = bookId) },
                 viewModel = koinViewModel(),
             )
         }
@@ -148,9 +149,7 @@ fun MyLibraryNavHost(
         composable(route = Destinations.findBookRoute) {
             FindBookRoute(
                 onNavigateBack = { navController.popBackStack() },
-                onViewBookClick = { bookId ->
-                    navController.navigateToBookDetail(bookId = bookId, popupToBookList = false)
-                },
+                onViewBookClick = { bookId -> navController.navigateToBookDetail(bookId = bookId) },
                 viewModel = koinViewModel(),
             )
         }
@@ -158,9 +157,7 @@ fun MyLibraryNavHost(
         composable(route = Destinations.searchBarcodeRoute) {
             SearchBarcodeRoute(
                 onNavigateBack = { navController.popBackStack() },
-                onBookFound = { bookId ->
-                    navController.navigateToBookDetail(bookId)
-                },
+                onBookFound = { bookId -> navController.navigateToBookDetail(bookId = bookId, popupToBookList = true) },
                 onScanAgainClick = { navController.navigateToScanBarcode() },
                 viewModel = koinViewModel(),
             )

@@ -40,6 +40,7 @@ import dev.zezula.books.domain.FindBookForIsbnOnlineUseCase
 import dev.zezula.books.domain.FindBookForQueryOnlineUseCase
 import dev.zezula.books.domain.GetAllAuthorsUseCase
 import dev.zezula.books.domain.GetAllBookDetailUseCase
+import dev.zezula.books.domain.GetAllNotesUseCase
 import dev.zezula.books.domain.GetBookUseCase
 import dev.zezula.books.domain.GetBooksForAuthorUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
@@ -55,6 +56,7 @@ import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
 import dev.zezula.books.ui.screen.detail.BookDetailViewModel
 import dev.zezula.books.ui.screen.list.BookListViewModel
+import dev.zezula.books.ui.screen.notes.AllNotesViewModel
 import dev.zezula.books.ui.screen.search.FindBookViewModel
 import dev.zezula.books.ui.screen.search.SearchBarcodeViewModel
 import dev.zezula.books.ui.screen.search.SearchMyLibraryViewModel
@@ -68,15 +70,19 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 val appModule = module {
 
     // Network services
     single<GoodreadsApi> {
+        // SimpleXmlConverterFactory is deprecated but working. There seems to be no alternative for Android right now:
+        // https://github.com/square/retrofit/issues/2733
+        @Suppress("DEPRECATION")
+        val create = retrofit2.converter.simplexml.SimpleXmlConverterFactory.create()
+
         Retrofit.Builder()
-            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .addConverterFactory(create)
             .baseUrl("https://www.goodreads.com/")
             .build()
             .create(GoodreadsApi::class.java)
@@ -171,6 +177,7 @@ val appModule = module {
     single { MoveBookToLibraryUseCase(get()) }
     single { UpdateLastSignedInDateUseCase(get()) }
     single { GetAllAuthorsUseCase(get()) }
+    single { GetAllNotesUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
@@ -193,5 +200,6 @@ val appModule = module {
     viewModel { FindBookViewModel(get()) }
     viewModel { SearchMyLibraryViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
+    viewModel { AllNotesViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get()) }
 }
