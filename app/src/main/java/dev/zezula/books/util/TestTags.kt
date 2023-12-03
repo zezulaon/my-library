@@ -4,6 +4,7 @@ package dev.zezula.books.util
 
 const val homeAppBar = "homeAppBar"
 const val allAuthorsAppBar = "allAuthorsAppBar"
+const val allNotesAppBar = "allNotesAppBar"
 const val homeNavDrawer = "homeNavDrawer"
 const val homeBtnAddBook = "homeBtnAddBook"
 const val homeBtnAddBookManually = "homeBtnAddBookManually"

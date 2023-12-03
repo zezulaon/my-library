@@ -31,8 +31,7 @@ class BookListViewModel(
 
     private val errorMessage = MutableStateFlow<Int?>(null)
     private val selectedShelf = MutableStateFlow<Shelf?>(null)
-    private val managedShelvesClicked = MutableStateFlow(false)
-    private val allAuthorsClicked = MutableStateFlow(false)
+    private val drawerItemClicked = MutableStateFlow<DrawerClickItem?>(null)
     private val addBookSheetOpened = MutableStateFlow(false)
     private val moreDialogDisplayed = MutableStateFlow(false)
     private val sortBooksDialogDisplayed = MutableStateFlow(false)
@@ -51,14 +50,12 @@ class BookListViewModel(
         .onResponseError { errorMessage.value = R.string.error_failed_get_data }
 
     private val drawerNavigationFlow = combine(
-        managedShelvesClicked,
-        allAuthorsClicked,
+        drawerItemClicked,
         shelves,
-    ) { managedShelvesClicked, allAuthorsClicked, shelves ->
+    ) { drawerItemClicked, shelves ->
         DrawerNavigationState(
             shelves = shelves.getOrDefault(emptyList()),
-            managedShelvesClicked = managedShelvesClicked,
-            allAuthorsClicked = allAuthorsClicked,
+            drawerItemClicked = drawerItemClicked,
         )
     }
 
@@ -139,20 +136,12 @@ class BookListViewModel(
         errorMessage.value = null
     }
 
-    fun onManagedShelvesClicked() {
-        managedShelvesClicked.value = true
+    fun onDrawerItemClicked(drawerClickItem: DrawerClickItem) {
+        drawerItemClicked.value = drawerClickItem
     }
 
-    fun onManagedShelvesClickedHandled() {
-        managedShelvesClicked.value = false
-    }
-
-    fun onAllAuthorsClicked() {
-        allAuthorsClicked.value = true
-    }
-
-    fun onAllAuthorsClickedHandled() {
-        allAuthorsClicked.value = false
+    fun onDrawerItemClickedHandled() {
+        drawerItemClicked.value = null
     }
 
     fun onAddBookSheetOpenRequest() {

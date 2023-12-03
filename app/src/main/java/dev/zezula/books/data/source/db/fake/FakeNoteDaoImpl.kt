@@ -1,6 +1,7 @@
 package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.note.NoteWithBookEntity
 import dev.zezula.books.data.source.db.NoteDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +15,20 @@ class FakeNoteDaoImpl : NoteDao {
     // MutableStateFlow for emitting updates to the notes list
     private val notesFlow = MutableStateFlow<List<NoteEntity>>(listOf())
 
-    override fun getAllNotesStream(): Flow<List<NoteEntity>> {
+    override fun getAllNotesStream(): Flow<List<NoteWithBookEntity>> {
         return notesFlow.map { noteList ->
-            noteList.sortedByDescending { it.dateAdded }
+            noteList.map { note ->
+                NoteWithBookEntity(
+                    id = note.id,
+                    bookId = note.bookId,
+                    text = note.text,
+                    dateAdded = note.dateAdded,
+                    page = note.page,
+                    type = note.type,
+                    bookTitle = "Book Title",
+                )
+            }
+                .sortedByDescending { it.dateAdded }
         }
     }
 

@@ -11,6 +11,7 @@ import dev.zezula.books.ui.DestinationArgs.authorNameIdArg
 import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.Destinations.allAuthorsRoute
+import dev.zezula.books.ui.Destinations.allNotesRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
 import dev.zezula.books.ui.Destinations.emailSignInRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
@@ -19,6 +20,7 @@ import dev.zezula.books.ui.Destinations.searchMyLibraryRoute
 import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
 import dev.zezula.books.ui.MyLibraryScreens.allAuthors
+import dev.zezula.books.ui.MyLibraryScreens.allNotes
 import dev.zezula.books.ui.MyLibraryScreens.authorBookList
 import dev.zezula.books.ui.MyLibraryScreens.bookDetail
 import dev.zezula.books.ui.MyLibraryScreens.bookForm
@@ -44,6 +46,7 @@ private object MyLibraryScreens {
     const val shelves = "shelves"
     const val searchMyLibrary = "searchMyLibrary"
     const val allAuthors = "allAuthors"
+    const val allNotes = "allNotes"
     const val scanBarcode = "scanBarcode"
     const val findBook = "findBook"
     const val searchBarcode = "searchBarcode"
@@ -65,6 +68,7 @@ object Destinations {
     const val shelvesRoute = shelves
     const val searchMyLibraryRoute = searchMyLibrary
     const val allAuthorsRoute = allAuthors
+    const val allNotesRoute = allNotes
     const val scanBarcodeRoute = scanBarcode
     const val findBookRoute = findBook
     const val searchBarcodeRoute = "$searchBarcode/{$barcodeArg}"
@@ -98,7 +102,7 @@ fun NavHostController.navigateToAddOrEdit(bookId: String? = null) {
     navigate("$bookForm/$bookId")
 }
 
-fun NavHostController.navigateToBookDetail(bookId: String, popupToBookList: Boolean = true) {
+fun NavHostController.navigateToBookDetail(bookId: String, popupToBookList: Boolean = false) {
     navigate("$bookDetail/$bookId") {
         if (popupToBookList) {
             // popUpTo() ensures that there will be only one book detail screen right after book list screen
@@ -123,6 +127,10 @@ fun NavHostController.navigateToSearchMyLibrary() {
 
 fun NavHostController.navigateToAllAuthorsShelves() {
     navigate(allAuthorsRoute)
+}
+
+fun NavHostController.navigateToAllNotes() {
+    navigate(allNotesRoute)
 }
 
 fun NavHostController.navigateToEmailSignIn() {

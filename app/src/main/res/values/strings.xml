@@ -84,6 +84,7 @@
     <string name="drawer_item_manage_shelves">Manage Shelves</string>
     <string name="drawer_item_all_books">All Books</string>
     <string name="drawer_item_all_authors">All Authors</string>
+    <string name="drawer_item_all_notes">All Notes</string>
     <string name="drawer_label_shelves">Shelves</string>
     <string name="drawer_app_title">MY LIBRARY</string>
 
@@ -98,6 +99,19 @@
         <item quantity="many">%s Authors</item>
         <item quantity="other">%s Authors</item>
     </plurals>
+
+    <!-- All Notes -->
+    <string name="screen_title_all_notes">All Notes</string>
+    <!-- Number of authors subtitle -->
+    <plurals name="all_notes_number_of_notes_subtitle">
+        <item quantity="zero">No Note Added</item>
+        <item quantity="one">1 Note</item>
+        <item quantity="few">%s Notes</item>
+        <item quantity="many">%s Notes</item>
+        <item quantity="other">%s Notes</item>
+    </plurals>
+    <string name="notes_empty_info_card_title">Your Personal Book Notes</string>
+    <string name="notes_empty_info_card_content">This space is for your thoughts and reflections. Haven\'t added any notes yet? Head to the book details screen to capture your feelings, favorite quotes, memorable moments, or key takeaways from the book. Your notes will appear here, creating a personalized journal of your reading journey.</string>
 
     <!-- Book Detail -->
     <string name="detail_label_page_count">Page Count</string>

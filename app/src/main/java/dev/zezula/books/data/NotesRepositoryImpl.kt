@@ -4,6 +4,8 @@ import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.note.NoteWithBook
+import dev.zezula.books.data.model.note.NoteWithBookEntity
 import dev.zezula.books.data.model.note.asExternalModel
 import dev.zezula.books.data.model.note.fromNetworkNote
 import dev.zezula.books.data.source.db.NoteDao
@@ -18,10 +20,10 @@ class NotesRepositoryImpl(
     private val networkDataSource: NetworkDataSource,
 ) : NotesRepository {
 
-    override fun getAllNotesStream(): Flow<List<Note>> {
+    override fun getAllNotesStream(): Flow<List<NoteWithBook>> {
         // Returns a Flow of all notes from the database. Notes are sorted by date added.
         return noteDao.getAllNotesStream().map {
-            it.map(NoteEntity::asExternalModel)
+            it.map(NoteWithBookEntity::asExternalModel)
         }
     }
 

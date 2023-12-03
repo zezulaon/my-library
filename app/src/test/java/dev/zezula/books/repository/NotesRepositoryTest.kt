@@ -60,7 +60,7 @@ class NotesRepositoryTest : KoinTest {
     fun getAllNotesStream_returns_all_notes() = runTest {
         val allNotes = notesRepository.getAllNotesStream().first()
         // Check that returned note IDs match the test data
-        assertEquals(notesTestData.map { it.id }, allNotes.map { it.id })
+        assertEquals(notesTestData.map { it.id }, allNotes.map { it.note.id })
     }
 
     @Test
@@ -99,7 +99,7 @@ class NotesRepositoryTest : KoinTest {
                 .map { it.id },
             notesRepository.getAllNotesStream()
                 .first()
-                .map { it.id },
+                .map { it.note.id },
         )
     }
 
@@ -143,7 +143,11 @@ class NotesRepositoryTest : KoinTest {
         )
 
         // Check that the book in the repository was updated
-        assertEquals(updatedText, notesRepository.getAllNotesStream().first().first { it.id == noteToUpdate.id }.text)
+        assertEquals(
+            updatedText,
+            notesRepository.getAllNotesStream()
+                .first().first { it.note.id == noteToUpdate.id }.note.text,
+        )
         // Check that the book in DB was updated
         assertEquals(updatedText, noteDao.getAllNotesStream().first().first { it.id == noteToUpdate.id }.text)
         // Check that the book in network data source was updated
@@ -159,17 +163,17 @@ class NotesRepositoryTest : KoinTest {
     fun delete_removes_the_note() = runTest {
         val noteToDelete = notesRepository.getAllNotesStream().first().first()
         notesRepository.deleteNote(
-            noteId = noteToDelete.id,
-            bookId = noteToDelete.bookId,
+            noteId = noteToDelete.note.id,
+            bookId = noteToDelete.note.bookId,
         )
 
         // Check that the book was deleted from all data sources
-        assertNull(notesRepository.getAllNotesStream().first().firstOrNull { it.id == noteToDelete.id })
-        assertNull(noteDao.getAllNotesStream().first().firstOrNull { it.id == noteToDelete.id })
+        assertNull(notesRepository.getAllNotesStream().first().firstOrNull { it.note.id == noteToDelete.note.id })
+        assertNull(noteDao.getAllNotesStream().first().firstOrNull { it.id == noteToDelete.note.id })
         assertFalse(
-            networkDataSource.getNotesForBook(noteToDelete.bookId)
+            networkDataSource.getNotesForBook(noteToDelete.note.bookId)
                 .any { networkNote ->
-                    networkNote.id == noteToDelete.id
+                    networkNote.id == noteToDelete.note.id
                 },
         )
     }

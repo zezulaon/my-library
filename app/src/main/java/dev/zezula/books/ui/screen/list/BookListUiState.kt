@@ -14,8 +14,7 @@ data class BookListUiState(
 
 data class DrawerNavigationState(
     val shelves: List<Shelf> = emptyList(),
-    val managedShelvesClicked: Boolean = false,
-    val allAuthorsClicked: Boolean = false,
+    val drawerItemClicked: DrawerClickItem? = null,
 )
 
 data class SortingState(
