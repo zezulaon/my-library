@@ -148,6 +148,11 @@
     <string name="detail_failed_to_create_note">An error has occurred - the note wasn\'t created.</string>
     <string name="detail_failed_to_update_note">An error has occurred - the note wasn\'t updated.</string>
     <string name="detail_failed_to_delete_note">An error has occurred - the note wasn\'t deleted.</string>
+    <string name="detail_notes_empty_info_card_content">Ready to capture your thoughts about this book? Tap on the plus sign above to add your notes. Whether it\'s your feelings, favorite quotes, key insights, or memorable moments… Start creating your unique journal for this book now.</string>
+
+    <string name="detail_shelves_empty_info_card_title">Organize Your Book Collection</string>
+    <string name="detail_shelves_empty_info_card_content">Tailor your library to your taste. Create shelves like \'Currently Reading\', \'Have Read\', or \'Future Reads\' to keep your collection sorted. Just tap the plus sign and begin categorizing your books for easy access and organization.</string>
+
     <string name="detail_failed_to_add_book">An error has occurred - the book wasn\'t added.</string>
 
     <string name="detail_suggestions_generate_btn">Create Suggestions</string>
@@ -185,7 +190,6 @@
         <item quantity="many">%s books</item>
         <item quantity="other">%s books</item>
     </plurals>
-
 
     <!-- Scanner -->
     <string name="scanner_title">Scanner</string>
