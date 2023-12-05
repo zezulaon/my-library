@@ -33,8 +33,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 @Composable
-fun BarcodeScannerComponent(
-    onBarcodeScanned: (String) -> Unit,
+fun IsbnScannerComponent(
+    onIsbnScanned: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -48,7 +48,7 @@ fun BarcodeScannerComponent(
             context.startImageAnalysis(
                 lifeCycleOwner = lifecycleOwner,
                 previewView = previewView,
-                onBarcodeScanned = onBarcodeScanned,
+                onIsbnScanned = onIsbnScanned,
             )
         }
     }
@@ -66,7 +66,7 @@ fun BarcodeScannerComponent(
 suspend fun Context.startImageAnalysis(
     lifeCycleOwner: LifecycleOwner,
     previewView: PreviewView,
-    onBarcodeScanned: (String) -> Unit,
+    onIsbnScanned: (String) -> Unit,
 ) {
     val cameraProvider = this.getCameraProvider()
 
@@ -78,10 +78,10 @@ suspend fun Context.startImageAnalysis(
     val imageAnalyzer = ImageAnalysis.Builder().build().also {
         it.setAnalyzer(
             ContextCompat.getMainExecutor(this),
-            BarcodeAnalyzer(
-                onBarcodeScanned = { barcode ->
+            IsbnAnalyzer(
+                onIsbnScanned = { isbn ->
                     cameraProvider.unbindAll()
-                    onBarcodeScanned(barcode)
+                    onIsbnScanned(isbn)
                 },
             ),
         )
@@ -101,7 +101,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider {
     return suspendCancellableCoroutine { continuation ->
         val future = ProcessCameraProvider.getInstance(this)
         future.addListener(
-            Runnable {
+            {
                 try {
                     continuation.resume(future.get())
                 } catch (e: ExecutionException) {
@@ -117,9 +117,9 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider {
     }
 }
 
-private class BarcodeAnalyzer(val onBarcodeScanned: (String) -> Unit) : ImageAnalysis.Analyzer {
+private class IsbnAnalyzer(val onIsbnScanned: (String) -> Unit) : ImageAnalysis.Analyzer {
 
-    private val barcodeFound = AtomicBoolean(false)
+    private val isbnFound = AtomicBoolean(false)
 
     val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
@@ -138,15 +138,18 @@ private class BarcodeAnalyzer(val onBarcodeScanned: (String) -> Unit) : ImageAna
             val inputImage = InputImage.fromMediaImage(image, imageProxy.imageInfo.rotationDegrees)
             barcodeScanner.process(inputImage).addOnCompleteListener { task ->
 
-                val barcodes: List<String> = task.result.mapNotNull { it.rawValue }
+                val isbnList: List<String> = task.result
+                    .filterNotNull()
+                    .filter { it.valueType == Barcode.TYPE_ISBN && it.format == Barcode.FORMAT_EAN_13 }
+                    .mapNotNull { it.rawValue }
 
                 imageProxy.close()
 
-                if (barcodes.isNotEmpty() && barcodeFound.get().not()) {
-                    barcodeFound.set(true)
-                    val barcode = barcodes.first()
-                    Timber.d("Barcode found: $barcode")
-                    onBarcodeScanned(barcode)
+                if (isbnList.isNotEmpty() && isbnFound.get().not()) {
+                    isbnFound.set(true)
+                    val barcode = isbnList.first()
+                    Timber.d("ISBN found: $barcode")
+                    onIsbnScanned(barcode)
                 }
             }
         }

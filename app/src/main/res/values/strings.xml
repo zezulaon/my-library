@@ -63,6 +63,7 @@
     <string name="home_btn_find_online">Find Book Online</string>
     <string name="home_btn_add_book">Add Book</string>
     <string name="home_btn_scan_barcode"><![CDATA[Scan Barcode & Add]]></string>
+    <string name="home_btn_bulk_scan_barcodes">Bulk Scan Into</string>
 
     <!-- Number of books subtitle -->
     <plurals name="home_number_of_books_subtitle">
@@ -208,12 +209,15 @@
     <!-- Search -->
     <string name="search_title">Search a Barcode</string>
     <string name="search_btn_scan_again">Scan Again</string>
+    <string name="search_btn_scan_another">Scan Another</string>
+    <string name="search_btn_cancel_scan">Cancel Scanning</string>
     <string name="search_no_book_found_for_isbn">No book was found for ISBN:</string>
     <string name="search_no_book_found_for_query">No books were found.</string>
     <string name="search_result_btn_add">Add Book</string>
     <string name="search_result_btn_view">View</string>
     <string name="find_book_online_title">Find Book Online</string>
     <string name="find_book_search_placeholder">Search by title, isbn or keywords…</string>
+    <string name="search_book_added_appendable_label">was added to</string>
 
     <string name="search_my_library_placeholder">Search your books by title or author</string>
 

@@ -26,11 +26,11 @@ class SearchBookScreenTest {
             setContent {
                 createTestScreen(
                     SearchBarcodeUiState(
-                        barcode = "123",
-                        isInProgress = true,
+                        scannedIsbn = "123",
+                        isSearchInProgress = true,
                         noBookFound = true,
                         errorMessage = null,
-                        foundBookId = null,
+                        foundedBookId = null,
                     ),
                 )
             }
@@ -47,6 +47,11 @@ class SearchBookScreenTest {
             uiState = state,
             onNavigateBack = {},
             onScanAgainClick = {},
+            onCancelScanClick = {},
+            isCameraPermissionGranted = true,
+            onRequestCameraPermissionClick = {},
+            onIsbnScanned = {},
+            isBulkScanningEnabled = false,
         )
     }
 }

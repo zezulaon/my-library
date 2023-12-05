@@ -56,6 +56,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -74,6 +78,7 @@ import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.homeAppBar
 import dev.zezula.books.util.homeBtnAddBook
 import dev.zezula.books.util.homeBtnAddBookManually
+import dev.zezula.books.util.homeBtnBulkScanBarcode
 import dev.zezula.books.util.homeBtnScanBarcode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -88,6 +93,7 @@ fun BookListRoute(
     onAddBookManuallyClick: () -> Unit,
     onFindBookOnlineClick: () -> Unit,
     onScanBookClick: () -> Unit,
+    onBulkScanBooksClick: (shelfId: String?) -> Unit,
     onBookClick: (String) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllAuthorsShelvesClick: () -> Unit,
@@ -155,7 +161,8 @@ fun BookListRoute(
         scope = scope,
         onAddBookClick = { viewModel.onAddBookSheetOpenRequest() },
         onAddBookSheetCloseRequested = { viewModel.onAddBookSheetDismissRequest() },
-        onScanBarcodeClick = onScanBookClick,
+        onScanBarcodeClick = { onScanBookClick() },
+        onBulkScanBooksClick = { onBulkScanBooksClick(uiState.selectedShelf?.id) },
         onAddManuallyClick = onAddBookManuallyClick,
         onFindOnlineClick = onFindBookOnlineClick,
 
@@ -203,6 +210,7 @@ fun BookListScreen(
     onAddBookClick: () -> Unit = {},
     onAddBookSheetCloseRequested: () -> Unit = {},
     onScanBarcodeClick: () -> Unit = {},
+    onBulkScanBooksClick: () -> Unit = {},
     onAddManuallyClick: () -> Unit = {},
     onFindOnlineClick: () -> Unit = {},
     onBookClick: (String) -> Unit = {},
@@ -298,8 +306,10 @@ fun BookListScreen(
 
             if (uiState.infoMessages.addBookSheetOpened) {
                 AddBookBottomSheet(
+                    uiState = uiState,
                     onAddBookSheetCloseRequested,
                     onScanBarcodeClick,
+                    onBulkScanBooksClick,
                     onAddManuallyClick,
                     onFindOnlineClick,
                     bottomSheetState,
@@ -354,8 +364,10 @@ private fun UpgradeAnonymCard(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun AddBookBottomSheet(
+    uiState: BookListUiState,
     onAddBookSheetCloseRequested: () -> Unit,
     onScanBarcodeClick: () -> Unit,
+    onBulkScanBooksClick: () -> Unit,
     onAddManuallyClick: () -> Unit,
     onFindOnlineClick: () -> Unit,
     bottomSheetState: SheetState,
@@ -373,23 +385,30 @@ private fun AddBookBottomSheet(
                 .padding(top = 16.dp)
                 .padding(bottom = 54.dp),
         ) {
+            val defaultShelf = stringResource(R.string.drawer_item_all_books)
+            val selectedShelf = uiState.selectedShelf?.title ?: defaultShelf
+            val label = stringResource(R.string.home_btn_bulk_scan_barcodes)
             ListItem(
                 modifier = Modifier
-                    .testTag(homeBtnAddBookManually)
+                    .testTag(homeBtnBulkScanBarcode)
                     .clickable {
-                        onAddManuallyClick()
+                        onBulkScanBooksClick()
                         onAddBookSheetCloseRequested()
                     },
-                headlineContent = { Text(stringResource(R.string.home_btn_add_manually)) },
-                leadingContent = { Icon(Icons.Default.Create, contentDescription = null) },
-            )
-            ListItem(
-                modifier = Modifier.clickable {
-                    onFindOnlineClick()
-                    onAddBookSheetCloseRequested()
+                headlineContent = {
+                    Text(
+                        text = buildAnnotatedString {
+                            append(label)
+                            append(" ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(selectedShelf)
+                            }
+                        },
+                    )
                 },
-                headlineContent = { Text(stringResource(R.string.home_btn_find_online)) },
-                leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
+                leadingContent = {
+                    Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null)
+                },
             )
             ListItem(
                 modifier = Modifier
@@ -402,6 +421,24 @@ private fun AddBookBottomSheet(
                 leadingContent = {
                     Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null)
                 },
+            )
+            ListItem(
+                modifier = Modifier.clickable {
+                    onFindOnlineClick()
+                    onAddBookSheetCloseRequested()
+                },
+                headlineContent = { Text(stringResource(R.string.home_btn_find_online)) },
+                leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
+            )
+            ListItem(
+                modifier = Modifier
+                    .testTag(homeBtnAddBookManually)
+                    .clickable {
+                        onAddManuallyClick()
+                        onAddBookSheetCloseRequested()
+                    },
+                headlineContent = { Text(stringResource(R.string.home_btn_add_manually)) },
+                leadingContent = { Icon(Icons.Default.Create, contentDescription = null) },
             )
         }
     }

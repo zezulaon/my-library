@@ -199,7 +199,6 @@ val appModule = module {
     viewModel { EmailSignInViewModel(get()) }
     viewModel { FindBookViewModel(get()) }
     viewModel { SearchMyLibraryViewModel(get()) }
-    viewModel { SearchBarcodeViewModel(get(), get()) }
     viewModel { AllNotesViewModel(get()) }
-    viewModel { SearchBarcodeViewModel(get(), get()) }
+    viewModel { SearchBarcodeViewModel(get(), get(), get(), get(), get()) }
 }
