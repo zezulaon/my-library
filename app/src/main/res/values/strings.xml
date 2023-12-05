@@ -64,6 +64,16 @@
     <string name="home_btn_add_book">Add Book</string>
     <string name="home_btn_scan_barcode"><![CDATA[Scan Barcode & Add]]></string>
     <string name="home_btn_bulk_scan_barcodes">Bulk Scan Into</string>
+    <string name="home_no_books_card_title">No Books Added Yet</string>
+    <string name="home_no_books_card_content_start">You can add books to your collection in several ways:</string>
+    <string name="home_no_books_card_content_point_1_title">Scan with Camera</string>
+    <string name="home_no_books_card_content_point_1_text">Use your camera to quickly scan book barcodes.</string>
+    <string name="home_no_books_card_content_point_2_title">Manual Entry</string>
+    <string name="home_no_books_card_content_point_2_text">Create a book record manually if you prefer a more personal touch.</string>
+    <string name="home_no_books_card_content_point_3_title">Search Online</string>
+    <string name="home_no_books_card_content_point_3_text">Easily search for books by title or author.</string>
+    <string name="home_no_books_card_content_end">Simply tap \'Add Book\' to begin adding your favorite titles to your new library.</string>
+
 
     <!-- Number of books subtitle -->
     <plurals name="home_number_of_books_subtitle">

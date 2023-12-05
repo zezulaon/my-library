@@ -5,7 +5,7 @@ import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 
 data class BookListUiState(
-    val books: List<Book> = emptyList(),
+    val books: List<Book>? = null,
     val drawerNavigation: DrawerNavigationState = DrawerNavigationState(),
     val sorting: SortingState = SortingState(),
     val infoMessages: InfoMessagesState = InfoMessagesState(),

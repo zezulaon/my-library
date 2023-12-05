@@ -1,5 +1,6 @@
 package dev.zezula.books.ui.screen.list
 
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -56,6 +58,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -295,12 +298,15 @@ fun BookListScreen(
                             onAnonymUpgradeSignUpClick = onAnonymUpgradeSignUpClick,
                         )
                     }
-
-                    BookList(
-                        modifier = Modifier.fillMaxWidth(),
-                        books = uiState.books,
-                        onBookClick = onBookClick,
-                    )
+                    if (uiState.books?.isEmpty() == true) {
+                        NoBooksInfoCard(modifier = Modifier.padding(24.dp))
+                    } else {
+                        BookList(
+                            modifier = Modifier.fillMaxWidth(),
+                            books = uiState.books.orEmpty(),
+                            onBookClick = onBookClick,
+                        )
+                    }
                 }
             }
 
@@ -317,6 +323,58 @@ fun BookListScreen(
             }
         }
     }
+}
+
+@Composable
+fun NoBooksInfoCard(
+    modifier: Modifier = Modifier,
+) {
+    ElevatedCard(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 0.dp),
+                text = stringResource(R.string.home_no_books_card_title),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier.padding(top = 0.dp),
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.home_no_books_card_content_start))
+                    append("\n\n")
+                    InfoPoint(
+                        title = R.string.home_no_books_card_content_point_1_title,
+                        text = R.string.home_no_books_card_content_point_1_text,
+                    )
+                    InfoPoint(
+                        title = R.string.home_no_books_card_content_point_2_title,
+                        text = R.string.home_no_books_card_content_point_2_text,
+                    )
+                    InfoPoint(
+                        title = R.string.home_no_books_card_content_point_3_title,
+                        text = R.string.home_no_books_card_content_point_3_text,
+                    )
+                    append("\n")
+                    append(stringResource(R.string.home_no_books_card_content_end))
+                },
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun AnnotatedString.Builder.InfoPoint(@StringRes title: Int, @StringRes text: Int) {
+    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+        append(stringResource(title))
+    }
+    append(": ")
+    append(stringResource(text))
+    append("\n")
 }
 
 @Composable
@@ -471,7 +529,7 @@ private fun BookListTopAppBar(
 private fun HomeAppBarTitle(uiState: BookListUiState) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
-        val numberOfBooks = uiState.books.count()
+        val numberOfBooks = uiState.books?.count() ?: 0
         val noBooksFormatted = pluralStringResource(
             R.plurals.home_number_of_books_subtitle,
             numberOfBooks,
