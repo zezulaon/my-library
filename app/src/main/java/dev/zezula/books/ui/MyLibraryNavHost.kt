@@ -172,7 +172,7 @@ fun MyLibraryNavHost(
                     nullable = true
                     defaultValue = null
                 },
-            )
+            ),
         ) { backStackEntry ->
             val isBulkScanOn = backStackEntry.arguments?.getBoolean(isBulkScanOnArg) ?: false
             SearchBarcodeRoute(

@@ -137,7 +137,7 @@ fun SearchBarcodeScreen(
 private fun IsbnScanner(
     isCameraPermissionGranted: Boolean,
     onIsbnScanned: (String) -> Unit,
-    onRequestCameraPermissionClick: () -> Unit
+    onRequestCameraPermissionClick: () -> Unit,
 ) {
     if (isCameraPermissionGranted) {
         IsbnScannerComponent(onIsbnScanned)
@@ -163,7 +163,7 @@ private fun RequestCameraPermission(onRequestCameraPermissionClick: () -> Unit) 
 @Composable
 private fun NoBookFoundInfo(
     scannedIsbn: String,
-    onScanAgainClick: () -> Unit
+    onScanAgainClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(24.dp),
@@ -185,7 +185,7 @@ private fun NoBookFoundInfo(
 private fun BulkScanInProgressCard(
     uiState: SearchBarcodeUiState,
     onCancelScanClick: () -> Unit,
-    onScanAgainClick: () -> Unit
+    onScanAgainClick: () -> Unit,
 ) {
     Column {
         val book = uiState.foundedBook
@@ -206,19 +206,19 @@ private fun BulkScanInProgressCard(
                         append(shelf)
                     }
                     append(".")
-                }
+                },
             )
             BookListItem(
                 modifier = Modifier.padding(top = 8.dp),
                 book = book,
                 onBookClick = {},
-                isLast = true
+                isLast = true,
             )
         }
         Row(
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(end = 24.dp)
+                .padding(end = 24.dp),
         ) {
             TextButton(onClick = onCancelScanClick) {
                 Text(stringResource(R.string.search_btn_cancel_scan))

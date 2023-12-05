@@ -396,13 +396,15 @@ private fun AddBookBottomSheet(
                         onAddBookSheetCloseRequested()
                     },
                 headlineContent = {
-                    Text(text = buildAnnotatedString {
-                        append(label)
-                        append(" ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(selectedShelf)
-                        }
-                    })
+                    Text(
+                        text = buildAnnotatedString {
+                            append(label)
+                            append(" ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(selectedShelf)
+                            }
+                        },
+                    )
                 },
                 leadingContent = {
                     Icon(painter = painterResource(id = R.drawable.ic_barcode), contentDescription = null)
