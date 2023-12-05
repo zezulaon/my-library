@@ -4,16 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
+import dev.zezula.books.ui.DestinationArgs.shelfIdArg
 import dev.zezula.books.ui.screen.authors.AllAuthorsRoute
 import dev.zezula.books.ui.screen.authors.AuthorBooksRoute
 import dev.zezula.books.ui.screen.create.CreateBookRoute
 import dev.zezula.books.ui.screen.detail.BookDetailRoute
 import dev.zezula.books.ui.screen.list.BookListRoute
 import dev.zezula.books.ui.screen.notes.AllNotesRoute
-import dev.zezula.books.ui.screen.scanner.ScanBarcodeRoute
 import dev.zezula.books.ui.screen.search.FindBookRoute
 import dev.zezula.books.ui.screen.search.SearchBarcodeRoute
 import dev.zezula.books.ui.screen.search.SearchMyLibraryRoute
@@ -59,7 +62,10 @@ fun MyLibraryNavHost(
             BookListRoute(
                 onGoogleSignIn = { navController.navigateToGoogleSignIn() },
                 onAddBookManuallyClick = { navController.navigateToAddOrEdit() },
-                onScanBookClick = { navController.navigateToScanBarcode() },
+                onScanBookClick = { navController.navigateToBarcodeSearch() },
+                onBulkScanBooksClick = { shelfId ->
+                    navController.navigateToBarcodeSearch(isBulkScanOn = true, shelfId = shelfId)
+                },
                 onFindBookOnlineClick = { navController.navigateToFindBookOnline() },
                 onBookClick = { bookId -> navController.navigateToBookDetail(bookId) },
                 onManageShelvesClick = { navController.navigateToManageShelves() },
@@ -154,21 +160,26 @@ fun MyLibraryNavHost(
             )
         }
 
-        composable(route = Destinations.searchBarcodeRoute) {
+        composable(
+            route = Destinations.searchBarcodeRoute,
+            arguments = listOf(
+                navArgument(isBulkScanOnArg) {
+                    type = NavType.BoolType
+                    defaultValue = false
+                },
+                navArgument(shelfIdArg) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+            )
+        ) { backStackEntry ->
+            val isBulkScanOn = backStackEntry.arguments?.getBoolean(isBulkScanOnArg) ?: false
             SearchBarcodeRoute(
+                isBulkScanningEnabled = isBulkScanOn,
                 onNavigateBack = { navController.popBackStack() },
                 onBookFound = { bookId -> navController.navigateToBookDetail(bookId = bookId, popupToBookList = true) },
-                onScanAgainClick = { navController.navigateToScanBarcode() },
                 viewModel = koinViewModel(),
-            )
-        }
-
-        composable(route = Destinations.scanBarcodeRoute) {
-            ScanBarcodeRoute(
-                onNavigateBack = { navController.popBackStack() },
-                onBarcodeScanned = { barcode ->
-                    navController.navigateToSearchBarcode(barcode)
-                },
             )
         }
     }

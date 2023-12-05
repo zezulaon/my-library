@@ -8,14 +8,14 @@ import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.ui.DestinationArgs.authorNameIdArg
-import dev.zezula.books.ui.DestinationArgs.barcodeArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
+import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
+import dev.zezula.books.ui.DestinationArgs.shelfIdArg
 import dev.zezula.books.ui.Destinations.allAuthorsRoute
 import dev.zezula.books.ui.Destinations.allNotesRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
 import dev.zezula.books.ui.Destinations.emailSignInRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
-import dev.zezula.books.ui.Destinations.scanBarcodeRoute
 import dev.zezula.books.ui.Destinations.searchMyLibraryRoute
 import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
@@ -27,7 +27,6 @@ import dev.zezula.books.ui.MyLibraryScreens.bookForm
 import dev.zezula.books.ui.MyLibraryScreens.bookList
 import dev.zezula.books.ui.MyLibraryScreens.emailSignIn
 import dev.zezula.books.ui.MyLibraryScreens.findBook
-import dev.zezula.books.ui.MyLibraryScreens.scanBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchMyLibrary
 import dev.zezula.books.ui.MyLibraryScreens.shelves
@@ -47,7 +46,6 @@ private object MyLibraryScreens {
     const val searchMyLibrary = "searchMyLibrary"
     const val allAuthors = "allAuthors"
     const val allNotes = "allNotes"
-    const val scanBarcode = "scanBarcode"
     const val findBook = "findBook"
     const val searchBarcode = "searchBarcode"
 }
@@ -55,7 +53,8 @@ private object MyLibraryScreens {
 object DestinationArgs {
     const val bookIdArg = "bookId"
     const val authorNameIdArg = "authorNameIdArg"
-    const val barcodeArg = "barcode"
+    const val isBulkScanOnArg = "isBulkScanOn"
+    const val shelfIdArg = "shelfIdArg"
 }
 
 object Destinations {
@@ -69,9 +68,8 @@ object Destinations {
     const val searchMyLibraryRoute = searchMyLibrary
     const val allAuthorsRoute = allAuthors
     const val allNotesRoute = allNotes
-    const val scanBarcodeRoute = scanBarcode
     const val findBookRoute = findBook
-    const val searchBarcodeRoute = "$searchBarcode/{$barcodeArg}"
+    const val searchBarcodeRoute = "$searchBarcode?$isBulkScanOnArg={$isBulkScanOnArg}&$shelfIdArg={$shelfIdArg}"
 }
 
 fun NavHostController.navigateFromOnboardingToHome() {
@@ -81,21 +79,16 @@ fun NavHostController.navigateFromOnboardingToHome() {
     )
 }
 
-fun NavHostController.navigateToScanBarcode() {
-    navigate(scanBarcodeRoute)
-}
-
 fun NavHostController.navigateToFindBookOnline() {
     navigate(findBookRoute)
 }
 
-fun NavHostController.navigateToSearchBarcode(barcode: String) {
-    this.navigate("$searchBarcode/$barcode") {
-        // popUpTo() ensures that there will be only one search result screen right after book list screen
-        popUpTo(bookListRoute) {
-            inclusive = false
-        }
+fun NavHostController.navigateToBarcodeSearch(isBulkScanOn: Boolean = false, shelfId: String? = null) {
+    var route = "$searchBarcode?$isBulkScanOnArg=$isBulkScanOn"
+    if (shelfId != null) {
+        route = "$route&$shelfIdArg=$shelfId"
     }
+    this.navigate(route)
 }
 
 fun NavHostController.navigateToAddOrEdit(bookId: String? = null) {

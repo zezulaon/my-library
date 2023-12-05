@@ -110,5 +110,5 @@ val appUnitTestModule = module {
     viewModel { CreateBookViewModel(get(), get(), get()) }
     viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
-    viewModel { SearchBarcodeViewModel(get(), get()) }
+    viewModel { SearchBarcodeViewModel(get(), get(), get(), get(), get()) }
 }
