@@ -127,7 +127,7 @@ class BookListViewModelTest : KoinTest {
             // Check that "all books" (no shelf) is selected
             assertEquals(null, selectedShelf)
             // Check that all books are displayed
-            assertEquals(booksTestData.size, books.size)
+            assertEquals(booksTestData.size, (books?.size ?: 0))
         }
 
         collectJob.cancel()
