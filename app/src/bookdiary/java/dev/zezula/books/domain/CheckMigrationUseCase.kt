@@ -26,6 +26,7 @@ import kotlin.time.measureTime
 
 class CheckMigrationUseCase(
     private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
+    private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
     private val updateShelfUseCase: UpdateShelfUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
@@ -257,6 +258,15 @@ class CheckMigrationUseCase(
                     },
                     onFailure = {
                         Timber.w(it, "Failed to migrate the book")
+                    },
+                )
+            moveBookToLibraryUseCase(bookId.toString())
+                .fold(
+                    onSuccess = {
+                        Timber.d("Book moved to library successfully")
+                    },
+                    onFailure = {
+                        Timber.w(it, "Failed to move the book to library")
                     },
                 )
             val state = legacyBookDao.getStatesForBookId(bookId)?.firstOrNull()
