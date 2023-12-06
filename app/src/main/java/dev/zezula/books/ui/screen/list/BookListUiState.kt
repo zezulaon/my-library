@@ -1,9 +1,9 @@
 package dev.zezula.books.ui.screen.list
 
 import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.domain.MigrationProgress
 
 data class BookListUiState(
     val books: List<Book>? = null,

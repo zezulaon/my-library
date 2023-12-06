@@ -72,10 +72,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.data.model.MigrationProgress
+import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.domain.MigrationProgress
-import dev.zezula.books.domain.MigrationType
 import dev.zezula.books.ui.screen.about.AboutDialog
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.screen.signin.SignInUiState

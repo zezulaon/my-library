@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
 import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.domain.CheckMigrationUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
-import dev.zezula.books.domain.MigrationProgress
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault

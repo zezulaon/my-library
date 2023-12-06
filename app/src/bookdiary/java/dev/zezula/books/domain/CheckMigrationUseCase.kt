@@ -4,6 +4,8 @@ import androidx.core.database.getIntOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import dev.zezula.books.BuildConfig
+import dev.zezula.books.data.model.MigrationProgress
+import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookFormData
 import dev.zezula.books.data.model.note.NoteFormData
@@ -21,19 +23,6 @@ import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.time.measureTime
-
-data class MigrationProgress(
-    val type: MigrationType,
-    val total: Int,
-    val current: Int,
-)
-
-enum class MigrationType {
-    SHELVES,
-    BOOKS,
-    GROUPING,
-    COMMENTS,
-}
 
 class CheckMigrationUseCase(
     private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
