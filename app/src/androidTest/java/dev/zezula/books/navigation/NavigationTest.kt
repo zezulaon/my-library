@@ -28,6 +28,7 @@ import dev.zezula.books.data.model.shelf.previewShelves
 import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.di.appInstrumentedTestModule
 import dev.zezula.books.di.appModule
+import dev.zezula.books.di.flavoredAppModule
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.util.createBookInputAuthor
 import dev.zezula.books.util.createBookInputDesc
@@ -42,6 +43,7 @@ import dev.zezula.books.util.homeBtnAddBook
 import dev.zezula.books.util.homeBtnAddBookManually
 import dev.zezula.books.util.homeBtnScanBarcode
 import dev.zezula.books.util.homeNavDrawer
+import dev.zezula.books.util.homeNavDrawerShelfItem
 import dev.zezula.books.util.manageShelvesBtnExpand
 import dev.zezula.books.util.manageShelvesShelfItem
 import dev.zezula.books.waitUntilExists
@@ -71,7 +73,7 @@ class NavigationTest : KoinTest {
     @get:Rule(order = 0)
     val koinTestRule = KoinTestRule(
         // Override some production components with instrumented module
-        modules = listOf(appModule, appInstrumentedTestModule),
+        modules = listOf(appModule, flavoredAppModule, appInstrumentedTestModule),
     )
 
     @get:Rule(order = 1)
@@ -230,6 +232,9 @@ class NavigationTest : KoinTest {
         val shelfToCheck = previewShelves.first()
 
         composeTestRule.apply {
+            // Wait till list items are fetched and visible
+            waitUntilExists(hasText(previewBooks.first().title!!))
+
             // GIVEN the user is on "Detail" screen
             onNodeWithText(bookToCheck.title!!).performClick()
             // AND the "shelves" tab is selected
@@ -245,7 +250,7 @@ class NavigationTest : KoinTest {
             // AND book list for this shelf contains the correct book
             onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back)).performClick()
             onNodeWithTag(homeNavDrawer).performClick()
-            onNodeWithText(shelfToCheck.title).performClick()
+            onNodeWithTag("$homeNavDrawerShelfItem${shelfToCheck.title}").performClick()
             onNodeWithText(bookToCheck.title!!).assertIsDisplayed()
         }
     }
