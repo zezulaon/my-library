@@ -36,7 +36,7 @@ class HomeScreenTest {
             BookListScreen(
                 uiState = BookListUiState(
                     books = previewBooks,
-                    drawerNavigation = DrawerNavigationState(shelves = previewShelves, managedShelvesClicked = true),
+                    drawerNavigation = DrawerNavigationState(shelves = previewShelves, drawerItemClicked = null),
                 ),
                 signUiState = SignInUiState(),
             )

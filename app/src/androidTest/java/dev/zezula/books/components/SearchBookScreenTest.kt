@@ -27,7 +27,7 @@ class SearchBookScreenTest {
                 createTestScreen(
                     SearchBarcodeUiState(
                         scannedIsbn = "123",
-                        isSearchInProgress = true,
+                        isSearchInProgress = false,
                         noBookFound = true,
                         errorMessage = null,
                         foundedBookId = null,
