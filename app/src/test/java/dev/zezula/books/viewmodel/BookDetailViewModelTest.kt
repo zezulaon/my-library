@@ -81,6 +81,7 @@ class BookDetailViewModelTest : KoinTest {
                     toggleBookInShelfUseCase = get(),
                     savedStateHandle = savedStateHandle,
                     getAllBookDetailUseCase = get(),
+                    refreshBookCoverUseCase = get(),
                 )
             }
         }

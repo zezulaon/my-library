@@ -18,7 +18,6 @@ import dev.zezula.books.data.UserRepository
 import dev.zezula.books.data.UserRepositoryImpl
 import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.data.source.db.MIGRATION_3_4
-import dev.zezula.books.data.source.db.legacy.LegacyAppDatabase
 import dev.zezula.books.data.source.network.AuthService
 import dev.zezula.books.data.source.network.AuthServiceImpl
 import dev.zezula.books.data.source.network.FirestoreDataSource
@@ -47,8 +46,6 @@ import dev.zezula.books.domain.GetBooksForAuthorUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
-import dev.zezula.books.domain.CheckMigrationUseCase
-import dev.zezula.books.domain.RefreshBookCoverUseCase
 import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
@@ -135,18 +132,6 @@ val appModule = module {
             .build()
     }
     // Legacy database dependencies
-    single<LegacyAppDatabase> {
-        Room.databaseBuilder(
-            androidApplication(),
-            LegacyAppDatabase::class.java,
-            "books.db",
-        )
-            .build()
-    }
-    single {
-        val database = get<LegacyAppDatabase>()
-        database.legacyBookDao()
-    }
     single {
         val database = get<AppDatabase>()
         database.bookDao()
@@ -195,8 +180,6 @@ val appModule = module {
     single { GetAllAuthorsUseCase(get()) }
     single { GetAllNotesUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
-    single { RefreshBookCoverUseCase(get(), get(), get()) }
-    single { CheckMigrationUseCase(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 
     // Repositories
     single<BooksRepository> { BooksRepositoryImpl(get(), get()) }

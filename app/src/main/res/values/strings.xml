@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Library</string>
-    <string name="app_name_migration">My Library (formerly MyBookDroid)</string>
+    <string name="app_name_migration">My Library</string>
 
     <string name="screen_title_sign_in">Sign Up</string>
     <string name="btn_add">Save</string>
@@ -234,7 +234,7 @@
 
     <!-- About dialog -->
     <string name="about_changes_title">Latest Changes and Release Notes</string>
-    <string name="about_changes_desc">The app is currently undergoing a major update to enhance functionality. An essential change is the integration of cloud backup for your data. We suggest signing in via Google. This will ensure that all your data is associated with your account. For detailed information, please check the \"Release Notes.\" If you have any questions or concerns, don\'t hesitate to contact us. Thank you for your patience and understanding.</string>
+    <string name="about_changes_desc">The app is currently undergoing a major update to enhance functionality. For detailed information, please check the \"Release Notes.\" If you have any questions or concerns, don\'t hesitate to contact us. Thank you for your patience and understanding.</string>
     <string name="about_btn_release_notes">Release Notes</string>
     <string name="about_btn_contact">Contact Us</string>
 

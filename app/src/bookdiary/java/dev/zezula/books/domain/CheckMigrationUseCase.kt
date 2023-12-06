@@ -86,7 +86,7 @@ class CheckMigrationUseCase(
                     migrationError = errorMessage,
                     versionCode = BuildConfig.VERSION_CODE.toString(),
                     migrationDurationInSeconds = durationInSeconds,
-                )
+                ),
             )
         }
             .onError {
@@ -128,9 +128,7 @@ class CheckMigrationUseCase(
                             },
                         )
                 }
-
             } while (cursor.moveToNext())
-
         }
         cursor.close()
     }
@@ -146,7 +144,6 @@ class CheckMigrationUseCase(
 
         if (cursor.moveToFirst()) {
             do {
-
                 val id = cursor.getIntOrNull(cursor.getColumnIndexOrThrow("_id"))
                 val bookId = cursor.getIntOrNull(cursor.getColumnIndexOrThrow("bookId"))
                 val dateCreated = cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateCreated"))
@@ -173,7 +170,6 @@ class CheckMigrationUseCase(
                             },
                         )
                 }
-
             } while (cursor.moveToNext())
         }
         cursor.close()

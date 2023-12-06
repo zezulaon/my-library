@@ -335,7 +335,6 @@ fun BookListScreen(
 
 @Composable
 private fun MigrationCard(progress: MigrationProgress) {
-
     val title = when (progress.type) {
         MigrationType.BOOKS -> "Importing Books"
         MigrationType.SHELVES -> "Importing Shelves"
@@ -662,7 +661,7 @@ fun PreviewBookListScreen() {
                     type = MigrationType.BOOKS,
                     current = 1,
                     total = 10,
-                )
+                ),
             ),
             signUiState = SignInUiState(),
         )

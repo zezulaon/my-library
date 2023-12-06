@@ -13,7 +13,7 @@ android {
     buildToolsVersion = "34.0.0"
 
     defaultConfig {
-        applicationId = "org.zezula.bookdiary"
+        applicationId = "dev.zezula.books"
         minSdk = 23
         targetSdk = 33
         versionCode = 301
@@ -90,6 +90,25 @@ android {
             // Enables resource shrinking
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    flavorDimensions += "booksAppDimension"
+
+    productFlavors {
+        create("standard") {
+            dimension = "booksAppDimension"
+            versionNameSuffix = "-s"
+        }
+        create("bookdiary") {
+            dimension = "booksAppDimension"
+            applicationId = "org.zezula.bookdiary"
+            versionNameSuffix = "-mbd"
+        }
+        create("gb") {
+            dimension = "booksAppDimension"
+            applicationId = "org.zezi.gb"
+            versionNameSuffix = "-gb"
         }
     }
 

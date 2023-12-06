@@ -21,7 +21,6 @@ class RefreshBookCoverUseCase(
             .onError {
                 Timber.e(it, "Failed to update book: [$bookId] cover.")
             }
-
     }
 
     private suspend fun updateBookCover(bookId: String) {

@@ -60,6 +60,8 @@ fun BookFormData.asNetworkBook(id: String): NetworkBook {
         thumbnailLink = this.thumbnailLink,
         userRating = this.userRating,
         dateAdded = this.dateAdded ?: LocalDateTime.now().toString(),
+        subject = this.subject,
+        binding = this.binding,
     )
 }
 

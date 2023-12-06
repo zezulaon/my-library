@@ -124,7 +124,6 @@ class BookListViewModel(
     fun refresh() {
         Timber.d("refresh()")
         viewModelScope.launch {
-
             // Checks if the legacy DB was already migrated. If not, it performs the migration.
             try {
                 checkMigrationUseCase.invoke(migrationProgress)
