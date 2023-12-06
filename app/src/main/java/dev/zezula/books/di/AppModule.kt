@@ -131,7 +131,6 @@ val appModule = module {
             .addMigrations(MIGRATION_3_4)
             .build()
     }
-    // Legacy database dependencies
     single {
         val database = get<AppDatabase>()
         database.bookDao()
