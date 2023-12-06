@@ -14,4 +14,8 @@ data class NetworkBook(
     val pageCount: Int? = null,
     val thumbnailLink: String? = null,
     val userRating: Int? = null,
+    // Subject is legacy property from older version of the app. It's not used right now.
+    val subject: String? = null,
+    // Binding is legacy property from older version of the app. It's not used right now.
+    val binding: String? = null,
 )

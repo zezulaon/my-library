@@ -1,6 +1,7 @@
 package dev.zezula.books.ui.screen.list
 
 import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 
@@ -10,6 +11,7 @@ data class BookListUiState(
     val sorting: SortingState = SortingState(),
     val infoMessages: InfoMessagesState = InfoMessagesState(),
     val selectedShelf: Shelf? = null,
+    val migrationProgress: MigrationProgress? = null,
 )
 
 data class DrawerNavigationState(

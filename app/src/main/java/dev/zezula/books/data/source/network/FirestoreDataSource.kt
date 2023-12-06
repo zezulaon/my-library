@@ -9,6 +9,8 @@ import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
 import dev.zezula.books.data.model.shelf.bookIdProperty
 import dev.zezula.books.data.model.shelf.shelfIdProperty
+import dev.zezula.books.data.model.user.NetworkMigrationData
+import dev.zezula.books.data.model.user.toMapValues
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -19,6 +21,8 @@ class FirestoreDataSource : NetworkDataSource {
 
     private val userId: String by lazy { auth.currentUser?.uid ?: throw IllegalStateException("Missing firebase user") }
 
+    private val userDocument = db.collection(COLLECTION_ID_USERS).document(userId)
+
     private val booksCollection =
         db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_BOOKS)
 
@@ -27,6 +31,29 @@ class FirestoreDataSource : NetworkDataSource {
 
     private val shelvesWithBooksCollection =
         db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES_WITH_BOOKS)
+
+    override suspend fun getMigrationData(): NetworkMigrationData {
+        Timber.d("getMigrationData()")
+        return userDocument.get().await()
+            .toObject(NetworkMigrationData::class.java).also {
+                Timber.d("Deserialized migration data to: $it")
+            } ?: NetworkMigrationData()
+    }
+
+    override suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData) {
+        Timber.d("updateMigrationData(networkMigrationData=$networkMigrationData)")
+        val userDocumentExists = userDocument.get().await().exists()
+        if (userDocumentExists) {
+            userDocument.update(networkMigrationData.toMapValues()).await()
+        } else {
+            userDocument.set(networkMigrationData).await()
+        }
+    }
+
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+        Timber.d("updateBookCover(bookId=$bookId, thumbnailLink=$thumbnailLink)")
+        booksCollection.document(bookId).update("thumbnailLink", thumbnailLink).await()
+    }
 
     override suspend fun getBooks(): List<NetworkBook> {
         Timber.d("getBooks()")

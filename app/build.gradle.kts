@@ -93,6 +93,25 @@ android {
         }
     }
 
+    flavorDimensions += "booksAppDimension"
+
+    productFlavors {
+        create("standard") {
+            dimension = "booksAppDimension"
+            versionNameSuffix = "-s"
+        }
+        create("bookdiary") {
+            dimension = "booksAppDimension"
+            applicationId = "org.zezula.bookdiary"
+            versionNameSuffix = "-mbd"
+        }
+        create("gb") {
+            dimension = "booksAppDimension"
+            applicationId = "org.zezi.gb"
+            versionNameSuffix = "-gb"
+        }
+    }
+
     compileOptions {
         // Desugaring for access to LocalDateTime APIs (this can be removed once the app the minSdk=API 26)
         isCoreLibraryDesugaringEnabled = true

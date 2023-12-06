@@ -4,6 +4,7 @@ import android.app.Application
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.di.appModule
+import dev.zezula.books.di.flavoredAppModule
 import dev.zezula.books.util.CrashlyticsTree
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,7 +26,7 @@ class MyLibraryApp : Application() {
         startKoin {
             androidContext(this@MyLibraryApp)
             androidLogger()
-            modules(appModule)
+            modules(appModule, flavoredAppModule)
         }
     }
 }

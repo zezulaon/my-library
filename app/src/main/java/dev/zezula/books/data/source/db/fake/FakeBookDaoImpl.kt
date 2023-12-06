@@ -45,6 +45,10 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>> {
         return getAllBooksStream()
     }

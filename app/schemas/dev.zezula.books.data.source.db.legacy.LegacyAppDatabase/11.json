@@ -1,0 +1,304 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 11,
+    "identityHash": "8a2a94016de44b9465d1f3c955b3f6ea",
+    "entities": [
+      {
+        "tableName": "books",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `isbn13` TEXT, `isbn10` TEXT, `title` TEXT, `binding` TEXT, `description` TEXT, `numberOfPages` TEXT, `publisher` TEXT, `publicationDate` INTEGER, `reviewsFetchedDate` INTEGER, `offersFetchedDate` INTEGER, `grRating` REAL, `grRatingsCount` INTEGER, `subject` TEXT, `created` INTEGER, `stateId` INTEGER, `userRating` INTEGER, `authors` TEXT, `lentToName` TEXT, `lentToUri` TEXT, `familyName` TEXT, `thumbnailSmall` TEXT, `thumbnailLarge` TEXT, `amazonBookId` INTEGER, `grBookId` INTEGER, `googleBookId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isbn13",
+            "columnName": "isbn13",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isbn10",
+            "columnName": "isbn10",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "binding",
+            "columnName": "binding",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberOfPages",
+            "columnName": "numberOfPages",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "publisher",
+            "columnName": "publisher",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "publicationDate",
+            "columnName": "publicationDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reviewsFetchedDate",
+            "columnName": "reviewsFetchedDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "offersFetchedDate",
+            "columnName": "offersFetchedDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grRating",
+            "columnName": "grRating",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grRatingsCount",
+            "columnName": "grRatingsCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subject",
+            "columnName": "subject",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "created",
+            "columnName": "created",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stateId",
+            "columnName": "stateId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userRating",
+            "columnName": "userRating",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "authors",
+            "columnName": "authors",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lentToName",
+            "columnName": "lentToName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lentToUri",
+            "columnName": "lentToUri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "familyName",
+            "columnName": "familyName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailSmall",
+            "columnName": "thumbnailSmall",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailLarge",
+            "columnName": "thumbnailLarge",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amazonBookId",
+            "columnName": "amazonBookId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grBookId",
+            "columnName": "grBookId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "googleBookId",
+            "columnName": "googleBookId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "states",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `bookId` INTEGER, `favorite` INTEGER, `haveRead` INTEGER, `readingNow` INTEGER, `iOwn` INTEGER, `toBuy` INTEGER, `toRead` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "bookId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "favorite",
+            "columnName": "favorite",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "haveRead",
+            "columnName": "haveRead",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "readingNow",
+            "columnName": "readingNow",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "iOwn",
+            "columnName": "iOwn",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toBuy",
+            "columnName": "toBuy",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toRead",
+            "columnName": "toRead",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "groups",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "bookGroup",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `groupId` INTEGER, `bookId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "bookId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a2a94016de44b9465d1f3c955b3f6ea')"
+    ]
+  }
+}

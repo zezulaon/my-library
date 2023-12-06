@@ -189,12 +189,12 @@ val appModule = module {
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
     viewModel { EmailSignInViewModel(get()) }
     viewModel { FindBookViewModel(get()) }

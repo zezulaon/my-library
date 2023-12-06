@@ -9,5 +9,7 @@ interface OnlineBookFinderService {
 
     suspend fun findReviewsForIsbn(isbn: String?, title: String?, author: String?): GoodreadsBook?
 
+    suspend fun findBookCoverLinkForIsbn(isbn: String): String?
+
     suspend fun findBookForQueryOnline(query: String): List<BookFormData>
 }
