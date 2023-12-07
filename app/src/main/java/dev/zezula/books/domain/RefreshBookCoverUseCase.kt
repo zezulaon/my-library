@@ -8,6 +8,7 @@ import dev.zezula.books.domain.model.asResponse
 import kotlinx.coroutines.flow.firstOrNull
 import timber.log.Timber
 
+// TODO: Refactor into more general Refresh/Update book data use case.
 class RefreshBookCoverUseCase(
     private val bookDao: BookDao,
     private val networkDataSource: NetworkDataSource,
