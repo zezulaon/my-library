@@ -1,12 +1,12 @@
 package dev.zezula.books.domain
 
+import dev.zezula.books.data.model.MigrationProgress
+import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.legacy.toBookFormData
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.legacy.LegacyBookDao
-import dev.zezula.books.data.source.db.legacy.LegacyGroupShelfBookDao
-import dev.zezula.books.data.source.db.legacy.LegacyShelfDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -14,27 +14,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import timber.log.Timber
 
-data class MigrationProgress(
-    val type: MigrationType,
-    val total: Int,
-    val current: Int,
-)
-
-enum class MigrationType {
-    SHELVES,
-    BOOKS,
-    GROUPING,
-}
-
 class CheckMigrationUseCase(
-    private val addOrUpdateBookUseCase: AddOrUpdateBookUseCase,
+    private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
+    private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
     private val updateShelfUseCase: UpdateShelfUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     private val bookDao: BookDao,
     private val shelfDao: ShelfAndBookDao,
     private val legacyBookDao: LegacyBookDao,
-    private val legacyShelfDao: LegacyShelfDao,
-    private val legacyGroupShelfBookDao: LegacyGroupShelfBookDao,
     private val networkDataSource: NetworkDataSource,
 ) {
 
@@ -63,7 +50,7 @@ class CheckMigrationUseCase(
                     legacyDbMigrated = true,
                     legacyAppId = "org.zezi.gb",
                     migrationError = errorMessage,
-                )
+                ),
             )
         }
             .onError {
@@ -72,8 +59,8 @@ class CheckMigrationUseCase(
     }
 
     private suspend fun migrateShelves(migrationProgress: MutableStateFlow<MigrationProgress?>) {
-        val shelves = legacyShelfDao.getAllShelves()
-        val existingShelves = shelfDao.getAllShelvesAsStream().firstOrNull()
+        val shelves = legacyBookDao.getAllShelves()
+        val existingShelves = shelfDao.getAllShelvesStream().firstOrNull()
         shelves.forEachIndexed { index, shelf ->
             migrationProgress.value = MigrationProgress(
                 type = MigrationType.SHELVES,
@@ -115,7 +102,7 @@ class CheckMigrationUseCase(
             val bookId = book._id
             if (bookId != null) {
                 // Check if the book is already migrated
-                val existingBook = bookDao.getBook(book._id.toString()).firstOrNull()
+                val existingBook = bookDao.getBookStream(book._id.toString()).firstOrNull()
                 val yearStringLength = existingBook?.yearPublished?.toString()?.length ?: 0
                 val isYearBroken = yearStringLength > 4
                 if (existingBook == null || isYearBroken) {
@@ -128,6 +115,15 @@ class CheckMigrationUseCase(
                                 Timber.d("Failed to migrate the book")
                             },
                         )
+                    moveBookToLibraryUseCase(bookId.toString())
+                        .fold(
+                            onSuccess = {
+                                Timber.d("Book moved to library successfully")
+                            },
+                            onFailure = {
+                                Timber.w(it, "Failed to move the book to library")
+                            },
+                        )
                 } else {
                     Timber.d("Book already migrated")
                 }
@@ -136,7 +132,7 @@ class CheckMigrationUseCase(
     }
 
     private suspend fun migrateGrouping(migrationProgress: MutableStateFlow<MigrationProgress?>) {
-        val grouping = legacyGroupShelfBookDao.getAll()
+        val grouping = legacyBookDao.getAllGroups()
         val existingGroupings = shelfDao.getAllShelfWithBookEntity()
         grouping.forEachIndexed { index, group ->
             migrationProgress.value = MigrationProgress(
@@ -148,8 +144,8 @@ class CheckMigrationUseCase(
             val volumeId = group.volumeId
             val shelfId = group.shelfId
             if (volumeId != null && shelfId != null) {
-                val bookExists = bookDao.getBook(volumeId.toString()).firstOrNull() != null
-                val shelfExists = shelfDao.getAllShelvesAsStream()
+                val bookExists = bookDao.getBookStream(volumeId.toString()).firstOrNull() != null
+                val shelfExists = shelfDao.getAllShelvesStream()
                     .firstOrNull()?.any { it.id == shelfId.toString() } == true
                 if (bookExists && shelfExists) {
                     // Check if the group is already migrated

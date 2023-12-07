@@ -33,8 +33,4 @@ abstract class LegacyAppDatabase : RoomDatabase() {
     }
 
     abstract fun legacyBookDao(): LegacyBookDao
-
-    abstract fun legacyShelfDao(): LegacyShelfDao
-
-    abstract fun legacyGroupShelfBookDao(): LegacyGroupShelfBookDao
 }
