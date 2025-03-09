@@ -38,7 +38,8 @@ class UserLibraryRepositoryImpl(
     override suspend fun moveBookToLibrary(bookId: String) {
         val existingBook = bookDao.getBookStream(bookId).firstOrNull()
         checkNotNull(existingBook) { "Failed to add book to Library -> book with id: [$bookId] does not exist." }
-        addOrUpdateNetworkBook(existingBook.asNetworkBook())
+        // FIXME: implement proper syncing.
+//        addOrUpdateNetworkBook(existingBook.asNetworkBook())
         bookDao.addToLibraryBooks(LibraryBookEntity(bookId))
     }
 
@@ -47,7 +48,8 @@ class UserLibraryRepositoryImpl(
     }
 
     override suspend fun deleteBookFromLibrary(bookId: String) {
-        networkDataSource.deleteBook(bookId)
+        // FIXME: implement proper syncing.
+//        networkDataSource.deleteBook(bookId)
 
         // Delete the book from the DB. Associated library reference will be deleted by the DB cascade
         bookDao.delete(bookId)
@@ -82,16 +84,17 @@ class UserLibraryRepositoryImpl(
         bookFormData: BookFormData,
     ): NetworkBook {
         val networkBook = bookFormData.asNetworkBook(bookId)
-        addOrUpdateNetworkBook(networkBook)
+        // FIXME: implement proper syncing.
+//        addOrUpdateNetworkBook(networkBook)
         return networkBook
     }
 
-    private suspend fun addOrUpdateNetworkBook(
-        networkBook: NetworkBook,
-    ): NetworkBook {
-        networkDataSource.addOrUpdateBook(networkBook)
-        return networkBook
-    }
+//    private suspend fun addOrUpdateNetworkBook(
+//        networkBook: NetworkBook,
+//    ): NetworkBook {
+//        networkDataSource.addOrUpdateBook(networkBook)
+//        return networkBook
+//    }
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
         // Check if the book is part of user's library. If not, do not allow to add it to a shelf.
@@ -100,7 +103,8 @@ class UserLibraryRepositoryImpl(
 
         val shelvesWithBooksEntity = ShelfWithBookEntity(bookId = bookId, shelfId = shelfId)
 
-        networkDataSource.updateBookInShelf(shelfId, bookId, isBookInShelf)
+        // FIXME: implement proper syncing.
+//        networkDataSource.updateBookInShelf(shelfId, bookId, isBookInShelf)
 
         if (isBookInShelf) {
             shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
@@ -111,31 +115,31 @@ class UserLibraryRepositoryImpl(
 
     override suspend fun refreshBooks() {
         val numberOfBooks = bookDao.getBookCount()
-        // TODO: implement proper syncing. Right now, the firestore is used as a simple online "back up" (which is
+        // FIXME: implement proper syncing. Right now, the firestore is used as a simple online "back up" (which is
         //  downloaded only when there are no books in the app database)
-        if (numberOfBooks == 0) {
-            networkDataSource.getBooks().forEach { networkBook ->
-                val bookEntity = fromNetworkBook(networkBook)
-                bookDao.addOrUpdate(bookEntity)
-
-                // Associate the book with the library
-                bookDao.addToLibraryBooks(LibraryBookEntity(bookId = bookEntity.id))
-
-                networkDataSource.getNotesForBook(bookEntity.id).forEach { networkNote ->
-                    val networkNoteEntity = fromNetworkNote(
-                        networkNote = networkNote,
-                        bookId = bookEntity.id,
-                    )
-                    noteDao.addOrUpdateNote(networkNoteEntity)
-                }
-            }
-            networkDataSource.getShelves().forEach { networkShelf ->
-                shelfAndBookDao.addOrUpdate(fromNetworkShelf(networkShelf))
-            }
-            networkDataSource.getShelvesWithBooks().forEach { networkShelfWithBook ->
-                shelfAndBookDao.addBookToShelf(fromNetworkShelfWithBook(networkShelfWithBook))
-            }
-        }
+//        if (numberOfBooks == 0) {
+//            networkDataSource.getBooks().forEach { networkBook ->
+//                val bookEntity = fromNetworkBook(networkBook)
+//                bookDao.addOrUpdate(bookEntity)
+//
+//                // Associate the book with the library
+//                bookDao.addToLibraryBooks(LibraryBookEntity(bookId = bookEntity.id))
+//
+//                networkDataSource.getNotesForBook(bookEntity.id).forEach { networkNote ->
+//                    val networkNoteEntity = fromNetworkNote(
+//                        networkNote = networkNote,
+//                        bookId = bookEntity.id,
+//                    )
+//                    noteDao.addOrUpdateNote(networkNoteEntity)
+//                }
+//            }
+//            networkDataSource.getShelves().forEach { networkShelf ->
+//                shelfAndBookDao.addOrUpdate(fromNetworkShelf(networkShelf))
+//            }
+//            networkDataSource.getShelvesWithBooks().forEach { networkShelfWithBook ->
+//                shelfAndBookDao.addBookToShelf(fromNetworkShelfWithBook(networkShelfWithBook))
+//            }
+//        }
     }
 
     override suspend fun searchMyLibraryBooks(query: String): List<Book> {

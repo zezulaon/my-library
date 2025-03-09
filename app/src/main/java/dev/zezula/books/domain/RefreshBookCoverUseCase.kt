@@ -30,8 +30,9 @@ class RefreshBookCoverUseCase(
             val isbn = book.isbn
             val thumbnailLink = onlineBookFinderService.findBookCoverLinkForIsbn(isbn)
             if (thumbnailLink != null) {
+                // FIXME: Set sync flag to false to force sync.
                 bookDao.updateBookCover(book.id, thumbnailLink)
-                networkDataSource.updateBookCover(book.id, thumbnailLink)
+//                networkDataSource.updateBookCover(book.id, thumbnailLink)
             }
         }
     }

@@ -44,14 +44,16 @@ class ShelvesRepositoryImpl(
     override suspend fun addOrUpdateShelf(shelfId: String, shelfTitle: String) {
         Timber.d("addOrUpdateShelf($shelfId, $shelfTitle)")
         val networkShelf = NetworkShelf(id = shelfId, dateAdded = LocalDateTime.now().toString(), title = shelfTitle)
-        networkDataSource.addOrUpdateShelf(networkShelf)
+        // FIXME: Implement proper syncing.
+//        networkDataSource.addOrUpdateShelf(networkShelf)
 
         val shelf = fromNetworkShelf(networkShelf)
         shelvesAndBooksDao.addOrUpdate(shelf)
     }
 
     override suspend fun deleteShelf(shelf: Shelf) {
-        networkDataSource.deleteShelf(shelf.id)
+        // FIXME: Implement proper syncing.
+//        networkDataSource.deleteShelf(shelf.id)
         shelvesAndBooksDao.delete(shelf.id)
     }
 }

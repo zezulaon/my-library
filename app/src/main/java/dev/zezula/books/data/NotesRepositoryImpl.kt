@@ -50,7 +50,8 @@ class NotesRepositoryImpl(
             page = noteFormData.page,
             type = noteFormData.type,
         )
-        networkDataSource.addOrUpdateNote(networkNote)
+        // FIXME: Implement proper syncing.
+//        networkDataSource.addOrUpdateNote(networkNote)
 
         val networkNoteEntity = fromNetworkNote(
             networkNote = networkNote,
@@ -62,7 +63,8 @@ class NotesRepositoryImpl(
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
         // Deletes a note from the server and then from the database.
-        networkDataSource.deleteNote(noteId = noteId, bookId = bookId)
+        // FIXME: Implement proper syncing.
+//        networkDataSource.deleteNote(noteId = noteId, bookId = bookId)
         noteDao.deleteNote(noteId)
     }
 }
