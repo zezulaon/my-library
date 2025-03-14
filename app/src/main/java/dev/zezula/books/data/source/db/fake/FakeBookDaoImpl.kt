@@ -2,7 +2,6 @@ package dev.zezula.books.data.source.db.fake
 
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
-import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.SearchBookResultEntity
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.Flow
@@ -15,22 +14,29 @@ class FakeBookDaoImpl : BookDao {
 
     private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
 
-    override suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity) {
-    }
+//    override suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity) {
+//    }
 
     override fun getAllLibraryBooksStream(): Flow<List<BookEntity>> {
         return getAllBooksStream()
     }
 
-    override fun getLibraryBookStream(bookId: String): Flow<LibraryBookEntity?> {
-        return getAllBooksStream().map { bookList ->
-            val book = bookList.firstOrNull { book -> book.id == bookId }
-            if (book != null) {
-                LibraryBookEntity(book.id)
-            } else {
-                null
-            }
-        }
+    //    override fun getLibraryBookStream(bookId: String): Flow<LibraryBookEntity?> {
+//        return getAllBooksStream().map { bookList ->
+//            val book = bookList.firstOrNull { book -> book.id == bookId }
+//            if (book != null) {
+//                LibraryBookEntity(book.id)
+//            } else {
+//                null
+//            }
+//        }
+//    }
+    override fun isBookInLibrary(bookId: String): Flow<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addToLibraryBooks(bookId: String, dateAdded: String) {
+        TODO("Not yet implemented")
     }
 
     override fun getAllSearchResultBooksStream(): Flow<List<BookEntity>> {
@@ -61,7 +67,7 @@ class FakeBookDaoImpl : BookDao {
 
     override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
-    override suspend fun getLibraryBooksForForQuery(query: String): List<BookEntity> {
+    override suspend fun getLibraryBooksForQuery(query: String): List<BookEntity> {
         TODO("Searching books is not yet implemented")
     }
 

@@ -8,7 +8,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
-import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.SearchBookResultEntity
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.review.RatingEntity
@@ -20,7 +19,6 @@ import timber.log.Timber
 @Database(
     entities = [
         BookEntity::class,
-        LibraryBookEntity::class,
         SearchBookResultEntity::class,
         BookSuggestionEntity::class,
         ReviewEntity::class,
@@ -29,7 +27,7 @@ import timber.log.Timber
         ShelfWithBookEntity::class,
         NoteEntity::class,
     ],
-    version = 6,
+    version = 7,
     // https://developer.android.com/training/data-storage/room/migrating-db-versions
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
@@ -63,8 +61,14 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
             "CREATE TABLE IF NOT EXISTS library_books (bookId TEXT NOT NULL, PRIMARY KEY(bookId)," +
                 " FOREIGN KEY(bookId) REFERENCES books (id) ON UPDATE NO ACTION ON DELETE CASCADE)",
         )
-
-        // Insert all IDs from books table into book_added table
         db.execSQL("INSERT INTO library_books (bookId) SELECT id FROM books")
+    }
+}
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE books ADD COLUMN isInLibrary INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("UPDATE books SET isInLibrary = 1 WHERE id IN (SELECT bookId FROM library_books)")
+        db.execSQL("DROP TABLE library_books")
     }
 }

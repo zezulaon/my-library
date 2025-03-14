@@ -3,23 +3,21 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.asNetworkBook
 import dev.zezula.books.data.model.book.fromNetworkBook
-import dev.zezula.books.data.model.note.fromNetworkNote
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
-import dev.zezula.books.data.model.shelf.fromNetworkShelf
-import dev.zezula.books.data.model.shelf.fromNetworkShelfWithBook
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
+import java.time.LocalDateTime
 import java.util.UUID
 
 class UserLibraryRepositoryImpl(
@@ -40,11 +38,11 @@ class UserLibraryRepositoryImpl(
         checkNotNull(existingBook) { "Failed to add book to Library -> book with id: [$bookId] does not exist." }
         // FIXME: implement proper syncing.
 //        addOrUpdateNetworkBook(existingBook.asNetworkBook())
-        bookDao.addToLibraryBooks(LibraryBookEntity(bookId))
+        bookDao.addToLibraryBooks(bookId = bookId, dateAdded = LocalDateTime.now().toString())
     }
 
     override fun isBookInLibrary(bookId: String): Flow<Boolean> {
-        return bookDao.getLibraryBookStream(bookId).map { it != null }
+        return bookDao.isBookInLibrary(bookId)
     }
 
     override suspend fun deleteBookFromLibrary(bookId: String) {
@@ -98,8 +96,8 @@ class UserLibraryRepositoryImpl(
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
         // Check if the book is part of user's library. If not, do not allow to add it to a shelf.
-        val libraryBook = bookDao.getLibraryBookStream(bookId).firstOrNull()
-        checkNotNull(libraryBook) { "Cannot modify the shelf -> book with id: [$bookId] is not in the library." }
+        val isBookInLibrary = isBookInLibrary(bookId).first()
+        check(isBookInLibrary) { "Cannot modify the shelf -> book with id: [$bookId] is not in the library." }
 
         val shelvesWithBooksEntity = ShelfWithBookEntity(bookId = bookId, shelfId = shelfId)
 
@@ -143,6 +141,6 @@ class UserLibraryRepositoryImpl(
     }
 
     override suspend fun searchMyLibraryBooks(query: String): List<Book> {
-        return bookDao.getLibraryBooksForForQuery(query).map(BookEntity::asExternalModel)
+        return bookDao.getLibraryBooksForQuery(query).map(BookEntity::asExternalModel)
     }
 }

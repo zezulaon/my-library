@@ -38,9 +38,10 @@ class BooksRepositoryImpl(
         val allSearchResults = bookDao.getAllSearchResultBooksStream().first()
         Timber.d("${allSearchResults.size} search results to delete.")
         allSearchResults.forEach { bookEntity ->
-            val libraryBook = bookDao.getLibraryBookStream(bookEntity.id).first()
-            if (libraryBook == null) {
+            val isInLibrary = bookDao.isBookInLibrary(bookEntity.id).first()
+            if (isInLibrary.not()) {
                 Timber.d("Deleting book: $bookEntity")
+                // FIXME: Could this be handled by sql query that skips deletion of there is isInLibrary = 1?
                 bookDao.delete(bookEntity.id)
             } else {
                 Timber.d("Not deleting book: $bookEntity because it is already in the user library.")

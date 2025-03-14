@@ -15,7 +15,7 @@ interface NoteDao {
      */
     @Query(
         "SELECT notes.*, books.title as bookTitle FROM notes INNER JOIN books ON notes.bookId = books.id " +
-            "INNER JOIN library_books ON notes.bookId = library_books.bookId ORDER BY dateAdded DESC",
+            "ORDER BY dateAdded DESC",
     )
     fun getAllNotesStream(): Flow<List<NoteWithBookEntity>>
 

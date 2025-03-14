@@ -6,7 +6,6 @@ import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
-import dev.zezula.books.data.model.book.LibraryBookEntity
 import dev.zezula.books.data.model.book.SearchBookResultEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,34 +13,47 @@ import kotlinx.coroutines.flow.Flow
 interface BookDao {
 
     /**
-     * Returns books that are also added in "library_books" reference table.
+     * Returns books that are part of user's personal book collection (library).
      */
     @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
-    @Query("SELECT * FROM books INNER JOIN library_books ON library_books.bookId = books.id ORDER BY dateAdded DESC")
+    @Query(
+        """
+        SELECT * FROM books
+        WHERE isInLibrary = 1 
+        ORDER BY dateAdded DESC
+        """,
+    )
     fun getAllLibraryBooksStream(): Flow<List<BookEntity>>
 
     /**
-     * Returns book that is also added in "library_books" reference table.
+     * Checks if the book is part of the user's personal book collection (library).
      */
-    @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
-    @Query("SELECT * FROM books INNER JOIN library_books ON books.id = library_books.bookId WHERE books.id = :bookId")
-    fun getLibraryBookStream(bookId: String): Flow<LibraryBookEntity?>
+    @Query("SELECT EXISTS(SELECT 1 FROM books WHERE id = :bookId AND isInLibrary = 1)")
+    fun isBookInLibrary(bookId: String): Flow<Boolean>
 
     /**
-     * Add the book to the "library_books" reference table (Table with user's personal book collection).
-     */
-    @Upsert
-    suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity)
-
-    /**
-     * For a given search query, returns books from "library_books" reference table (Table with user's personal book
-     * collection). Searches title and author columns.
+     * Flags the book as part of the user's personal book collection (library).
      */
     @Query(
-        "SELECT * FROM books INNER JOIN library_books ON library_books.bookId = books.id WHERE " +
-            "title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%' ORDER BY dateAdded DESC",
+        """
+        UPDATE books 
+        SET isInLibrary = 1, dateAdded = :dateAdded
+        WHERE id = :bookId""",
     )
-    suspend fun getLibraryBooksForForQuery(query: String): List<BookEntity>
+    suspend fun addToLibraryBooks(bookId: String, dateAdded: String)
+
+    /**
+     * For a given search query, returns books from user's personal library. Searches title and author columns.
+     */
+    @Query(
+        """
+            SELECT * FROM books
+            WHERE 
+                isInLibrary = 1 AND
+                (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
+            ORDER BY dateAdded DESC""",
+    )
+    suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
 
     /**
      * Returns search results - books that were found online and are stored temporarily in the database.

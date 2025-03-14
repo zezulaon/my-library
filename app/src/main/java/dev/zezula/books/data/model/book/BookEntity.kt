@@ -22,6 +22,7 @@ data class BookEntity(
     val thumbnailLink: String? = null,
     val userRating: Int? = null,
     val pageCount: Int? = null,
+    val isInLibrary: Boolean = false,
 )
 
 fun BookEntity.asExternalModel(): Book {
