@@ -3,10 +3,8 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.NetworkBook
+import dev.zezula.books.data.model.book.asBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
-import dev.zezula.books.data.model.book.asNetworkBook
-import dev.zezula.books.data.model.book.fromNetworkBook
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
@@ -24,7 +22,6 @@ class UserLibraryRepositoryImpl(
     private val bookDao: BookDao,
     private val shelfAndBookDao: ShelfAndBookDao,
     private val noteDao: NoteDao,
-    private val networkDataSource: NetworkDataSource,
 ) : UserLibraryRepository {
 
     override fun getAllLibraryBooksStream(): Flow<List<Book>> {
@@ -33,11 +30,31 @@ class UserLibraryRepositoryImpl(
         }
     }
 
+    override fun getAllLibraryPendingSyncBooksStream(): Flow<List<Book>> {
+        return bookDao.getAllLibraryPendingSyncBooksStream().map {
+            it.map(BookEntity::asExternalModel)
+        }
+    }
+
+    override fun getAllShelvesWithBooksPendingSyncStream(): Flow<List<ShelfWithBookEntity>> {
+        return shelfAndBookDao.getAllPendingShelvesWithBooksStream()
+    }
+
+    override fun isBookDeleted(bookId: String): Flow<Boolean> {
+        return bookDao.getBookStream(bookId).map { it?.isDeleted == true}
+    }
+
+    override suspend fun resetPendingSyncStatus(bookId: String) {
+        bookDao.resetPendingSyncStatus(bookId)
+    }
+
+    override suspend fun resetShelvesWithBooksSyncStatus(shelfId: String, bookId: String) {
+        shelfAndBookDao.resetShelvesWithBooksPendingSyncStatus(shelfId = shelfId, bookId = bookId)
+    }
+
     override suspend fun moveBookToLibrary(bookId: String) {
         val existingBook = bookDao.getBookStream(bookId).firstOrNull()
         checkNotNull(existingBook) { "Failed to add book to Library -> book with id: [$bookId] does not exist." }
-        // FIXME: implement proper syncing.
-//        addOrUpdateNetworkBook(existingBook.asNetworkBook())
         bookDao.addToLibraryBooks(bookId = bookId, dateAdded = LocalDateTime.now().toString())
     }
 
@@ -46,11 +63,12 @@ class UserLibraryRepositoryImpl(
     }
 
     override suspend fun deleteBookFromLibrary(bookId: String) {
-        // FIXME: implement proper syncing.
-//        networkDataSource.deleteBook(bookId)
+        bookDao.softDeleteFromLibraryBooks(bookId)
+        bookDao.setPendingSyncStatus(bookId)
 
-        // Delete the book from the DB. Associated library reference will be deleted by the DB cascade
-        bookDao.delete(bookId)
+        noteDao.softDeleteNotesForBook(bookId)
+
+        shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId)
     }
 
     override fun getBooksForShelfStream(shelfId: String): Flow<List<Book>> {
@@ -71,44 +89,28 @@ class UserLibraryRepositoryImpl(
 
     override suspend fun addOrUpdateBook(bookId: String, bookFormData: BookFormData): Book {
         Timber.d("addOrUpdateBook($bookId, $bookFormData)")
-        val networkBook = addOrUpdateNetworkBook(bookId, bookFormData)
-        val bookEntity = fromNetworkBook(networkBook)
+        // FIXME: simplify/improve upserting and inserting
+        val isBookInLibrary = bookDao.isBookInLibrary(bookId).first()
+        val bookEntity = bookFormData
+            .asBookEntity(id = bookId)
+            .copy(isInLibrary = isBookInLibrary, isPendingSync = isBookInLibrary)
         bookDao.addOrUpdate(bookEntity)
+
         return bookEntity.asExternalModel()
     }
 
-    private suspend fun addOrUpdateNetworkBook(
-        bookId: String,
-        bookFormData: BookFormData,
-    ): NetworkBook {
-        val networkBook = bookFormData.asNetworkBook(bookId)
-        // FIXME: implement proper syncing.
-//        addOrUpdateNetworkBook(networkBook)
-        return networkBook
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+        bookDao.updateBookCover(bookId, thumbnailLink)
+        bookDao.setPendingSyncStatus(bookId)
     }
-
-//    private suspend fun addOrUpdateNetworkBook(
-//        networkBook: NetworkBook,
-//    ): NetworkBook {
-//        networkDataSource.addOrUpdateBook(networkBook)
-//        return networkBook
-//    }
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
         // Check if the book is part of user's library. If not, do not allow to add it to a shelf.
         val isBookInLibrary = isBookInLibrary(bookId).first()
         check(isBookInLibrary) { "Cannot modify the shelf -> book with id: [$bookId] is not in the library." }
 
-        val shelvesWithBooksEntity = ShelfWithBookEntity(bookId = bookId, shelfId = shelfId)
-
-        // FIXME: implement proper syncing.
-//        networkDataSource.updateBookInShelf(shelfId, bookId, isBookInShelf)
-
-        if (isBookInShelf) {
-            shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
-        } else {
-            shelfAndBookDao.removeBookFromShelf(shelvesWithBooksEntity)
-        }
+        val shelvesWithBooksEntity = ShelfWithBookEntity(bookId = bookId, shelfId = shelfId, isPendingSync = true, isDeleted = isBookInShelf.not())
+        shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
     }
 
     override suspend fun refreshBooks() {

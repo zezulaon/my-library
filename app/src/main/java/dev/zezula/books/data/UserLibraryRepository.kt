@@ -2,6 +2,7 @@ package dev.zezula.books.data
 
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import kotlinx.coroutines.flow.Flow
 
 interface UserLibraryRepository {
@@ -9,6 +10,16 @@ interface UserLibraryRepository {
     suspend fun deleteBookFromLibrary(bookId: String)
 
     fun getAllLibraryBooksStream(): Flow<List<Book>>
+
+    fun getAllLibraryPendingSyncBooksStream(): Flow<List<Book>>
+
+    fun getAllShelvesWithBooksPendingSyncStream(): Flow<List<ShelfWithBookEntity>>
+
+    fun isBookDeleted(bookId: String): Flow<Boolean>
+
+    suspend fun resetPendingSyncStatus(bookId: String)
+
+    suspend fun resetShelvesWithBooksSyncStatus(shelfId: String, bookId: String)
 
     suspend fun moveBookToLibrary(bookId: String)
 
@@ -21,6 +32,8 @@ interface UserLibraryRepository {
     suspend fun addOrUpdateBook(bookId: String, bookFormData: BookFormData): Book
 
     suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
+
+    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
 
     suspend fun refreshBooks()
 

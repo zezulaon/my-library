@@ -1,5 +1,6 @@
 package dev.zezula.books.data.model.shelf
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,6 +10,10 @@ data class ShelfEntity(
     val id: String,
     val dateAdded: String,
     val title: String,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
 )
 
 fun fromNetworkShelf(networkShelf: NetworkShelf): ShelfEntity {

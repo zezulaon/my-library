@@ -1,5 +1,6 @@
 package dev.zezula.books.data.model.note
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
@@ -24,6 +25,11 @@ import dev.zezula.books.data.model.book.BookEntity
 @Entity(
     tableName = "notes",
     foreignKeys = [
+        // FIXME: review cascade delete
+        //  Soucasna implementace knihy nemaze - pouze nastavi isDeleted, takze cascade se provdede jen napr. pro search books
+        //  je tedy cascade zbytecny?
+        //  jak se chovat kdyz nastavim isDeleted na library book?
+        //  resolution - cascade muze zustat (neovlivni knihy v policce), pro soft delete se udela soft delete i pro tuto entitu
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
     ],
     indices = [
@@ -39,6 +45,10 @@ data class NoteEntity(
     val text: String,
     val page: Int? = null,
     val type: String? = null,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
 )
 
 val previewNoteEntities = listOf(

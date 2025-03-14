@@ -14,6 +14,7 @@ import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
+import dev.zezula.books.domain.sync.SyncService
 import dev.zezula.books.ui.whileSubscribedInActivity
 import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +32,7 @@ class BookListViewModel(
     private val getBooksForShelfUseCase: GetBooksForShelfUseCase,
     private val refreshLibraryUseCase: RefreshLibraryUseCase,
     private val checkMigrationUseCase: CheckMigrationUseCase,
+    private val syncService: SyncService,
 ) : ViewModel() {
 
     private val errorMessage = MutableStateFlow<Int?>(null)
@@ -139,6 +141,9 @@ class BookListViewModel(
                 onFailure = { errorMessage.value = R.string.home_failed_to_refresh },
             )
         }
+
+        // FIXME: find better place for sync
+        syncService.startSync()
     }
 
     fun onShelfSelected(selectedShelf: Shelf) {

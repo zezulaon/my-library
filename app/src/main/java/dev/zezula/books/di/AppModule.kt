@@ -52,6 +52,7 @@ import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
+import dev.zezula.books.domain.sync.SyncService
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
@@ -122,6 +123,10 @@ val appModule = module {
     single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
 
+    single<SyncService> {
+        SyncService(get(), get(), get(), get())
+    }
+
     // Database and DAOs
     single<AppDatabase> {
         Room.databaseBuilder(
@@ -184,14 +189,14 @@ val appModule = module {
 
     // Repositories
     single<BooksRepository> { BooksRepositoryImpl(get(), get()) }
-    single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
+    single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl() }
-    single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
+    single<ShelvesRepository> { ShelvesRepositoryImpl(get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }

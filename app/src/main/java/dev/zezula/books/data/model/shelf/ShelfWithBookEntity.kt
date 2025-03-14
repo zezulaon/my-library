@@ -1,5 +1,6 @@
 package dev.zezula.books.data.model.shelf
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
@@ -13,7 +14,7 @@ import dev.zezula.books.data.model.book.BookEntity
     tableName = "shelf_with_book",
     primaryKeys = ["bookId", "shelfId"],
     foreignKeys = [
-        ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
+        ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE), // FIXME: review all cascade props, if it works with sync (can be cascade used with sync?)
         ForeignKey(entity = ShelfEntity::class, parentColumns = ["id"], childColumns = ["shelfId"], onDelete = CASCADE),
     ],
     indices = [
@@ -25,6 +26,10 @@ import dev.zezula.books.data.model.book.BookEntity
 data class ShelfWithBookEntity(
     val bookId: String,
     val shelfId: String,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
 )
 
 fun fromNetworkShelfWithBook(networkShelfWithBook: NetworkShelfWithBook): ShelfWithBookEntity {

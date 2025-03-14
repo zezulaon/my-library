@@ -19,11 +19,21 @@ interface BookDao {
     @Query(
         """
         SELECT * FROM books
-        WHERE isInLibrary = 1 
+        WHERE isInLibrary = 1 AND isDeleted = 0
         ORDER BY dateAdded DESC
         """,
     )
     fun getAllLibraryBooksStream(): Flow<List<BookEntity>>
+
+    @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
+    @Query("SELECT * FROM books WHERE books.isPendingSync = 1")
+    fun getAllLibraryPendingSyncBooksStream(): Flow<List<BookEntity>>
+
+    @Query("UPDATE books SET isPendingSync = 0 WHERE id = :bookId")
+    suspend fun resetPendingSyncStatus(bookId: String)
+
+    @Query("UPDATE books SET isPendingSync = 1 WHERE id = :bookId")
+    suspend fun setPendingSyncStatus(bookId: String)
 
     /**
      * Checks if the book is part of the user's personal book collection (library).
@@ -37,10 +47,14 @@ interface BookDao {
     @Query(
         """
         UPDATE books 
-        SET isInLibrary = 1, dateAdded = :dateAdded
-        WHERE id = :bookId""",
+        SET isInLibrary = 1, dateAdded = :dateAdded, isPendingSync = 1
+        WHERE id = :bookId
+        """,
     )
     suspend fun addToLibraryBooks(bookId: String, dateAdded: String)
+
+    @Query("UPDATE books SET isDeleted = 1 WHERE id = :bookId")
+    suspend fun softDeleteFromLibraryBooks(bookId: String)
 
     /**
      * For a given search query, returns books from user's personal library. Searches title and author columns.
@@ -100,9 +114,6 @@ interface BookDao {
 
     @Upsert
     suspend fun addOrUpdate(book: BookEntity)
-
-    @Upsert
-    suspend fun addOrUpdate(books: List<BookEntity>)
 
     @Query("DELETE FROM books WHERE id = :bookId")
     suspend fun delete(bookId: String)

@@ -1,8 +1,5 @@
 package dev.zezula.books.data.model.shelf
 
-import androidx.room.Entity
-
-@Entity(tableName = "shelves")
 data class Shelf(
     val id: String,
     val dateAdded: String,

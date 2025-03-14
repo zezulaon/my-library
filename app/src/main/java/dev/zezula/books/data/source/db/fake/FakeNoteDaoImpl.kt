@@ -32,6 +32,26 @@ class FakeNoteDaoImpl : NoteDao {
         }
     }
 
+    override suspend fun softDeleteNotesForBook(bookId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resetPendingSyncStatus(noteId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteNote(noteId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setPendingSyncStatus(noteId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllPendingSyncStream(): Flow<List<NoteEntity>> {
+        TODO("Not yet implemented")
+    }
+
     override fun getNotesForBookStream(bookId: String): Flow<List<NoteEntity>> {
         return notesFlow
             .map { noteList ->
@@ -48,11 +68,6 @@ class FakeNoteDaoImpl : NoteDao {
         } else {
             notes.add(note) // Add a new note
         }
-        notesFlow.value = notes
-    }
-
-    override suspend fun deleteNote(noteId: String) {
-        notes.removeAll { it.id == noteId }
         notesFlow.value = notes
     }
 }

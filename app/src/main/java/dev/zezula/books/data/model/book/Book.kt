@@ -65,6 +65,24 @@ fun BookFormData.asNetworkBook(id: String): NetworkBook {
     )
 }
 
+fun BookFormData.asBookEntity(id: String): BookEntity {
+    return BookEntity(
+        id = id,
+        title = title,
+        author = author,
+        description = description,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        pageCount = pageCount,
+        thumbnailLink = thumbnailLink,
+        userRating = userRating,
+        dateAdded = dateAdded ?: LocalDateTime.now().toString(),
+        subject = subject,
+        binding = binding,
+    )
+}
+
 /**
  * Returns true if book has all important data set to non null values
  */

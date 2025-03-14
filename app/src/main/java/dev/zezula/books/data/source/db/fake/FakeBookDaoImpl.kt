@@ -39,6 +39,22 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun softDeleteFromLibraryBooks(bookId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllLibraryPendingSyncBooksStream(): Flow<List<BookEntity>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setPendingSyncStatus(bookId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resetPendingSyncStatus(bookId: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun getAllSearchResultBooksStream(): Flow<List<BookEntity>> {
         TODO("Not yet implemented")
     }
@@ -77,16 +93,9 @@ class FakeBookDaoImpl : BookDao {
     override suspend fun getBookCount(): Int = bookFlow.first().size
 
     override suspend fun addOrUpdate(book: BookEntity) {
-        addOrUpdate(listOf(book))
+        TODO()
     }
 
-    override suspend fun addOrUpdate(books: List<BookEntity>) {
-        bookFlow.update { bookMap ->
-            bookMap.toMutableMap().apply {
-                putAll(books.associateBy { entity -> entity.id })
-            }
-        }
-    }
 
     override suspend fun delete(bookId: String) {
         bookFlow.update { bookMap ->

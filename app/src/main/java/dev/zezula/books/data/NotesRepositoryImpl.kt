@@ -34,6 +34,15 @@ class NotesRepositoryImpl(
         }
     }
 
+    override fun getAllPendingSyncStream(): Flow<List<NoteEntity>> {
+        // FIXME: custom sync data class instead of entity?
+        return noteDao.getAllPendingSyncStream()
+    }
+
+    override suspend fun resetPendingSyncStatus(noteId: String) {
+        noteDao.resetPendingSyncStatus(noteId)
+    }
+
     override suspend fun addOrUpdateNote(
         noteId: String?,
         bookId: String,
@@ -50,21 +59,18 @@ class NotesRepositoryImpl(
             page = noteFormData.page,
             type = noteFormData.type,
         )
-        // FIXME: Implement proper syncing.
-//        networkDataSource.addOrUpdateNote(networkNote)
 
-        val networkNoteEntity = fromNetworkNote(
+        val entity = fromNetworkNote(
             networkNote = networkNote,
             bookId = bookId,
-        )
-        noteDao.addOrUpdateNote(networkNoteEntity)
-        return networkNoteEntity.asExternalModel()
+        ).copy(isPendingSync = true)
+
+        noteDao.addOrUpdateNote(entity)
+        return entity.asExternalModel()
     }
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
-        // Deletes a note from the server and then from the database.
-        // FIXME: Implement proper syncing.
-//        networkDataSource.deleteNote(noteId = noteId, bookId = bookId)
-        noteDao.deleteNote(noteId)
+        noteDao.softDeleteNote(noteId)
+        noteDao.setPendingSyncStatus(noteId)
     }
 }

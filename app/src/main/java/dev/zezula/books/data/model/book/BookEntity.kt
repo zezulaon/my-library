@@ -1,5 +1,6 @@
 package dev.zezula.books.data.model.book
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,7 +8,6 @@ import androidx.room.PrimaryKey
 data class BookEntity(
     @PrimaryKey
     val id: String,
-    // TODO: [LibraryBookEntity] would be better place for this property.
     val dateAdded: String,
     val title: String? = null,
     val author: String? = null,
@@ -23,6 +23,10 @@ data class BookEntity(
     val userRating: Int? = null,
     val pageCount: Int? = null,
     val isInLibrary: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER) // Is this @ColumnInfo needed? Can it be migrated manually?
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
 )
 
 fun BookEntity.asExternalModel(): Book {

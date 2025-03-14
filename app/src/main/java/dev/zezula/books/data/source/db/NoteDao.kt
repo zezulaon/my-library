@@ -14,15 +14,26 @@ interface NoteDao {
      * Returns a flow of all notes that are associated with a book in the user's library.
      */
     @Query(
-        "SELECT notes.*, books.title as bookTitle FROM notes INNER JOIN books ON notes.bookId = books.id " +
-            "ORDER BY dateAdded DESC",
+        """
+            SELECT notes.*, books.title as bookTitle 
+            FROM notes 
+            INNER JOIN books ON notes.bookId = books.id 
+            WHERE notes.isDeleted = 0
+            ORDER BY dateAdded DESC
+            """,
     )
     fun getAllNotesStream(): Flow<List<NoteWithBookEntity>>
 
     /**
      * Returns a flow of notes associated with a specific [bookId], ordered by their addition date.
      */
-    @Query("SELECT * FROM notes WHERE bookId = :bookId ORDER BY dateAdded DESC")
+    @Query(
+        """
+        SELECT * FROM notes 
+        WHERE bookId = :bookId AND isDeleted = 0 
+        ORDER BY dateAdded DESC
+        """,
+    )
     fun getNotesForBookStream(bookId: String): Flow<List<NoteEntity>>
 
     /**
@@ -32,9 +43,41 @@ interface NoteDao {
     @Upsert
     suspend fun addOrUpdateNote(note: NoteEntity)
 
-    /**
-     * Deletes the note identified by [noteId] from the database.
-     */
-    @Query("DELETE FROM notes WHERE id = :noteId")
-    suspend fun deleteNote(noteId: String)
+    @Query("UPDATE notes SET isDeleted = 1 WHERE id = :noteId")
+    suspend fun softDeleteNote(noteId: String)
+
+    @Query(
+        """
+        UPDATE notes 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE bookId = :bookId
+        """,
+    )
+    suspend fun softDeleteNotesForBook(bookId: String)
+
+    @Query(
+        """
+        UPDATE notes 
+        SET isPendingSync = 1
+        WHERE id = :noteId
+        """,
+    )
+    suspend fun setPendingSyncStatus(noteId: String)
+
+    @Query(
+        """
+        UPDATE notes 
+        SET isPendingSync = 0
+        WHERE id = :noteId
+        """,
+    )
+    suspend fun resetPendingSyncStatus(noteId: String)
+
+    @Query(
+        """
+        SELECT * FROM notes 
+        WHERE isPendingSync = 1
+        """,
+    )
+    fun getAllPendingSyncStream(): Flow<List<NoteEntity>>
 }

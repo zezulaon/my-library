@@ -30,12 +30,28 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         }
     }
 
+    override suspend fun softDeleteShelvesWithBooksForBook(bookId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun addOrUpdate(shelves: List<ShelfEntity>) {
         shelvesFlow.update { shelfMap ->
             shelfMap.toMutableMap().apply {
                 putAll(shelves.associateBy { entity -> entity.id })
             }
         }
+    }
+
+    override fun getAllPendingShelvesWithBooksStream(): Flow<List<ShelfWithBookEntity>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resetShelvesWithBooksPendingSyncStatus(shelfId: String, bookId: String) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun addOrUpdate(shelf: ShelfEntity) {
@@ -54,17 +70,25 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         throw NotImplementedError("Unused in tests")
     }
 
-    override suspend fun removeBookFromShelf(shelvesWithBooksEntity: ShelfWithBookEntity) {
-        throw NotImplementedError("Unused in tests")
-    }
-
     override fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>> =
         shelvesForBook.map { it.getOrDefault(bookId, emptyList()) }
 
     override fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>> =
         booksForShelfFlow.map { it.getOrDefault(shelfId, emptyList()) }
 
-    override suspend fun getAllShelfWithBookEntity(): List<ShelfWithBookEntity> {
-        throw NotImplementedError("Unused in tests")
+    override suspend fun softDelete(shelfId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setPendingSyncStatus(shelfId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resetPendingSyncStatus(shelfId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllPendingSyncShelvesStream(): Flow<List<ShelfEntity>> {
+        TODO("Not yet implemented")
     }
 }

@@ -1,7 +1,7 @@
 package dev.zezula.books.domain
 
+import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.source.db.BookDao
-import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -11,7 +11,7 @@ import timber.log.Timber
 // TODO: Refactor into more general Refresh/Update book data use case.
 class RefreshBookCoverUseCase(
     private val bookDao: BookDao,
-    private val networkDataSource: NetworkDataSource,
+    private val libraryRepository: UserLibraryRepository,
     private val onlineBookFinderService: OnlineBookFinderService,
 ) {
 
@@ -30,9 +30,7 @@ class RefreshBookCoverUseCase(
             val isbn = book.isbn
             val thumbnailLink = onlineBookFinderService.findBookCoverLinkForIsbn(isbn)
             if (thumbnailLink != null) {
-                // FIXME: Set sync flag to false to force sync.
-                bookDao.updateBookCover(book.id, thumbnailLink)
-//                networkDataSource.updateBookCover(book.id, thumbnailLink)
+                libraryRepository.updateBookCover(bookId = book.id, thumbnailLink = thumbnailLink)
             }
         }
     }
