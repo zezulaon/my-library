@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.db
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.Transaction
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
@@ -88,11 +89,28 @@ interface BookDao {
     @Upsert
     suspend fun addToSearchBookResults(searchBookResultEntity: SearchBookResultEntity)
 
+    @Transaction
+    suspend fun deleteAllSearchResults() {
+        deleteAllSearchedBooksNotInLibrary()
+        deleteAllSearchBookResultReferences()
+    }
+
+    /**
+     * Deletes the books that were found online and are not added in user's library.
+     */
+    @Query(
+        """
+        DELETE FROM books
+        WHERE books.isInLibrary = 0 AND id IN (SELECT bookId FROM search_book_results)
+        """,
+    )
+    suspend fun deleteAllSearchedBooksNotInLibrary()
+
     /**
      * Delete all books from the "search_book_results" reference table.
      */
     @Query("DELETE FROM search_book_results")
-    suspend fun deleteAllSearchBookResults()
+    suspend fun deleteAllSearchBookResultReferences()
 
     /**
      * Returns suggestions for a given book ID.

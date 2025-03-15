@@ -35,6 +35,10 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteAllSearchedBooksNotInLibrary() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun addToLibraryBooks(bookId: String, dateAdded: String) {
         TODO("Not yet implemented")
     }
@@ -63,7 +67,7 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAllSearchBookResults() {
+    override suspend fun deleteAllSearchBookResultReferences() {
         TODO("Not yet implemented")
     }
 

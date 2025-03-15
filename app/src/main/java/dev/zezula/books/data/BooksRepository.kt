@@ -6,16 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
 
-    suspend fun addBookToSearchResults(bookId: String)
-
-    fun getAllSearchResultBooksStream(): Flow<List<Book>>
-
-    suspend fun fetchSuggestions(bookId: String): List<Book>?
-
-    fun getAllSuggestionsForBook(bookId: String): Flow<List<Book>>
-
-    suspend fun deleteAllSearchBookResults()
-
     fun getAllBooksStream(): Flow<List<Book>>
 
     fun getBookStream(bookId: String): Flow<Book?>

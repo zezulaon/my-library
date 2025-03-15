@@ -1,5 +1,6 @@
 package dev.zezula.books.domain
 
+import dev.zezula.books.data.BookSuggestionsRepository
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.NotesRepository
 import dev.zezula.books.data.ReviewsRepository
@@ -30,6 +31,7 @@ data class AllBookDetailResult(
 class GetAllBookDetailUseCase(
     private val shelvesRepository: ShelvesRepository,
     private val booksRepository: BooksRepository,
+    private val bookSuggestionsRepository: BookSuggestionsRepository,
     private val userLibraryRepository: UserLibraryRepository,
     private val reviewsRepository: ReviewsRepository,
     private val notesRepository: NotesRepository,
@@ -43,7 +45,7 @@ class GetAllBookDetailUseCase(
             shelvesRepository.getShelvesForBookStream(bookId),
             reviewsRepository.getRatingStream(bookId),
             reviewsRepository.getReviewsForBookStream(bookId),
-            booksRepository.getAllSuggestionsForBook(bookId),
+            bookSuggestionsRepository.getAllSuggestionsForBook(bookId),
         ) { book, isBookInLibrary, notes, shelves, rating, reviews, suggestions ->
             AllBookDetailResult(
                 book = book,

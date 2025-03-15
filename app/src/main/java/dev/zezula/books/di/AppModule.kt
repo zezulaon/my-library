@@ -4,6 +4,10 @@ import androidx.room.Room
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.BuildConfig
+import dev.zezula.books.data.BookSearchResultsRepository
+import dev.zezula.books.data.BookSearchResultsRepositoryImpl
+import dev.zezula.books.data.BookSuggestionsRepository
+import dev.zezula.books.data.BookSuggestionsRepositoryImpl
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.BooksRepositoryImpl
 import dev.zezula.books.data.NotesRepository
@@ -172,12 +176,12 @@ val appModule = module {
     single { DeleteNoteUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
-    single { GetAllBookDetailUseCase(get(), get(), get(), get(), get()) }
+    single { GetAllBookDetailUseCase(get(), get(), get(), get(), get(), get()) }
     single { DeleteBookFromLibraryUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
     single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
-    single { FindBookForQueryOnlineUseCase(get(), get()) }
+    single { FindBookForQueryOnlineUseCase(get(), get(), get()) }
     single { SearchMyLibraryBooksUseCase(get()) }
     single { GetBookUseCase(get()) }
     single { AddOrUpdateLibraryBookUseCase(get()) }
@@ -188,7 +192,9 @@ val appModule = module {
     single { GetBooksForAuthorUseCase(get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get(), get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get()) }
+    single<BookSuggestionsRepository> { BookSuggestionsRepositoryImpl(get(), get()) }
+    single<BookSearchResultsRepository> { BookSearchResultsRepositoryImpl(get()) }
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl() }
