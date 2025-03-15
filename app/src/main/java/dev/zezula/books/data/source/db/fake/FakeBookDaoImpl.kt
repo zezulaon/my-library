@@ -39,7 +39,7 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun softDeleteFromLibraryBooks(bookId: String) {
+    override suspend fun softDeleteBook(bookId: String) {
         TODO("Not yet implemented")
     }
 

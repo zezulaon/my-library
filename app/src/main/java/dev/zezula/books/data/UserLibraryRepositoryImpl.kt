@@ -6,10 +6,10 @@ import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
+import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
-import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -41,7 +41,7 @@ class UserLibraryRepositoryImpl(
     }
 
     override fun isBookDeleted(bookId: String): Flow<Boolean> {
-        return bookDao.getBookStream(bookId).map { it?.isDeleted == true}
+        return bookDao.getBookStream(bookId).map { it?.isDeleted == true }
     }
 
     override suspend fun resetPendingSyncStatus(bookId: String) {
@@ -62,13 +62,10 @@ class UserLibraryRepositoryImpl(
         return bookDao.isBookInLibrary(bookId)
     }
 
-    override suspend fun deleteBookFromLibrary(bookId: String) {
-        bookDao.softDeleteFromLibraryBooks(bookId)
-        bookDao.setPendingSyncStatus(bookId)
-
-        noteDao.softDeleteNotesForBook(bookId)
-
+    override suspend fun softDeleteBookInLibrary(bookId: String) {
+        bookDao.softDeleteBook(bookId)
         shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId)
+        noteDao.softDeleteNotesForBook(bookId)
     }
 
     override fun getBooksForShelfStream(shelfId: String): Flow<List<Book>> {
@@ -101,7 +98,6 @@ class UserLibraryRepositoryImpl(
 
     override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
         bookDao.updateBookCover(bookId, thumbnailLink)
-        bookDao.setPendingSyncStatus(bookId)
     }
 
     override suspend fun updateBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {

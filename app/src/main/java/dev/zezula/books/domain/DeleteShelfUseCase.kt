@@ -10,7 +10,7 @@ class DeleteShelfUseCase(private val repository: ShelvesRepository) {
 
     suspend operator fun invoke(shelf: Shelf): Response<Unit> {
         return asResponse {
-            repository.deleteShelf(shelf)
+            repository.softDeleteShelf(shelf)
         }
             .onError {
                 Timber.e(it, "Failed to delete the shelf: [${shelf.id}].")

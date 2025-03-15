@@ -50,11 +50,6 @@ class FirestoreDataSource : NetworkDataSource {
         }
     }
 
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
-        Timber.d("updateBookCover(bookId=$bookId, thumbnailLink=$thumbnailLink)")
-        booksCollection.document(bookId).update("thumbnailLink", thumbnailLink).await()
-    }
-
     override suspend fun getBooks(): List<NetworkBook> {
         Timber.d("getBooks()")
 
@@ -120,16 +115,6 @@ class FirestoreDataSource : NetworkDataSource {
 
     override suspend fun deleteBook(bookId: String) {
         Timber.d("deleteBook(bookId=$bookId)")
-        // FIXME: review deletion logic + sync
-
-        // Delete associated book<->shelf connection
-        // FIXME: soft delete associated book<->shelf connection
-        val shelvesBookJoin = shelvesWithBooksCollection.whereEqualTo(bookIdProperty, bookId).get().await()
-        val idsToDelete = shelvesBookJoin.map { it.id }
-        idsToDelete.forEach { id ->
-            shelvesWithBooksCollection.document(id).update(FIELD_IS_DELETED, true).await()
-        }
-
         booksCollection.document(bookId).update(FIELD_IS_DELETED, true).await()
     }
 
@@ -149,14 +134,6 @@ class FirestoreDataSource : NetworkDataSource {
 
     override suspend fun deleteShelf(shelfId: String) {
         Timber.d("deleteShelf(shelfId=$shelfId)")
-
-        // Delete associated book<->shelf connection
-        val shelvesBooksJoin = shelvesWithBooksCollection.whereEqualTo(shelfIdProperty, shelfId).get().await()
-        val idsToDelete = shelvesBooksJoin.map { it.id }
-        idsToDelete.forEach { id ->
-            // FIXME: check if this is redundant or not (App should be responsible for soft deleting connection and marking it as pending)
-            shelvesWithBooksCollection.document(id).update(FIELD_IS_DELETED, true).await()
-        }
 
         shelvesCollection.document(shelfId).update(FIELD_IS_DELETED, true).await()
     }

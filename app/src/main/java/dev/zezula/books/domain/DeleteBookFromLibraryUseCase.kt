@@ -9,7 +9,7 @@ class DeleteBookFromLibraryUseCase(private val userLibraryRepository: UserLibrar
 
     suspend operator fun invoke(bookId: String): Response<Unit> {
         return asResponse {
-            userLibraryRepository.deleteBookFromLibrary(bookId)
+            userLibraryRepository.softDeleteBookInLibrary(bookId)
         }
             .onError {
                 Timber.e(it, "Failed to delete the book: [$bookId].")

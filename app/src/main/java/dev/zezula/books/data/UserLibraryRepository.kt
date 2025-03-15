@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserLibraryRepository {
 
-    suspend fun deleteBookFromLibrary(bookId: String)
+    suspend fun softDeleteBookInLibrary(bookId: String)
 
     fun getAllLibraryBooksStream(): Flow<List<Book>>
 

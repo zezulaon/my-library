@@ -12,8 +12,6 @@ interface NetworkDataSource {
 
     suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData)
 
-    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
-
     suspend fun getBooks(): List<NetworkBook>
 
     suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook

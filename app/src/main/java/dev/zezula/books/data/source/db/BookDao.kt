@@ -53,8 +53,14 @@ interface BookDao {
     )
     suspend fun addToLibraryBooks(bookId: String, dateAdded: String)
 
-    @Query("UPDATE books SET isDeleted = 1 WHERE id = :bookId")
-    suspend fun softDeleteFromLibraryBooks(bookId: String)
+    @Query(
+        """
+        UPDATE books 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE id = :bookId
+        """,
+    )
+    suspend fun softDeleteBook(bookId: String)
 
     /**
      * For a given search query, returns books from user's personal library. Searches title and author columns.
@@ -121,6 +127,12 @@ interface BookDao {
     @Query("DELETE FROM books")
     suspend fun deleteAll()
 
-    @Query("UPDATE books SET thumbnailLink = :thumbnailLink WHERE id = :bookId")
+    @Query(
+        """
+        UPDATE books 
+        SET thumbnailLink = :thumbnailLink, isPendingSync = 1
+        WHERE id = :bookId
+        """,
+    )
     suspend fun updateBookCover(bookId: String, thumbnailLink: String)
 }

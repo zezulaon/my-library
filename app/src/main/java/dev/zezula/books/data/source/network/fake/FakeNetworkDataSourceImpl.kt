@@ -104,8 +104,4 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
         return notesMap.values.filter { it.bookId == bookId }
     }
-
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
-        TODO("Not yet implemented")
-    }
 }

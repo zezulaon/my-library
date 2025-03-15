@@ -57,10 +57,8 @@ class ShelvesRepositoryImpl(
         shelvesAndBooksDao.addOrUpdate(shelf.copy(isPendingSync = true))
     }
 
-    override suspend fun deleteShelf(shelf: Shelf) {
-        shelvesAndBooksDao.softDelete(shelf.id)
-        shelvesAndBooksDao.setPendingSyncStatus(shelf.id)
-
+    override suspend fun softDeleteShelf(shelf: Shelf) {
+        shelvesAndBooksDao.softDeleteShelf(shelf.id)
         shelvesAndBooksDao.softDeleteShelvesWithBooksForShelf(shelf.id)
     }
 }

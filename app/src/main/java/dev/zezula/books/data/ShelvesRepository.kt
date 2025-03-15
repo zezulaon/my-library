@@ -19,7 +19,7 @@ interface ShelvesRepository {
 
     suspend fun updateShelf(shelfId: String, updatedTitle: String)
 
-    suspend fun deleteShelf(shelf: Shelf)
+    suspend fun softDeleteShelf(shelf: Shelf)
 
     suspend fun addOrUpdateShelf(shelfId: String, shelfTitle: String)
 }

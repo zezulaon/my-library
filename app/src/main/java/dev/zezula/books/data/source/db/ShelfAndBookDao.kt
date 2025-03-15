@@ -23,14 +23,32 @@ interface ShelfAndBookDao {
     @Query("DELETE FROM shelves WHERE id = :shelfId")
     suspend fun delete(shelfId: String)
 
-    @Query("UPDATE shelves SET isDeleted = 1 WHERE id = :shelfId")
-    suspend fun softDelete(shelfId: String)
+    @Query(
+        """
+        UPDATE shelves 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE id = :shelfId
+        """,
+    )
+    suspend fun softDeleteShelf(shelfId: String)
 
-    @Query("UPDATE shelf_with_book SET isDeleted = 1 WHERE bookId = :bookId")
-    suspend fun softDeleteShelvesWithBooksForBook(bookId: String)
-
-    @Query("UPDATE shelf_with_book SET isDeleted = 1 WHERE shelfId = :shelfId")
+    @Query(
+        """
+        UPDATE shelf_with_book 
+        SET isDeleted = 1, isPendingSync = 1 
+        WHERE shelfId = :shelfId
+        """,
+    )
     suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String)
+
+    @Query(
+        """
+        UPDATE shelf_with_book 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE bookId = :bookId
+        """,
+    )
+    suspend fun softDeleteShelvesWithBooksForBook(bookId: String)
 
     @Query("UPDATE shelves SET isPendingSync = 1 WHERE id = :shelfId")
     suspend fun setPendingSyncStatus(shelfId: String)
