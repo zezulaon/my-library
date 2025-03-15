@@ -46,7 +46,7 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         }
     }
 
-    override fun getAllPendingShelvesWithBooksStream(): Flow<List<ShelfWithBookEntity>> {
+    override fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>> {
         TODO("Not yet implemented")
     }
 

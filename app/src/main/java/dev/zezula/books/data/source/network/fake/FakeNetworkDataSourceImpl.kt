@@ -58,10 +58,6 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return book
     }
 
-    override suspend fun deleteBook(bookId: String) {
-        booksMap.remove(bookId)
-    }
-
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
         shelvesMap[shelf.id!!] = shelf
         return shelf
@@ -88,8 +84,8 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return emptyList()
     }
 
-    override suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
-        // book<->shelf connection not used in this fake
+    override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {

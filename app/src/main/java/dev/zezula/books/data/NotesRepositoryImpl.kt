@@ -1,23 +1,19 @@
 package dev.zezula.books.data
 
-import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.note.NoteWithBook
 import dev.zezula.books.data.model.note.NoteWithBookEntity
 import dev.zezula.books.data.model.note.asExternalModel
-import dev.zezula.books.data.model.note.fromNetworkNote
+import dev.zezula.books.data.model.note.fromNoteFormData
 import dev.zezula.books.data.source.db.NoteDao
-import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDateTime
 import java.util.UUID
 
 class NotesRepositoryImpl(
     private val noteDao: NoteDao,
-    private val networkDataSource: NetworkDataSource,
 ) : NotesRepository {
 
     override fun getAllNotesStream(): Flow<List<NoteWithBook>> {
@@ -34,36 +30,20 @@ class NotesRepositoryImpl(
         }
     }
 
-    override fun getAllPendingSyncStream(): Flow<List<NoteEntity>> {
-        // FIXME: custom sync data class instead of entity?
-        return noteDao.getAllPendingSyncStream()
-    }
-
-    override suspend fun resetPendingSyncStatus(noteId: String) {
-        noteDao.resetPendingSyncStatus(noteId)
-    }
-
     override suspend fun addOrUpdateNote(
         noteId: String?,
         bookId: String,
         noteFormData: NoteFormData,
     ): Note {
-        // Adds or updates a note on the server and then in the database. For newly created notes, a new ID is
-        // generated before the note is added to the server.
         val finalNoteId = noteId ?: UUID.randomUUID().toString()
-        val networkNote = NetworkNote(
-            id = finalNoteId,
-            bookId = bookId,
-            text = noteFormData.text,
-            dateAdded = noteFormData.dateAdded ?: LocalDateTime.now().toString(),
-            page = noteFormData.page,
-            type = noteFormData.type,
-        )
 
-        val entity = fromNetworkNote(
-            networkNote = networkNote,
+        val entity = fromNoteFormData(
+            noteId = finalNoteId,
             bookId = bookId,
-        ).copy(isPendingSync = true)
+            noteFormData = noteFormData,
+        )
+            // FIXME: move setting this flag to DAO
+            .copy(isPendingSync = true)
 
         noteDao.addOrUpdateNote(entity)
         return entity.asExternalModel()

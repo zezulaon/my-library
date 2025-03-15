@@ -20,8 +20,6 @@ interface NetworkDataSource {
 
     suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote
 
-    suspend fun deleteBook(bookId: String)
-
     suspend fun deleteNote(noteId: String, bookId: String)
 
     suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf
@@ -32,5 +30,5 @@ interface NetworkDataSource {
 
     suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook>
 
-    suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean)
+    suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook)
 }

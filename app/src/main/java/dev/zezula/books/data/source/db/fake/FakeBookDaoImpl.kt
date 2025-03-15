@@ -8,30 +8,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 
 class FakeBookDaoImpl : BookDao {
 
     private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
 
-//    override suspend fun addToLibraryBooks(libraryBookEntity: LibraryBookEntity) {
-//    }
-
     override fun getAllLibraryBooksStream(): Flow<List<BookEntity>> {
         return getAllBooksStream()
     }
 
-    //    override fun getLibraryBookStream(bookId: String): Flow<LibraryBookEntity?> {
-//        return getAllBooksStream().map { bookList ->
-//            val book = bookList.firstOrNull { book -> book.id == bookId }
-//            if (book != null) {
-//                LibraryBookEntity(book.id)
-//            } else {
-//                null
-//            }
-//        }
-//    }
     override fun isBookInLibrary(bookId: String): Flow<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getBooksByIsbn(isbn: String): List<BookEntity> {
         TODO("Not yet implemented")
     }
 
@@ -47,7 +37,7 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override fun getAllLibraryPendingSyncBooksStream(): Flow<List<BookEntity>> {
+    override fun getAllPendingSyncBooksFlow(): Flow<List<BookEntity>> {
         TODO("Not yet implemented")
     }
 
@@ -55,7 +45,7 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun resetPendingSyncStatus(bookId: String) {
+    override suspend fun resetBookPendingSyncStatus(bookId: String) {
         TODO("Not yet implemented")
     }
 
@@ -91,22 +81,10 @@ class FakeBookDaoImpl : BookDao {
         TODO("Searching books is not yet implemented")
     }
 
-    override suspend fun getForIsbn(isbn: String): List<BookEntity> =
-        bookFlow.first().values.filter { entity -> entity.isbn == isbn }
-
     override suspend fun getBookCount(): Int = bookFlow.first().size
 
     override suspend fun addOrUpdate(book: BookEntity) {
         TODO()
-    }
-
-
-    override suspend fun delete(bookId: String) {
-        bookFlow.update { bookMap ->
-            bookMap.toMutableMap().apply {
-                remove(bookId)
-            }
-        }
     }
 
     override suspend fun deleteAll() {

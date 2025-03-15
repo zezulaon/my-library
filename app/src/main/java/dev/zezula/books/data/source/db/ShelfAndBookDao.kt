@@ -73,7 +73,7 @@ interface ShelfAndBookDao {
     fun getAllPendingSyncShelvesStream(): Flow<List<ShelfEntity>>
 
     @Query("SELECT * FROM shelf_with_book WHERE isPendingSync = 1")
-    fun getAllPendingShelvesWithBooksStream(): Flow<List<ShelfWithBookEntity>>
+    fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>>
 
     @Query("UPDATE shelf_with_book SET isPendingSync = 0 WHERE shelfId = :shelfId AND bookId = :bookId")
     suspend fun resetShelvesWithBooksPendingSyncStatus(shelfId: String, bookId: String)

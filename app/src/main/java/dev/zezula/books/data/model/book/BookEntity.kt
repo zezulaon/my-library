@@ -31,51 +31,37 @@ data class BookEntity(
 
 fun BookEntity.asExternalModel(): Book {
     return Book(
-        id = this.id,
-        dateAdded = this.dateAdded,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
+        id = id,
+        dateAdded = dateAdded,
+        title = title,
+        author = author,
+        description = description,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        pageCount = pageCount,
+        thumbnailLink = thumbnailLink,
+        userRating = userRating,
     )
 }
 
 fun BookEntity.asNetworkBook(): NetworkBook {
+    // [isInLibrary] is not needed since all [NetworkBook]s are already in library.
     return NetworkBook(
-        id = this.id,
-        dateAdded = this.dateAdded,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
-    )
-}
-
-fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
-    checkNotNull(networkBook.id) { "Book needs [id] property" }
-    checkNotNull(networkBook.dateAdded) { "Book needs [dateAdded] property" }
-    return BookEntity(
-        id = networkBook.id,
-        dateAdded = networkBook.dateAdded,
-        title = networkBook.title,
-        author = networkBook.author,
-        description = networkBook.description,
-        isbn = networkBook.isbn,
-        publisher = networkBook.publisher,
-        yearPublished = networkBook.yearPublished,
-        pageCount = networkBook.pageCount,
-        thumbnailLink = networkBook.thumbnailLink,
-        userRating = networkBook.userRating,
+        id = id,
+        dateAdded = dateAdded,
+        title = title,
+        author = author,
+        description = description,
+        subject = subject,
+        binding = binding,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        thumbnailLink = thumbnailLink,
+        userRating = userRating,
+        pageCount = pageCount,
+        isDeleted = isDeleted,
     )
 }
 

@@ -47,24 +47,6 @@ data class BookFormData(
     val binding: String? = null,
 )
 
-fun BookFormData.asNetworkBook(id: String): NetworkBook {
-    return NetworkBook(
-        id = id,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
-        dateAdded = this.dateAdded ?: LocalDateTime.now().toString(),
-        subject = this.subject,
-        binding = this.binding,
-    )
-}
-
 fun BookFormData.asBookEntity(id: String): BookEntity {
     return BookEntity(
         id = id,

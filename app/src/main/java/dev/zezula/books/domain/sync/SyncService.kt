@@ -1,20 +1,13 @@
 package dev.zezula.books.domain.sync
 
 import com.google.firebase.firestore.FirebaseFirestoreException
-import dev.zezula.books.data.NotesRepository
-import dev.zezula.books.data.ShelvesRepository
-import dev.zezula.books.data.UserLibraryRepository
-import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.asNetworkBook
-import dev.zezula.books.data.model.note.NetworkNote
-import dev.zezula.books.data.model.shelf.NetworkShelf
+import dev.zezula.books.data.SyncLibraryRepository
 import dev.zezula.books.data.source.network.NetworkDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -23,10 +16,8 @@ import kotlin.time.Duration.Companion.seconds
 
 // FIXME: review the syncing
 class SyncService(
-    private val userLibraryRepository: UserLibraryRepository,
-    private val shelvesRepository: ShelvesRepository,
+    private val syncLibraryRepository: SyncLibraryRepository,
     private val networkDataSource: NetworkDataSource,
-    private val notesRepository: NotesRepository,
 ) {
 
     private val syncStarted: AtomicBoolean = AtomicBoolean(false)
@@ -35,10 +26,8 @@ class SyncService(
     //  not crash the app or stop the sync service).
     private val job = SupervisorJob()
 
-    //    private val coroutineScope = CoroutineScope(job)
     private val coroutineContext = Dispatchers.IO + job
     private val coroutineScope = CoroutineScope(coroutineContext)
-//    val x = userLibraryRepository.getAllLibraryBooksStream().col
 
     @OptIn(FlowPreview::class)
     fun startSync() {
@@ -56,7 +45,7 @@ class SyncService(
     @OptIn(FlowPreview::class)
     private fun startBooksSync() {
         coroutineScope.launch {
-            userLibraryRepository.getAllLibraryPendingSyncBooksStream()
+            syncLibraryRepository.getAllBooksPendingSyncFlow()
                 .debounce(5.seconds)
                 .onStart {
                     println("### ON SYNC START")
@@ -67,34 +56,16 @@ class SyncService(
                 .collect { list ->
                     println("### PENDING BOOKS: ${list.map { it.title }}")
                     list.forEach { book ->
-                        val isDeleted = userLibraryRepository.isBookDeleted(book.id).first()
                         println("### SYNCING BOOK: ${book.title}")
                         try {
-                            if (isDeleted) {
-                                println("### DELETING BOOK: ${book.title}")
-                                networkDataSource.deleteBook(book.id)
-                                userLibraryRepository.resetPendingSyncStatus(book.id)
-                            } else {
-                                val bookFormData = BookFormData(
-                                    title = book.title,
-                                    author = book.author,
-                                    description = book.description,
-                                    isbn = book.isbn,
-                                    publisher = book.publisher,
-                                    yearPublished = book.yearPublished,
-                                    pageCount = book.pageCount,
-                                    thumbnailLink = book.thumbnailLink,
-                                    userRating = book.userRating,
-                                    dateAdded = book.dateAdded,
-                                )
-                                networkDataSource.addOrUpdateBook(bookFormData.asNetworkBook(book.id))
-                                userLibraryRepository.resetPendingSyncStatus(book.id)
-                            }
+                            networkDataSource.addOrUpdateBook(book)
+
+                            // FIXME: improve so the null check is not needed (pass id from the repository?)
+                            val bookId = checkNotNull(book.id) { "Book ID is null" }
+                            syncLibraryRepository.resetBookPendingSyncStatus(bookId)
                         } catch (e: FirebaseFirestoreException) { // FIXME: how to handle exception in stream?
                             println("### ERROR: ${e.message}")
                         }
-
-                        //                        userLibraryRepository.syncBook(it)
                     }
                 }
         }
@@ -103,7 +74,7 @@ class SyncService(
     @OptIn(FlowPreview::class)
     private fun startShelvesSync() {
         coroutineScope.launch {
-            shelvesRepository.getAllPendingSyncShelvesStream()
+            syncLibraryRepository.getAllShelvesPendingSyncFlow()
                 .debounce(5.seconds)
                 .onStart {
                     println("### ON SHELVES SYNC START")
@@ -114,26 +85,15 @@ class SyncService(
                 .collect { list ->
                     println("### PENDING SHELVES: ${list.map { it.title }}")
                     list.forEach { shelf ->
-                        val isDeleted = shelf.isDeleted
                         println("### SYNCING SHELF: ${shelf.title}")
                         try {
-                            if (isDeleted) {
-                                println("### DELETING SHELF: ${shelf.title}")
-                                networkDataSource.deleteShelf(shelf.id)
-                            } else {
-                                networkDataSource.addOrUpdateShelf(
-                                    NetworkShelf(
-                                        id = shelf.id,
-                                        dateAdded = shelf.dateAdded,
-                                        title = shelf.title,
-                                    )
-                                )
-                            }
-                            shelvesRepository.resetPendingSyncStatus(shelf.id)
+                            networkDataSource.addOrUpdateShelf(shelf)
+
+                            val shelfId = checkNotNull(shelf.id) { "Shelf ID is null" }
+                            syncLibraryRepository.resetShelfPendingSyncStatus(shelfId)
                         } catch (e: FirebaseFirestoreException) { // FIXME: how to handle exception in stream?
                             println("### ERROR: ${e.message}")
                         }
-
                     }
                 }
         }
@@ -143,7 +103,7 @@ class SyncService(
     private fun startNotesSync() {
         coroutineScope.launch {
 
-            notesRepository.getAllPendingSyncStream()
+            syncLibraryRepository.getAllNotesPendingSyncFlow()
                 .debounce(5.seconds)
                 .onStart {
                     println("### ON NOTES SYNC START")
@@ -153,29 +113,13 @@ class SyncService(
                 }
                 .collect { list ->
 
-
                     println("### PENDING NOTES: ${list.map { it.text }}")
                     list.forEach { note ->
-                        val isDeleted = note.isDeleted
                         try {
-                            if (isDeleted) {
-                                // FIXME: can throw NOT_FOUND: No document to update: projects/mylibrary-v3/databases/(default)/documents/...
-                                //  log this or repair (force insert entry)?
-                                println("### DELETING NOTE: ${note.text}")
-                                networkDataSource.deleteNote(note.id, note.bookId)
-                            } else {
-                                networkDataSource.addOrUpdateNote(
-                                    NetworkNote(
-                                        id = note.id,
-                                        bookId = note.bookId,
-                                        text = note.text,
-                                        dateAdded = note.dateAdded,
-                                        page = note.page,
-                                        type = note.type,
-                                    )
-                                )
-                            }
-                            notesRepository.resetPendingSyncStatus(note.id)
+                            networkDataSource.addOrUpdateNote(note)
+
+                            val noteId = checkNotNull(note.id) { "Note ID is null" }
+                            syncLibraryRepository.resetNotePendingSyncStatus(noteId)
                         } catch (e: FirebaseFirestoreException) { // FIXME: how to handle exception in stream?
                             println("### ERROR: ${e.message}")
                         }
@@ -188,7 +132,7 @@ class SyncService(
     @OptIn(FlowPreview::class)
     private fun startShelvesWithBookSync() {
         coroutineScope.launch {
-            userLibraryRepository.getAllShelvesWithBooksPendingSyncStream()
+            syncLibraryRepository.getAllShelvesWithBooksPendingSyncFlow()
                 .debounce(5.seconds)
                 .onStart {
                     println("### ON SWB SYNC START")
@@ -200,15 +144,13 @@ class SyncService(
                     try {
 
                         println("### PENDING SWB: ${list.map { it.shelfId }}")
-                        list.forEach { shelfBookJoin ->
-                            val isDeleted = shelfBookJoin.isDeleted
-                            println("### SYNCING SWB: ${shelfBookJoin.shelfId}")
-                            networkDataSource.updateBookInShelf(
-                                shelfId = shelfBookJoin.shelfId,
-                                bookId = shelfBookJoin.bookId,
-                                isBookInShelf = isDeleted.not()
-                            )
-                            userLibraryRepository.resetShelvesWithBooksSyncStatus(shelfId = shelfBookJoin.shelfId, bookId = shelfBookJoin.bookId)
+                        list.forEach { shelfWithBook ->
+                            println("### SYNCING SWB: $shelfWithBook")
+
+                            val shelfId = checkNotNull(shelfWithBook.shelfId) { "Shelf ID is null" }
+                            val bookId = checkNotNull(shelfWithBook.bookId) { "Book ID is null" }
+                            networkDataSource.updateBookInShelf(shelfWithBook)
+                            syncLibraryRepository.resetShelfWithBookPendingSyncStatus(shelfId = shelfId, bookId = bookId)
                         }
                     } catch (e: FirebaseFirestoreException) { // FIXME: how to handle exception in stream?
                         println("### ERROR: ${e.message}")

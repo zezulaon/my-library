@@ -7,6 +7,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import dev.zezula.books.data.model.book.BookEntity
+import java.time.LocalDateTime
 
 /**
  * Represents a note entity in the database.
@@ -25,11 +26,6 @@ import dev.zezula.books.data.model.book.BookEntity
 @Entity(
     tableName = "notes",
     foreignKeys = [
-        // FIXME: review cascade delete
-        //  Soucasna implementace knihy nemaze - pouze nastavi isDeleted, takze cascade se provdede jen napr. pro search books
-        //  je tedy cascade zbytecny?
-        //  jak se chovat kdyz nastavim isDeleted na library book?
-        //  resolution - cascade muze zustat (neovlivni knihy v policce), pro soft delete se udela soft delete i pro tuto entitu
         ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
     ],
     indices = [
@@ -50,6 +46,18 @@ data class NoteEntity(
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,
 )
+
+fun NoteEntity.asNetworkNote(): NetworkNote {
+    return NetworkNote(
+        id = id,
+        bookId = bookId,
+        dateAdded = dateAdded,
+        text = text,
+        page = page,
+        type = type,
+        isDeleted = isDeleted,
+    )
+}
 
 val previewNoteEntities = listOf(
     NoteEntity(
@@ -81,19 +89,17 @@ fun NoteEntity.asExternalModel(): Note {
     )
 }
 
-fun fromNetworkNote(
-    networkNote: NetworkNote,
+fun fromNoteFormData(
+    noteId: String,
     bookId: String,
+    noteFormData: NoteFormData,
 ): NoteEntity {
-    checkNotNull(networkNote.id) { "Note needs [id] property" }
-    checkNotNull(networkNote.dateAdded) { "Note needs [dateAdded] property" }
-    checkNotNull(networkNote.text) { "Note needs [text] property" }
     return NoteEntity(
-        id = networkNote.id,
+        id = noteId,
         bookId = bookId,
-        dateAdded = networkNote.dateAdded,
-        text = networkNote.text,
-        page = networkNote.page,
-        type = networkNote.type,
+        dateAdded = noteFormData.dateAdded ?: LocalDateTime.now().toString(),
+        text = noteFormData.text,
+        page = noteFormData.page,
+        type = noteFormData.type,
     )
 }

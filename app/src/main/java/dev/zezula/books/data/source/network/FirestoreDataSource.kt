@@ -7,8 +7,6 @@ import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.NetworkShelfWithBook
-import dev.zezula.books.data.model.shelf.bookIdProperty
-import dev.zezula.books.data.model.shelf.shelfIdProperty
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.model.user.toMapValues
 import kotlinx.coroutines.tasks.await
@@ -113,11 +111,6 @@ class FirestoreDataSource : NetworkDataSource {
         return note
     }
 
-    override suspend fun deleteBook(bookId: String) {
-        Timber.d("deleteBook(bookId=$bookId)")
-        booksCollection.document(bookId).update(FIELD_IS_DELETED, true).await()
-    }
-
     override suspend fun deleteNote(noteId: String, bookId: String) {
         Timber.d("deleteNote (noteId=$noteId)")
         booksCollection.document(bookId).collection(COLLECTION_NOTES).document(noteId).update(FIELD_IS_DELETED, true).await()
@@ -138,17 +131,15 @@ class FirestoreDataSource : NetworkDataSource {
         shelvesCollection.document(shelfId).update(FIELD_IS_DELETED, true).await()
     }
 
-    override suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
-        Timber.d("updateBookInToShelf(shelfId=$shelfId, bookId=$bookId, isBookInShelf=$isBookInShelf)")
+    override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
+        Timber.d("updateBookInToShelf(shelfWithBook=$shelfWithBook)")
 
-        val shelfWithBookId = createShelfWithBookId(shelfId, bookId)
+        val shelfId = checkNotNull(shelfWithBook.shelfId) { "Shelf ID is null" }
+        val bookId = checkNotNull(shelfWithBook.bookId) { "Book ID is null" }
 
-        if (isBookInShelf) {
-            val shelfWithBook = NetworkShelfWithBook(bookId = bookId, shelfId = shelfId)
-            shelvesWithBooksCollection.document(shelfWithBookId).set(shelfWithBook).await()
-        } else {
-            shelvesWithBooksCollection.document(shelfWithBookId).update(FIELD_IS_DELETED, true).await()
-        }
+        val shelfWithBookId = createShelfWithBookId(shelfId = shelfId, bookId = bookId)
+
+        shelvesWithBooksCollection.document(shelfWithBookId).set(shelfWithBook).await()
     }
 
     private fun createShelfWithBookId(shelfId: String, bookId: String) = "${shelfId}_$bookId"

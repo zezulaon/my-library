@@ -5,7 +5,7 @@ import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.note.asExternalModel
-import dev.zezula.books.data.model.note.fromNetworkNote
+import dev.zezula.books.data.model.note.fromNoteFormData
 import dev.zezula.books.data.model.note.previewNoteEntities
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.network.NetworkDataSource
@@ -20,9 +20,7 @@ import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class NotesRepositoryTest : KoinTest {
@@ -192,7 +190,7 @@ class NotesRepositoryTest : KoinTest {
             page = 100,
             type = "Inspiration",
         )
-        val transformedNoteEntity = fromNetworkNote(networkNote = networkNote, bookId = networkNote.bookId!!)
+        val transformedNoteEntity = fromNoteFormData(networkNote = networkNote, bookId = networkNote.bookId!!)
         val transformedNote = transformedNoteEntity.asExternalModel()
 
         assertEquals(networkNote.id, transformedNote.id)

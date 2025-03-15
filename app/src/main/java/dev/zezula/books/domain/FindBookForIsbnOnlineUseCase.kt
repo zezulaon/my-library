@@ -25,12 +25,13 @@ class FindBookForIsbnOnlineUseCase(
 
     private suspend fun findBook(isbn: String): String? {
         // Skips downloading if the book is already in the DB
-        val existingId = booksRepository.getBookId(isbn)
-        if (existingId != null) {
-            if (userLibraryRepository.isBookInLibrary(existingId).first().not()) {
-                userLibraryRepository.moveBookToLibrary(existingId)
+        val existingBooks = booksRepository.getBooksByIsbn(isbn)
+        if (existingBooks.isNotEmpty()) {
+            val existingBookIds = existingBooks.first().id
+            if (userLibraryRepository.isBookInLibrary(existingBookIds).first().not()) {
+                userLibraryRepository.moveBookToLibrary(existingBookIds)
             }
-            return existingId
+            return existingBookIds
         }
 
         val bookFormData = onlineBookFinderService.findBookForIsbnOnline(isbn)

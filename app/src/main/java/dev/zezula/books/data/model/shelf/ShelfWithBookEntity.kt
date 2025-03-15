@@ -32,11 +32,10 @@ data class ShelfWithBookEntity(
     val isDeleted: Boolean = false,
 )
 
-fun fromNetworkShelfWithBook(networkShelfWithBook: NetworkShelfWithBook): ShelfWithBookEntity {
-    checkNotNull(networkShelfWithBook.shelfId) { "Entity needs [shelfId] property" }
-    checkNotNull(networkShelfWithBook.bookId) { "Entity needs [bookId] property" }
-    return ShelfWithBookEntity(
-        bookId = networkShelfWithBook.bookId,
-        shelfId = networkShelfWithBook.shelfId,
+fun ShelfWithBookEntity.asNetworkShelfWithBook(): NetworkShelfWithBook {
+    return NetworkShelfWithBook(
+        bookId = bookId,
+        shelfId = shelfId,
+        isDeleted = isDeleted,
     )
 }

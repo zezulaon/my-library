@@ -1,13 +1,11 @@
 package dev.zezula.books.data
 
-import dev.zezula.books.data.model.shelf.NetworkShelf
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.data.model.shelf.ShelfForBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
 import dev.zezula.books.data.model.shelf.asExternalModel
-import dev.zezula.books.data.model.shelf.fromNetworkShelf
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -32,29 +30,27 @@ class ShelvesRepositoryImpl(
         }
     }
 
-    override fun getAllPendingSyncShelvesStream(): Flow<List<ShelfEntity>> {
-        return shelvesAndBooksDao.getAllPendingSyncShelvesStream()
-    }
-
-    override suspend fun resetPendingSyncStatus(shelfId: String) {
-        shelvesAndBooksDao.resetPendingSyncStatus(shelfId)
-    }
-
     override suspend fun createShelf(shelfTitle: String) {
         val createdId = UUID.randomUUID().toString()
-        addOrUpdateShelf(shelfId = createdId, shelfTitle = shelfTitle)
+        addOrUpdateShelf(shelfId = createdId, shelfTitle = shelfTitle, dateAdded = LocalDateTime.now().toString())
     }
 
     override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
-        addOrUpdateShelf(shelfId = shelfId, shelfTitle = updatedTitle)
+        // FIXME: date added cannot be created here, the record already exists. This should be refactored into create/update functions (not @Upsert)
+        addOrUpdateShelf(shelfId = shelfId, shelfTitle = updatedTitle, dateAdded = LocalDateTime.now().toString())
     }
 
-    override suspend fun addOrUpdateShelf(shelfId: String, shelfTitle: String) {
+    private suspend fun addOrUpdateShelf(shelfId: String, shelfTitle: String, dateAdded: String) {
         Timber.d("addOrUpdateShelf($shelfId, $shelfTitle)")
-        val networkShelf = NetworkShelf(id = shelfId, dateAdded = LocalDateTime.now().toString(), title = shelfTitle)
 
-        val shelf = fromNetworkShelf(networkShelf)
-        shelvesAndBooksDao.addOrUpdate(shelf.copy(isPendingSync = true))
+        val shelf = ShelfEntity(
+            id = shelfId,
+            dateAdded = dateAdded,
+            title = shelfTitle,
+            // FIXME: move setting this flag to DAO
+            isPendingSync = true,
+        )
+        shelvesAndBooksDao.addOrUpdate(shelf)
     }
 
     override suspend fun softDeleteShelf(shelf: Shelf) {

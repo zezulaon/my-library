@@ -28,10 +28,10 @@ interface BookDao {
 
     @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
     @Query("SELECT * FROM books WHERE books.isPendingSync = 1")
-    fun getAllLibraryPendingSyncBooksStream(): Flow<List<BookEntity>>
+    fun getAllPendingSyncBooksFlow(): Flow<List<BookEntity>>
 
     @Query("UPDATE books SET isPendingSync = 0 WHERE id = :bookId")
-    suspend fun resetPendingSyncStatus(bookId: String)
+    suspend fun resetBookPendingSyncStatus(bookId: String)
 
     @Query("UPDATE books SET isPendingSync = 1 WHERE id = :bookId")
     suspend fun setPendingSyncStatus(bookId: String)
@@ -131,16 +131,13 @@ interface BookDao {
     fun getBookStream(bookId: String): Flow<BookEntity?>
 
     @Query("SELECT * FROM books WHERE isbn = :isbn ORDER BY dateAdded DESC")
-    suspend fun getForIsbn(isbn: String): List<BookEntity>
+    suspend fun getBooksByIsbn(isbn: String): List<BookEntity>
 
     @Query("SELECT COUNT(id) FROM books")
     suspend fun getBookCount(): Int
 
     @Upsert
     suspend fun addOrUpdate(book: BookEntity)
-
-    @Query("DELETE FROM books WHERE id = :bookId")
-    suspend fun delete(bookId: String)
 
     @Query("DELETE FROM books")
     suspend fun deleteAll()

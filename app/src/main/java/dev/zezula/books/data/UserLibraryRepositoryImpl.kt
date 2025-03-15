@@ -6,7 +6,6 @@ import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
-import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
@@ -31,13 +30,13 @@ class UserLibraryRepositoryImpl(
     }
 
     override fun getAllLibraryPendingSyncBooksStream(): Flow<List<Book>> {
-        return bookDao.getAllLibraryPendingSyncBooksStream().map {
+        return bookDao.getAllPendingSyncBooksFlow().map {
             it.map(BookEntity::asExternalModel)
         }
     }
 
     override fun getAllShelvesWithBooksPendingSyncStream(): Flow<List<ShelfWithBookEntity>> {
-        return shelfAndBookDao.getAllPendingShelvesWithBooksStream()
+        return shelfAndBookDao.getAllShelvesWithBooksPendingSyncFlow()
     }
 
     override fun isBookDeleted(bookId: String): Flow<Boolean> {
@@ -45,7 +44,7 @@ class UserLibraryRepositoryImpl(
     }
 
     override suspend fun resetPendingSyncStatus(bookId: String) {
-        bookDao.resetPendingSyncStatus(bookId)
+        bookDao.resetBookPendingSyncStatus(bookId)
     }
 
     override suspend fun resetShelvesWithBooksSyncStatus(shelfId: String, bookId: String) {

@@ -16,6 +16,8 @@ import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
+import dev.zezula.books.data.SyncLibraryRepository
+import dev.zezula.books.data.SyncLibraryRepositoryImpl
 import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.UserLibraryRepositoryImpl
 import dev.zezula.books.data.UserRepository
@@ -128,7 +130,7 @@ val appModule = module {
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
 
     single<SyncService> {
-        SyncService(get(), get(), get(), get())
+        SyncService(get(), get())
     }
 
     // Database and DAOs
@@ -196,10 +198,11 @@ val appModule = module {
     single<BookSuggestionsRepository> { BookSuggestionsRepositoryImpl(get(), get()) }
     single<BookSearchResultsRepository> { BookSearchResultsRepositoryImpl(get()) }
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get()) }
-    single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
+    single<NotesRepository> { NotesRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl() }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
+    single<SyncLibraryRepository> { SyncLibraryRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
     viewModel { BookListViewModel(get(), get(), get(), get(), get()) }
