@@ -50,8 +50,7 @@ class NotesRepositoryImpl(
         )
     }
 
-    override suspend fun deleteNote(noteId: String, bookId: String) {
+    override suspend fun softDeleteNote(noteId: String, bookId: String) {
         noteDao.softDeleteNote(noteId)
-        noteDao.setPendingSyncStatus(noteId)
     }
 }

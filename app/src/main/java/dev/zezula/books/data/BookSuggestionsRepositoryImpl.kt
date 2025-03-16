@@ -38,7 +38,7 @@ class BookSuggestionsRepositoryImpl(
 
                 // Check that the book is still in the database (it might have been deleted in the meantime).
                 if (bookDao.getBookStream(bookId).firstOrNull() != null) {
-                    bookDao.addOrUpdate(bookEntity)
+                    bookDao.insertBook(bookEntity)
                     bookDao.addToBookSuggestions(BookSuggestionEntity(bookId = bookEntity.id, parentBookId = bookId))
                 }
             }

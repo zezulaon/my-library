@@ -9,7 +9,7 @@ class ToggleBookInShelfUseCase(private val userLibraryRepository: UserLibraryRep
 
     suspend operator fun invoke(bookId: String, shelfId: String, isBookInShelf: Boolean): Response<Unit> {
         return asResponse {
-            userLibraryRepository.updateBookInShelf(bookId = bookId, shelfId = shelfId, isBookInShelf = isBookInShelf)
+            userLibraryRepository.toggleBookInShelf(bookId = bookId, shelfId = shelfId, isBookInShelf = isBookInShelf)
         }
             .onError {
                 Timber.e(it, "Failed to update book: [$bookId] in shelf: [$shelfId].")

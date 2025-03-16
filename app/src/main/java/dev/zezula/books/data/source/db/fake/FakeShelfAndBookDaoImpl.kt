@@ -77,7 +77,7 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
     override fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>> =
         shelvesForBook.map { it.getOrDefault(bookId, emptyList()) }
 
-    override fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>> =
+    override fun getAllBooksForShelfStream(shelfId: String): Flow<List<BookEntity>> =
         booksForShelfFlow.map { it.getOrDefault(shelfId, emptyList()) }
 
     override suspend fun softDeleteShelf(shelfId: String) {

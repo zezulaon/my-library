@@ -14,7 +14,29 @@ class FakeBookDaoImpl : BookDao {
     private var bookFlow: MutableStateFlow<Map<String, BookEntity>> = MutableStateFlow(emptyMap())
 
     override fun getAllLibraryBooksStream(): Flow<List<BookEntity>> {
-        return getAllBooksStream()
+        TODO()
+    }
+
+    override suspend fun insertBook(book: BookEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateBook(
+        bookId: String,
+        isPendingSync: Boolean,
+        title: String?,
+        author: String?,
+        description: String?,
+        subject: String?,
+        binding: String?,
+        isbn: String?,
+        publisher: String?,
+        yearPublished: Int?,
+        thumbnailLink: String?,
+        userRating: Int?,
+        pageCount: Int?
+    ) {
+        TODO("Not yet implemented")
     }
 
     override fun isBookInLibrary(bookId: String): Flow<Boolean> {
@@ -41,10 +63,6 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun setPendingSyncStatus(bookId: String) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun resetBookPendingSyncStatus(bookId: String) {
         TODO("Not yet implemented")
     }
@@ -66,14 +84,12 @@ class FakeBookDaoImpl : BookDao {
     }
 
     override fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>> {
-        return getAllBooksStream()
+        TODO()
     }
 
     override suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity) {
         TODO("Not yet implemented")
     }
-
-    override fun getAllBooksStream(): Flow<List<BookEntity>> = bookFlow.asBooks()
 
     override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
@@ -82,14 +98,6 @@ class FakeBookDaoImpl : BookDao {
     }
 
     override suspend fun getBookCount(): Int = bookFlow.first().size
-
-    override suspend fun addOrUpdate(book: BookEntity) {
-        TODO()
-    }
-
-    override suspend fun deleteAll() {
-        bookFlow.value = emptyMap()
-    }
 
     private fun MutableStateFlow<Map<String, BookEntity>>.asBooks() = map { it.values.toList() }
 }

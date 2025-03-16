@@ -1,6 +1,7 @@
 package dev.zezula.books.data.source.db
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
@@ -33,9 +34,6 @@ interface BookDao {
     @Query("UPDATE books SET isPendingSync = 0 WHERE id = :bookId")
     suspend fun resetBookPendingSyncStatus(bookId: String)
 
-    @Query("UPDATE books SET isPendingSync = 1 WHERE id = :bookId")
-    suspend fun setPendingSyncStatus(bookId: String)
-
     /**
      * Checks if the book is part of the user's personal book collection (library).
      */
@@ -53,6 +51,44 @@ interface BookDao {
         """,
     )
     suspend fun addToLibraryBooks(bookId: String, dateAdded: String)
+
+    @Insert
+    suspend fun insertBook(book: BookEntity)
+
+    @Query(
+        """
+        UPDATE books 
+        SET 
+            title = :title, 
+            author = :author, 
+            description = :description,
+            subject = :subject, 
+            binding = :binding,
+            isbn = :isbn, 
+            publisher = :publisher, 
+            yearPublished = :yearPublished, 
+            thumbnailLink = :thumbnailLink,
+            userRating = :userRating,
+            pageCount = :pageCount, 
+            isPendingSync = :isPendingSync
+        WHERE id = :bookId
+        """,
+    )
+    suspend fun updateBook(
+        bookId: String,
+        isPendingSync: Boolean,
+        title: String?,
+        author: String?,
+        description: String?,
+        subject: String?,
+        binding: String?,
+        isbn: String?,
+        publisher: String?,
+        yearPublished: Int?,
+        thumbnailLink: String?,
+        userRating: Int?,
+        pageCount: Int?,
+    )
 
     @Query(
         """
@@ -124,9 +160,6 @@ interface BookDao {
     @Upsert
     suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity)
 
-    @Query("SELECT * FROM books ORDER BY dateAdded DESC")
-    fun getAllBooksStream(): Flow<List<BookEntity>>
-
     @Query("SELECT * FROM books WHERE id=:bookId")
     fun getBookStream(bookId: String): Flow<BookEntity?>
 
@@ -135,12 +168,6 @@ interface BookDao {
 
     @Query("SELECT COUNT(id) FROM books")
     suspend fun getBookCount(): Int
-
-    @Upsert
-    suspend fun addOrUpdate(book: BookEntity)
-
-    @Query("DELETE FROM books")
-    suspend fun deleteAll()
 
     @Query(
         """

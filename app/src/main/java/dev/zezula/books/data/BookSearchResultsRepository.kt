@@ -8,7 +8,7 @@ interface BookSearchResultsRepository {
 
     fun getAllSearchResultsStream(): Flow<List<Book>>
 
-    suspend fun addBookToSearchResults(bookFormData: BookFormData): Book
+    suspend fun addBookToSearchResults(bookFormData: BookFormData)
 
     suspend fun deleteAllSearchResults()
 }

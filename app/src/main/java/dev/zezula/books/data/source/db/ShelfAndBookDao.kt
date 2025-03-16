@@ -92,12 +92,12 @@ interface ShelfAndBookDao {
     @Query(
         """
         SELECT * FROM books     
-        INNER JOIN shelf_with_book ON bookId=id 
-        WHERE shelfId=:shelfId AND shelf_with_book.isDeleted = 0
-        ORDER BY dateAdded DESC
+        INNER JOIN shelf_with_book ON bookId=books.id 
+        WHERE shelf_with_book.shelfId=:shelfId AND shelf_with_book.isDeleted = 0 AND books.isDeleted = 0
+        ORDER BY books.dateAdded DESC
         """,
     )
-    fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>>
+    fun getAllBooksForShelfStream(shelfId: String): Flow<List<BookEntity>>
 
     @Upsert
     suspend fun addBookToShelf(shelvesWithBooksEntity: ShelfWithBookEntity)

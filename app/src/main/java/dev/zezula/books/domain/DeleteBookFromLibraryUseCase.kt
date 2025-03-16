@@ -1,15 +1,15 @@
 package dev.zezula.books.domain
 
-import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import timber.log.Timber
 
-class DeleteBookFromLibraryUseCase(private val userLibraryRepository: UserLibraryRepository) {
+class DeleteBookFromLibraryUseCase(private val booksRepository: BooksRepository) {
 
     suspend operator fun invoke(bookId: String): Response<Unit> {
         return asResponse {
-            userLibraryRepository.softDeleteBookInLibrary(bookId)
+            booksRepository.softDeleteBook(bookId)
         }
             .onError {
                 Timber.e(it, "Failed to delete the book: [$bookId].")

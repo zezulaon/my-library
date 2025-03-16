@@ -23,22 +23,15 @@ class BookSearchResultsRepositoryImpl(
         }
     }
 
-    override suspend fun addBookToSearchResults(bookFormData: BookFormData): Book {
-        val book =  addBook(bookFormData)
-        bookDao.addToSearchBookResults(SearchBookResultEntity(bookId = book.id))
-        return book
-    }
-
-    // FIXME: find out if this (simple book insertion) is duplicated elsewhere
-    private suspend fun addBook(bookFormData: BookFormData): Book {
-        val createdId = UUID.randomUUID().toString()
+    override suspend fun addBookToSearchResults(bookFormData: BookFormData) {
+        val bookId = UUID.randomUUID().toString()
         val bookEntity = fromBookFormData(
-            id = createdId,
+            id = bookId,
             dateAdded = bookFormData.dateAdded ?: LocalDateTime.now().toString(),
             bookFormData = bookFormData,
         )
-        bookDao.addOrUpdate(bookEntity)
-        return bookEntity.asExternalModel()
+        bookDao.insertBook(bookEntity)
+        bookDao.addToSearchBookResults(SearchBookResultEntity(bookId = bookId))
     }
 
     override suspend fun deleteAllSearchResults() {

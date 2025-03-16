@@ -17,7 +17,7 @@ class GetBooksForShelfUseCase(private val userLibraryRepository: UserLibraryRepo
         val booksFlow = if (selectedShelf == null) {
             userLibraryRepository.getAllLibraryBooksStream()
         } else {
-            userLibraryRepository.getBooksForShelfStream(selectedShelf.id)
+            userLibraryRepository.getAllBooksForShelfStream(selectedShelf.id)
         }
         return booksFlow.map { books ->
             val sortedBooks = when (sortBooksBy) {

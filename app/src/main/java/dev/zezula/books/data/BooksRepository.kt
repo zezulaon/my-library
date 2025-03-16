@@ -10,4 +10,6 @@ interface BooksRepository {
     suspend fun getBook(bookId: String): Book?
 
     suspend fun getBooksByIsbn(isbn: String): List<Book>
+
+    suspend fun softDeleteBook(bookId: String)
 }

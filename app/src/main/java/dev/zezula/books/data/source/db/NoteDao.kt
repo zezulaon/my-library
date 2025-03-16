@@ -53,7 +53,13 @@ interface NoteDao {
         type: String?,
     )
 
-    @Query("UPDATE notes SET isDeleted = 1 WHERE id = :noteId")
+    @Query(
+        """
+        UPDATE notes 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE id = :noteId
+        """,
+    )
     suspend fun softDeleteNote(noteId: String)
 
     @Query(
@@ -64,15 +70,6 @@ interface NoteDao {
         """,
     )
     suspend fun softDeleteNotesForBook(bookId: String)
-
-    @Query(
-        """
-        UPDATE notes 
-        SET isPendingSync = 1
-        WHERE id = :noteId
-        """,
-    )
-    suspend fun setPendingSyncStatus(noteId: String)
 
     @Query(
         """

@@ -44,10 +44,6 @@ class FakeNoteDaoImpl : NoteDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun setPendingSyncStatus(noteId: String) {
-        TODO("Not yet implemented")
-    }
-
     override fun getAllPendingSyncStream(): Flow<List<NoteEntity>> {
         TODO("Not yet implemented")
     }

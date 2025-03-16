@@ -9,7 +9,7 @@ class MoveBookToLibraryUseCase(private val userLibraryRepository: UserLibraryRep
 
     suspend operator fun invoke(bookId: String): Response<Unit> {
         return asResponse {
-            userLibraryRepository.moveBookToLibrary(bookId)
+            userLibraryRepository.moveExistingBookToLibrary(bookId)
         }
             .onError {
                 Timber.e(it, "Failed to add the book: [$bookId] to library.")
