@@ -9,7 +9,6 @@ import dev.zezula.books.data.model.shelf.asExternalModel
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -31,26 +30,19 @@ class ShelvesRepositoryImpl(
     }
 
     override suspend fun createShelf(shelfTitle: String) {
-        val createdId = UUID.randomUUID().toString()
-        addOrUpdateShelf(shelfId = createdId, shelfTitle = shelfTitle, dateAdded = LocalDateTime.now().toString())
-    }
-
-    override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
-        // FIXME: date added cannot be created here, the record already exists. This should be refactored into create/update functions (not @Upsert)
-        addOrUpdateShelf(shelfId = shelfId, shelfTitle = updatedTitle, dateAdded = LocalDateTime.now().toString())
-    }
-
-    private suspend fun addOrUpdateShelf(shelfId: String, shelfTitle: String, dateAdded: String) {
-        Timber.d("addOrUpdateShelf($shelfId, $shelfTitle)")
+        val shelfId = UUID.randomUUID().toString()
 
         val shelf = ShelfEntity(
             id = shelfId,
-            dateAdded = dateAdded,
+            dateAdded = LocalDateTime.now().toString(),
             title = shelfTitle,
-            // FIXME: move setting this flag to DAO
             isPendingSync = true,
         )
-        shelvesAndBooksDao.addOrUpdate(shelf)
+        shelvesAndBooksDao.insertShelf(shelf)
+    }
+
+    override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
+        shelvesAndBooksDao.updateShelf(shelfId = shelfId, title = updatedTitle)
     }
 
     override suspend fun softDeleteShelf(shelf: Shelf) {

@@ -54,8 +54,12 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addOrUpdate(shelf: ShelfEntity) {
-        addOrUpdate(listOf(shelf))
+    override suspend fun insertShelf(shelf: ShelfEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateShelf(shelfId: String, title: String) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun delete(shelfId: String) {

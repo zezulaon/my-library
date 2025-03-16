@@ -1,6 +1,7 @@
 package dev.zezula.books.data.source.db
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
@@ -14,8 +15,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShelfAndBookDao {
 
-    @Upsert
-    suspend fun addOrUpdate(shelf: ShelfEntity)
+    @Insert
+    suspend fun insertShelf(shelf: ShelfEntity)
+
+    @Query(
+        """
+        UPDATE shelves 
+        SET title = :title, isPendingSync = 1
+        WHERE id = :shelfId
+        """,
+    )
+    suspend fun updateShelf(shelfId: String, title: String)
 
     @Upsert
     suspend fun addOrUpdate(shelves: List<ShelfEntity>)

@@ -183,7 +183,7 @@ val appModule = module {
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
     single { FindBookForIsbnOnlineUseCase(get(), get(), get()) }
-    single { FindBookForQueryOnlineUseCase(get(), get(), get()) }
+    single { FindBookForQueryOnlineUseCase(get(), get()) }
     single { SearchMyLibraryBooksUseCase(get()) }
     single { GetBookUseCase(get()) }
     single { AddOrUpdateLibraryBookUseCase(get()) }
