@@ -30,23 +30,24 @@ class NotesRepositoryImpl(
         }
     }
 
-    override suspend fun addOrUpdateNote(
-        noteId: String?,
-        bookId: String,
-        noteFormData: NoteFormData,
-    ): Note {
-        val finalNoteId = noteId ?: UUID.randomUUID().toString()
-
-        val entity = fromNoteFormData(
-            noteId = finalNoteId,
+    override suspend fun createNote(bookId: String, noteFormData: NoteFormData) {
+        val noteId = UUID.randomUUID().toString()
+        val note = fromNoteFormData(
+            noteId = noteId,
             bookId = bookId,
             noteFormData = noteFormData,
         )
-            // FIXME: move setting this flag to DAO
             .copy(isPendingSync = true)
+        noteDao.insertNote(note)
+    }
 
-        noteDao.addOrUpdateNote(entity)
-        return entity.asExternalModel()
+    override suspend fun updateNote(noteId: String, noteFormData: NoteFormData) {
+        noteDao.updateNote(
+            noteId = noteId,
+            text = noteFormData.text,
+            type = noteFormData.type,
+            page = noteFormData.page,
+        )
     }
 
     override suspend fun deleteNote(noteId: String, bookId: String) {

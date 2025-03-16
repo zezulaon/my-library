@@ -11,11 +11,15 @@ interface NotesRepository {
 
     fun getNotesForBookStream(bookId: String): Flow<List<Note>>
 
-    suspend fun addOrUpdateNote(
-        noteId: String?,
+    suspend fun createNote(
         bookId: String,
         noteFormData: NoteFormData,
-    ): Note
+    )
+
+    suspend fun updateNote(
+        noteId: String,
+        noteFormData: NoteFormData,
+    )
 
     suspend fun deleteNote(noteId: String, bookId: String)
 }

@@ -61,13 +61,11 @@ class FakeNoteDaoImpl : NoteDao {
             }
     }
 
-    override suspend fun addOrUpdateNote(note: NoteEntity) {
-        val existingIndex = notes.indexOfFirst { it.id == note.id }
-        if (existingIndex != -1) {
-            notes[existingIndex] = note // Update the note
-        } else {
-            notes.add(note) // Add a new note
-        }
-        notesFlow.value = notes
+    override suspend fun insertNote(noteEntity: NoteEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateNote(noteId: String, text: String, page: Int?, type: String?) {
+        TODO("Not yet implemented")
     }
 }

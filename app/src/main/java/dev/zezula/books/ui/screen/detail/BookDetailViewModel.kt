@@ -9,7 +9,7 @@ import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.domain.AllBookDetailResult
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
-import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
+import dev.zezula.books.domain.CreateNoteUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.FetchSuggestionsUseCase
@@ -17,6 +17,7 @@ import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.RefreshBookCoverUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
+import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
@@ -37,7 +38,8 @@ class BookDetailViewModel(
     private val deleteBookUseCase: DeleteBookFromLibraryUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
     private val fetchSuggestionsUseCase: FetchSuggestionsUseCase,
-    private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
+    private val createNoteUseCase: CreateNoteUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     private val refreshBookCoverUseCase: RefreshBookCoverUseCase,
@@ -212,7 +214,7 @@ class BookDetailViewModel(
     fun createNote(text: String) {
         viewModelScope.launch {
             val noteFormData = NoteFormData(text = text)
-            createOrUpdateNoteUseCase(noteId = null, noteFormData = noteFormData, bookId = bookId)
+            createNoteUseCase(bookId = bookId, noteFormData = noteFormData)
                 .onError {
                     _errorMessage.value = R.string.detail_failed_to_create_note
                 }
@@ -224,7 +226,7 @@ class BookDetailViewModel(
         dismissNoteDialog()
         viewModelScope.launch {
             val noteFormData = NoteFormData(text = text, dateAdded = note.dateAdded, page = note.page, type = note.type)
-            createOrUpdateNoteUseCase(noteId = note.id, noteFormData = noteFormData, bookId = bookId)
+            updateNoteUseCase(noteId = note.id, noteFormData = noteFormData)
                 .onError {
                     _errorMessage.value = R.string.detail_failed_to_update_note
                 }

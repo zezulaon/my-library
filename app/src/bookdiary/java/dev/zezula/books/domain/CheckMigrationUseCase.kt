@@ -8,9 +8,10 @@ import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookFormData
-import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
+import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.legacy.LegacyAppDatabase
 import dev.zezula.books.data.source.db.legacy.LegacyBookDao
@@ -29,11 +30,11 @@ class CheckMigrationUseCase(
     private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
     private val updateShelfUseCase: UpdateShelfUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
-    private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
     private val legacyAppDatabase: LegacyAppDatabase,
     private val bookDao: BookDao,
     private val shelfDao: ShelfAndBookDao,
     private val legacyBookDao: LegacyBookDao,
+    private val noteDao: NoteDao,
     private val networkDataSource: NetworkDataSource,
 ) {
 
@@ -101,22 +102,19 @@ class CheckMigrationUseCase(
                 val page = cursor.getStringOrNull(cursor.getColumnIndexOrThrow("page"))
                 val text = cursor.getStringOrNull(cursor.getColumnIndexOrThrow("text"))
 
-                val noteFormData = NoteFormData(
-                    text = text ?: "",
-                    page = page?.toIntOrNull(),
-                    type = "quote",
-                )
                 if (id != null && bookId != null) {
                     val noteId = "${bookId}_${id}_quote"
-                    createOrUpdateNoteUseCase(noteId, noteFormData, bookId.toString())
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Quote created successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to create quote")
-                            },
+                    noteDao.insertNote(
+                        NoteEntity(
+                            id = noteId,
+                            bookId = bookId.toString(),
+                            dateAdded = LocalDateTime.now().toString(),
+                            text = text ?: "",
+                            page = page?.toIntOrNull(),
+                            type = "quote",
+                            isPendingSync = true,
                         )
+                    )
                 }
             } while (cursor.moveToNext())
         }
@@ -144,21 +142,17 @@ class CheckMigrationUseCase(
                 } else {
                     null
                 }
-                val noteFormData = NoteFormData(
-                    text = text ?: "",
-                    dateAdded = dateAdded?.toString(),
-                )
                 if (id != null && bookId != null) {
                     val noteId = "${bookId}_${id}_comment"
-                    createOrUpdateNoteUseCase(noteId, noteFormData, bookId.toString())
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Comment created successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to create comment")
-                            },
+                    noteDao.insertNote(
+                        NoteEntity(
+                            id = noteId,
+                            bookId = bookId.toString(),
+                            dateAdded = dateAdded?.toString() ?: LocalDateTime.now().toString(),
+                            text = text ?: "",
+                            isPendingSync = true,
                         )
+                    )
                 }
             } while (cursor.moveToNext())
         }
@@ -281,20 +275,15 @@ class CheckMigrationUseCase(
             val lentToName = book.lentToName
             if (lentToName != null && lentToName.isNotEmpty()) {
                 addBookToShelf(LegacyShelfType.LENT_TO.shelfId, bookId.toString())
-                val noteFormData = NoteFormData(
-                    text = "Lent to $lentToName",
-                    page = null,
-                    type = null,
-                )
-                createOrUpdateNoteUseCase("${bookId}_lent_to_id", noteFormData, bookId.toString())
-                    .fold(
-                        onSuccess = {
-                            Timber.d("Lent Note created successfully")
-                        },
-                        onFailure = {
-                            Timber.w(it, "Failed to create lent note")
-                        },
+                noteDao.insertNote(
+                    NoteEntity(
+                        id = "${bookId}_lent_to_id",
+                        bookId = bookId.toString(),
+                        dateAdded = LocalDateTime.now().toString(),
+                        text = "Lent to $lentToName",
+                        isPendingSync = true,
                     )
+                )
             }
         }
     }

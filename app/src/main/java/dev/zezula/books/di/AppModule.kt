@@ -37,7 +37,7 @@ import dev.zezula.books.data.source.network.OnlineBookFinderServiceImpl
 import dev.zezula.books.data.source.network.OpenLibraryApi
 import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
-import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
+import dev.zezula.books.domain.CreateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
@@ -57,6 +57,7 @@ import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
+import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.domain.sync.SyncService
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
@@ -174,7 +175,8 @@ val appModule = module {
     single { FetchSuggestionsUseCase(get()) }
     single { GetShelvesUseCase(get()) }
     single { DeleteShelfUseCase(get()) }
-    single { CreateOrUpdateNoteUseCase(get()) }
+    single { CreateNoteUseCase(get()) }
+    single { UpdateNoteUseCase(get()) }
     single { DeleteNoteUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
@@ -210,7 +212,7 @@ val appModule = module {
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
     viewModel { EmailSignInViewModel(get()) }
     viewModel { FindBookViewModel(get()) }

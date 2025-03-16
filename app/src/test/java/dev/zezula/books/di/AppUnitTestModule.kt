@@ -30,7 +30,7 @@ import dev.zezula.books.data.source.network.fake.FakeNetworkDataSourceImpl
 import dev.zezula.books.data.source.network.fake.FakeOnlineBookFinderServiceImpl
 import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
-import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
+import dev.zezula.books.domain.CreateNoteUseCase
 import dev.zezula.books.domain.CreateShelfUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
@@ -81,9 +81,9 @@ val appUnitTestModule = module {
     single { DeleteShelfUseCase(get()) }
     single { UpdateShelfUseCase(get()) }
     single { CreateShelfUseCase(get()) }
-    single { CreateOrUpdateNoteUseCase(get()) }
+    single { CreateNoteUseCase(get()) }
     single { DeleteNoteUseCase(get()) }
-    single { GetAllBookDetailUseCase(get(), get(), get(), get(), get()) }
+    single { GetAllBookDetailUseCase(get(), get(), get(), get(), get(), get()) }
     single { DeleteBookFromLibraryUseCase(get()) }
     single { ToggleBookInShelfUseCase(get()) }
     single { CheckReviewsDownloadedUseCase(get(), get()) }
@@ -97,20 +97,20 @@ val appUnitTestModule = module {
     single { RefreshBookCoverUseCase(get(), get(), get()) }
 
     // Repositories
-    single<BooksRepository> { BooksRepositoryImpl(get(), get()) }
-    single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get(), get()) }
-    single<NotesRepository> { NotesRepositoryImpl(get(), get()) }
-    single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
+    single<BooksRepository> { BooksRepositoryImpl(get()) }
+    single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get(), get()) }
+    single<NotesRepository> { NotesRepositoryImpl(get()) }
+    single<ShelvesRepository> { ShelvesRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl() }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
     viewModel { CreateBookViewModel(get(), get(), get()) }
-    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { BookDetailViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
     viewModel { SearchBarcodeViewModel(get(), get(), get(), get(), get()) }
 }

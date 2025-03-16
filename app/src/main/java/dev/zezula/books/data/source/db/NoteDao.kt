@@ -1,8 +1,8 @@
 package dev.zezula.books.data.source.db
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Upsert
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteWithBookEntity
 import kotlinx.coroutines.flow.Flow
@@ -36,12 +36,22 @@ interface NoteDao {
     )
     fun getNotesForBookStream(bookId: String): Flow<List<NoteEntity>>
 
-    /**
-     * Adds a new note or updates an existing one in the database based on the provided [note].
-     * Utilizes upsert logic: updates the note if it exists, or inserts a new one if it doesn't.
-     */
-    @Upsert
-    suspend fun addOrUpdateNote(note: NoteEntity)
+    @Insert
+    suspend fun insertNote(noteEntity: NoteEntity)
+
+    @Query(
+        """
+        UPDATE notes 
+        SET text = :text, page = :page, type = :type, isPendingSync = 1
+        WHERE id = :noteId
+        """,
+    )
+    suspend fun updateNote(
+        noteId: String,
+        text: String,
+        page: Int?,
+        type: String?,
+    )
 
     @Query("UPDATE notes SET isDeleted = 1 WHERE id = :noteId")
     suspend fun softDeleteNote(noteId: String)
