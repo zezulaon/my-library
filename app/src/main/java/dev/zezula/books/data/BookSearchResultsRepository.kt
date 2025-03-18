@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookSearchResultsRepository {
 
-    fun getAllSearchResultsStream(): Flow<List<Book>>
+    fun getAllSearchResultsFlow(): Flow<List<Book>>
 
     suspend fun addBookToSearchResults(bookFormData: BookFormData)
 

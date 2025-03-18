@@ -1,7 +1,6 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.BookSearchResultsRepository
-import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.source.network.OnlineBookFinderService
@@ -29,7 +28,7 @@ class FindBookForQueryOnlineUseCase(
             }
 
             // Return new search results
-            bookSearchResultsRepository.getAllSearchResultsStream().first()
+            bookSearchResultsRepository.getAllSearchResultsFlow().first()
         }
             .onError {
                 Timber.e(it, "Failed to search book for query: [$query].")

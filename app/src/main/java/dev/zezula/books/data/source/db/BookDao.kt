@@ -104,49 +104,14 @@ interface BookDao {
      */
     @Query(
         """
-            SELECT * FROM books
-            WHERE 
-                isInLibrary = 1 AND
-                (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
-            ORDER BY dateAdded DESC""",
-    )
-    suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
-
-    /**
-     * Returns search results - books that were found online and are stored temporarily in the database.
-     */
-    @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
-    @Query("SELECT * FROM books INNER JOIN search_book_results ON books.id = search_book_results.bookId")
-    fun getAllSearchResultBooksStream(): Flow<List<BookEntity>>
-
-    /**
-     * Add the book to the "search_book_results" reference table (Table with temporary search results).
-     */
-    @Upsert
-    suspend fun addToSearchBookResults(searchBookResultEntity: SearchBookResultEntity)
-
-    @Transaction
-    suspend fun deleteAllSearchResults() {
-        deleteAllSearchedBooksNotInLibrary()
-        deleteAllSearchBookResultReferences()
-    }
-
-    /**
-     * Deletes the books that were found online and are not added in user's library.
-     */
-    @Query(
-        """
-        DELETE FROM books
-        WHERE books.isInLibrary = 0 AND id IN (SELECT bookId FROM search_book_results)
+        SELECT * FROM books
+        WHERE 
+            isInLibrary = 1 AND
+            (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
+        ORDER BY dateAdded DESC
         """,
     )
-    suspend fun deleteAllSearchedBooksNotInLibrary()
-
-    /**
-     * Delete all books from the "search_book_results" reference table.
-     */
-    @Query("DELETE FROM search_book_results")
-    suspend fun deleteAllSearchBookResultReferences()
+    suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
 
     /**
      * Returns suggestions for a given book ID.

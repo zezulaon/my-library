@@ -47,10 +47,6 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAllSearchedBooksNotInLibrary() {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun addToLibraryBooks(bookId: String, dateAdded: String) {
         TODO("Not yet implemented")
     }
@@ -64,18 +60,6 @@ class FakeBookDaoImpl : BookDao {
     }
 
     override suspend fun resetBookPendingSyncStatus(bookId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getAllSearchResultBooksStream(): Flow<List<BookEntity>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun addToSearchBookResults(searchBookResultEntity: SearchBookResultEntity) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteAllSearchBookResultReferences() {
         TODO("Not yet implemented")
     }
 
