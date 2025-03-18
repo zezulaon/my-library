@@ -15,15 +15,15 @@ class BooksRepositoryImpl(
     private val noteDao: NoteDao,
 ) : BooksRepository {
 
-    override fun getBookStream(bookId: String): Flow<Book?> {
-        return bookDao.getBookStream(bookId)
+    override fun getBookFlow(bookId: String): Flow<Book?> {
+        return bookDao.getBookFlow(bookId)
             .map {
                 it?.asExternalModel()
             }
     }
 
     override suspend fun getBook(bookId: String): Book? {
-        return getBookStream(bookId).first()
+        return getBookFlow(bookId).first()
     }
 
     override suspend fun getBooksByIsbn(isbn: String): List<Book> {

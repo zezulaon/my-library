@@ -230,7 +230,7 @@ class CheckMigrationUseCase(
             Timber.d("Migrating book: $book")
             try {
                 // Check if the book is already migrated
-                val existingBook = bookDao.getBookStream(book._id.toString()).firstOrNull()
+                val existingBook = bookDao.getBookFlow(book._id.toString()).firstOrNull()
                 if (existingBook != null) {
                     Timber.d("Book already migrated. Skipping...")
                 } else {
@@ -291,7 +291,7 @@ class CheckMigrationUseCase(
 
     private suspend fun addBookToShelf(shelfId: String?, bookId: String?) {
         if (bookId != null && shelfId != null) {
-            val bookExists = bookDao.getBookStream(bookId.toString()).firstOrNull() != null
+            val bookExists = bookDao.getBookFlow(bookId.toString()).firstOrNull() != null
             val shelfExists = shelfDao.getAllShelvesFlow()
                 .firstOrNull()?.any { it.id == shelfId.toString() } == true
             if (bookExists && shelfExists) {

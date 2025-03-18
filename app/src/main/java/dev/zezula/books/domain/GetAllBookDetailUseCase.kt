@@ -39,7 +39,7 @@ class GetAllBookDetailUseCase(
 
     operator fun invoke(bookId: String): Flow<Response<AllBookDetailResult>> {
         return combine(
-            booksRepository.getBookStream(bookId),
+            booksRepository.getBookFlow(bookId),
             userLibraryRepository.isBookInLibrary(bookId),
             notesRepository.getNotesForBookFlow(bookId),
             shelvesRepository.getAllShelvesForBookFlow(bookId),

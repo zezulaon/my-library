@@ -25,7 +25,7 @@ class RefreshBookCoverUseCase(
     }
 
     private suspend fun updateBookCover(bookId: String) {
-        val book = bookDao.getBookStream(bookId).firstOrNull()
+        val book = bookDao.getBookFlow(bookId).firstOrNull()
         if (book?.isbn != null && book.thumbnailLink == null) {
             val isbn = book.isbn
             val thumbnailLink = onlineBookFinderService.findBookCoverLinkForIsbn(isbn)

@@ -67,7 +67,7 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
+    override fun getBookFlow(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
     override suspend fun getLibraryBooksForQuery(query: String): List<BookEntity> {
         TODO("Searching books is not yet implemented")

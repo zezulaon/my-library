@@ -56,7 +56,7 @@ class ReviewsRepositoryImpl(
         book: Book,
         fetchBookNetworkResponse: FindBookOnlineResponse,
     ) {
-        val existingBook = bookDao.getBookStream(book.id).first()
+        val existingBook = bookDao.getBookFlow(book.id).first()
         // Check if there is a book in the database
         if (existingBook == null) {
             Timber.w("Cannot save reviews -> Book with id: [${book.id}] not found in database.")

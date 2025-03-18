@@ -31,7 +31,7 @@ class BookSuggestionsRepositoryImpl(
 
     override suspend fun fetchSuggestions(bookId: String): List<Book>? {
         Timber.d("Fetching suggestions for book: $bookId")
-        val parentBook = bookDao.getBookStream(bookId).firstOrNull()
+        val parentBook = bookDao.getBookFlow(bookId).firstOrNull()
         val title = parentBook?.title
         val author = parentBook?.author
         return if (parentBook != null && title != null && author != null) {
@@ -46,7 +46,7 @@ class BookSuggestionsRepositoryImpl(
                     )
 
                 // Check that the book is still in the database (it might have been deleted in the meantime).
-                if (bookDao.getBookStream(bookId).firstOrNull() != null) {
+                if (bookDao.getBookFlow(bookId).firstOrNull() != null) {
                     bookDao.insertBook(bookEntity)
                     bookSuggestionDao.addToBookSuggestions(BookSuggestionEntity(bookId = bookEntity.id, parentBookId = bookId))
                 }

@@ -4,11 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
-import androidx.room.Transaction
-import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.book.BookSuggestionEntity
-import dev.zezula.books.data.model.book.SearchBookResultEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,6 +22,29 @@ interface BookDao {
         """,
     )
     fun getAllLibraryBooksStream(): Flow<List<BookEntity>>
+
+    /**
+     * For a given search query, returns books from user's personal library. Searches title and author columns.
+     */
+    @Query(
+        """
+        SELECT * FROM books
+        WHERE 
+            isInLibrary = 1 AND
+            (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
+        ORDER BY dateAdded DESC
+        """,
+    )
+    suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
+
+    @Query("SELECT * FROM books WHERE id=:bookId")
+    fun getBookFlow(bookId: String): Flow<BookEntity?>
+
+    @Query("SELECT * FROM books WHERE isbn = :isbn ORDER BY dateAdded DESC")
+    suspend fun getBooksByIsbn(isbn: String): List<BookEntity>
+
+    @Query("SELECT COUNT(id) FROM books")
+    suspend fun getBookCount(): Int
 
     @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
     @Query("SELECT * FROM books WHERE books.isPendingSync = 1")
@@ -93,41 +112,18 @@ interface BookDao {
     @Query(
         """
         UPDATE books 
-        SET isDeleted = 1, isPendingSync = 1
-        WHERE id = :bookId
-        """,
-    )
-    suspend fun softDeleteBook(bookId: String)
-
-    /**
-     * For a given search query, returns books from user's personal library. Searches title and author columns.
-     */
-    @Query(
-        """
-        SELECT * FROM books
-        WHERE 
-            isInLibrary = 1 AND
-            (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
-        ORDER BY dateAdded DESC
-        """,
-    )
-    suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
-
-    @Query("SELECT * FROM books WHERE id=:bookId")
-    fun getBookStream(bookId: String): Flow<BookEntity?>
-
-    @Query("SELECT * FROM books WHERE isbn = :isbn ORDER BY dateAdded DESC")
-    suspend fun getBooksByIsbn(isbn: String): List<BookEntity>
-
-    @Query("SELECT COUNT(id) FROM books")
-    suspend fun getBookCount(): Int
-
-    @Query(
-        """
-        UPDATE books 
         SET thumbnailLink = :thumbnailLink, isPendingSync = 1
         WHERE id = :bookId
         """,
     )
     suspend fun updateBookCover(bookId: String, thumbnailLink: String)
+
+    @Query(
+        """
+        UPDATE books 
+        SET isDeleted = 1, isPendingSync = 1
+        WHERE id = :bookId
+        """,
+    )
+    suspend fun softDeleteBook(bookId: String)
 }
