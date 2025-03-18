@@ -14,7 +14,7 @@ class GetAllNotesUseCase(private val notesRepository: NotesRepository) {
      * Returns a list of all authors with the number of their books.
      */
     operator fun invoke(): Flow<Response<List<NoteWithBook>>> {
-        return notesRepository.getAllNotesStream()
+        return notesRepository.getAllNotesFlow()
             .asResponse()
             .onResponseError {
                 Timber.e(it, "Failed to load all notes")

@@ -1,7 +1,6 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.BookSuggestionsRepository
-import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -18,7 +17,7 @@ class FetchSuggestionsUseCase(
             var result: List<Book>? = null
 
             val duration = measureTime {
-                val existingSuggestions = bookSuggestionsRepository.getAllSuggestionsForBook(bookId).first()
+                val existingSuggestions = bookSuggestionsRepository.getAllSuggestionsForBookFlow(bookId).first()
                 // Try to download suggestions if we don't have any
                 if (existingSuggestions.isEmpty()) {
                     result = bookSuggestionsRepository.fetchSuggestions(bookId)

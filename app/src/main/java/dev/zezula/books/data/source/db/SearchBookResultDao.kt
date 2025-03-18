@@ -10,7 +10,7 @@ import dev.zezula.books.data.model.book.SearchBookResultEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface BookSearchResultDao {
+interface SearchBookResultDao {
 
     /**
      * Returns search results - books that were found online and are stored temporarily in the database.

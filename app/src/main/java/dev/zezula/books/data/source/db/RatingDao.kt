@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface RatingDao {
 
     @Query("SELECT * FROM ratings WHERE bookId = :bookId")
-    fun getRatingForBookStream(bookId: String): Flow<RatingEntity?>
+    fun getRatingForBookFlow(bookId: String): Flow<RatingEntity?>
 
     @Upsert
     suspend fun addRating(rating: RatingEntity)

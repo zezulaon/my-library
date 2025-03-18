@@ -77,7 +77,7 @@ interface ShelfAndBookDao {
         ORDER BY dateAdded DESC
         """,
     )
-    fun getAllShelvesStream(): Flow<List<ShelfWithBookCountEntity>>
+    fun getAllShelvesFlow(): Flow<List<ShelfWithBookCountEntity>>
 
     @Query("SELECT * FROM shelves WHERE isPendingSync = 1")
     fun getAllPendingSyncShelvesStream(): Flow<List<ShelfEntity>>
@@ -114,5 +114,5 @@ interface ShelfAndBookDao {
         WHERE shelves.isDeleted = 0
         """,
     )
-    fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>>
+    fun getAllShelvesForBookFlow(bookId: String): Flow<List<ShelfForBookEntity>>
 }

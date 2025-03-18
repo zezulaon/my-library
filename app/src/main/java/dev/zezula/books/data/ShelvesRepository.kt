@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShelvesRepository {
 
-    fun getShelvesStream(): Flow<List<Shelf>>
+    fun getAllShelvesFlow(): Flow<List<Shelf>>
 
-    fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBook>>
+    fun getAllShelvesForBookFlow(bookId: String): Flow<List<ShelfForBook>>
 
     suspend fun createShelf(shelfTitle: String)
 

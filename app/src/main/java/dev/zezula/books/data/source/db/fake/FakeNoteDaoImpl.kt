@@ -15,7 +15,7 @@ class FakeNoteDaoImpl : NoteDao {
     // MutableStateFlow for emitting updates to the notes list
     private val notesFlow = MutableStateFlow<List<NoteEntity>>(listOf())
 
-    override fun getAllNotesStream(): Flow<List<NoteWithBookEntity>> {
+    override fun getAllNotesFlow(): Flow<List<NoteWithBookEntity>> {
         return notesFlow.map { noteList ->
             noteList.map { note ->
                 NoteWithBookEntity(
@@ -48,7 +48,7 @@ class FakeNoteDaoImpl : NoteDao {
         TODO("Not yet implemented")
     }
 
-    override fun getNotesForBookStream(bookId: String): Flow<List<NoteEntity>> {
+    override fun getNotesForBookFlow(bookId: String): Flow<List<NoteEntity>> {
         return notesFlow
             .map { noteList ->
                 noteList

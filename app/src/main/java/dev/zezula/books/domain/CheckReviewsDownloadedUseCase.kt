@@ -14,7 +14,7 @@ class CheckReviewsDownloadedUseCase(
 
     suspend operator fun invoke(bookId: String): Response<Unit> {
         return asResponse {
-            val existingReviews = repository.getReviewsForBookStream(bookId).first()
+            val existingReviews = repository.getReviewsForBookFlow(bookId).first()
             // Try to download reviews if we don't have any
             if (existingReviews.isEmpty()) {
                 val book = booksRepository.getBook(bookId)

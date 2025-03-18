@@ -292,7 +292,7 @@ class CheckMigrationUseCase(
     private suspend fun addBookToShelf(shelfId: String?, bookId: String?) {
         if (bookId != null && shelfId != null) {
             val bookExists = bookDao.getBookStream(bookId.toString()).firstOrNull() != null
-            val shelfExists = shelfDao.getAllShelvesStream()
+            val shelfExists = shelfDao.getAllShelvesFlow()
                 .firstOrNull()?.any { it.id == shelfId.toString() } == true
             if (bookExists && shelfExists) {
                 toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)

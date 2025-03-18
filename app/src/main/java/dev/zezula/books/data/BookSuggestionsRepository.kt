@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookSuggestionsRepository {
 
-    suspend fun fetchSuggestions(bookId: String): List<Book>?
+    fun getAllSuggestionsForBookFlow(bookId: String): Flow<List<Book>>
 
-    fun getAllSuggestionsForBook(bookId: String): Flow<List<Book>>
+    suspend fun fetchSuggestions(bookId: String): List<Book>?
 }

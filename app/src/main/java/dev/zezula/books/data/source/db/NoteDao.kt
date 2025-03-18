@@ -22,7 +22,7 @@ interface NoteDao {
             ORDER BY dateAdded DESC
             """,
     )
-    fun getAllNotesStream(): Flow<List<NoteWithBookEntity>>
+    fun getAllNotesFlow(): Flow<List<NoteWithBookEntity>>
 
     /**
      * Returns a flow of notes associated with a specific [bookId], ordered by their addition date.
@@ -34,7 +34,7 @@ interface NoteDao {
         ORDER BY dateAdded DESC
         """,
     )
-    fun getNotesForBookStream(bookId: String): Flow<List<NoteEntity>>
+    fun getNotesForBookFlow(bookId: String): Flow<List<NoteEntity>>
 
     @Insert
     suspend fun insertNote(noteEntity: NoteEntity)

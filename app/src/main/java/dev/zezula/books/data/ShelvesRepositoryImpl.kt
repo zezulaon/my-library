@@ -16,15 +16,15 @@ class ShelvesRepositoryImpl(
     private val shelvesAndBooksDao: ShelfAndBookDao,
 ) : ShelvesRepository {
 
-    override fun getShelvesStream(): Flow<List<Shelf>> {
-        return shelvesAndBooksDao.getAllShelvesStream()
+    override fun getAllShelvesFlow(): Flow<List<Shelf>> {
+        return shelvesAndBooksDao.getAllShelvesFlow()
             .map { shelfEntities ->
             shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
         }
     }
 
-    override fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBook>> {
-        return shelvesAndBooksDao.getShelvesForBookStream(bookId).map { list ->
+    override fun getAllShelvesForBookFlow(bookId: String): Flow<List<ShelfForBook>> {
+        return shelvesAndBooksDao.getAllShelvesForBookFlow(bookId).map { list ->
             list.map(ShelfForBookEntity::asExternalModel)
         }
     }

@@ -8,7 +8,7 @@ class FakeRatingDaoImpl : RatingDao {
 
     private var ratingFlow: MutableStateFlow<RatingEntity?> = MutableStateFlow(null)
 
-    override fun getRatingForBookStream(bookId: String) = ratingFlow
+    override fun getRatingForBookFlow(bookId: String) = ratingFlow
 
     override suspend fun addRating(rating: RatingEntity) {
         ratingFlow.value = rating

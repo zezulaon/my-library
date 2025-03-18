@@ -16,16 +16,16 @@ class NotesRepositoryImpl(
     private val noteDao: NoteDao,
 ) : NotesRepository {
 
-    override fun getAllNotesStream(): Flow<List<NoteWithBook>> {
+    override fun getAllNotesFlow(): Flow<List<NoteWithBook>> {
         // Returns a Flow of all notes from the database. Notes are sorted by date added.
-        return noteDao.getAllNotesStream().map {
+        return noteDao.getAllNotesFlow().map {
             it.map(NoteWithBookEntity::asExternalModel)
         }
     }
 
-    override fun getNotesForBookStream(bookId: String): Flow<List<Note>> {
+    override fun getNotesForBookFlow(bookId: String): Flow<List<Note>> {
         // Returns a Flow of all notes for a given book from the database. Notes are sorted by date added.
-        return noteDao.getNotesForBookStream(bookId).map {
+        return noteDao.getNotesForBookFlow(bookId).map {
             it.map(NoteEntity::asExternalModel)
         }
     }

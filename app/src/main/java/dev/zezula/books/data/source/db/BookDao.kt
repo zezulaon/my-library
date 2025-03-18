@@ -113,18 +113,6 @@ interface BookDao {
     )
     suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
 
-    /**
-     * Returns suggestions for a given book ID.
-     */
-    @Query("SELECT * FROM books INNER JOIN book_suggestions ON books.id = book_suggestions.bookId WHERE book_suggestions.parentBookId = :bookId")
-    fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>>
-
-    /**
-     * Add the book to the "book_suggestions" reference table (Table with book suggestions).
-     */
-    @Upsert
-    suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity)
-
     @Query("SELECT * FROM books WHERE id=:bookId")
     fun getBookStream(bookId: String): Flow<BookEntity?>
 

@@ -7,7 +7,7 @@ import dev.zezula.books.data.model.book.SearchBookResultEntity
 import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.source.db.BookDao
-import dev.zezula.books.data.source.db.BookSearchResultDao
+import dev.zezula.books.data.source.db.SearchBookResultDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -16,11 +16,11 @@ import java.util.UUID
 
 class BookSearchResultsRepositoryImpl(
     private val bookDao: BookDao,
-    private val bookSearchResultDao: BookSearchResultDao,
+    private val searchBookResultDao: SearchBookResultDao,
 ) : BookSearchResultsRepository {
 
     override fun getAllSearchResultsFlow(): Flow<List<Book>> {
-        return bookSearchResultDao.getAllSearchResultBooksFlow().map {
+        return searchBookResultDao.getAllSearchResultBooksFlow().map {
             it.map(BookEntity::asExternalModel)
         }
     }
@@ -32,11 +32,11 @@ class BookSearchResultsRepositoryImpl(
             dateAdded = LocalDateTime.now().toString(),
         )
         bookDao.insertBook(bookEntity)
-        bookSearchResultDao.insertSearchBookResults(SearchBookResultEntity(bookId = bookId))
+        searchBookResultDao.insertSearchBookResults(SearchBookResultEntity(bookId = bookId))
     }
 
     override suspend fun deleteAllSearchResults() {
         Timber.d("deleteAllSearchBookResults()")
-        bookSearchResultDao.deleteAllSearchResults()
+        searchBookResultDao.deleteAllSearchResults()
     }
 }

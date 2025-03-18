@@ -67,14 +67,6 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override fun getSuggestionsForBook(bookId: String): Flow<List<BookEntity>> {
-        TODO()
-    }
-
-    override suspend fun addToBookSuggestions(bookSuggestionEntity: BookSuggestionEntity) {
-        TODO("Not yet implemented")
-    }
-
     override fun getBookStream(bookId: String): Flow<BookEntity?> = bookFlow.map { it[bookId] }
 
     override suspend fun getLibraryBooksForQuery(query: String): List<BookEntity> {

@@ -20,8 +20,6 @@ import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class NotesRepositoryTest : KoinTest {
 
@@ -46,17 +44,17 @@ class NotesRepositoryTest : KoinTest {
     @Test
     fun notes_stream_is_backed_by_note_dao() = runTest {
         assertEquals(
-            noteDao.getNotesForBookStream(notesTestData.first().bookId)
+            noteDao.getNotesForBookFlow(notesTestData.first().bookId)
                 .first()
                 .map(NoteEntity::asExternalModel),
-            notesRepository.getNotesForBookStream(notesTestData.first().bookId)
+            notesRepository.getNotesForBookFlow(notesTestData.first().bookId)
                 .first(),
         )
     }
 
     @Test
     fun getAllNotesStream_returns_all_notes() = runTest {
-        val allNotes = notesRepository.getAllNotesStream().first()
+        val allNotes = notesRepository.getAllNotesFlow().first()
         // Check that returned note IDs match the test data
         assertEquals(notesTestData.map { it.id }, allNotes.map { it.note.id })
     }
@@ -211,7 +209,7 @@ class NotesRepositoryTest : KoinTest {
         notesRepository.addOrUpdateNote(noteId, bookId, note)
         notesRepository.addOrUpdateNote(noteId, bookId, note) // Repeat the operation
 
-        val allNotesWithId = noteDao.getNotesForBookStream(bookId).first().count { it.id == noteId }
+        val allNotesWithId = noteDao.getNotesForBookFlow(bookId).first().count { it.id == noteId }
 
         assertEquals(1, allNotesWithId)
     }

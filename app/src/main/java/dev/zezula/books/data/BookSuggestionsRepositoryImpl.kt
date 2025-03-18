@@ -7,6 +7,7 @@ import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.myLibrary.toBookFormData
 import dev.zezula.books.data.source.db.BookDao
+import dev.zezula.books.data.source.db.BookSuggestionDao
 import dev.zezula.books.data.source.network.MyLibraryApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -18,8 +19,15 @@ import java.util.UUID
 
 class BookSuggestionsRepositoryImpl(
     private val bookDao: BookDao,
+    private val bookSuggestionDao: BookSuggestionDao,
     private val myLibraryApi: MyLibraryApi,
 ) : BookSuggestionsRepository {
+
+    override fun getAllSuggestionsForBookFlow(bookId: String): Flow<List<Book>> {
+        return bookSuggestionDao.getAllSuggestionsForBookFlow(bookId).map {
+            it.map(BookEntity::asExternalModel)
+        }
+    }
 
     override suspend fun fetchSuggestions(bookId: String): List<Book>? {
         Timber.d("Fetching suggestions for book: $bookId")
@@ -40,19 +48,13 @@ class BookSuggestionsRepositoryImpl(
                 // Check that the book is still in the database (it might have been deleted in the meantime).
                 if (bookDao.getBookStream(bookId).firstOrNull() != null) {
                     bookDao.insertBook(bookEntity)
-                    bookDao.addToBookSuggestions(BookSuggestionEntity(bookId = bookEntity.id, parentBookId = bookId))
+                    bookSuggestionDao.addToBookSuggestions(BookSuggestionEntity(bookId = bookEntity.id, parentBookId = bookId))
                 }
             }
-            getAllSuggestionsForBook(bookId).first()
+            getAllSuggestionsForBookFlow(bookId).first()
         } else {
             Timber.d("Cannot fetch suggestions for book: $bookId because it is missing some data.")
             null
-        }
-    }
-
-    override fun getAllSuggestionsForBook(bookId: String): Flow<List<Book>> {
-        return bookDao.getSuggestionsForBook(bookId).map {
-            it.map(BookEntity::asExternalModel)
         }
     }
 }

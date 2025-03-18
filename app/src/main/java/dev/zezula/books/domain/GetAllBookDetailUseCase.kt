@@ -41,11 +41,11 @@ class GetAllBookDetailUseCase(
         return combine(
             booksRepository.getBookStream(bookId),
             userLibraryRepository.isBookInLibrary(bookId),
-            notesRepository.getNotesForBookStream(bookId),
-            shelvesRepository.getShelvesForBookStream(bookId),
-            reviewsRepository.getRatingStream(bookId),
-            reviewsRepository.getReviewsForBookStream(bookId),
-            bookSuggestionsRepository.getAllSuggestionsForBook(bookId),
+            notesRepository.getNotesForBookFlow(bookId),
+            shelvesRepository.getAllShelvesForBookFlow(bookId),
+            reviewsRepository.getRatingForBookFlow(bookId),
+            reviewsRepository.getReviewsForBookFlow(bookId),
+            bookSuggestionsRepository.getAllSuggestionsForBookFlow(bookId),
         ) { book, isBookInLibrary, notes, shelves, rating, reviews, suggestions ->
             AllBookDetailResult(
                 book = book,

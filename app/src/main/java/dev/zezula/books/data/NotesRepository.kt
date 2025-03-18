@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {
 
-    fun getAllNotesStream(): Flow<List<NoteWithBook>>
+    fun getAllNotesFlow(): Flow<List<NoteWithBook>>
 
-    fun getNotesForBookStream(bookId: String): Flow<List<Note>>
+    fun getNotesForBookFlow(bookId: String): Flow<List<Note>>
 
     suspend fun createNote(
         bookId: String,

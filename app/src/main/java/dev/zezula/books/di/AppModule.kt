@@ -201,7 +201,7 @@ val appModule = module {
 
     // Repositories
     single<BooksRepository> { BooksRepositoryImpl(get(), get(), get()) }
-    single<BookSuggestionsRepository> { BookSuggestionsRepositoryImpl(get(), get()) }
+    single<BookSuggestionsRepository> { BookSuggestionsRepositoryImpl(get(), get(), get()) }
     single<BookSearchResultsRepository> { BookSearchResultsRepositoryImpl(get(), get()) }
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get()) }
