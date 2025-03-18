@@ -65,22 +65,6 @@ fun BookEntity.asNetworkBook(): NetworkBook {
     )
 }
 
-fun fromBookFormData(id: String, dateAdded: String, bookFormData: BookFormData): BookEntity {
-    return BookEntity(
-        id = id,
-        dateAdded = dateAdded,
-        title = bookFormData.title,
-        author = bookFormData.author,
-        description = bookFormData.description,
-        isbn = bookFormData.isbn,
-        publisher = bookFormData.publisher,
-        yearPublished = bookFormData.yearPublished,
-        pageCount = bookFormData.pageCount,
-        thumbnailLink = bookFormData.thumbnailLink,
-        userRating = bookFormData.userRating,
-    )
-}
-
 val previewBookEntities = listOf(
     BookEntity(
         id = "1",

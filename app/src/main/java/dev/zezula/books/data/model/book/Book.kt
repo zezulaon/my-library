@@ -3,7 +3,6 @@ package dev.zezula.books.data.model.book
 import dev.zezula.books.util.formatDate
 import dev.zezula.books.util.toSortingAuthor
 import dev.zezula.books.util.toSortingTitle
-import java.time.LocalDateTime
 
 data class Book(
     val id: String,
@@ -39,17 +38,14 @@ data class BookFormData(
     val yearPublished: Int? = null,
     val pageCount: Int? = null,
     val userRating: Int? = null,
-    // FIXME: thumbnailLink and dateAdded should not be in the form data. Form data should only contain input fields (data user can edit).
     val thumbnailLink: String? = null,
-    val dateAdded: String? = null,
     // Subject is legacy property from older version of the app. It's not used right now.
     val subject: String? = null,
     // Binding is legacy property from older version of the app. It's not used right now.
     val binding: String? = null,
 )
 
-// FIXME: there is also BookEntity.fromBookFormData() - this should be merged into one function
-fun BookFormData.asBookEntity(id: String): BookEntity {
+fun BookFormData.toBookEntity(id: String, dateAdded: String): BookEntity {
     return BookEntity(
         id = id,
         title = title,
@@ -59,11 +55,11 @@ fun BookFormData.asBookEntity(id: String): BookEntity {
         publisher = publisher,
         yearPublished = yearPublished,
         pageCount = pageCount,
-        thumbnailLink = thumbnailLink,
         userRating = userRating,
-        dateAdded = dateAdded ?: LocalDateTime.now().toString(), // FIXME: is this field needed in the form data? setting this is error prone and UI should not need it
+        dateAdded = dateAdded,
         subject = subject,
         binding = binding,
+        thumbnailLink = thumbnailLink,
     )
 }
 

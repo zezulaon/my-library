@@ -3,7 +3,7 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.asBookEntity
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.source.db.BookDao
@@ -43,7 +43,10 @@ class UserLibraryRepositoryImpl(
         val bookId = UUID.randomUUID().toString()
 
         val bookEntity = bookFormData
-            .asBookEntity(id = bookId)
+            .toBookEntity(
+                id = bookId,
+                dateAdded = LocalDateTime.now().toString()
+            )
             .copy(
                 isInLibrary = true,
                 isPendingSync = true,

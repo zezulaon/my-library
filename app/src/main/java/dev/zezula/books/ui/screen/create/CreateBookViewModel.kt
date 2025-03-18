@@ -85,7 +85,6 @@ class CreateBookViewModel(
                         description = book.description,
                         thumbnailLink = book.thumbnailLink,
                         userRating = book.userRating,
-                        dateAdded = book.dateAdded,
                     )
                 }
 

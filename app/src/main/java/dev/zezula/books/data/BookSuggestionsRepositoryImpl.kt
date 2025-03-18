@@ -3,8 +3,8 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
-import dev.zezula.books.data.model.book.fromBookFormData
 import dev.zezula.books.data.model.myLibrary.toBookFormData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.MyLibraryApi
@@ -30,11 +30,12 @@ class BookSuggestionsRepositoryImpl(
             val suggestions = myLibraryApi.suggestions(title = title, author = author, isbn = parentBook.isbn)
             Timber.d("Fetched suggestions: $suggestions")
             suggestions?.forEach { suggestion ->
-                val bookEntity = fromBookFormData(
-                    id = UUID.randomUUID().toString(),
-                    dateAdded = LocalDateTime.now().toString(),
-                    bookFormData = suggestion.toBookFormData(),
-                )
+                val bookEntity = suggestion
+                    .toBookFormData()
+                    .toBookEntity(
+                        id = UUID.randomUUID().toString(),
+                        dateAdded = LocalDateTime.now().toString(),
+                    )
 
                 // Check that the book is still in the database (it might have been deleted in the meantime).
                 if (bookDao.getBookStream(bookId).firstOrNull() != null) {

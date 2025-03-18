@@ -4,8 +4,8 @@ import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.SearchBookResultEntity
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
-import dev.zezula.books.data.model.book.fromBookFormData
 import dev.zezula.books.data.source.db.BookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -25,10 +25,9 @@ class BookSearchResultsRepositoryImpl(
 
     override suspend fun addBookToSearchResults(bookFormData: BookFormData) {
         val bookId = UUID.randomUUID().toString()
-        val bookEntity = fromBookFormData(
+        val bookEntity = bookFormData.toBookEntity(
             id = bookId,
-            dateAdded = bookFormData.dateAdded ?: LocalDateTime.now().toString(),
-            bookFormData = bookFormData,
+            dateAdded = LocalDateTime.now().toString(),
         )
         bookDao.insertBook(bookEntity)
         bookDao.addToSearchBookResults(SearchBookResultEntity(bookId = bookId))

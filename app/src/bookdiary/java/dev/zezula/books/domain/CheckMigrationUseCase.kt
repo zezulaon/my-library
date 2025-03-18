@@ -7,7 +7,7 @@ import dev.zezula.books.BuildConfig
 import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
-import dev.zezula.books.data.model.legacy.toBookFormData
+import dev.zezula.books.data.model.legacy.toBookEntity
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
@@ -245,24 +245,9 @@ class CheckMigrationUseCase(
     private suspend fun migrateBook(book: LegacyBookEntity) {
         val bookId = book._id
         if (bookId != null) {
-            addOrUpdateBookUseCase(bookId.toString(), book.toBookFormData())
-                .fold(
-                    onSuccess = {
-                        Timber.d("Book migrated successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to migrate the book")
-                    },
-                )
-            moveBookToLibraryUseCase(bookId.toString())
-                .fold(
-                    onSuccess = {
-                        Timber.d("Book moved to library successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to move the book to library")
-                    },
-                )
+            val bookEntity = book.toBookEntity(bookId = bookId.toString())
+            bookDao.insertBook(bookEntity)
+
             val state = legacyBookDao.getStatesForBookId(bookId)?.firstOrNull()
             if (state != null) {
                 if (state.favorite == 1) addBookToShelf(LegacyShelfType.FAVORITE.shelfId, bookId.toString())
