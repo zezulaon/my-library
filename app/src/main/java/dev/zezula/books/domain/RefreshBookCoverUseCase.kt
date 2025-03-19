@@ -1,5 +1,6 @@
 package dev.zezula.books.domain
 
+import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.OnlineBookFinderService
@@ -10,8 +11,7 @@ import timber.log.Timber
 
 // TODO: Refactor into more general Refresh/Update book data use case.
 class RefreshBookCoverUseCase(
-    private val bookDao: BookDao,
-    private val libraryRepository: UserLibraryRepository,
+    private val booksRepository: BooksRepository,
     private val onlineBookFinderService: OnlineBookFinderService,
 ) {
 
@@ -25,12 +25,12 @@ class RefreshBookCoverUseCase(
     }
 
     private suspend fun updateBookCover(bookId: String) {
-        val book = bookDao.getBookFlow(bookId).firstOrNull()
+        val book = booksRepository.getBookFlow(bookId).firstOrNull()
         if (book?.isbn != null && book.thumbnailLink == null) {
             val isbn = book.isbn
             val thumbnailLink = onlineBookFinderService.findBookCoverLinkForIsbn(isbn)
             if (thumbnailLink != null) {
-                libraryRepository.updateBookCover(bookId = book.id, thumbnailLink = thumbnailLink)
+                booksRepository.updateBookCover(bookId = book.id, thumbnailLink = thumbnailLink)
             }
         }
     }

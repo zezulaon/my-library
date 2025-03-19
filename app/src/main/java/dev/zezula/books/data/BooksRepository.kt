@@ -11,5 +11,7 @@ interface BooksRepository {
 
     suspend fun getBooksByIsbn(isbn: String): List<Book>
 
+    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
+
     suspend fun softDeleteBook(bookId: String)
 }

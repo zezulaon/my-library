@@ -32,6 +32,10 @@ class BooksRepositoryImpl(
             .map { it.asExternalModel() }
     }
 
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+        bookDao.updateBookCover(bookId, thumbnailLink)
+    }
+
     override suspend fun softDeleteBook(bookId: String) {
         bookDao.softDeleteBook(bookId)
         shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId)

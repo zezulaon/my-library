@@ -14,7 +14,7 @@ import dev.zezula.books.data.model.book.BookEntity
     tableName = "shelf_with_book",
     primaryKeys = ["bookId", "shelfId"],
     foreignKeys = [
-        ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE), // FIXME: review all cascade props, if it works with sync (can be cascade used with sync?)
+        ForeignKey(entity = BookEntity::class, parentColumns = ["id"], childColumns = ["bookId"], onDelete = CASCADE),
         ForeignKey(entity = ShelfEntity::class, parentColumns = ["id"], childColumns = ["shelfId"], onDelete = CASCADE),
     ],
     indices = [

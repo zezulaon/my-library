@@ -76,10 +76,6 @@ class UserLibraryRepositoryImpl(
         )
     }
 
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
-        bookDao.updateBookCover(bookId, thumbnailLink)
-    }
-
     override suspend fun toggleBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
         val shelvesWithBooksEntity = ShelfWithBookEntity(
             bookId = bookId,

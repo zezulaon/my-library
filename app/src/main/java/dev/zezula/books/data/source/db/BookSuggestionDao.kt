@@ -13,7 +13,13 @@ interface BookSuggestionDao {
     /**
      * Returns suggestions for a given book ID.
      */
-    @Query("SELECT * FROM books INNER JOIN book_suggestions ON books.id = book_suggestions.bookId WHERE book_suggestions.parentBookId = :bookId")
+    @Query(
+        """
+        SELECT * FROM books 
+        INNER JOIN book_suggestions ON books.id = book_suggestions.bookId 
+        WHERE book_suggestions.parentBookId = :bookId
+        """,
+    )
     fun getAllSuggestionsForBookFlow(bookId: String): Flow<List<BookEntity>>
 
     /**

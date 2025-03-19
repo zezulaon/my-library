@@ -16,7 +16,12 @@ interface SearchBookResultDao {
      * Returns search results - books that were found online and are stored temporarily in the database.
      */
     @RewriteQueriesToDropUnusedColumns // Removes unused [bookId] columns from the query.
-    @Query("SELECT * FROM books INNER JOIN search_book_results ON books.id = search_book_results.bookId")
+    @Query(
+        """
+        SELECT * FROM books 
+        INNER JOIN search_book_results ON books.id = search_book_results.bookId
+        """,
+    )
     fun getAllSearchResultBooksFlow(): Flow<List<BookEntity>>
 
     /**
