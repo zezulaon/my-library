@@ -87,7 +87,7 @@ class UserLibraryRepositoryImpl(
             isPendingSync = true,
             isDeleted = isBookInShelf.not()
         )
-        shelfAndBookDao.addBookToShelf(shelvesWithBooksEntity)
+        shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
     }
 
     override suspend fun refreshBooks() {

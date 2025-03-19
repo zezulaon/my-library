@@ -53,6 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bookSearchResultDao(): SearchBookResultDao
     abstract fun bookSuggestionDao(): BookSuggestionDao
     abstract fun noteDao(): NoteDao
+    abstract fun shelfDao(): ShelfDao
     abstract fun shelfAndBookDao(): ShelfAndBookDao
     abstract fun reviewDao(): ReviewDao
     abstract fun ratingDao(): RatingDao

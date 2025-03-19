@@ -7,6 +7,7 @@ import dev.zezula.books.data.model.shelf.ShelfForBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
 import dev.zezula.books.data.model.shelf.asExternalModel
 import dev.zezula.books.data.source.db.ShelfAndBookDao
+import dev.zezula.books.data.source.db.ShelfDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
@@ -14,6 +15,7 @@ import java.util.UUID
 
 class ShelvesRepositoryImpl(
     private val shelvesAndBooksDao: ShelfAndBookDao,
+    private val shelfDao: ShelfDao,
 ) : ShelvesRepository {
 
     override fun getAllShelvesFlow(): Flow<List<Shelf>> {
@@ -38,15 +40,15 @@ class ShelvesRepositoryImpl(
             title = shelfTitle,
             isPendingSync = true,
         )
-        shelvesAndBooksDao.insertShelf(shelf)
+        shelfDao.insertShelf(shelf)
     }
 
     override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
-        shelvesAndBooksDao.updateShelf(shelfId = shelfId, title = updatedTitle)
+        shelfDao.updateShelf(shelfId = shelfId, title = updatedTitle)
     }
 
     override suspend fun softDeleteShelf(shelf: Shelf) {
-        shelvesAndBooksDao.softDeleteShelf(shelf.id)
+        shelfDao.softDeleteShelf(shelf.id)
         shelvesAndBooksDao.softDeleteShelvesWithBooksForShelf(shelf.id)
     }
 }

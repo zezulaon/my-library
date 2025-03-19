@@ -15,6 +15,7 @@ import dev.zezula.books.data.model.shelf.asNetworkShelfWithBook
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
+import dev.zezula.books.data.source.db.ShelfDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -22,7 +23,7 @@ class SyncLibraryRepositoryImpl(
     private val bookDao: BookDao,
     private val shelfAndBookDao: ShelfAndBookDao,
     private val noteDao: NoteDao,
-    private val shelvesAndBooksDao: ShelfAndBookDao,
+    private val shelfDao: ShelfDao,
 ) : SyncLibraryRepository {
 
     override fun getAllBooksPendingSyncFlow(): Flow<List<NetworkBook>> {
@@ -37,6 +38,18 @@ class SyncLibraryRepositoryImpl(
         bookDao.resetBookPendingSyncStatus(bookId)
     }
 
+    override fun getAllShelvesPendingSyncFlow(): Flow<List<NetworkShelf>> {
+        return shelfDao
+            .getAllShelvesPendingSyncShelvesStream()
+            .map { list ->
+                list.map(ShelfEntity::asNetworkShelf)
+            }
+    }
+
+    override suspend fun resetShelfPendingSyncStatus(shelfId: String) {
+        shelfDao.resetShelfPendingSyncStatus(shelfId)
+    }
+
     override fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<NetworkShelfWithBook>> {
         return shelfAndBookDao
             .getAllShelvesWithBooksPendingSyncFlow()
@@ -46,7 +59,7 @@ class SyncLibraryRepositoryImpl(
     }
 
     override suspend fun resetShelfWithBookPendingSyncStatus(shelfId: String, bookId: String) {
-        shelfAndBookDao.resetShelvesWithBooksPendingSyncStatus(shelfId = shelfId, bookId = bookId)
+        shelfAndBookDao.resetShelfWithBookPendingSyncStatus(shelfId = shelfId, bookId = bookId)
     }
 
     override fun getAllNotesPendingSyncFlow(): Flow<List<NetworkNote>> {
@@ -59,17 +72,5 @@ class SyncLibraryRepositoryImpl(
 
     override suspend fun resetNotePendingSyncStatus(noteId: String) {
         noteDao.resetPendingSyncStatus(noteId)
-    }
-
-    override fun getAllShelvesPendingSyncFlow(): Flow<List<NetworkShelf>> {
-        return shelvesAndBooksDao
-            .getAllPendingSyncShelvesStream()
-            .map { list ->
-                list.map(ShelfEntity::asNetworkShelf)
-            }
-    }
-
-    override suspend fun resetShelfPendingSyncStatus(shelfId: String) {
-        shelvesAndBooksDao.resetPendingSyncStatus(shelfId)
     }
 }

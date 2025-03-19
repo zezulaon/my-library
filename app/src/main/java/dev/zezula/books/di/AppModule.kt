@@ -155,6 +155,10 @@ val appModule = module {
     }
     single {
         val database = get<AppDatabase>()
+        database.bookSuggestionDao()
+    }
+    single {
+        val database = get<AppDatabase>()
         database.noteDao()
     }
     single {
@@ -164,6 +168,10 @@ val appModule = module {
     single {
         val database = get<AppDatabase>()
         database.ratingDao()
+    }
+    single {
+        val database = get<AppDatabase>()
+        database.shelfDao()
     }
     single {
         val database = get<AppDatabase>()
@@ -206,7 +214,7 @@ val appModule = module {
     single<UserLibraryRepository> { UserLibraryRepositoryImpl(get(), get()) }
     single<NotesRepository> { NotesRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl() }
-    single<ShelvesRepository> { ShelvesRepositoryImpl(get()) }
+    single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
     single<SyncLibraryRepository> { SyncLibraryRepositoryImpl(get(), get(), get(), get()) }
 

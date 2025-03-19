@@ -38,39 +38,15 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addOrUpdate(shelves: List<ShelfEntity>) {
-        shelvesFlow.update { shelfMap ->
-            shelfMap.toMutableMap().apply {
-                putAll(shelves.associateBy { entity -> entity.id })
-            }
-        }
-    }
-
     override fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun resetShelvesWithBooksPendingSyncStatus(shelfId: String, bookId: String) {
+    override suspend fun resetShelfWithBookPendingSyncStatus(shelfId: String, bookId: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertShelf(shelf: ShelfEntity) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateShelf(shelfId: String, title: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun delete(shelfId: String) {
-        shelvesFlow.update { shelfMap ->
-            shelfMap.toMutableMap().apply {
-                remove(shelfId)
-            }
-        }
-    }
-
-    override suspend fun addBookToShelf(shelvesWithBooksEntity: ShelfWithBookEntity) {
+    override suspend fun insertOrUpdateShelfWithBook(shelfWithBookEntity: ShelfWithBookEntity) {
         throw NotImplementedError("Unused in tests")
     }
 
@@ -80,19 +56,4 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
     override fun getAllBooksForShelfStream(shelfId: String): Flow<List<BookEntity>> =
         booksForShelfFlow.map { it.getOrDefault(shelfId, emptyList()) }
 
-    override suspend fun softDeleteShelf(shelfId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setPendingSyncStatus(shelfId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun resetPendingSyncStatus(shelfId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getAllPendingSyncShelvesStream(): Flow<List<ShelfEntity>> {
-        TODO("Not yet implemented")
-    }
 }
