@@ -45,7 +45,6 @@ import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.RefreshBookCoverUseCase
-import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase

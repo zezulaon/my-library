@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteWithBookEntity
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,9 @@ interface NoteDao {
 
     @Insert
     suspend fun insertNote(noteEntity: NoteEntity)
+
+    @Upsert
+    suspend fun insertOrUpdateNote(note: NoteEntity)
 
     @Query(
         """

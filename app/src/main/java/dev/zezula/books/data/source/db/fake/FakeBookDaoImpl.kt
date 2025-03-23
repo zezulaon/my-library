@@ -39,6 +39,10 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun insertOrUpdate(book: BookEntity) {
+        TODO("Not yet implemented")
+    }
+
     override fun isBookInLibrary(bookId: String): Flow<Boolean> {
         TODO("Not yet implemented")
     }

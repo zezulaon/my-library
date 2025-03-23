@@ -53,13 +53,13 @@ import dev.zezula.books.domain.GetBooksForAuthorUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
-import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
 import dev.zezula.books.domain.sync.SyncService
+import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
@@ -182,8 +182,8 @@ val appModule = module {
     }
 
     // UseCases
+    single { SyncUseCase(get(), get(), get(), get(), get()) }
     single { GetBooksForShelfUseCase(get()) }
-    single { RefreshLibraryUseCase(get()) }
     single { FetchSuggestionsUseCase(get()) }
     single { GetShelvesUseCase(get()) }
     single { DeleteShelfUseCase(get()) }

@@ -20,7 +20,5 @@ interface UserLibraryRepository {
 
     suspend fun toggleBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
 
-    suspend fun refreshBooks()
-
     suspend fun searchMyLibraryBooks(query: String): List<Book>
 }

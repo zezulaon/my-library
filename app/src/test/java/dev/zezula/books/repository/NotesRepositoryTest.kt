@@ -37,7 +37,7 @@ class NotesRepositoryTest : KoinTest {
     @Before
     fun setupRepository() = runTest {
         notesTestData.forEach { note ->
-            noteDao.addOrUpdateNote(note)
+            noteDao.insertOrUpdateNote(note)
         }
     }
 

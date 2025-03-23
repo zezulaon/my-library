@@ -27,3 +27,21 @@ data class NetworkBook(
     @get:PropertyName(FIELD_IS_DELETED)
     val isDeleted: Boolean? = null,
 )
+
+fun NetworkBook.asEntity() = BookEntity(
+    id = checkNotNull(id) { "NetworkBook id is null" },
+    dateAdded = checkNotNull(dateAdded) { "NetworkBook dateAdded is null" },
+    title = title,
+    author = author,
+    description = description,
+    isbn = isbn,
+    publisher = publisher,
+    yearPublished = yearPublished,
+    pageCount = pageCount,
+    thumbnailLink = thumbnailLink,
+    userRating = userRating,
+    subject = subject,
+    binding = binding,
+    isDeleted = isDeleted == true,
+    isInLibrary = true,
+)

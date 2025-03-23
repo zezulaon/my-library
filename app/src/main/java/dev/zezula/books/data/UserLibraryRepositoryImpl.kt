@@ -86,35 +86,6 @@ class UserLibraryRepositoryImpl(
         shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
     }
 
-    override suspend fun refreshBooks() {
-        val numberOfBooks = bookDao.getBookCount()
-        // FIXME: implement proper syncing. Right now, the firestore is used as a simple online "back up" (which is
-        //  downloaded only when there are no books in the app database)
-//        if (numberOfBooks == 0) {
-//            networkDataSource.getBooks().forEach { networkBook ->
-//                val bookEntity = fromNetworkBook(networkBook)
-//                bookDao.addOrUpdate(bookEntity)
-//
-//                // Associate the book with the library
-//                bookDao.addToLibraryBooks(LibraryBookEntity(bookId = bookEntity.id))
-//
-//                networkDataSource.getNotesForBook(bookEntity.id).forEach { networkNote ->
-//                    val networkNoteEntity = fromNetworkNote(
-//                        networkNote = networkNote,
-//                        bookId = bookEntity.id,
-//                    )
-//                    noteDao.addOrUpdateNote(networkNoteEntity)
-//                }
-//            }
-//            networkDataSource.getShelves().forEach { networkShelf ->
-//                shelfAndBookDao.addOrUpdate(fromNetworkShelf(networkShelf))
-//            }
-//            networkDataSource.getShelvesWithBooks().forEach { networkShelfWithBook ->
-//                shelfAndBookDao.addBookToShelf(fromNetworkShelfWithBook(networkShelfWithBook))
-//            }
-//        }
-    }
-
     override suspend fun searchMyLibraryBooks(query: String): List<Book> {
         return bookDao.getLibraryBooksForQuery(query).map(BookEntity::asExternalModel)
     }

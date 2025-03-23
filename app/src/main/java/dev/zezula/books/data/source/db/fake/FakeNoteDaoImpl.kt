@@ -36,6 +36,10 @@ class FakeNoteDaoImpl : NoteDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun insertOrUpdateNote(note: NoteEntity) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun resetPendingSyncStatus(noteId: String) {
         TODO("Not yet implemented")
     }

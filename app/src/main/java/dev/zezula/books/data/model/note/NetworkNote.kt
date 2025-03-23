@@ -16,3 +16,13 @@ data class NetworkNote(
     @get:PropertyName(FIELD_IS_DELETED)
     val isDeleted: Boolean? = null,
 )
+
+fun NetworkNote.asEntity() = NoteEntity(
+    id = checkNotNull(id) { "NetworkNote id is null" },
+    bookId = checkNotNull(bookId) { "NetworkNote bookId is null" },
+    dateAdded = checkNotNull(dateAdded) { "NetworkNote dateAdded is null" },
+    text = checkNotNull(text) { "NetworkNote text is null" },
+    page = page,
+    type = type,
+    isDeleted = isDeleted == true,
+)

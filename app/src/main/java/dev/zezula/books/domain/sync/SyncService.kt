@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.seconds
 
 // FIXME: review the syncing
+// FIXME: rename to back up service?
 class SyncService(
     private val syncLibraryRepository: SyncLibraryRepository,
     private val networkDataSource: NetworkDataSource,

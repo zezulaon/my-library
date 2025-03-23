@@ -5,17 +5,12 @@ import dev.zezula.books.data.model.book.previewBookEntities
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
 import dev.zezula.books.di.appUnitTestModule
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 import org.koin.test.inject
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class UserLibraryRepositoryTest : KoinTest {
 
@@ -32,7 +27,7 @@ class UserLibraryRepositoryTest : KoinTest {
 
     @Before
     fun setupRepository() = runTest {
-        bookDao.addOrUpdate(booksTestData)
+        bookDao.insertOrUpdate(booksTestData)
     }
 
 //    @Test

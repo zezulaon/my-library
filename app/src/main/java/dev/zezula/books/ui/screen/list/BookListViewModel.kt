@@ -10,11 +10,11 @@ import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.domain.CheckMigrationUseCase
 import dev.zezula.books.domain.GetBooksForShelfUseCase
 import dev.zezula.books.domain.GetShelvesUseCase
-import dev.zezula.books.domain.RefreshLibraryUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.domain.sync.SyncService
+import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +30,7 @@ import timber.log.Timber
 class BookListViewModel(
     getShelvesUseCase: GetShelvesUseCase,
     private val getBooksForShelfUseCase: GetBooksForShelfUseCase,
-    private val refreshLibraryUseCase: RefreshLibraryUseCase,
+    private val syncUseCase: SyncUseCase,
     private val checkMigrationUseCase: CheckMigrationUseCase,
     private val syncService: SyncService,
 ) : ViewModel() {
@@ -136,7 +136,7 @@ class BookListViewModel(
             }
 
             // Refreshes and syncs the library
-            refreshLibraryUseCase().fold(
+            syncUseCase().fold(
                 onSuccess = { Timber.d("refresh() - successful") },
                 onFailure = { errorMessage.value = R.string.home_failed_to_refresh },
             )

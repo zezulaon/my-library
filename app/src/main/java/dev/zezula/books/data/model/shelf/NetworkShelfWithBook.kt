@@ -18,3 +18,10 @@ data class NetworkShelfWithBook(
     @get:PropertyName(FIELD_IS_DELETED)
     val isDeleted: Boolean? = null,
 )
+
+// FIXME: Tmp solution. Invalid state should be just logged and entity insertion skipped
+fun NetworkShelfWithBook.asEntity() = ShelfWithBookEntity(
+    bookId = checkNotNull(bookId) { "NetworkShelfWithBook bookId is null" },
+    shelfId = checkNotNull(shelfId) { "NetworkShelfWithBook shelfId is null" },
+    isDeleted = isDeleted == true,
+)

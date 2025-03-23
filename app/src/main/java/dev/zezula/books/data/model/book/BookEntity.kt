@@ -23,7 +23,7 @@ data class BookEntity(
     val userRating: Int? = null,
     val pageCount: Int? = null,
     val isInLibrary: Boolean = false,
-    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER) // Is this @ColumnInfo needed? Can it be migrated manually?
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,

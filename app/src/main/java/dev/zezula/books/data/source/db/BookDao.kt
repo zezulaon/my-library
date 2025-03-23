@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.Upsert
 import dev.zezula.books.data.model.book.BookEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -73,6 +74,9 @@ interface BookDao {
 
     @Insert
     suspend fun insertBook(book: BookEntity)
+
+    @Upsert
+    suspend fun insertOrUpdate(book: BookEntity)
 
     @Query(
         """

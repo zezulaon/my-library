@@ -13,3 +13,10 @@ data class NetworkShelf(
     @get:PropertyName(FIELD_IS_DELETED)
     val isDeleted: Boolean? = null,
 )
+
+fun NetworkShelf.asEntity() = ShelfEntity(
+    id = checkNotNull(id) { "NetworkShelf id is null" },
+    dateAdded = checkNotNull(dateAdded) { "NetworkShelf dateAdded is null" },
+    title = checkNotNull(title) { "NetworkShelf title is null" },
+    isDeleted = isDeleted == true,
+)

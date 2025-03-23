@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +12,9 @@ interface ShelfDao {
 
     @Insert
     suspend fun insertShelf(shelf: ShelfEntity)
+
+    @Upsert
+    suspend fun insertOrUpdateShelf(shelf: ShelfEntity)
 
     @Query(
         """
