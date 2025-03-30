@@ -3,6 +3,7 @@ package dev.zezula.books.data.model.legacy
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.zezula.books.data.model.book.BookEntity
+import kotlinx.datetime.Clock
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Calendar
@@ -95,5 +96,6 @@ fun LegacyBookEntity.toBookEntity(bookId: String): BookEntity {
         binding = binding,
         isInLibrary = true,
         isPendingSync = true,
+        lastModifiedTimestamp = Clock.System.now().toString(),
     )
 }

@@ -7,7 +7,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import dev.zezula.books.data.model.book.BookEntity
-import java.time.LocalDateTime
+import kotlinx.datetime.Instant
 
 /**
  * Represents a note entity in the database.
@@ -45,6 +45,7 @@ data class NoteEntity(
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun NoteEntity.asNetworkNote(): NetworkNote {
@@ -56,6 +57,7 @@ fun NoteEntity.asNetworkNote(): NetworkNote {
         page = page,
         type = type,
         isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
@@ -67,6 +69,7 @@ val previewNoteEntities = listOf(
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies ultricni.",
         page = 1,
         type = "NOTE",
+        lastModifiedTimestamp = "2021-01-01T00:00:00",
     ),
     NoteEntity(
         id = "2",
@@ -75,6 +78,7 @@ val previewNoteEntities = listOf(
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae aliquet nisl nunc vitae nisl.",
         page = 1,
         type = "QUOTE",
+        lastModifiedTimestamp = "2021-01-01T00:00:00",
     ),
 )
 
@@ -93,13 +97,16 @@ fun fromNoteFormData(
     noteId: String,
     bookId: String,
     noteFormData: NoteFormData,
+    dateAdded: String,
+    lastModifiedTimestamp: Instant,
 ): NoteEntity {
     return NoteEntity(
         id = noteId,
         bookId = bookId,
-        dateAdded = noteFormData.dateAdded ?: LocalDateTime.now().toString(),
+        dateAdded = dateAdded,
         text = noteFormData.text,
         page = noteFormData.page,
         type = noteFormData.type,
+        lastModifiedTimestamp = lastModifiedTimestamp.toString(),
     )
 }

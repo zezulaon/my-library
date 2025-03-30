@@ -8,6 +8,7 @@ import dev.zezula.books.data.source.db.ShelfAndBookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 
 class BooksRepositoryImpl(
     private val bookDao: BookDao,
@@ -33,12 +34,15 @@ class BooksRepositoryImpl(
     }
 
     override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
-        bookDao.updateBookCover(bookId, thumbnailLink)
+        bookDao.updateBookCover(bookId = bookId, thumbnailLink = thumbnailLink, lastModifiedTimestamp = Clock.System.now().toString())
     }
 
     override suspend fun softDeleteBook(bookId: String) {
-        bookDao.softDeleteBook(bookId)
-        shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId)
-        noteDao.softDeleteNotesForBook(bookId)
+        bookDao.softDeleteBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
+        shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
+        noteDao.softDeleteNotesForBook(
+            bookId = bookId,
+            lastModifiedTimestamp = Clock.System.now().toString()
+        )
     }
 }

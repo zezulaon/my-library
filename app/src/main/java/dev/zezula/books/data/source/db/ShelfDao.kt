@@ -16,23 +16,26 @@ interface ShelfDao {
     @Upsert
     suspend fun insertOrUpdateShelf(shelf: ShelfEntity)
 
-    @Query(
-        """
-        UPDATE shelves 
-        SET title = :title, isPendingSync = 1
-        WHERE id = :shelfId
-        """,
-    )
-    suspend fun updateShelf(shelfId: String, title: String)
+    @Upsert
+    suspend fun insertOrUpdateShelves(shelfEntities: List<ShelfEntity>)
 
     @Query(
         """
         UPDATE shelves 
-        SET isDeleted = 1, isPendingSync = 1
+        SET title = :title, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :shelfId
         """,
     )
-    suspend fun softDeleteShelf(shelfId: String)
+    suspend fun updateShelf(shelfId: String, title: String, lastModifiedTimestamp: String)
+
+    @Query(
+        """
+        UPDATE shelves 
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
+        WHERE id = :shelfId
+        """,
+    )
+    suspend fun softDeleteShelf(shelfId: String, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -45,4 +48,7 @@ interface ShelfDao {
 
     @Query("SELECT * FROM shelves WHERE isPendingSync = 1")
     fun getAllShelvesPendingSyncShelvesStream(): Flow<List<ShelfEntity>>
+
+    @Query("SELECT lastModifiedTimestamp FROM shelves ORDER BY lastModifiedTimestamp DESC LIMIT 1")
+    suspend fun getLatestLastModifiedTimestamp(): String?
 }

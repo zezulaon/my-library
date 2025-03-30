@@ -30,6 +30,9 @@ class FirestoreDataSource : NetworkDataSource {
     private val shelvesWithBooksCollection =
         db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES_WITH_BOOKS)
 
+    private val notesCollection =
+        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_NOTES)
+
     override suspend fun getMigrationData(): NetworkMigrationData {
         Timber.d("getMigrationData()")
         return userDocument.get().await()
@@ -48,22 +51,15 @@ class FirestoreDataSource : NetworkDataSource {
         }
     }
 
-    override suspend fun getBooks(): List<NetworkBook> {
-        Timber.d("getBooks()")
+    override suspend fun getModifiedShelves(lastModifiedTimestamp: String?): List<NetworkShelf> {
+        Timber.d("getModifiedShelves(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
-        return booksCollection.get().await()
-            .map {
-                it.toObject(NetworkBook::class.java)
-            }
-            .onEach {
-                Timber.d("Deserialized book: $it")
-            }
-    }
-
-    override suspend fun getShelves(): List<NetworkShelf> {
-        Timber.d("getShelves()")
-
-        return shelvesCollection.get().await()
+        return if (lastModifiedTimestamp == null) {
+            shelvesCollection
+        } else {
+            shelvesCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+        }.get().await()
+            .also { Timber.d("Found ${it.size()} modified shelves") }
             .map {
                 it.toObject(NetworkShelf::class.java)
             }
@@ -72,15 +68,54 @@ class FirestoreDataSource : NetworkDataSource {
             }
     }
 
-    override suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook> {
-        Timber.d("getShelvesWithBooks()")
+    override suspend fun getModifiedShelvesWithBooks(lastModifiedTimestamp: String?): List<NetworkShelfWithBook> {
+        Timber.d("getModifiedShelvesWithBooks(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
-        return shelvesWithBooksCollection.get().await()
+        return if (lastModifiedTimestamp == null) {
+            shelvesWithBooksCollection
+        } else {
+            shelvesWithBooksCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+        }.get().await()
+            .also { Timber.d("Found ${it.size()} modified shelves with books") }
             .map {
                 it.toObject(NetworkShelfWithBook::class.java)
             }
             .onEach {
                 Timber.d("Deserialized shelfWithBook: $it")
+            }
+    }
+
+    override suspend fun getModifiedBooks(lastModifiedTimestamp: String?): List<NetworkBook> {
+        Timber.d("getModifiedBooks(lastModifiedTimestamp=$lastModifiedTimestamp)")
+
+        return if (lastModifiedTimestamp == null) {
+            booksCollection
+        } else {
+            booksCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+        }.get().await()
+            .also { Timber.d("Found ${it.size()} modified books") }
+            .map {
+                it.toObject(NetworkBook::class.java)
+            }
+            .onEach {
+                Timber.d("Deserialized book: $it")
+            }
+    }
+
+    override suspend fun getModifiedNotes(lastModifiedTimestamp: String?): List<NetworkNote> {
+        Timber.d("getModifiedNotes(lastModifiedTimestamp=$lastModifiedTimestamp)")
+
+        return if (lastModifiedTimestamp == null) {
+            notesCollection
+        } else {
+            notesCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+        }.get().await()
+            .also { Timber.d("Found ${it.size()} modified notes") }
+            .map {
+                it.toObject(NetworkNote::class.java)
+            }
+            .onEach {
+                Timber.d("Deserialized note: $it")
             }
     }
 
@@ -92,22 +127,13 @@ class FirestoreDataSource : NetworkDataSource {
         return book
     }
 
-    override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
-        return booksCollection.document(bookId).collection(COLLECTION_NOTES).get().await()
-            .map {
-                it.toObject(NetworkNote::class.java)
-            }
-            .onEach {
-                Timber.d("Deserialized note: $it")
-            }
-    }
-
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
         Timber.d("addOrUpdate(note=$note)")
         checkNotNull(note.id) { "Note needs [id] property" }
         checkNotNull(note.bookId) { "Note needs [bookId] property" }
 
-        booksCollection.document(note.bookId).collection(COLLECTION_NOTES).document(note.id).set(note).await()
+        val bookWithNoteId = createBookWithNoteId(bookId = note.bookId, noteId = note.id)
+        notesCollection.document(bookWithNoteId).set(note).await()
         return note
     }
 
@@ -143,4 +169,6 @@ class FirestoreDataSource : NetworkDataSource {
     }
 
     private fun createShelfWithBookId(shelfId: String, bookId: String) = "${shelfId}_$bookId"
+
+    private fun createBookWithNoteId(bookId: String, noteId: String) = "${bookId}_$noteId"
 }

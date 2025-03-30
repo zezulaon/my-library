@@ -32,7 +32,15 @@ class FakeNoteDaoImpl : NoteDao {
         }
     }
 
-    override suspend fun softDeleteNotesForBook(bookId: String) {
+    override suspend fun updateNote(noteId: String, text: String, page: Int?, type: String?, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteNote(noteId: String, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteNotesForBook(bookId: String, lastModifiedTimestamp: String) {
         TODO("Not yet implemented")
     }
 
@@ -44,7 +52,11 @@ class FakeNoteDaoImpl : NoteDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun softDeleteNote(noteId: String) {
+    override suspend fun getLatestLastModifiedTimestamp(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertOrUpdateNotes(noteEntities: List<NoteEntity>) {
         TODO("Not yet implemented")
     }
 
@@ -62,10 +74,6 @@ class FakeNoteDaoImpl : NoteDao {
     }
 
     override suspend fun insertNote(noteEntity: NoteEntity) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateNote(noteId: String, text: String, page: Int?, type: String?) {
         TODO("Not yet implemented")
     }
 }

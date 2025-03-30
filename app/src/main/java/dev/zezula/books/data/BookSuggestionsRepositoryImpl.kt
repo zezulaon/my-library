@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.util.UUID
@@ -43,6 +44,7 @@ class BookSuggestionsRepositoryImpl(
                     .toBookEntity(
                         id = UUID.randomUUID().toString(),
                         dateAdded = LocalDateTime.now().toString(),
+                        lastModifiedTimestamp = Clock.System.now().toString(),
                     )
 
                 // Check that the book is still in the database (it might have been deleted in the meantime).

@@ -22,36 +22,41 @@ class SyncUseCase(
 
     suspend operator fun invoke(): Response<Unit> {
         return asResponse {
-            downloadLibrary()
+            syncLibrary()
         }
             .onError {
                 Timber.e(it, "Failed to refresh library.")
             }
     }
 
-    private suspend fun downloadLibrary() {
-        val numberOfBooks = bookDao.getBookCount()
-        Timber.d("Number of books in the app database: $numberOfBooks")
-        Timber.d("Sync is required: ${numberOfBooks == 0}")
-        // FIXME: implement proper syncing. Right now, the firestore is used as a simple online "back up" (which is
-        //  downloaded only when there are no books in the app database)
-        if (numberOfBooks == 0) {
-            networkDataSource.getBooks().forEach { networkBook ->
-                val bookEntity = networkBook.asEntity()
+    private suspend fun syncLibrary() {
+        syncShelves()
+        syncBooks()
+        syncShelvesWithBooks()
+        syncNotes()
+    }
 
-                bookDao.insertOrUpdate(bookEntity)
+    private suspend fun syncShelves() {
+        val lastModifiedTimestamp = shelfDao.getLatestLastModifiedTimestamp()
+        val modifiedShelves = networkDataSource.getModifiedShelves(lastModifiedTimestamp)
+        shelfDao.insertOrUpdateShelves(modifiedShelves.map { it.asEntity() })
+    }
 
-                networkDataSource.getNotesForBook(bookEntity.id).forEach { networkNote ->
-                    val networkNoteEntity = networkNote.asEntity()
-                    noteDao.insertOrUpdateNote(networkNoteEntity)
-                }
-            }
-            networkDataSource.getShelves().forEach { networkShelf ->
-                shelfDao.insertOrUpdateShelf(networkShelf.asEntity())
-            }
-            networkDataSource.getShelvesWithBooks().forEach { networkShelfWithBook ->
-                shelfAndBookDao.insertOrUpdateShelfWithBook(networkShelfWithBook.asEntity())
-            }
-        }
+    private suspend fun syncShelvesWithBooks() {
+        val lastModifiedTimestamp = shelfAndBookDao.getLatestLastModifiedTimestamp()
+        val modifiedShelvesWithBooks = networkDataSource.getModifiedShelvesWithBooks(lastModifiedTimestamp)
+        shelfAndBookDao.insertOrUpdateShelvesWithBooks(modifiedShelvesWithBooks.map { it.asEntity() })
+    }
+
+    private suspend fun syncNotes() {
+        val lastModifiedTimestamp = noteDao.getLatestLastModifiedTimestamp()
+        val modifiedNotes = networkDataSource.getModifiedNotes(lastModifiedTimestamp)
+        noteDao.insertOrUpdateNotes(modifiedNotes.map { it.asEntity() })
+    }
+
+    private suspend fun syncBooks() {
+        val lastModifiedTimestamp = bookDao.getLatestLastModifiedTimestamp()
+        val modifiedBooks = networkDataSource.getModifiedBooks(lastModifiedTimestamp)
+        bookDao.insertOrUpdateBooks(modifiedBooks.map { it.asEntity() })
     }
 }

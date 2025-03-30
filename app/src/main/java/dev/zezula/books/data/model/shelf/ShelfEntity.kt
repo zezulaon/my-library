@@ -14,6 +14,7 @@ data class ShelfEntity(
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun ShelfEntity.asNetworkShelf(): NetworkShelf {
@@ -22,10 +23,11 @@ fun ShelfEntity.asNetworkShelf(): NetworkShelf {
         dateAdded = dateAdded,
         title = title,
         isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
 val previewShelfEntities = listOf(
-    ShelfEntity(id = "1", dateAdded = "2023-01-05T17:43:25.629", title = "Favorites"),
-    ShelfEntity(id = "2", dateAdded = "2022-01-05T17:43:25.629", title = "Have Read"),
+    ShelfEntity(id = "1", dateAdded = "2023-01-05T17:43:25.629", title = "Favorites", lastModifiedTimestamp = "2023-01-05T17:43:25.629"),
+    ShelfEntity(id = "2", dateAdded = "2022-01-05T17:43:25.629", title = "Have Read", lastModifiedTimestamp = "2022-01-05T17:43:25.629"),
 )

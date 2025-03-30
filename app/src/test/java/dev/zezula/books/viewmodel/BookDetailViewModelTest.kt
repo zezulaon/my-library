@@ -94,7 +94,7 @@ class BookDetailViewModelTest : KoinTest {
 
     @Before
     fun setupRepository() = runTest {
-        bookDao.insertOrUpdate(bookTestData)
+        bookDao.insertOrUpdateBook(bookTestData)
         shelfAndBookDao.addOrUpdate(shelvesTestData)
     }
 

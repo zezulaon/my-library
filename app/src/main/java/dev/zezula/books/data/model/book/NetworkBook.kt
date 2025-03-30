@@ -2,6 +2,7 @@ package dev.zezula.books.data.model.book
 
 import com.google.firebase.firestore.PropertyName
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
+import kotlinx.datetime.Clock
 
 // Null default values are required when deserializing from firestore [DataSnapshot]. See:
 // https://firebase.google.com/docs/database/android/read-and-write#basic_write
@@ -26,6 +27,8 @@ data class NetworkBook(
 
     @get:PropertyName(FIELD_IS_DELETED)
     val isDeleted: Boolean? = null,
+
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun NetworkBook.asEntity() = BookEntity(
@@ -44,4 +47,5 @@ fun NetworkBook.asEntity() = BookEntity(
     binding = binding,
     isDeleted = isDeleted == true,
     isInLibrary = true,
+    lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
 )

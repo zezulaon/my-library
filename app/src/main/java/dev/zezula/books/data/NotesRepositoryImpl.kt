@@ -10,6 +10,8 @@ import dev.zezula.books.data.model.note.fromNoteFormData
 import dev.zezula.books.data.source.db.NoteDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import java.time.LocalDateTime
 import java.util.UUID
 
 class NotesRepositoryImpl(
@@ -36,6 +38,8 @@ class NotesRepositoryImpl(
             noteId = noteId,
             bookId = bookId,
             noteFormData = noteFormData,
+            dateAdded = noteFormData.dateAdded ?: LocalDateTime.now().toString(),
+            lastModifiedTimestamp = Clock.System.now(),
         )
             .copy(isPendingSync = true)
         noteDao.insertNote(note)
@@ -47,10 +51,14 @@ class NotesRepositoryImpl(
             text = noteFormData.text,
             type = noteFormData.type,
             page = noteFormData.page,
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
     }
 
     override suspend fun softDeleteNote(noteId: String, bookId: String) {
-        noteDao.softDeleteNote(noteId)
+        noteDao.softDeleteNote(
+            noteId = noteId,
+            lastModifiedTimestamp = Clock.System.now().toString()
+        )
     }
 }

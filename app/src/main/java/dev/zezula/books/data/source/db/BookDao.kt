@@ -66,17 +66,20 @@ interface BookDao {
     @Query(
         """
         UPDATE books 
-        SET isInLibrary = 1, dateAdded = :dateAdded, isPendingSync = 1
+        SET isInLibrary = 1, dateAdded = :dateAdded, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :bookId
         """,
     )
-    suspend fun addToLibraryBooks(bookId: String, dateAdded: String)
+    suspend fun addToLibraryBooks(bookId: String, dateAdded: String, lastModifiedTimestamp: String)
 
     @Insert
     suspend fun insertBook(book: BookEntity)
 
     @Upsert
-    suspend fun insertOrUpdate(book: BookEntity)
+    suspend fun insertOrUpdateBook(book: BookEntity)
+
+    @Upsert
+    suspend fun insertOrUpdateBooks(bookEntities: List<BookEntity>)
 
     @Query(
         """
@@ -93,7 +96,8 @@ interface BookDao {
             thumbnailLink = :thumbnailLink,
             userRating = :userRating,
             pageCount = :pageCount, 
-            isPendingSync = :isPendingSync
+            isPendingSync = :isPendingSync,
+            lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :bookId
         """,
     )
@@ -111,23 +115,27 @@ interface BookDao {
         thumbnailLink: String?,
         userRating: Int?,
         pageCount: Int?,
+        lastModifiedTimestamp: String,
     )
 
     @Query(
         """
         UPDATE books 
-        SET thumbnailLink = :thumbnailLink, isPendingSync = 1
+        SET thumbnailLink = :thumbnailLink, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :bookId
         """,
     )
-    suspend fun updateBookCover(bookId: String, thumbnailLink: String)
+    suspend fun updateBookCover(bookId: String, thumbnailLink: String, lastModifiedTimestamp: String)
 
     @Query(
         """
         UPDATE books 
-        SET isDeleted = 1, isPendingSync = 1
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :bookId
         """,
     )
-    suspend fun softDeleteBook(bookId: String)
+    suspend fun softDeleteBook(bookId: String, lastModifiedTimestamp: String)
+
+    @Query("SELECT lastModifiedTimestamp FROM books ORDER BY lastModifiedTimestamp DESC LIMIT 1")
+    suspend fun getLatestLastModifiedTimestamp(): String?
 }

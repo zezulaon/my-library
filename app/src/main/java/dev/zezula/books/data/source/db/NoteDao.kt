@@ -43,10 +43,13 @@ interface NoteDao {
     @Upsert
     suspend fun insertOrUpdateNote(note: NoteEntity)
 
+    @Upsert
+    suspend fun insertOrUpdateNotes(noteEntities: List<NoteEntity>)
+
     @Query(
         """
         UPDATE notes 
-        SET text = :text, page = :page, type = :type, isPendingSync = 1
+        SET text = :text, page = :page, type = :type, lastModifiedTimestamp = :lastModifiedTimestamp, isPendingSync = 1
         WHERE id = :noteId
         """,
     )
@@ -55,25 +58,26 @@ interface NoteDao {
         text: String,
         page: Int?,
         type: String?,
+        lastModifiedTimestamp: String,
     )
 
     @Query(
         """
         UPDATE notes 
-        SET isDeleted = 1, isPendingSync = 1
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :noteId
         """,
     )
-    suspend fun softDeleteNote(noteId: String)
+    suspend fun softDeleteNote(noteId: String, lastModifiedTimestamp: String)
 
     @Query(
         """
         UPDATE notes 
-        SET isDeleted = 1, isPendingSync = 1
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE bookId = :bookId
         """,
     )
-    suspend fun softDeleteNotesForBook(bookId: String)
+    suspend fun softDeleteNotesForBook(bookId: String, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -91,4 +95,7 @@ interface NoteDao {
         """,
     )
     fun getAllPendingSyncStream(): Flow<List<NoteEntity>>
+
+    @Query("SELECT lastModifiedTimestamp FROM notes ORDER BY lastModifiedTimestamp DESC LIMIT 1")
+    suspend fun getLatestLastModifiedTimestamp(): String?
 }

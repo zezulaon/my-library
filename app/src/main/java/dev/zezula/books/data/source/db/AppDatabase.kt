@@ -27,7 +27,7 @@ import timber.log.Timber
         ShelfWithBookEntity::class,
         NoteEntity::class,
     ],
-    version = 8,
+    version = 10,
     // https://developer.android.com/training/data-storage/room/migrating-db-versions
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
@@ -35,6 +35,7 @@ import timber.log.Timber
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
         AutoMigration(from = 7, to = 8),
+        AutoMigration(from = 8, to = 9),
     ],
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -74,5 +75,16 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         db.execSQL("ALTER TABLE books ADD COLUMN isInLibrary INTEGER NOT NULL DEFAULT 0")
         db.execSQL("UPDATE books SET isInLibrary = 1 WHERE id IN (SELECT bookId FROM library_books)")
         db.execSQL("DROP TABLE library_books")
+    }
+}
+
+val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("UPDATE notes SET isPendingSync = 1")
+
+        db.execSQL("UPDATE notes SET lastModifiedTimestamp = \"2025-03-24T12:00:00.000Z\"")
+        db.execSQL("UPDATE books SET lastModifiedTimestamp = \"2025-03-24T12:00:00.000Z\"")
+        db.execSQL("UPDATE shelves SET lastModifiedTimestamp = \"2025-03-24T12:00:00.000Z\"")
+        db.execSQL("UPDATE shelf_with_book SET lastModifiedTimestamp = \"2025-03-24T12:00:00.000Z\"")
     }
 }

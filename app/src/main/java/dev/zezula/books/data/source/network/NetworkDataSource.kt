@@ -12,11 +12,7 @@ interface NetworkDataSource {
 
     suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData)
 
-    suspend fun getBooks(): List<NetworkBook>
-
     suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook
-
-    suspend fun getNotesForBook(bookId: String): List<NetworkNote>
 
     suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote
 
@@ -26,9 +22,13 @@ interface NetworkDataSource {
 
     suspend fun deleteShelf(shelfId: String)
 
-    suspend fun getShelves(): List<NetworkShelf>
-
-    suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook>
-
     suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook)
+
+    suspend fun getModifiedShelves(lastModifiedTimestamp: String?): List<NetworkShelf>
+
+    suspend fun getModifiedBooks(lastModifiedTimestamp: String?): List<NetworkBook>
+
+    suspend fun getModifiedShelvesWithBooks(lastModifiedTimestamp: String?): List<NetworkShelfWithBook>
+
+    suspend fun getModifiedNotes(lastModifiedTimestamp: String?): List<NetworkNote>
 }

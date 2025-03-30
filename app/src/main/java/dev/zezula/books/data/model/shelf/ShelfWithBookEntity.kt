@@ -30,6 +30,7 @@ data class ShelfWithBookEntity(
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun ShelfWithBookEntity.asNetworkShelfWithBook(): NetworkShelfWithBook {
@@ -37,5 +38,6 @@ fun ShelfWithBookEntity.asNetworkShelfWithBook(): NetworkShelfWithBook {
         bookId = bookId,
         shelfId = shelfId,
         isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }

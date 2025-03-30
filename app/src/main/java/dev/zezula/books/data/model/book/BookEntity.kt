@@ -27,6 +27,7 @@ data class BookEntity(
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun BookEntity.asExternalModel(): Book {
@@ -62,6 +63,7 @@ fun BookEntity.asNetworkBook(): NetworkBook {
         userRating = userRating,
         pageCount = pageCount,
         isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
@@ -77,6 +79,7 @@ val previewBookEntities = listOf(
         pageCount = 152,
         thumbnailLink = null,
         dateAdded = "2022-01-05T17:43:25.629",
+        lastModifiedTimestamp = "2022-01-05T17:43:25.629",
     ),
     BookEntity(
         id = "2",
@@ -89,5 +92,6 @@ val previewBookEntities = listOf(
         pageCount = 152,
         thumbnailLink = null,
         dateAdded = "2023-01-05T17:43:25.629",
+        lastModifiedTimestamp = "2023-01-05T17:43:25.629",
     ),
 )

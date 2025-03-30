@@ -9,10 +9,12 @@ import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookEntity
 import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
+import dev.zezula.books.data.source.db.ShelfDao
 import dev.zezula.books.data.source.db.legacy.LegacyAppDatabase
 import dev.zezula.books.data.source.db.legacy.LegacyBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
@@ -20,19 +22,18 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Clock
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.time.measureTime
 
 class CheckMigrationUseCase(
-    private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
-    private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
-    private val updateShelfUseCase: UpdateShelfUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     private val legacyAppDatabase: LegacyAppDatabase,
     private val bookDao: BookDao,
-    private val shelfDao: ShelfAndBookDao,
+    private val shelfAndBookDao: ShelfAndBookDao,
+    private val shelfDao: ShelfDao,
     private val legacyBookDao: LegacyBookDao,
     private val noteDao: NoteDao,
     private val networkDataSource: NetworkDataSource,
@@ -113,6 +114,7 @@ class CheckMigrationUseCase(
                             page = page?.toIntOrNull(),
                             type = "quote",
                             isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
                         )
                     )
                 }
@@ -151,6 +153,7 @@ class CheckMigrationUseCase(
                             dateAdded = dateAdded?.toString() ?: LocalDateTime.now().toString(),
                             text = text ?: "",
                             isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
                         )
                     )
                 }
@@ -178,15 +181,15 @@ class CheckMigrationUseCase(
                 total = legacyShelvesSize,
                 current = index + 1,
             )
-            updateShelfUseCase(legacyShelfType.shelfId, legacyShelfType.title)
-                .fold(
-                    onSuccess = {
-                        Timber.d("Legacy Shelf migrated successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to migrate legacy shelf")
-                    },
+            shelfDao.insertShelf(
+                ShelfEntity(
+                    id = legacyShelfType.shelfId,
+                    dateAdded = LocalDateTime.now().toString(),
+                    title = legacyShelfType.title,
+                    isPendingSync = true,
+                    lastModifiedTimestamp = Clock.System.now().toString(),
                 )
+            )
         }
         Timber.d("Migrating real shelves...")
         val shelves = legacyBookDao.getAllShelves()
@@ -202,15 +205,15 @@ class CheckMigrationUseCase(
                 val id = shelf._id
                 val title = shelf.name
                 if (id != null && title != null) {
-                    updateShelfUseCase(id.toString(), title)
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Shelf migrated successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to migrate the shelf")
-                            },
+                    shelfDao.insertShelf(
+                        ShelfEntity(
+                            id = id.toString(),
+                            dateAdded = LocalDateTime.now().toString(),
+                            title = title,
+                            isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
                         )
+                    )
                 }
             } catch (e: Exception) {
                 Timber.w(e, "Failed to migrate shelf: $shelf")
@@ -267,6 +270,7 @@ class CheckMigrationUseCase(
                         dateAdded = LocalDateTime.now().toString(),
                         text = "Lent to $lentToName",
                         isPendingSync = true,
+                        lastModifiedTimestamp = Clock.System.now().toString(),
                     )
                 )
             }
@@ -292,7 +296,7 @@ class CheckMigrationUseCase(
     private suspend fun addBookToShelf(shelfId: String?, bookId: String?) {
         if (bookId != null && shelfId != null) {
             val bookExists = bookDao.getBookFlow(bookId.toString()).firstOrNull() != null
-            val shelfExists = shelfDao.getAllShelvesFlow()
+            val shelfExists = shelfAndBookDao.getAllShelvesFlow()
                 .firstOrNull()?.any { it.id == shelfId.toString() } == true
             if (bookExists && shelfExists) {
                 toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)

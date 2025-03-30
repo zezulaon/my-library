@@ -16,6 +16,9 @@ interface ShelfAndBookDao {
     @Upsert
     suspend fun insertOrUpdateShelfWithBook(shelfWithBookEntity: ShelfWithBookEntity)
 
+    @Upsert
+    suspend fun insertOrUpdateShelvesWithBooks(shelfWithBookEntities: List<ShelfWithBookEntity>)
+
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """
@@ -57,24 +60,27 @@ interface ShelfAndBookDao {
     @Query(
         """
         UPDATE shelf_with_book 
-        SET isDeleted = 1, isPendingSync = 1 
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE shelfId = :shelfId
         """,
     )
-    suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String)
+    suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String, lastModifiedTimestamp: String)
 
     @Query(
         """
         UPDATE shelf_with_book 
-        SET isDeleted = 1, isPendingSync = 1
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE bookId = :bookId
         """,
     )
-    suspend fun softDeleteShelvesWithBooksForBook(bookId: String)
+    suspend fun softDeleteShelvesWithBooksForBook(bookId: String, lastModifiedTimestamp: String)
 
     @Query("SELECT * FROM shelf_with_book WHERE isPendingSync = 1")
     fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>>
 
     @Query("UPDATE shelf_with_book SET isPendingSync = 0 WHERE shelfId = :shelfId AND bookId = :bookId")
     suspend fun resetShelfWithBookPendingSyncStatus(shelfId: String, bookId: String)
+
+    @Query("SELECT lastModifiedTimestamp FROM shelf_with_book ORDER BY lastModifiedTimestamp DESC LIMIT 1")
+    suspend fun getLatestLastModifiedTimestamp(): String?
 }

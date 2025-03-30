@@ -25,6 +25,7 @@ import dev.zezula.books.data.UserRepositoryImpl
 import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.data.source.db.MIGRATION_3_4
 import dev.zezula.books.data.source.db.MIGRATION_6_7
+import dev.zezula.books.data.source.db.MIGRATION_9_10
 import dev.zezula.books.data.source.network.AuthService
 import dev.zezula.books.data.source.network.AuthServiceImpl
 import dev.zezula.books.data.source.network.FirestoreDataSource
@@ -143,6 +144,7 @@ val appModule = module {
         )
             .addMigrations(MIGRATION_3_4)
             .addMigrations(MIGRATION_6_7)
+            .addMigrations(MIGRATION_9_10)
             .build()
     }
     single {

@@ -10,6 +10,7 @@ import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.SearchBookResultDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.util.UUID
@@ -29,7 +30,8 @@ class BookSearchResultsRepositoryImpl(
         val bookId = UUID.randomUUID().toString()
         val bookEntity = bookFormData.toBookEntity(
             id = bookId,
-            dateAdded = LocalDateTime.now().toString(),
+            dateAdded = LocalDateTime.now().toString(), // FIXME: move to kotlin x Instant (in DB and network objects)
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
         bookDao.insertBook(bookEntity)
         searchBookResultDao.insertSearchBookResults(SearchBookResultEntity(bookId = bookId))

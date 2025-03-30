@@ -30,11 +30,19 @@ class FakeShelfAndBookDaoImpl : ShelfAndBookDao {
         }
     }
 
-    override suspend fun softDeleteShelvesWithBooksForBook(bookId: String) {
+    override suspend fun getLatestLastModifiedTimestamp(): String? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String) {
+    override suspend fun softDeleteShelvesWithBooksForShelf(shelfId: String, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertOrUpdateShelvesWithBooks(shelfWithBookEntities: List<ShelfWithBookEntity>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteShelvesWithBooksForBook(bookId: String, lastModifiedTimestamp: String) {
         TODO("Not yet implemented")
     }
 

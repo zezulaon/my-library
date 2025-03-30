@@ -27,7 +27,7 @@ class UserLibraryRepositoryTest : KoinTest {
 
     @Before
     fun setupRepository() = runTest {
-        bookDao.insertOrUpdate(booksTestData)
+        bookDao.insertOrUpdateBook(booksTestData)
     }
 
 //    @Test

@@ -21,6 +21,22 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
+    override suspend fun addToLibraryBooks(bookId: String, dateAdded: String, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun softDeleteBook(bookId: String, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateBookCover(bookId: String, thumbnailLink: String, lastModifiedTimestamp: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertOrUpdateBooks(bookEntities: List<BookEntity>) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateBook(
         bookId: String,
         isPendingSync: Boolean,
@@ -34,12 +50,17 @@ class FakeBookDaoImpl : BookDao {
         yearPublished: Int?,
         thumbnailLink: String?,
         userRating: Int?,
-        pageCount: Int?
+        pageCount: Int?,
+        lastModifiedTimestamp: String
     ) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertOrUpdate(book: BookEntity) {
+    override suspend fun getLatestLastModifiedTimestamp(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertOrUpdateBook(book: BookEntity) {
         TODO("Not yet implemented")
     }
 
@@ -51,23 +72,11 @@ class FakeBookDaoImpl : BookDao {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addToLibraryBooks(bookId: String, dateAdded: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun softDeleteBook(bookId: String) {
-        TODO("Not yet implemented")
-    }
-
     override fun getAllPendingSyncBooksFlow(): Flow<List<BookEntity>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun resetBookPendingSyncStatus(bookId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
         TODO("Not yet implemented")
     }
 

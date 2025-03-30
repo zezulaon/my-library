@@ -49,13 +49,13 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         .associateBy { note -> note.id!! }
         .toMutableMap()
 
-    override suspend fun getBooks(): List<NetworkBook> {
-        return booksMap.values.toList()
-    }
-
     override suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook {
         booksMap[book.id!!] = book
         return book
+    }
+
+    override suspend fun getModifiedShelves(lastModifiedTimestamp: String?): List<NetworkShelf> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
@@ -63,12 +63,20 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return shelf
     }
 
-    override suspend fun deleteShelf(shelfId: String) {
-        shelvesMap.remove(shelfId)
+    override suspend fun getModifiedBooks(lastModifiedTimestamp: String?): List<NetworkBook> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getShelves(): List<NetworkShelf> {
-        return shelvesMap.values.toList()
+    override suspend fun getModifiedShelvesWithBooks(lastModifiedTimestamp: String?): List<NetworkShelfWithBook> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getModifiedNotes(lastModifiedTimestamp: String?): List<NetworkNote> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteShelf(shelfId: String) {
+        shelvesMap.remove(shelfId)
     }
 
     override suspend fun getMigrationData(): NetworkMigrationData {
@@ -77,11 +85,6 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     override suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData) {
         // Not used in this fake
-    }
-
-    override suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook> {
-        // Starts without any book<->shelf connection
-        return emptyList()
     }
 
     override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
@@ -95,9 +98,5 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
         notesMap.remove(noteId)
-    }
-
-    override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
-        return notesMap.values.filter { it.bookId == bookId }
     }
 }

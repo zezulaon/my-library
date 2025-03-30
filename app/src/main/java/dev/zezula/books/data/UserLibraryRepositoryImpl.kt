@@ -3,13 +3,14 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.util.UUID
@@ -26,7 +27,7 @@ class UserLibraryRepositoryImpl(
     }
 
     override suspend fun moveExistingBookToLibrary(bookId: String) {
-        bookDao.addToLibraryBooks(bookId = bookId, dateAdded = LocalDateTime.now().toString())
+        bookDao.addToLibraryBooks(bookId = bookId, dateAdded = LocalDateTime.now().toString(), lastModifiedTimestamp = Clock.System.now().toString())
     }
 
     override fun isBookInLibrary(bookId: String): Flow<Boolean> {
@@ -45,7 +46,8 @@ class UserLibraryRepositoryImpl(
         val bookEntity = bookFormData
             .toBookEntity(
                 id = bookId,
-                dateAdded = LocalDateTime.now().toString()
+                dateAdded = LocalDateTime.now().toString(),
+                lastModifiedTimestamp = Clock.System.now().toString(),
             )
             .copy(
                 isInLibrary = true,
@@ -72,7 +74,8 @@ class UserLibraryRepositoryImpl(
             yearPublished = bookFormData.yearPublished,
             thumbnailLink = bookFormData.thumbnailLink,
             userRating = bookFormData.userRating,
-            pageCount = bookFormData.pageCount
+            pageCount = bookFormData.pageCount,
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
     }
 
@@ -81,7 +84,8 @@ class UserLibraryRepositoryImpl(
             bookId = bookId,
             shelfId = shelfId,
             isPendingSync = true,
-            isDeleted = isBookInShelf.not()
+            isDeleted = isBookInShelf.not(),
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
         shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
     }

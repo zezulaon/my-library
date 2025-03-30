@@ -10,6 +10,7 @@ import dev.zezula.books.data.source.db.ShelfAndBookDao
 import dev.zezula.books.data.source.db.ShelfDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -39,16 +40,24 @@ class ShelvesRepositoryImpl(
             dateAdded = LocalDateTime.now().toString(),
             title = shelfTitle,
             isPendingSync = true,
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
         shelfDao.insertShelf(shelf)
     }
 
     override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
-        shelfDao.updateShelf(shelfId = shelfId, title = updatedTitle)
+        shelfDao.updateShelf(
+            shelfId = shelfId,
+            title = updatedTitle,
+            lastModifiedTimestamp = Clock.System.now().toString()
+        )
     }
 
     override suspend fun softDeleteShelf(shelf: Shelf) {
-        shelfDao.softDeleteShelf(shelf.id)
-        shelvesAndBooksDao.softDeleteShelvesWithBooksForShelf(shelf.id)
+        shelfDao.softDeleteShelf(
+            shelfId = shelf.id,
+            lastModifiedTimestamp = Clock.System.now().toString()
+        )
+        shelvesAndBooksDao.softDeleteShelvesWithBooksForShelf(shelfId = shelf.id, lastModifiedTimestamp = Clock.System.now().toString())
     }
 }

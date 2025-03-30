@@ -45,7 +45,7 @@ data class BookFormData(
     val binding: String? = null,
 )
 
-fun BookFormData.toBookEntity(id: String, dateAdded: String): BookEntity {
+fun BookFormData.toBookEntity(id: String, dateAdded: String, lastModifiedTimestamp: String): BookEntity {
     return BookEntity(
         id = id,
         title = title,
@@ -60,6 +60,7 @@ fun BookFormData.toBookEntity(id: String, dateAdded: String): BookEntity {
         subject = subject,
         binding = binding,
         thumbnailLink = thumbnailLink,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
