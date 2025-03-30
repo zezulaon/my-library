@@ -24,5 +24,5 @@ val flavoredAppModule = module {
     }
 
     single { RefreshBookCoverUseCase(get(), get()) }
-    single { CheckMigrationUseCase(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { CheckMigrationUseCase(get(), get(), get(), get(), get(), get(), get()) }
 }

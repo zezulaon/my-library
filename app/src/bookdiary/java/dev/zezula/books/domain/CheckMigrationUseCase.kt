@@ -10,6 +10,7 @@ import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookEntity
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.shelf.ShelfEntity
+import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.NoteDao
@@ -29,14 +30,13 @@ import java.time.ZoneOffset
 import kotlin.time.measureTime
 
 class CheckMigrationUseCase(
-    private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
-    private val legacyAppDatabase: LegacyAppDatabase,
     private val bookDao: BookDao,
     private val shelfAndBookDao: ShelfAndBookDao,
     private val shelfDao: ShelfDao,
-    private val legacyBookDao: LegacyBookDao,
     private val noteDao: NoteDao,
     private val networkDataSource: NetworkDataSource,
+    private val legacyAppDatabase: LegacyAppDatabase,
+    private val legacyBookDao: LegacyBookDao,
 ) {
 
     suspend operator fun invoke(migrationProgress: MutableStateFlow<MigrationProgress?>): Response<Unit> {
@@ -299,18 +299,27 @@ class CheckMigrationUseCase(
             val shelfExists = shelfAndBookDao.getAllShelvesFlow()
                 .firstOrNull()?.any { it.id == shelfId.toString() } == true
             if (bookExists && shelfExists) {
-                toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)
-                    .fold(
-                        onSuccess = {
-                            Timber.d("Book added to shelf successfully")
-                        },
-                        onFailure = {
-                            Timber.w(it, "Failed to add book to shelf")
-                        },
-                    )
-            } else {
-                Timber.w("Legacy group not migrated. Book or shelf missing.")
+                val shelvesWithBooksEntity = ShelfWithBookEntity(
+                    bookId = bookId,
+                    shelfId = shelfId,
+                    isPendingSync = true,
+                    isDeleted = false,
+                    lastModifiedTimestamp = Clock.System.now().toString(),
+                )
+                shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
             }
+//                toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)
+//                    .fold(
+//                        onSuccess = {
+//                            Timber.d("Book added to shelf successfully")
+//                        },
+//                        onFailure = {
+//                            Timber.w(it, "Failed to add book to shelf")
+//                        },
+//                    )
+//            } else {
+//                Timber.w("Legacy group not migrated. Book or shelf missing.")
+//            }
         }
     }
 }
