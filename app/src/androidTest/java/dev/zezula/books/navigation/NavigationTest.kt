@@ -14,16 +14,20 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.onSiblings
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.printToLog
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoActivityResumedException
 import dev.zezula.books.KoinTestRule
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.previewShelves
 import dev.zezula.books.data.source.db.AppDatabase
 import dev.zezula.books.di.appInstrumentedTestModule
@@ -47,7 +51,9 @@ import dev.zezula.books.util.homeNavDrawerShelfItem
 import dev.zezula.books.util.manageShelvesBtnExpand
 import dev.zezula.books.util.manageShelvesShelfItem
 import dev.zezula.books.waitUntilExists
+import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
@@ -78,6 +84,33 @@ class NavigationTest : KoinTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MyLibraryMainActivity>()
+
+    @Before
+    fun setup() = runTest {
+        db.shelfDao().insertOrUpdateShelves(previewShelves.map {
+            ShelfEntity(
+                id = it.id,
+                dateAdded = it.dateAdded,
+                title = it.title,
+            )
+        })
+
+        db.bookDao().insertOrUpdateBooks(previewBooks.map {
+            BookEntity(
+                id = it.id,
+                dateAdded = it.dateAdded,
+                title = it.title,
+                author = it.author,
+                description = it.description,
+                isbn = it.isbn,
+                publisher = it.publisher,
+                yearPublished = it.yearPublished,
+                pageCount = it.pageCount,
+                thumbnailLink = it.thumbnailLink,
+                isInLibrary = true,
+            )
+        })
+    }
 
     @After
     fun closeDb() {

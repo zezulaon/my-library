@@ -55,7 +55,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     }
 
     override suspend fun getModifiedShelves(lastModifiedTimestamp: String?): List<NetworkShelf> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
@@ -64,15 +64,15 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     }
 
     override suspend fun getModifiedBooks(lastModifiedTimestamp: String?): List<NetworkBook> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun getModifiedShelvesWithBooks(lastModifiedTimestamp: String?): List<NetworkShelfWithBook> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun getModifiedNotes(lastModifiedTimestamp: String?): List<NetworkNote> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun deleteShelf(shelfId: String) {
@@ -88,7 +88,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     }
 
     override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
-        TODO("Not yet implemented")
+        // Not used in this fake
     }
 
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
