@@ -16,8 +16,6 @@ import dev.zezula.books.data.ReviewsRepository
 import dev.zezula.books.data.ReviewsRepositoryImpl
 import dev.zezula.books.data.ShelvesRepository
 import dev.zezula.books.data.ShelvesRepositoryImpl
-import dev.zezula.books.data.SyncLibraryRepository
-import dev.zezula.books.data.SyncLibraryRepositoryImpl
 import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.UserLibraryRepositoryImpl
 import dev.zezula.books.data.UserRepository
@@ -59,7 +57,7 @@ import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
-import dev.zezula.books.domain.sync.SyncService
+import dev.zezula.books.data.BackupService
 import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
@@ -73,16 +71,26 @@ import dev.zezula.books.ui.screen.search.SearchMyLibraryViewModel
 import dev.zezula.books.ui.screen.shelves.ShelvesViewModel
 import dev.zezula.books.ui.screen.signin.EmailSignInViewModel
 import dev.zezula.books.ui.screen.signin.SignInViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+private const val IO_SCOPE = "IO"
+
 val appModule = module {
+
+    factory<CoroutineScope>(qualifier = named(IO_SCOPE)) {
+        CoroutineScope(Dispatchers.IO + SupervisorJob())
+    }
 
     // Network services
     single<GoodreadsApi> {
@@ -131,8 +139,15 @@ val appModule = module {
     single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
 
-    single<SyncService> {
-        SyncService(get(), get())
+    single<BackupService> {
+        BackupService(
+            coroutineScope = get(qualifier = named(IO_SCOPE)),
+            networkDataSource = get(),
+            bookDao = get(),
+            shelfDao = get(),
+            noteDao = get(),
+            shelfAndBookDao = get(),
+        )
     }
 
     // Database and DAOs
@@ -218,10 +233,9 @@ val appModule = module {
     single<UserRepository> { UserRepositoryImpl() }
     single<ShelvesRepository> { ShelvesRepositoryImpl(get(), get()) }
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
-    single<SyncLibraryRepository> { SyncLibraryRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }

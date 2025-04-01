@@ -1,6 +1,8 @@
 package dev.zezula.books.data.source.network
 
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.data.model.book.NetworkBook
@@ -17,25 +19,25 @@ class FirestoreDataSource : NetworkDataSource {
     private val auth = Firebase.auth
     private val db = Firebase.firestore
 
-    private val userId: String by lazy { auth.currentUser?.uid ?: throw IllegalStateException("Missing firebase user") }
+    private fun getCurrentUserId(): String = auth.currentUser?.uid ?: throw IllegalStateException("Missing firebase user")
 
-    private val userDocument = db.collection(COLLECTION_ID_USERS).document(userId)
+    private fun userDocument(): DocumentReference = db.collection(COLLECTION_ID_USERS).document(getCurrentUserId())
 
-    private val booksCollection =
-        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_BOOKS)
+    private fun booksCollection(): CollectionReference =
+        db.collection(COLLECTION_ID_USERS).document(getCurrentUserId()).collection(COLLECTION_ID_BOOKS)
 
-    private val shelvesCollection =
-        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES)
+    private fun shelvesCollection(): CollectionReference =
+        db.collection(COLLECTION_ID_USERS).document(getCurrentUserId()).collection(COLLECTION_ID_SHELVES)
 
-    private val shelvesWithBooksCollection =
-        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_ID_SHELVES_WITH_BOOKS)
+    private fun shelvesWithBooksCollection(): CollectionReference =
+        db.collection(COLLECTION_ID_USERS).document(getCurrentUserId()).collection(COLLECTION_ID_SHELVES_WITH_BOOKS)
 
-    private val notesCollection =
-        db.collection(COLLECTION_ID_USERS).document(userId).collection(COLLECTION_NOTES)
+    private fun notesCollection(): CollectionReference =
+        db.collection(COLLECTION_ID_USERS).document(getCurrentUserId()).collection(COLLECTION_NOTES)
 
     override suspend fun getMigrationData(): NetworkMigrationData {
         Timber.d("getMigrationData()")
-        return userDocument.get().await()
+        return userDocument().get().await()
             .toObject(NetworkMigrationData::class.java).also {
                 Timber.d("Deserialized migration data to: $it")
             } ?: NetworkMigrationData()
@@ -43,11 +45,11 @@ class FirestoreDataSource : NetworkDataSource {
 
     override suspend fun updateMigrationData(networkMigrationData: NetworkMigrationData) {
         Timber.d("updateMigrationData(networkMigrationData=$networkMigrationData)")
-        val userDocumentExists = userDocument.get().await().exists()
+        val userDocumentExists = userDocument().get().await().exists()
         if (userDocumentExists) {
-            userDocument.update(networkMigrationData.toMapValues()).await()
+            userDocument().update(networkMigrationData.toMapValues()).await()
         } else {
-            userDocument.set(networkMigrationData).await()
+            userDocument().set(networkMigrationData).await()
         }
     }
 
@@ -55,9 +57,9 @@ class FirestoreDataSource : NetworkDataSource {
         Timber.d("getModifiedShelves(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
         return if (lastModifiedTimestamp == null) {
-            shelvesCollection
+            shelvesCollection()
         } else {
-            shelvesCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+            shelvesCollection().whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
         }.get().await()
             .also { Timber.d("Found ${it.size()} modified shelves") }
             .map {
@@ -72,9 +74,9 @@ class FirestoreDataSource : NetworkDataSource {
         Timber.d("getModifiedShelvesWithBooks(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
         return if (lastModifiedTimestamp == null) {
-            shelvesWithBooksCollection
+            shelvesWithBooksCollection()
         } else {
-            shelvesWithBooksCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+            shelvesWithBooksCollection().whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
         }.get().await()
             .also { Timber.d("Found ${it.size()} modified shelves with books") }
             .map {
@@ -89,9 +91,9 @@ class FirestoreDataSource : NetworkDataSource {
         Timber.d("getModifiedBooks(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
         return if (lastModifiedTimestamp == null) {
-            booksCollection
+            booksCollection()
         } else {
-            booksCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+            booksCollection().whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
         }.get().await()
             .also { Timber.d("Found ${it.size()} modified books") }
             .map {
@@ -106,9 +108,9 @@ class FirestoreDataSource : NetworkDataSource {
         Timber.d("getModifiedNotes(lastModifiedTimestamp=$lastModifiedTimestamp)")
 
         return if (lastModifiedTimestamp == null) {
-            notesCollection
+            notesCollection()
         } else {
-            notesCollection.whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
+            notesCollection().whereGreaterThan(FIELD_LAST_MODIFIED_TIMESTAMP, lastModifiedTimestamp)
         }.get().await()
             .also { Timber.d("Found ${it.size()} modified notes") }
             .map {
@@ -123,7 +125,7 @@ class FirestoreDataSource : NetworkDataSource {
         Timber.d("addOrUpdate(book=$book)")
         checkNotNull(book.id) { "Book needs [id] property" }
 
-        booksCollection.document(book.id).set(book).await()
+        booksCollection().document(book.id).set(book).await()
         return book
     }
 
@@ -133,13 +135,13 @@ class FirestoreDataSource : NetworkDataSource {
         checkNotNull(note.bookId) { "Note needs [bookId] property" }
 
         val bookWithNoteId = createBookWithNoteId(bookId = note.bookId, noteId = note.id)
-        notesCollection.document(bookWithNoteId).set(note).await()
+        notesCollection().document(bookWithNoteId).set(note).await()
         return note
     }
 
     override suspend fun deleteNote(noteId: String, bookId: String) {
         Timber.d("deleteNote (noteId=$noteId)")
-        booksCollection.document(bookId).collection(COLLECTION_NOTES).document(noteId).update(FIELD_IS_DELETED, true).await()
+        booksCollection().document(bookId).collection(COLLECTION_NOTES).document(noteId).update(FIELD_IS_DELETED, true).await()
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
@@ -147,25 +149,25 @@ class FirestoreDataSource : NetworkDataSource {
 
         checkNotNull(shelf.id) { "Shelf needs [id] property" }
 
-        shelvesCollection.document(shelf.id).set(shelf).await()
+        shelvesCollection().document(shelf.id).set(shelf).await()
         return shelf
     }
 
     override suspend fun deleteShelf(shelfId: String) {
         Timber.d("deleteShelf(shelfId=$shelfId)")
 
-        shelvesCollection.document(shelfId).update(FIELD_IS_DELETED, true).await()
+        shelvesCollection().document(shelfId).update(FIELD_IS_DELETED, true).await()
     }
 
     override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
-        Timber.d("updateBookInToShelf(shelfWithBook=$shelfWithBook)")
+        Timber.d("updateBookInShelf(shelfWithBook=$shelfWithBook)")
 
         val shelfId = checkNotNull(shelfWithBook.shelfId) { "Shelf ID is null" }
         val bookId = checkNotNull(shelfWithBook.bookId) { "Book ID is null" }
 
         val shelfWithBookId = createShelfWithBookId(shelfId = shelfId, bookId = bookId)
 
-        shelvesWithBooksCollection.document(shelfWithBookId).set(shelfWithBook).await()
+        shelvesWithBooksCollection().document(shelfWithBookId).set(shelfWithBook).await()
     }
 
     private fun createShelfWithBookId(shelfId: String, bookId: String) = "${shelfId}_$bookId"

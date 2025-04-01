@@ -47,7 +47,7 @@ interface ShelfDao {
     suspend fun resetShelfPendingSyncStatus(shelfId: String)
 
     @Query("SELECT * FROM shelves WHERE isPendingSync = 1")
-    fun getAllShelvesPendingSyncShelvesStream(): Flow<List<ShelfEntity>>
+    fun getAllShelvesPendingSyncStream(): Flow<List<ShelfEntity>>
 
     @Query("SELECT lastModifiedTimestamp FROM shelves ORDER BY lastModifiedTimestamp DESC LIMIT 1")
     suspend fun getLatestLastModifiedTimestamp(): String?

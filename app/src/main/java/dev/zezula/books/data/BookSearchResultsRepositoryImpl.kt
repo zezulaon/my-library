@@ -30,7 +30,9 @@ class BookSearchResultsRepositoryImpl(
         val bookId = UUID.randomUUID().toString()
         val bookEntity = bookFormData.toBookEntity(
             id = bookId,
-            dateAdded = LocalDateTime.now().toString(), // FIXME: move to kotlin x Instant (in DB and network objects)
+            // FIXME: move to kotlin x Instant (in DB and network objects)
+            //  also check that previous date is working
+            dateAdded = LocalDateTime.now().toString(),
             lastModifiedTimestamp = Clock.System.now().toString(),
         )
         bookDao.insertBook(bookEntity)

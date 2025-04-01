@@ -86,7 +86,7 @@ interface NoteDao {
         WHERE id = :noteId
         """,
     )
-    suspend fun resetPendingSyncStatus(noteId: String)
+    suspend fun resetNotePendingSyncStatus(noteId: String)
 
     @Query(
         """
@@ -94,7 +94,7 @@ interface NoteDao {
         WHERE isPendingSync = 1
         """,
     )
-    fun getAllPendingSyncStream(): Flow<List<NoteEntity>>
+    fun getAllNotesPendingSyncStream(): Flow<List<NoteEntity>>
 
     @Query("SELECT lastModifiedTimestamp FROM notes ORDER BY lastModifiedTimestamp DESC LIMIT 1")
     suspend fun getLatestLastModifiedTimestamp(): String?
