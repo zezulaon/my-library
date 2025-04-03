@@ -78,7 +78,7 @@ class ReviewsRepositoryImpl(
         val reviews = goodReadsReview
             .map {
                 ReviewEntity(
-                    id = UUID.randomUUID().toString(),
+                    id = Review.Id(UUID.randomUUID().toString()),
                     bookId = bookId,
                     body = it.body?.removeHtmlTags()?.trim(),
                     link = it.link,
@@ -96,7 +96,7 @@ class ReviewsRepositoryImpl(
     private suspend fun insertRating(bookId: Book.Id, goodreadsBook: GoodreadsBook) {
         val rating = with(goodreadsBook) {
             RatingEntity(
-                id = UUID.randomUUID().toString(),
+                id = Rating.Id(UUID.randomUUID().toString()),
                 bookId = bookId,
                 averageRating = this.average_rating,
                 textReviewsCount = this.work?.text_reviews_count,

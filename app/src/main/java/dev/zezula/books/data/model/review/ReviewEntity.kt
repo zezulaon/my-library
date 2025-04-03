@@ -20,7 +20,7 @@ import dev.zezula.books.data.model.book.BookEntity
 )
 data class ReviewEntity(
     @PrimaryKey
-    val id: String,
+    val id: Review.Id,
     val bookId: Book.Id,
     val body: String? = null,
     val link: String? = null,

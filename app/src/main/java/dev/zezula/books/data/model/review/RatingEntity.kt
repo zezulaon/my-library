@@ -23,7 +23,7 @@ data class RatingEntity(
     // TODO: Primary [id] key and foreign [bookId] key could be combined into one property since book can have exactly
     //  one rating
     @PrimaryKey
-    val id: String,
+    val id: Rating.Id,
     val bookId: Book.Id,
     val averageRating: String? = null,
     val textReviewsCount: Int? = null,
