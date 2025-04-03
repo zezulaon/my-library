@@ -100,7 +100,7 @@ fun BookListRoute(
     onAddBookManuallyClick: () -> Unit,
     onFindBookOnlineClick: () -> Unit,
     onScanBookClick: () -> Unit,
-    onBulkScanBooksClick: (shelfId: String?) -> Unit,
+    onBulkScanBooksClick: (shelfId: Shelf.Id?) -> Unit,
     onBookClick: (Book.Id) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllAuthorsShelvesClick: () -> Unit,

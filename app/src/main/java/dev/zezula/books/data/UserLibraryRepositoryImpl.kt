@@ -5,6 +5,7 @@ import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.toBookEntity
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
@@ -34,7 +35,7 @@ class UserLibraryRepositoryImpl(
         return bookDao.isBookInLibrary(bookId)
     }
 
-    override fun getAllBooksForShelfStream(shelfId: String): Flow<List<Book>> {
+    override fun getAllBooksForShelfStream(shelfId: Shelf.Id): Flow<List<Book>> {
         return shelfAndBookDao.getAllBooksForShelfStream(shelfId).map {
             it.map(BookEntity::asExternalModel)
         }
@@ -79,7 +80,7 @@ class UserLibraryRepositoryImpl(
         )
     }
 
-    override suspend fun toggleBookInShelf(bookId: Book.Id, shelfId: String, isBookInShelf: Boolean) {
+    override suspend fun toggleBookInShelf(bookId: Book.Id, shelfId: Shelf.Id, isBookInShelf: Boolean) {
         val shelvesWithBooksEntity = ShelfWithBookEntity(
             bookId = bookId,
             shelfId = shelfId,

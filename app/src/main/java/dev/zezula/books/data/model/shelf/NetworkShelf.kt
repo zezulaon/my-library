@@ -17,7 +17,7 @@ data class NetworkShelf(
 )
 
 fun NetworkShelf.asEntity() = ShelfEntity(
-    id = checkNotNull(id) { "NetworkShelf id is null" },
+    id = checkNotNull(id) { "NetworkShelf id is null" }.let { Shelf.Id(it) },
     dateAdded = checkNotNull(dateAdded) { "NetworkShelf dateAdded is null" },
     title = checkNotNull(title) { "NetworkShelf title is null" },
     isDeleted = isDeleted == true,

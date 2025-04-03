@@ -47,7 +47,7 @@ private fun ShelvesList(
             .fillMaxWidth(),
     ) {
         LazyColumn(modifier = modifier.padding(16.dp)) {
-            items(items = uiState.shelves, key = { shelf -> shelf.id }) { shelfForBook ->
+            items(items = uiState.shelves, key = { shelf -> shelf.id.value }) { shelfForBook ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = shelfForBook.title)
                     Spacer(modifier = modifier.weight(weight = 1f))

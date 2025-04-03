@@ -34,7 +34,7 @@ class ShelvesRepositoryImpl(
     }
 
     override suspend fun createShelf(shelfTitle: String) {
-        val shelfId = UUID.randomUUID().toString()
+        val shelfId = Shelf.Id(UUID.randomUUID().toString())
 
         val shelf = ShelfEntity(
             id = shelfId,
@@ -46,7 +46,7 @@ class ShelvesRepositoryImpl(
         shelfDao.insertShelf(shelf)
     }
 
-    override suspend fun updateShelf(shelfId: String, updatedTitle: String) {
+    override suspend fun updateShelf(shelfId: Shelf.Id, updatedTitle: String) {
         shelfDao.updateShelf(
             shelfId = shelfId,
             title = updatedTitle,

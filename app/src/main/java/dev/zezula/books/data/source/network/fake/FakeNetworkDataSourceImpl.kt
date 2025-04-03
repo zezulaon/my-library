@@ -33,7 +33,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     private val shelvesMap: MutableMap<String, NetworkShelf> = previewShelves
         .map { shelf ->
-            NetworkShelf(id = shelf.id, dateAdded = shelf.dateAdded, title = shelf.title)
+            NetworkShelf(id = shelf.id.value, dateAdded = shelf.dateAdded, title = shelf.title)
         }
         .associateBy { book -> book.id!! }
         .toMutableMap()

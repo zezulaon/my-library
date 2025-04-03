@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "shelves")
 data class ShelfEntity(
     @PrimaryKey
-    val id: String,
+    val id: Shelf.Id,
     val dateAdded: String,
     val title: String,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
@@ -19,7 +19,7 @@ data class ShelfEntity(
 
 fun ShelfEntity.asNetworkShelf(): NetworkShelf {
     return NetworkShelf(
-        id = id,
+        id = id.value,
         dateAdded = dateAdded,
         title = title,
         isDeleted = isDeleted,
@@ -28,6 +28,6 @@ fun ShelfEntity.asNetworkShelf(): NetworkShelf {
 }
 
 val previewShelfEntities = listOf(
-    ShelfEntity(id = "1", dateAdded = "2023-01-05T17:43:25.629", title = "Favorites", lastModifiedTimestamp = "2023-01-05T17:43:25.629"),
-    ShelfEntity(id = "2", dateAdded = "2022-01-05T17:43:25.629", title = "Have Read", lastModifiedTimestamp = "2022-01-05T17:43:25.629"),
+    ShelfEntity(id = Shelf.Id("1"), dateAdded = "2023-01-05T17:43:25.629", title = "Favorites", lastModifiedTimestamp = "2023-01-05T17:43:25.629"),
+    ShelfEntity(id = Shelf.Id("2"), dateAdded = "2022-01-05T17:43:25.629", title = "Have Read", lastModifiedTimestamp = "2022-01-05T17:43:25.629"),
 )

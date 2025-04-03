@@ -26,7 +26,7 @@ data class NetworkShelfWithBook(
 // FIXME: Tmp solution. Invalid state should be just logged and entity insertion skipped
 fun NetworkShelfWithBook.asEntity() = ShelfWithBookEntity(
     bookId = checkNotNull(bookId) { "NetworkShelfWithBook bookId is null" }.let { Book.Id(it) },
-    shelfId = checkNotNull(shelfId) { "NetworkShelfWithBook shelfId is null" },
+    shelfId = checkNotNull(shelfId) { "NetworkShelfWithBook shelfId is null" }.let { Shelf.Id(it) },
     isDeleted = isDeleted == true,
     lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
 )

@@ -1,7 +1,7 @@
 package dev.zezula.books.data.model.shelf
 
 data class ShelfWithBookCountEntity(
-    val id: String,
+    val id: Shelf.Id,
     val dateAdded: String,
     val title: String,
     val numberOfBooks: Int,

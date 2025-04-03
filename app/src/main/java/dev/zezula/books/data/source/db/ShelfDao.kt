@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -26,7 +27,7 @@ interface ShelfDao {
         WHERE id = :shelfId
         """,
     )
-    suspend fun updateShelf(shelfId: String, title: String, lastModifiedTimestamp: String)
+    suspend fun updateShelf(shelfId: Shelf.Id, title: String, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -35,7 +36,7 @@ interface ShelfDao {
         WHERE id = :shelfId
         """,
     )
-    suspend fun softDeleteShelf(shelfId: String, lastModifiedTimestamp: String)
+    suspend fun softDeleteShelf(shelfId: Shelf.Id, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -44,7 +45,7 @@ interface ShelfDao {
         WHERE id = :shelfId
         """,
     )
-    suspend fun resetShelfPendingSyncStatus(shelfId: String)
+    suspend fun resetShelfPendingSyncStatus(shelfId: Shelf.Id)
 
     @Query("SELECT * FROM shelves WHERE isPendingSync = 1")
     fun getAllShelvesPendingSyncStream(): Flow<List<ShelfEntity>>

@@ -7,6 +7,7 @@ import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.domain.AllBookDetailResult
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
@@ -82,7 +83,7 @@ class BookDetailViewModel(
 
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
-    private val _shelvesToggleProgressList = MutableStateFlow<Map<String, Boolean>>(emptyMap())
+    private val _shelvesToggleProgressList = MutableStateFlow<Map<Shelf.Id, Boolean>>(emptyMap())
 
     val uiState: StateFlow<BookDetailUiState> = combine(
         allBookDetail,
@@ -119,7 +120,7 @@ class BookDetailViewModel(
 
     private fun mergeShelvesWithToggleProgress(
         shelves: List<ShelfForBook>,
-        shelvesToggleProgressList: Map<String, Boolean>,
+        shelvesToggleProgressList: Map<Shelf.Id, Boolean>,
     ): List<ShelfForBook> {
         val mutableShelves = shelves.toMutableList()
         shelvesToggleProgressList.forEach { toggleShelfMap ->

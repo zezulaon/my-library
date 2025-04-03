@@ -28,7 +28,7 @@ class SearchBarcodeViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val selectedShelfId: String? = savedStateHandle[DestinationArgs.shelfIdArg]
+    private val selectedShelfId: Shelf.Id? = savedStateHandle.get<String?>(DestinationArgs.shelfIdArg)?.let { Shelf.Id(it) }
     private val isBulkScanningEnabled: Boolean? = savedStateHandle[DestinationArgs.isBulkScanOnArg]
 
     private val scannedIsbn = MutableStateFlow<String?>(null)

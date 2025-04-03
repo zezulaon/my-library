@@ -26,7 +26,7 @@ import dev.zezula.books.data.model.book.BookEntity
 )
 data class ShelfWithBookEntity(
     val bookId: Book.Id,
-    val shelfId: String,
+    val shelfId: Shelf.Id,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isPendingSync: Boolean = false,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
@@ -37,7 +37,7 @@ data class ShelfWithBookEntity(
 fun ShelfWithBookEntity.asNetworkShelfWithBook(): NetworkShelfWithBook {
     return NetworkShelfWithBook(
         bookId = bookId.value,
-        shelfId = shelfId,
+        shelfId = shelfId.value,
         isDeleted = isDeleted,
         lastModifiedTimestamp = lastModifiedTimestamp,
     )

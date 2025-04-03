@@ -11,6 +11,7 @@ import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookEntity
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
@@ -185,7 +186,7 @@ class CheckMigrationUseCase(
             )
             shelfDao.insertShelf(
                 ShelfEntity(
-                    id = legacyShelfType.shelfId,
+                    id = Shelf.Id(legacyShelfType.shelfId),
                     dateAdded = LocalDateTime.now().toString(),
                     title = legacyShelfType.title,
                     isPendingSync = true,
@@ -209,7 +210,7 @@ class CheckMigrationUseCase(
                 if (id != null && title != null) {
                     shelfDao.insertShelf(
                         ShelfEntity(
-                            id = id.toString(),
+                            id = Shelf.Id(id.toString()),
                             dateAdded = LocalDateTime.now().toString(),
                             title = title,
                             isPendingSync = true,
@@ -299,11 +300,11 @@ class CheckMigrationUseCase(
         if (bookId != null && shelfId != null) {
             val bookExists = bookDao.getBookFlow(Book.Id(bookId)).firstOrNull() != null
             val shelfExists = shelfAndBookDao.getAllShelvesFlow()
-                .firstOrNull()?.any { it.id == shelfId.toString() } == true
+                .firstOrNull()?.any { it.id.value == shelfId.toString() } == true
             if (bookExists && shelfExists) {
                 val shelvesWithBooksEntity = ShelfWithBookEntity(
                     bookId = Book.Id(bookId),
-                    shelfId = shelfId,
+                    shelfId = Shelf.Id(shelfId),
                     isPendingSync = true,
                     isDeleted = false,
                     lastModifiedTimestamp = Clock.System.now().toString(),

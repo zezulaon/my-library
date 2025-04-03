@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.screen.list.ImageThumbnail
@@ -229,7 +230,7 @@ private fun TabDetailPreview() {
         TabBookDetail(
             uiState = BookDetailUiState(
                 selectedTab = DetailTab.Detail,
-                shelves = listOf(ShelfForBook("1", "Test", true)),
+                shelves = listOf(ShelfForBook(Shelf.Id("1"), "Test", true)),
                 isBookDeleted = false,
                 book = Book(
                     id = Book.Id("id"),
