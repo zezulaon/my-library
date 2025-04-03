@@ -6,6 +6,7 @@ import androidx.core.database.getStringOrNull
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.MigrationType
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookEntity
 import dev.zezula.books.data.model.note.NoteEntity
@@ -108,7 +109,7 @@ class CheckMigrationUseCase(
                     noteDao.insertNote(
                         NoteEntity(
                             id = noteId,
-                            bookId = bookId.toString(),
+                            bookId = Book.Id(bookId.toString()),
                             dateAdded = LocalDateTime.now().toString(),
                             text = text ?: "",
                             page = page?.toIntOrNull(),
@@ -149,7 +150,7 @@ class CheckMigrationUseCase(
                     noteDao.insertNote(
                         NoteEntity(
                             id = noteId,
-                            bookId = bookId.toString(),
+                            bookId = Book.Id(bookId.toString()),
                             dateAdded = dateAdded?.toString() ?: LocalDateTime.now().toString(),
                             text = text ?: "",
                             isPendingSync = true,
@@ -233,7 +234,7 @@ class CheckMigrationUseCase(
             Timber.d("Migrating book: $book")
             try {
                 // Check if the book is already migrated
-                val existingBook = bookDao.getBookFlow(book._id.toString()).firstOrNull()
+                val existingBook = bookDao.getBookFlow(Book.Id(book._id.toString())).firstOrNull()
                 if (existingBook != null) {
                     Timber.d("Book already migrated. Skipping...")
                 } else {
@@ -266,7 +267,7 @@ class CheckMigrationUseCase(
                 noteDao.insertNote(
                     NoteEntity(
                         id = "${bookId}_lent_to_id",
-                        bookId = bookId.toString(),
+                        bookId = Book.Id(bookId.toString()),
                         dateAdded = LocalDateTime.now().toString(),
                         text = "Lent to $lentToName",
                         isPendingSync = true,
@@ -295,12 +296,12 @@ class CheckMigrationUseCase(
 
     private suspend fun addBookToShelf(shelfId: String?, bookId: String?) {
         if (bookId != null && shelfId != null) {
-            val bookExists = bookDao.getBookFlow(bookId.toString()).firstOrNull() != null
+            val bookExists = bookDao.getBookFlow(Book.Id(bookId)).firstOrNull() != null
             val shelfExists = shelfAndBookDao.getAllShelvesFlow()
                 .firstOrNull()?.any { it.id == shelfId.toString() } == true
             if (bookExists && shelfExists) {
                 val shelvesWithBooksEntity = ShelfWithBookEntity(
-                    bookId = bookId,
+                    bookId = Book.Id(bookId),
                     shelfId = shelfId,
                     isPendingSync = true,
                     isDeleted = false,

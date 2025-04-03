@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.shelf.ShelfForBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
@@ -55,7 +56,7 @@ interface ShelfAndBookDao {
         WHERE shelves.isDeleted = 0
         """,
     )
-    fun getAllShelvesForBookFlow(bookId: String): Flow<List<ShelfForBookEntity>>
+    fun getAllShelvesForBookFlow(bookId: Book.Id): Flow<List<ShelfForBookEntity>>
 
     @Query(
         """
@@ -73,13 +74,13 @@ interface ShelfAndBookDao {
         WHERE bookId = :bookId
         """,
     )
-    suspend fun softDeleteShelvesWithBooksForBook(bookId: String, lastModifiedTimestamp: String)
+    suspend fun softDeleteShelvesWithBooksForBook(bookId: Book.Id, lastModifiedTimestamp: String)
 
     @Query("SELECT * FROM shelf_with_book WHERE isPendingSync = 1")
     fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>>
 
     @Query("UPDATE shelf_with_book SET isPendingSync = 0 WHERE shelfId = :shelfId AND bookId = :bookId")
-    suspend fun resetShelfWithBookPendingSyncStatus(shelfId: String, bookId: String)
+    suspend fun resetShelfWithBookPendingSyncStatus(shelfId: String, bookId: Book.Id)
 
     @Query("SELECT lastModifiedTimestamp FROM shelf_with_book ORDER BY lastModifiedTimestamp DESC LIMIT 1")
     suspend fun getLatestLastModifiedTimestamp(): String?

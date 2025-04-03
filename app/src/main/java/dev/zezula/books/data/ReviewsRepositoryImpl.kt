@@ -28,13 +28,13 @@ class ReviewsRepositoryImpl(
     private val onlineBookFinderService: OnlineBookFinderService,
 ) : ReviewsRepository {
 
-    override fun getReviewsForBookFlow(bookId: String): Flow<List<Review>> {
+    override fun getReviewsForBookFlow(bookId: Book.Id): Flow<List<Review>> {
         return reviewsDao.getReviewsForBookFlow(bookId).mapNotNull {
             it.map(ReviewEntity::asExternalModel)
         }
     }
 
-    override fun getRatingForBookFlow(bookId: String): Flow<Rating?> {
+    override fun getRatingForBookFlow(bookId: Book.Id): Flow<Rating?> {
         return ratingsDao.getRatingForBookFlow(bookId)
             .map {
                 it?.asExternalModel()
@@ -74,7 +74,7 @@ class ReviewsRepositoryImpl(
         }
     }
 
-    private suspend fun insertReviews(bookId: String, goodReadsReview: List<GoodReadsReview>) {
+    private suspend fun insertReviews(bookId: Book.Id, goodReadsReview: List<GoodReadsReview>) {
         val reviews = goodReadsReview
             .map {
                 ReviewEntity(
@@ -93,7 +93,7 @@ class ReviewsRepositoryImpl(
         reviewsDao.addReviews(reviews)
     }
 
-    private suspend fun insertRating(bookId: String, goodreadsBook: GoodreadsBook) {
+    private suspend fun insertRating(bookId: Book.Id, goodreadsBook: GoodreadsBook) {
         val rating = with(goodreadsBook) {
             RatingEntity(
                 id = UUID.randomUUID().toString(),

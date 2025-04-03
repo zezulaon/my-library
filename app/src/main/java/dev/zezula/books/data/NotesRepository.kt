@@ -1,5 +1,6 @@
 package dev.zezula.books.data
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.note.NoteWithBook
@@ -9,10 +10,10 @@ interface NotesRepository {
 
     fun getAllNotesFlow(): Flow<List<NoteWithBook>>
 
-    fun getNotesForBookFlow(bookId: String): Flow<List<Note>>
+    fun getNotesForBookFlow(bookId: Book.Id): Flow<List<Note>>
 
     suspend fun createNote(
-        bookId: String,
+        bookId: Book.Id,
         noteFormData: NoteFormData,
     )
 
@@ -21,5 +22,5 @@ interface NotesRepository {
         noteFormData: NoteFormData,
     )
 
-    suspend fun softDeleteNote(noteId: String, bookId: String)
+    suspend fun softDeleteNote(noteId: String, bookId: Book.Id)
 }

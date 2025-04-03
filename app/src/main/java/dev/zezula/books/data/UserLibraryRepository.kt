@@ -10,15 +10,15 @@ interface UserLibraryRepository {
 
     fun getAllBooksForShelfStream(shelfId: String): Flow<List<Book>>
 
-    suspend fun addBookToLibrary(bookFormData: BookFormData): String
+    suspend fun addBookToLibrary(bookFormData: BookFormData): Book.Id
 
-    suspend fun moveExistingBookToLibrary(bookId: String)
+    suspend fun moveExistingBookToLibrary(bookId: Book.Id)
 
-    fun isBookInLibrary(bookId: String): Flow<Boolean>
+    fun isBookInLibrary(bookId: Book.Id): Flow<Boolean>
 
-    suspend fun updateBookInLibrary(bookId: String, bookFormData: BookFormData)
+    suspend fun updateBookInLibrary(bookId: Book.Id, bookFormData: BookFormData)
 
-    suspend fun toggleBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean)
+    suspend fun toggleBookInShelf(bookId: Book.Id, shelfId: String, isBookInShelf: Boolean)
 
     suspend fun searchMyLibraryBooks(query: String): List<Book>
 }

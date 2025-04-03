@@ -1,6 +1,7 @@
 package dev.zezula.books.data.model.note
 
 import com.google.firebase.firestore.PropertyName
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
 import kotlinx.datetime.Clock
 
@@ -23,7 +24,7 @@ data class NetworkNote(
 // FIXME: review these checkNotNull calls
 fun NetworkNote.asEntity() = NoteEntity(
     id = checkNotNull(id) { "NetworkNote id is null" },
-    bookId = checkNotNull(bookId) { "NetworkNote bookId is null" },
+    bookId = checkNotNull(bookId) { "NetworkNote bookId is null" }.let { Book.Id(it) },
     dateAdded = checkNotNull(dateAdded) { "NetworkNote dateAdded is null" },
     text = checkNotNull(text) { "NetworkNote text is null" },
     page = page,

@@ -1,6 +1,7 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -12,7 +13,7 @@ class AddOrUpdateLibraryBookUseCase(private val userLibraryRepository: UserLibra
      * Updates the book in the app (if [bookId] is available). If [bookId] wasn't provided, then new book record
      * is created in the app.
      */
-    suspend operator fun invoke(bookId: String?, bookFormData: BookFormData): Response<Unit> {
+    suspend operator fun invoke(bookId: Book.Id?, bookFormData: BookFormData): Response<Unit> {
         return asResponse {
             addOrUpdate(bookId, bookFormData)
         }
@@ -21,7 +22,7 @@ class AddOrUpdateLibraryBookUseCase(private val userLibraryRepository: UserLibra
             }
     }
 
-    private suspend fun addOrUpdate(bookId: String?, bookFormData: BookFormData) {
+    private suspend fun addOrUpdate(bookId: Book.Id?, bookFormData: BookFormData) {
         if (bookId != null) {
             // If there is a bookId, then we update the book.
             userLibraryRepository.updateBookInLibrary(bookId = bookId, bookFormData = bookFormData)

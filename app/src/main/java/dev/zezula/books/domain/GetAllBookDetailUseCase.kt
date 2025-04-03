@@ -37,7 +37,7 @@ class GetAllBookDetailUseCase(
     private val notesRepository: NotesRepository,
 ) {
 
-    operator fun invoke(bookId: String): Flow<Response<AllBookDetailResult>> {
+    operator fun invoke(bookId: Book.Id): Flow<Response<AllBookDetailResult>> {
         return combine(
             booksRepository.getBookFlow(bookId),
             userLibraryRepository.isBookInLibrary(bookId),

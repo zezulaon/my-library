@@ -5,7 +5,7 @@ import dev.zezula.books.util.toSortingAuthor
 import dev.zezula.books.util.toSortingTitle
 
 data class Book(
-    val id: String,
+    val id: Id,
     val title: String? = null,
     val author: String? = null,
     val description: String? = null,
@@ -17,6 +17,10 @@ data class Book(
     val userRating: Int? = null,
     val dateAdded: String,
 ) {
+
+    @JvmInline
+    value class Id(val value: String)
+
     val dateAddedFormatted: String = formatDate(dateAdded)
 
     // Titles without articles (a, an, the) for sorting
@@ -45,7 +49,7 @@ data class BookFormData(
     val binding: String? = null,
 )
 
-fun BookFormData.toBookEntity(id: String, dateAdded: String, lastModifiedTimestamp: String): BookEntity {
+fun BookFormData.toBookEntity(id: Book.Id, dateAdded: String, lastModifiedTimestamp: String): BookEntity {
     return BookEntity(
         id = id,
         title = title,
@@ -97,7 +101,7 @@ fun BookFormData.updateNullValues(other: BookFormData?): BookFormData {
 
 val previewBooks = listOf(
     Book(
-        id = "1",
+        id = Book.Id("1"),
         title = "Hobit",
         author = "J. R. R. Tolkien",
         description = "Hobit desc",
@@ -110,7 +114,7 @@ val previewBooks = listOf(
         dateAdded = "2023-01-05T17:43:25.629",
     ),
     Book(
-        id = "2",
+        id = Book.Id("2"),
         title = "Neverwhere",
         author = "N. Gaiman",
         description = "Neverwhere description",

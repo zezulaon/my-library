@@ -2,6 +2,7 @@ package dev.zezula.books.data.model.legacy
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import kotlinx.datetime.Clock
 import java.time.LocalDateTime
@@ -81,7 +82,7 @@ fun LegacyBookEntity.toBookEntity(bookId: String): BookEntity {
     }
 
     return BookEntity(
-        id = bookId,
+        id = Book.Id(bookId),
         title = title,
         author = authors,
         description = description,

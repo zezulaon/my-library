@@ -9,6 +9,6 @@ data class SearchBarcodeUiState(
     val selectedShelf: Shelf? = null,
     val noBookFound: Boolean = false,
     val errorMessage: Int? = null,
-    val foundedBookId: String? = null,
+    val foundedBookId: Book.Id? = null,
     val foundedBook: Book? = null,
 )

@@ -26,11 +26,11 @@ class UserLibraryRepositoryImpl(
         }
     }
 
-    override suspend fun moveExistingBookToLibrary(bookId: String) {
+    override suspend fun moveExistingBookToLibrary(bookId: Book.Id) {
         bookDao.addToLibraryBooks(bookId = bookId, dateAdded = LocalDateTime.now().toString(), lastModifiedTimestamp = Clock.System.now().toString())
     }
 
-    override fun isBookInLibrary(bookId: String): Flow<Boolean> {
+    override fun isBookInLibrary(bookId: Book.Id): Flow<Boolean> {
         return bookDao.isBookInLibrary(bookId)
     }
 
@@ -40,8 +40,8 @@ class UserLibraryRepositoryImpl(
         }
     }
 
-    override suspend fun addBookToLibrary(bookFormData: BookFormData): String {
-        val bookId = UUID.randomUUID().toString()
+    override suspend fun addBookToLibrary(bookFormData: BookFormData): Book.Id {
+        val bookId = Book.Id(UUID.randomUUID().toString())
 
         val bookEntity = bookFormData
             .toBookEntity(
@@ -58,7 +58,7 @@ class UserLibraryRepositoryImpl(
         return bookId
     }
 
-    override suspend fun updateBookInLibrary(bookId: String, bookFormData: BookFormData) {
+    override suspend fun updateBookInLibrary(bookId: Book.Id, bookFormData: BookFormData) {
         Timber.d("addOrUpdateBook($bookId, $bookFormData)")
 
         bookDao.updateBook(
@@ -79,7 +79,7 @@ class UserLibraryRepositoryImpl(
         )
     }
 
-    override suspend fun toggleBookInShelf(bookId: String, shelfId: String, isBookInShelf: Boolean) {
+    override suspend fun toggleBookInShelf(bookId: Book.Id, shelfId: String, isBookInShelf: Boolean) {
         val shelvesWithBooksEntity = ShelfWithBookEntity(
             bookId = bookId,
             shelfId = shelfId,

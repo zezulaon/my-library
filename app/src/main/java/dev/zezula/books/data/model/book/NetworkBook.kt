@@ -32,7 +32,7 @@ data class NetworkBook(
 )
 
 fun NetworkBook.asEntity() = BookEntity(
-    id = checkNotNull(id) { "NetworkBook id is null" },
+    id = checkNotNull(id) { "NetworkBook id is null" }.let { Book.Id(it) },
     dateAdded = checkNotNull(dateAdded) { "NetworkBook dateAdded is null" },
     title = title,
     author = author,

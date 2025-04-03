@@ -55,7 +55,7 @@ import org.jetbrains.annotations.VisibleForTesting
 fun FindBookRoute(
     viewModel: FindBookViewModel,
     onNavigateBack: () -> Unit,
-    onViewBookClick: (id: String) -> Unit,
+    onViewBookClick: (id: Book.Id) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -77,7 +77,7 @@ fun FindBookRoute(
 fun FindBookScreen(
     uiState: FindBookUiState,
     onNavigateBack: () -> Unit,
-    onViewBookClick: (id: String) -> Unit,
+    onViewBookClick: (id: Book.Id) -> Unit,
     onSearchRequested: (query: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -168,7 +168,7 @@ private fun SearchBooksBar(onSearchRequested: (query: String) -> Unit) {
 @Composable
 private fun ResultList(
     books: List<Book>,
-    onViewBookClick: (id: String) -> Unit,
+    onViewBookClick: (id: Book.Id) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -190,7 +190,7 @@ private fun ResultList(
 @Composable
 private fun SearchResultCard(
     book: Book,
-    onViewBookClick: (id: String) -> Unit,
+    onViewBookClick: (id: Book.Id) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "books")
 data class BookEntity(
     @PrimaryKey
-    val id: String,
+    val id: Book.Id,
     val dateAdded: String,
     val title: String? = null,
     val author: String? = null,
@@ -49,7 +49,7 @@ fun BookEntity.asExternalModel(): Book {
 fun BookEntity.asNetworkBook(): NetworkBook {
     // [isInLibrary] is not needed since all [NetworkBook]s are already in library.
     return NetworkBook(
-        id = id,
+        id = id.value,
         dateAdded = dateAdded,
         title = title,
         author = author,
@@ -69,7 +69,7 @@ fun BookEntity.asNetworkBook(): NetworkBook {
 
 val previewBookEntities = listOf(
     BookEntity(
-        id = "1",
+        id = Book.Id("1"),
         title = "Hobit",
         author = "J. R. R. Tolkien",
         description = "Hobit desc",
@@ -82,7 +82,7 @@ val previewBookEntities = listOf(
         lastModifiedTimestamp = "2022-01-05T17:43:25.629",
     ),
     BookEntity(
-        id = "2",
+        id = Book.Id("2"),
         title = "Neverwhere",
         author = "N. Gaiman",
         description = "Neverwhere description",

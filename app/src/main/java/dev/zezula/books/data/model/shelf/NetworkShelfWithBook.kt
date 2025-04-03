@@ -1,6 +1,7 @@
 package dev.zezula.books.data.model.shelf
 
 import com.google.firebase.firestore.PropertyName
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.network.FIELD_BOOK_ID
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
 import dev.zezula.books.data.source.network.FIELD_SHELF_ID
@@ -24,7 +25,7 @@ data class NetworkShelfWithBook(
 
 // FIXME: Tmp solution. Invalid state should be just logged and entity insertion skipped
 fun NetworkShelfWithBook.asEntity() = ShelfWithBookEntity(
-    bookId = checkNotNull(bookId) { "NetworkShelfWithBook bookId is null" },
+    bookId = checkNotNull(bookId) { "NetworkShelfWithBook bookId is null" }.let { Book.Id(it) },
     shelfId = checkNotNull(shelfId) { "NetworkShelfWithBook shelfId is null" },
     isDeleted = isDeleted == true,
     lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),

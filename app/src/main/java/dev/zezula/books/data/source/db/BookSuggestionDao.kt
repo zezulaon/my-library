@@ -3,6 +3,7 @@ package dev.zezula.books.data.source.db
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ interface BookSuggestionDao {
         WHERE book_suggestions.parentBookId = :bookId
         """,
     )
-    fun getAllSuggestionsForBookFlow(bookId: String): Flow<List<BookEntity>>
+    fun getAllSuggestionsForBookFlow(bookId: Book.Id): Flow<List<BookEntity>>
 
     /**
      * Add the book to the "book_suggestions" reference table (Table with book suggestions).

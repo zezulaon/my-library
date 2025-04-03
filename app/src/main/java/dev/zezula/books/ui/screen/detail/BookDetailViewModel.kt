@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.shelf.ShelfForBook
@@ -47,7 +48,7 @@ class BookDetailViewModel(
     getAllBookDetailUseCase: GetAllBookDetailUseCase,
 ) : ViewModel() {
 
-    private val bookId: String = checkNotNull(savedStateHandle[DestinationArgs.bookIdArg])
+    private val bookId: Book.Id = Book.Id(checkNotNull(savedStateHandle[DestinationArgs.bookIdArg]))
 
     private val allBookDetail: Flow<Response<AllBookDetailResult>> = getAllBookDetailUseCase(bookId)
         .onResponseError { _errorMessage.value = R.string.error_failed_get_data }

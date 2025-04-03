@@ -74,6 +74,7 @@ import dev.zezula.books.R
 import dev.zezula.books.data.SortBooksBy
 import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.MigrationType
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.ui.screen.about.AboutDialog
@@ -100,7 +101,7 @@ fun BookListRoute(
     onFindBookOnlineClick: () -> Unit,
     onScanBookClick: () -> Unit,
     onBulkScanBooksClick: (shelfId: String?) -> Unit,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book.Id) -> Unit,
     onManageShelvesClick: () -> Unit,
     onAllAuthorsShelvesClick: () -> Unit,
     onAllNotesClick: () -> Unit,
@@ -219,7 +220,7 @@ fun BookListScreen(
     onBulkScanBooksClick: () -> Unit = {},
     onAddManuallyClick: () -> Unit = {},
     onFindOnlineClick: () -> Unit = {},
-    onBookClick: (String) -> Unit = {},
+    onBookClick: (Book.Id) -> Unit = {},
     onManageShelvesClick: () -> Unit = {},
     onAllBooksClick: () -> Unit = {},
     onAllAuthorsClick: () -> Unit = {},

@@ -2,6 +2,7 @@ package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
@@ -15,7 +16,7 @@ class RefreshBookCoverUseCase(
     private val onlineBookFinderService: OnlineBookFinderService,
 ) {
 
-    suspend operator fun invoke(bookId: String): Response<Unit> {
+    suspend operator fun invoke(bookId: Book.Id): Response<Unit> {
         return asResponse {
             updateBookCover(bookId)
         }
@@ -24,7 +25,7 @@ class RefreshBookCoverUseCase(
             }
     }
 
-    private suspend fun updateBookCover(bookId: String) {
+    private suspend fun updateBookCover(bookId: Book.Id) {
         val book = booksRepository.getBookFlow(bookId).firstOrNull()
         if (book?.isbn != null && book.thumbnailLink == null) {
             val isbn = book.isbn

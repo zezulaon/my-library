@@ -1,5 +1,6 @@
 package dev.zezula.books.data
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfForBook
@@ -26,7 +27,7 @@ class ShelvesRepositoryImpl(
         }
     }
 
-    override fun getAllShelvesForBookFlow(bookId: String): Flow<List<ShelfForBook>> {
+    override fun getAllShelvesForBookFlow(bookId: Book.Id): Flow<List<ShelfForBook>> {
         return shelvesAndBooksDao.getAllShelvesForBookFlow(bookId).map { list ->
             list.map(ShelfForBookEntity::asExternalModel)
         }

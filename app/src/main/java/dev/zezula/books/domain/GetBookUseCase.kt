@@ -8,7 +8,7 @@ import timber.log.Timber
 
 class GetBookUseCase(private val repository: BooksRepository) {
 
-    suspend operator fun invoke(bookId: String): Response<Book?> {
+    suspend operator fun invoke(bookId: Book.Id): Response<Book?> {
         return asResponse {
             repository.getBook(bookId)
         }

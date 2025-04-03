@@ -2,6 +2,7 @@ package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -14,7 +15,7 @@ class FindBookForIsbnOnlineUseCase(
     private val userLibraryRepository: UserLibraryRepository,
 ) {
 
-    suspend operator fun invoke(isbn: String): Response<String?> {
+    suspend operator fun invoke(isbn: String): Response<Book.Id?> {
         return asResponse {
             findBook(isbn)
         }
@@ -23,7 +24,7 @@ class FindBookForIsbnOnlineUseCase(
             }
     }
 
-    private suspend fun findBook(isbn: String): String? {
+    private suspend fun findBook(isbn: String): Book.Id? {
         // Skips downloading if the book is already in the DB
         val existingBooks = booksRepository.getBooksByIsbn(isbn)
         if (existingBooks.isNotEmpty()) {

@@ -1,5 +1,6 @@
 package dev.zezula.books.data.source.network.fake
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.note.NetworkNote
@@ -12,10 +13,10 @@ import dev.zezula.books.data.source.network.NetworkDataSource
 
 open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
-    private val booksMap: MutableMap<String, NetworkBook> = previewBooks
+    private val booksMap: MutableMap<Book.Id, NetworkBook> = previewBooks
         .map { book ->
             NetworkBook(
-                id = book.id,
+                id = book.id.value,
                 dateAdded = book.dateAdded,
                 title = book.title,
                 author = book.author,
@@ -27,7 +28,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
                 thumbnailLink = book.thumbnailLink,
             )
         }
-        .associateBy { book -> book.id!! }
+        .associateBy { book -> Book.Id(book.id!!) }
         .toMutableMap()
 
     private val shelvesMap: MutableMap<String, NetworkShelf> = previewShelves
@@ -41,7 +42,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         .map { note ->
             NetworkNote(
                 id = note.id,
-                bookId = note.bookId,
+                bookId = note.bookId.value,
                 dateAdded = note.dateAdded,
                 text = note.text,
             )
@@ -50,7 +51,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         .toMutableMap()
 
     override suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook {
-        booksMap[book.id!!] = book
+        booksMap[Book.Id(book.id!!)] = book
         return book
     }
 
@@ -75,10 +76,6 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return emptyList()
     }
 
-    override suspend fun deleteShelf(shelfId: String) {
-        shelvesMap.remove(shelfId)
-    }
-
     override suspend fun getMigrationData(): NetworkMigrationData {
         return NetworkMigrationData()
     }
@@ -94,9 +91,5 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
         notesMap[note.id!!] = note
         return note
-    }
-
-    override suspend fun deleteNote(noteId: String, bookId: String) {
-        notesMap.remove(noteId)
     }
 }

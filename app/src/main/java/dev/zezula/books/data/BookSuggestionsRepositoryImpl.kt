@@ -24,13 +24,13 @@ class BookSuggestionsRepositoryImpl(
     private val myLibraryApi: MyLibraryApi,
 ) : BookSuggestionsRepository {
 
-    override fun getAllSuggestionsForBookFlow(bookId: String): Flow<List<Book>> {
+    override fun getAllSuggestionsForBookFlow(bookId: Book.Id): Flow<List<Book>> {
         return bookSuggestionDao.getAllSuggestionsForBookFlow(bookId).map {
             it.map(BookEntity::asExternalModel)
         }
     }
 
-    override suspend fun fetchSuggestions(bookId: String): List<Book>? {
+    override suspend fun fetchSuggestions(bookId: Book.Id): List<Book>? {
         Timber.d("Fetching suggestions for book: $bookId")
         val parentBook = bookDao.getBookFlow(bookId).firstOrNull()
         val title = parentBook?.title
@@ -42,7 +42,7 @@ class BookSuggestionsRepositoryImpl(
                 val bookEntity = suggestion
                     .toBookFormData()
                     .toBookEntity(
-                        id = UUID.randomUUID().toString(),
+                        id = Book.Id(UUID.randomUUID().toString()),
                         dateAdded = LocalDateTime.now().toString(),
                         lastModifiedTimestamp = Clock.System.now().toString(),
                     )

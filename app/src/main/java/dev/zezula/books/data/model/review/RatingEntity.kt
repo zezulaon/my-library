@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 
 @Entity(
@@ -23,7 +24,7 @@ data class RatingEntity(
     //  one rating
     @PrimaryKey
     val id: String,
-    val bookId: String,
+    val bookId: Book.Id,
     val averageRating: String? = null,
     val textReviewsCount: Int? = null,
     val ratingsCount: Int? = null,

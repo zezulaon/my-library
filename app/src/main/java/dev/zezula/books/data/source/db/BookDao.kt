@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -39,7 +40,7 @@ interface BookDao {
     suspend fun getLibraryBooksForQuery(query: String): List<BookEntity>
 
     @Query("SELECT * FROM books WHERE id=:bookId")
-    fun getBookFlow(bookId: String): Flow<BookEntity?>
+    fun getBookFlow(bookId: Book.Id): Flow<BookEntity?>
 
     @Query("SELECT * FROM books WHERE isbn = :isbn ORDER BY dateAdded DESC")
     suspend fun getBooksByIsbn(isbn: String): List<BookEntity>
@@ -52,13 +53,13 @@ interface BookDao {
     fun getAllBooksPendingSyncStream(): Flow<List<BookEntity>>
 
     @Query("UPDATE books SET isPendingSync = 0 WHERE id = :bookId")
-    suspend fun resetBookPendingSyncStatus(bookId: String)
+    suspend fun resetBookPendingSyncStatus(bookId: Book.Id)
 
     /**
      * Checks if the book is part of the user's personal book collection (library).
      */
     @Query("SELECT EXISTS(SELECT 1 FROM books WHERE id = :bookId AND isInLibrary = 1)")
-    fun isBookInLibrary(bookId: String): Flow<Boolean>
+    fun isBookInLibrary(bookId: Book.Id): Flow<Boolean>
 
     /**
      * Flags the book as part of the user's personal book collection (library).
@@ -70,7 +71,7 @@ interface BookDao {
         WHERE id = :bookId
         """,
     )
-    suspend fun addToLibraryBooks(bookId: String, dateAdded: String, lastModifiedTimestamp: String)
+    suspend fun addToLibraryBooks(bookId: Book.Id, dateAdded: String, lastModifiedTimestamp: String)
 
     @Insert
     suspend fun insertBook(book: BookEntity)
@@ -102,7 +103,7 @@ interface BookDao {
         """,
     )
     suspend fun updateBook(
-        bookId: String,
+        bookId: Book.Id,
         isPendingSync: Boolean,
         title: String?,
         author: String?,
@@ -125,7 +126,7 @@ interface BookDao {
         WHERE id = :bookId
         """,
     )
-    suspend fun updateBookCover(bookId: String, thumbnailLink: String, lastModifiedTimestamp: String)
+    suspend fun updateBookCover(bookId: Book.Id, thumbnailLink: String, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -134,7 +135,7 @@ interface BookDao {
         WHERE id = :bookId
         """,
     )
-    suspend fun softDeleteBook(bookId: String, lastModifiedTimestamp: String)
+    suspend fun softDeleteBook(bookId: Book.Id, lastModifiedTimestamp: String)
 
     @Query("SELECT lastModifiedTimestamp FROM books ORDER BY lastModifiedTimestamp DESC LIMIT 1")
     suspend fun getLatestLastModifiedTimestamp(): String?

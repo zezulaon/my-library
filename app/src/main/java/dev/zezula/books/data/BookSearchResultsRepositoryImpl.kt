@@ -27,7 +27,7 @@ class BookSearchResultsRepositoryImpl(
     }
 
     override suspend fun addBookToSearchResults(bookFormData: BookFormData) {
-        val bookId = UUID.randomUUID().toString()
+        val bookId = Book.Id(UUID.randomUUID().toString())
         val bookEntity = bookFormData.toBookEntity(
             id = bookId,
             // FIXME: move to kotlin x Instant (in DB and network objects)

@@ -139,11 +139,6 @@ class FirestoreDataSource : NetworkDataSource {
         return note
     }
 
-    override suspend fun deleteNote(noteId: String, bookId: String) {
-        Timber.d("deleteNote (noteId=$noteId)")
-        booksCollection().document(bookId).collection(COLLECTION_NOTES).document(noteId).update(FIELD_IS_DELETED, true).await()
-    }
-
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
         Timber.d("addOrUpdateShelf(shelf=$shelf)")
 
@@ -151,12 +146,6 @@ class FirestoreDataSource : NetworkDataSource {
 
         shelvesCollection().document(shelf.id).set(shelf).await()
         return shelf
-    }
-
-    override suspend fun deleteShelf(shelfId: String) {
-        Timber.d("deleteShelf(shelfId=$shelfId)")
-
-        shelvesCollection().document(shelfId).update(FIELD_IS_DELETED, true).await()
     }
 
     override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {

@@ -1,5 +1,6 @@
 package dev.zezula.books.data
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteFormData
@@ -25,14 +26,14 @@ class NotesRepositoryImpl(
         }
     }
 
-    override fun getNotesForBookFlow(bookId: String): Flow<List<Note>> {
+    override fun getNotesForBookFlow(bookId: Book.Id): Flow<List<Note>> {
         // Returns a Flow of all notes for a given book from the database. Notes are sorted by date added.
         return noteDao.getNotesForBookFlow(bookId).map {
             it.map(NoteEntity::asExternalModel)
         }
     }
 
-    override suspend fun createNote(bookId: String, noteFormData: NoteFormData) {
+    override suspend fun createNote(bookId: Book.Id, noteFormData: NoteFormData) {
         val noteId = UUID.randomUUID().toString()
         val note = fromNoteFormData(
             noteId = noteId,
@@ -55,7 +56,7 @@ class NotesRepositoryImpl(
         )
     }
 
-    override suspend fun softDeleteNote(noteId: String, bookId: String) {
+    override suspend fun softDeleteNote(noteId: String, bookId: Book.Id) {
         noteDao.softDeleteNote(
             noteId = noteId,
             lastModifiedTimestamp = Clock.System.now().toString()

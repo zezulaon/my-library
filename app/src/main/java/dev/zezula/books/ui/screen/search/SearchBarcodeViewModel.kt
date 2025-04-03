@@ -36,7 +36,7 @@ class SearchBarcodeViewModel(
     private val errorMessage = MutableStateFlow<Int?>(null)
     private val isBookSearchInProgress = MutableStateFlow(false)
     private val noBookWasFound = MutableStateFlow(false)
-    private val foundedBookId = MutableStateFlow<String?>(null)
+    private val foundedBookId = MutableStateFlow<Book.Id?>(null)
     private val foundedBook = MutableStateFlow<Book?>(null)
 
     val uiState = combine(
@@ -68,7 +68,7 @@ class SearchBarcodeViewModel(
     private fun searchBook(isbn: String) {
         viewModelScope.launch {
             isBookSearchInProgress.value = true
-            var foundBookId: String? = null
+            var foundBookId: Book.Id? = null
             findBookOnlineUseCase(isbn)
                 .fold(
                     onSuccess = { bookId ->

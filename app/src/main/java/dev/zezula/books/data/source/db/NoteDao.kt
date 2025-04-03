@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteWithBookEntity
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +36,7 @@ interface NoteDao {
         ORDER BY dateAdded DESC
         """,
     )
-    fun getNotesForBookFlow(bookId: String): Flow<List<NoteEntity>>
+    fun getNotesForBookFlow(bookId: Book.Id): Flow<List<NoteEntity>>
 
     @Insert
     suspend fun insertNote(noteEntity: NoteEntity)
@@ -77,7 +78,7 @@ interface NoteDao {
         WHERE bookId = :bookId
         """,
     )
-    suspend fun softDeleteNotesForBook(bookId: String, lastModifiedTimestamp: String)
+    suspend fun softDeleteNotesForBook(bookId: Book.Id, lastModifiedTimestamp: String)
 
     @Query(
         """

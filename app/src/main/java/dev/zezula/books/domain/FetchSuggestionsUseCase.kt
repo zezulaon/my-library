@@ -12,7 +12,7 @@ class FetchSuggestionsUseCase(
     private val bookSuggestionsRepository: BookSuggestionsRepository,
 ) {
 
-    suspend operator fun invoke(bookId: String): Response<List<Book>?> {
+    suspend operator fun invoke(bookId: Book.Id): Response<List<Book>?> {
         return asResponse {
             var result: List<Book>? = null
 

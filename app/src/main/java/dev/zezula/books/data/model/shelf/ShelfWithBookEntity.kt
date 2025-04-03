@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 
 // https://sqlite.org/foreignkeys.html
@@ -24,7 +25,7 @@ import dev.zezula.books.data.model.book.BookEntity
     ],
 )
 data class ShelfWithBookEntity(
-    val bookId: String,
+    val bookId: Book.Id,
     val shelfId: String,
     @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
     val isPendingSync: Boolean = false,
@@ -35,7 +36,7 @@ data class ShelfWithBookEntity(
 
 fun ShelfWithBookEntity.asNetworkShelfWithBook(): NetworkShelfWithBook {
     return NetworkShelfWithBook(
-        bookId = bookId,
+        bookId = bookId.value,
         shelfId = shelfId,
         isDeleted = isDeleted,
         lastModifiedTimestamp = lastModifiedTimestamp,

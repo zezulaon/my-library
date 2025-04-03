@@ -19,5 +19,5 @@ import androidx.room.PrimaryKey
 )
 data class SearchBookResultEntity(
     @PrimaryKey
-    val bookId: String,
+    val bookId: Book.Id,
 )

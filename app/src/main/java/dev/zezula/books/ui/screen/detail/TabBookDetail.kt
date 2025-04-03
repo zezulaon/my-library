@@ -232,7 +232,7 @@ private fun TabDetailPreview() {
                 shelves = listOf(ShelfForBook("1", "Test", true)),
                 isBookDeleted = false,
                 book = Book(
-                    id = "id",
+                    id = Book.Id("id"),
                     title = "Title",
                     author = "Tolkien",
                     description = "Desc",

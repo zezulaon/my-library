@@ -27,6 +27,7 @@ import timber.log.Timber
         ShelfWithBookEntity::class,
         NoteEntity::class,
     ],
+//    version = 11,
     version = 10,
     // https://developer.android.com/training/data-storage/room/migrating-db-versions
     autoMigrations = [
@@ -36,6 +37,7 @@ import timber.log.Timber
         AutoMigration(from = 5, to = 6),
         AutoMigration(from = 7, to = 8),
         AutoMigration(from = 8, to = 9),
+//        AutoMigration(from = 10, to = 11),
     ],
 )
 abstract class AppDatabase : RoomDatabase() {

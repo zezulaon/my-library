@@ -16,14 +16,14 @@ class BooksRepositoryImpl(
     private val noteDao: NoteDao,
 ) : BooksRepository {
 
-    override fun getBookFlow(bookId: String): Flow<Book?> {
+    override fun getBookFlow(bookId: Book.Id): Flow<Book?> {
         return bookDao.getBookFlow(bookId)
             .map {
                 it?.asExternalModel()
             }
     }
 
-    override suspend fun getBook(bookId: String): Book? {
+    override suspend fun getBook(bookId: Book.Id): Book? {
         return getBookFlow(bookId).first()
     }
 
@@ -33,11 +33,11 @@ class BooksRepositoryImpl(
             .map { it.asExternalModel() }
     }
 
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
+    override suspend fun updateBookCover(bookId: Book.Id, thumbnailLink: String) {
         bookDao.updateBookCover(bookId = bookId, thumbnailLink = thumbnailLink, lastModifiedTimestamp = Clock.System.now().toString())
     }
 
-    override suspend fun softDeleteBook(bookId: String) {
+    override suspend fun softDeleteBook(bookId: Book.Id) {
         bookDao.softDeleteBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
         shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
         noteDao.softDeleteNotesForBook(
