@@ -39,24 +39,25 @@ class SyncUseCase(
     private suspend fun syncShelves() {
         val lastModifiedTimestamp = shelfDao.getLatestLastModifiedTimestamp()
         val modifiedShelves = networkDataSource.getModifiedShelves(lastModifiedTimestamp)
-        shelfDao.insertOrUpdateShelves(modifiedShelves.map { it.asEntity() })
+        shelfDao.insertOrUpdateShelves(modifiedShelves.mapNotNull { it.asEntity() })
     }
 
     private suspend fun syncShelvesWithBooks() {
         val lastModifiedTimestamp = shelfAndBookDao.getLatestLastModifiedTimestamp()
         val modifiedShelvesWithBooks = networkDataSource.getModifiedShelvesWithBooks(lastModifiedTimestamp)
-        shelfAndBookDao.insertOrUpdateShelvesWithBooks(modifiedShelvesWithBooks.map { it.asEntity() })
+
+        shelfAndBookDao.insertOrUpdateShelvesWithBooks(modifiedShelvesWithBooks.mapNotNull { it.asEntity() })
     }
 
     private suspend fun syncNotes() {
         val lastModifiedTimestamp = noteDao.getLatestLastModifiedTimestamp()
         val modifiedNotes = networkDataSource.getModifiedNotes(lastModifiedTimestamp)
-        noteDao.insertOrUpdateNotes(modifiedNotes.map { it.asEntity() })
+        noteDao.insertOrUpdateNotes(modifiedNotes.mapNotNull { it.asEntity() })
     }
 
     private suspend fun syncBooks() {
         val lastModifiedTimestamp = bookDao.getLatestLastModifiedTimestamp()
         val modifiedBooks = networkDataSource.getModifiedBooks(lastModifiedTimestamp)
-        bookDao.insertOrUpdateBooks(modifiedBooks.map { it.asEntity() })
+        bookDao.insertOrUpdateBooks(modifiedBooks.mapNotNull { it.asEntity() })
     }
 }

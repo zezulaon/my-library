@@ -4,6 +4,7 @@ import com.google.firebase.firestore.PropertyName
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
 import kotlinx.datetime.Clock
+import timber.log.Timber
 
 // Null default values are required when deserializing from firestore [DataSnapshot]. See:
 // https://firebase.google.com/docs/database/android/read-and-write#basic_write
@@ -21,14 +22,20 @@ data class NetworkNote(
     val lastModifiedTimestamp: String? = null,
 )
 
-// FIXME: review these checkNotNull calls
-fun NetworkNote.asEntity() = NoteEntity(
-    id = checkNotNull(id) { "NetworkNote id is null" }.let { Note.Id(it) },
-    bookId = checkNotNull(bookId) { "NetworkNote bookId is null" }.let { Book.Id(it) },
-    dateAdded = checkNotNull(dateAdded) { "NetworkNote dateAdded is null" },
-    text = checkNotNull(text) { "NetworkNote text is null" },
-    page = page,
-    type = type,
-    isDeleted = isDeleted == true,
-    lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
-)
+fun NetworkNote.asEntity(): NoteEntity? {
+    return if (id == null || bookId == null || dateAdded == null || text == null) {
+        Timber.e("ID, bookId, dateAdded, or text is null: id=$id, bookId=$bookId, dateAdded=$dateAdded, text=$text")
+        null
+    } else {
+        NoteEntity(
+            id = Note.Id(id),
+            bookId = Book.Id(bookId),
+            dateAdded = dateAdded,
+            text = text,
+            page = page,
+            type = type,
+            isDeleted = isDeleted == true,
+            lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
+        )
+    }
+}

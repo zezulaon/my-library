@@ -6,6 +6,7 @@ import dev.zezula.books.data.source.network.FIELD_BOOK_ID
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
 import dev.zezula.books.data.source.network.FIELD_SHELF_ID
 import kotlinx.datetime.Clock
+import timber.log.Timber
 
 // Null default values are required when deserializing from firestore [DataSnapshot]. See:
 // https://firebase.google.com/docs/database/android/read-and-write#basic_write
@@ -23,10 +24,16 @@ data class NetworkShelfWithBook(
     val lastModifiedTimestamp: String? = null,
 )
 
-// FIXME: Tmp solution. Invalid state should be just logged and entity insertion skipped
-fun NetworkShelfWithBook.asEntity() = ShelfWithBookEntity(
-    bookId = checkNotNull(bookId) { "NetworkShelfWithBook bookId is null" }.let { Book.Id(it) },
-    shelfId = checkNotNull(shelfId) { "NetworkShelfWithBook shelfId is null" }.let { Shelf.Id(it) },
-    isDeleted = isDeleted == true,
-    lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
-)
+fun NetworkShelfWithBook.asEntity(): ShelfWithBookEntity? {
+    return if (bookId == null || shelfId == null) {
+        Timber.e("Book ID or Shelf ID is null: bookId=$bookId, shelfId=$shelfId")
+        null
+    } else {
+        ShelfWithBookEntity(
+            bookId = Book.Id(bookId),
+            shelfId = Shelf.Id(shelfId),
+            isDeleted = isDeleted == true,
+            lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
+        )
+    }
+}

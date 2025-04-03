@@ -1,6 +1,7 @@
 package dev.zezula.books
 
 import android.app.Application
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.di.appModule
@@ -21,6 +22,7 @@ class MyLibraryApp : Application() {
         super.onCreate()
 
         Firebase.crashlytics.setCrashlyticsCollectionEnabled(BuildConfig.DEBUG.not())
+        Firebase.crashlytics.setCustomKey("user_id", Firebase.auth.currentUser?.uid ?: "n/a")
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {

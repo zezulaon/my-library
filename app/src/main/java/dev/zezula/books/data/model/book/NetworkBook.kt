@@ -3,6 +3,7 @@ package dev.zezula.books.data.model.book
 import com.google.firebase.firestore.PropertyName
 import dev.zezula.books.data.source.network.FIELD_IS_DELETED
 import kotlinx.datetime.Clock
+import timber.log.Timber
 
 // Null default values are required when deserializing from firestore [DataSnapshot]. See:
 // https://firebase.google.com/docs/database/android/read-and-write#basic_write
@@ -31,21 +32,28 @@ data class NetworkBook(
     val lastModifiedTimestamp: String? = null,
 )
 
-fun NetworkBook.asEntity() = BookEntity(
-    id = checkNotNull(id) { "NetworkBook id is null" }.let { Book.Id(it) },
-    dateAdded = checkNotNull(dateAdded) { "NetworkBook dateAdded is null" },
-    title = title,
-    author = author,
-    description = description,
-    isbn = isbn,
-    publisher = publisher,
-    yearPublished = yearPublished,
-    pageCount = pageCount,
-    thumbnailLink = thumbnailLink,
-    userRating = userRating,
-    subject = subject,
-    binding = binding,
-    isDeleted = isDeleted == true,
-    isInLibrary = true,
-    lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
-)
+fun NetworkBook.asEntity(): BookEntity? {
+    if (id == null || dateAdded == null) {
+        Timber.e("ID or dateAdded is null: id=$id, dateAdded=$dateAdded")
+        return null
+    } else {
+        return BookEntity(
+            id = Book.Id(id),
+            dateAdded = dateAdded,
+            title = title,
+            author = author,
+            description = description,
+            isbn = isbn,
+            publisher = publisher,
+            yearPublished = yearPublished,
+            pageCount = pageCount,
+            thumbnailLink = thumbnailLink,
+            userRating = userRating,
+            subject = subject,
+            binding = binding,
+            isDeleted = isDeleted == true,
+            isInLibrary = true,
+            lastModifiedTimestamp = lastModifiedTimestamp ?: Clock.System.now().toString(),
+        )
+    }
+}
