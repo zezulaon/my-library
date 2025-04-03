@@ -23,7 +23,7 @@ data class NetworkNote(
 
 // FIXME: review these checkNotNull calls
 fun NetworkNote.asEntity() = NoteEntity(
-    id = checkNotNull(id) { "NetworkNote id is null" },
+    id = checkNotNull(id) { "NetworkNote id is null" }.let { Note.Id(it) },
     bookId = checkNotNull(bookId) { "NetworkNote bookId is null" }.let { Book.Id(it) },
     dateAdded = checkNotNull(dateAdded) { "NetworkNote dateAdded is null" },
     text = checkNotNull(text) { "NetworkNote text is null" },

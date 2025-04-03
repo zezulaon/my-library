@@ -9,6 +9,7 @@ import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
 import dev.zezula.books.data.model.legacy.toBookEntity
+import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.shelf.ShelfEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
@@ -108,7 +109,7 @@ class CheckMigrationUseCase(
                     val noteId = "${bookId}_${id}_quote"
                     noteDao.insertNote(
                         NoteEntity(
-                            id = noteId,
+                            id = Note.Id(noteId),
                             bookId = Book.Id(bookId.toString()),
                             dateAdded = LocalDateTime.now().toString(),
                             text = text ?: "",
@@ -149,7 +150,7 @@ class CheckMigrationUseCase(
                     val noteId = "${bookId}_${id}_comment"
                     noteDao.insertNote(
                         NoteEntity(
-                            id = noteId,
+                            id = Note.Id(noteId),
                             bookId = Book.Id(bookId.toString()),
                             dateAdded = dateAdded?.toString() ?: LocalDateTime.now().toString(),
                             text = text ?: "",
@@ -266,7 +267,7 @@ class CheckMigrationUseCase(
                 addBookToShelf(LegacyShelfType.LENT_TO.shelfId, bookId.toString())
                 noteDao.insertNote(
                     NoteEntity(
-                        id = "${bookId}_lent_to_id",
+                        id = Note.Id("${bookId}_lent_to_id"),
                         bookId = Book.Id(bookId.toString()),
                         dateAdded = LocalDateTime.now().toString(),
                         text = "Lent to $lentToName",

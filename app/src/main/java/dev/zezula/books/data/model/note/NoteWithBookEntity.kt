@@ -3,7 +3,7 @@ package dev.zezula.books.data.model.note
 import dev.zezula.books.data.model.book.Book
 
 class NoteWithBookEntity(
-    val id: String,
+    val id: Note.Id,
     val bookId: Book.Id,
     val dateAdded: String,
     val text: String,

@@ -36,7 +36,7 @@ import kotlinx.datetime.Instant
 )
 data class NoteEntity(
     @PrimaryKey
-    val id: String,
+    val id: Note.Id,
     val bookId: Book.Id,
     val dateAdded: String,
     val text: String,
@@ -51,7 +51,7 @@ data class NoteEntity(
 
 fun NoteEntity.asNetworkNote(): NetworkNote {
     return NetworkNote(
-        id = id,
+        id = id.value,
         bookId = bookId.value,
         dateAdded = dateAdded,
         text = text,
@@ -64,7 +64,7 @@ fun NoteEntity.asNetworkNote(): NetworkNote {
 
 val previewNoteEntities = listOf(
     NoteEntity(
-        id = "1",
+        id = Note.Id("1"),
         bookId = Book.Id("101"),
         dateAdded = "2021-01-01T00:00:00",
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies ultricni.",
@@ -73,7 +73,7 @@ val previewNoteEntities = listOf(
         lastModifiedTimestamp = "2021-01-01T00:00:00",
     ),
     NoteEntity(
-        id = "2",
+        id = Note.Id("2"),
         bookId = Book.Id("102"),
         dateAdded = "2021-01-01T00:00:00",
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae aliquet nisl nunc vitae nisl.",
@@ -95,7 +95,7 @@ fun NoteEntity.asExternalModel(): Note {
 }
 
 fun fromNoteFormData(
-    noteId: String,
+    noteId: Note.Id,
     bookId: Book.Id,
     noteFormData: NoteFormData,
     dateAdded: String,

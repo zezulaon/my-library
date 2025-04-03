@@ -18,9 +18,9 @@ interface NotesRepository {
     )
 
     suspend fun updateNote(
-        noteId: String,
+        noteId: Note.Id,
         noteFormData: NoteFormData,
     )
 
-    suspend fun softDeleteNote(noteId: String, bookId: Book.Id)
+    suspend fun softDeleteNote(noteId: Note.Id, bookId: Book.Id)
 }

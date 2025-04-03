@@ -34,7 +34,7 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun createNote(bookId: Book.Id, noteFormData: NoteFormData) {
-        val noteId = UUID.randomUUID().toString()
+        val noteId = Note.Id(UUID.randomUUID().toString())
         val note = fromNoteFormData(
             noteId = noteId,
             bookId = bookId,
@@ -46,7 +46,7 @@ class NotesRepositoryImpl(
         noteDao.insertNote(note)
     }
 
-    override suspend fun updateNote(noteId: String, noteFormData: NoteFormData) {
+    override suspend fun updateNote(noteId: Note.Id, noteFormData: NoteFormData) {
         noteDao.updateNote(
             noteId = noteId,
             text = noteFormData.text,
@@ -56,7 +56,7 @@ class NotesRepositoryImpl(
         )
     }
 
-    override suspend fun softDeleteNote(noteId: String, bookId: Book.Id) {
+    override suspend fun softDeleteNote(noteId: Note.Id, bookId: Book.Id) {
         noteDao.softDeleteNote(
             noteId = noteId,
             lastModifiedTimestamp = Clock.System.now().toString()

@@ -41,7 +41,7 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     private val notesMap: MutableMap<String, NetworkNote> = previewNotes
         .map { note ->
             NetworkNote(
-                id = note.id,
+                id = note.id.value,
                 bookId = note.bookId.value,
                 dateAdded = note.dateAdded,
                 text = note.text,

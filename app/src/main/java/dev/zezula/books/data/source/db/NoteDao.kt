@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteEntity
 import dev.zezula.books.data.model.note.NoteWithBookEntity
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +56,7 @@ interface NoteDao {
         """,
     )
     suspend fun updateNote(
-        noteId: String,
+        noteId: Note.Id,
         text: String,
         page: Int?,
         type: String?,
@@ -69,7 +70,7 @@ interface NoteDao {
         WHERE id = :noteId
         """,
     )
-    suspend fun softDeleteNote(noteId: String, lastModifiedTimestamp: String)
+    suspend fun softDeleteNote(noteId: Note.Id, lastModifiedTimestamp: String)
 
     @Query(
         """
@@ -87,7 +88,7 @@ interface NoteDao {
         WHERE id = :noteId
         """,
     )
-    suspend fun resetNotePendingSyncStatus(noteId: String)
+    suspend fun resetNotePendingSyncStatus(noteId: Note.Id)
 
     @Query(
         """

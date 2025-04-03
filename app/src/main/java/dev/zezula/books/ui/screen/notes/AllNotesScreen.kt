@@ -134,7 +134,7 @@ private fun AllNotesList(
     LazyColumn(
         modifier = modifier,
     ) {
-        itemsIndexed(key = { _, item -> item.note.id }, items = notes) { index, (note, title) ->
+        itemsIndexed(key = { _, item -> item.note.id.value }, items = notes) { index, (note, title) ->
             var footNote = title ?: "-"
             if (note.page != null) {
                 footNote = "$footNote, page: ${note.page}"

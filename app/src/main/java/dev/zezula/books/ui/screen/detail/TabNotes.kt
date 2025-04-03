@@ -42,7 +42,7 @@ fun TabNotes(
                 contentPadding = PaddingValues(vertical = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                items(items = uiState.notes, key = { note -> note.id }) { note ->
+                items(items = uiState.notes, key = { note -> note.id.value }) { note ->
                     val isExpanded = expandedNoteItem.value == note
                     NoteListItem(
                         note = note,
