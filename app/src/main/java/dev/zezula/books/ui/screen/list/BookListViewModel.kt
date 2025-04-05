@@ -13,7 +13,6 @@ import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
-import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi

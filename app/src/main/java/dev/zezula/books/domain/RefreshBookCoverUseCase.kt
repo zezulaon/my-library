@@ -1,9 +1,7 @@
 package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
-import dev.zezula.books.data.UserLibraryRepository
 import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse

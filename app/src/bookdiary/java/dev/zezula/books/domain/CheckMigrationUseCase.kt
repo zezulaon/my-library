@@ -118,7 +118,7 @@ class CheckMigrationUseCase(
                             type = "quote",
                             isPendingSync = true,
                             lastModifiedTimestamp = Clock.System.now().toString(),
-                        )
+                        ),
                     )
                 }
             } while (cursor.moveToNext())
@@ -157,7 +157,7 @@ class CheckMigrationUseCase(
                             text = text ?: "",
                             isPendingSync = true,
                             lastModifiedTimestamp = Clock.System.now().toString(),
-                        )
+                        ),
                     )
                 }
             } while (cursor.moveToNext())
@@ -191,7 +191,7 @@ class CheckMigrationUseCase(
                     title = legacyShelfType.title,
                     isPendingSync = true,
                     lastModifiedTimestamp = Clock.System.now().toString(),
-                )
+                ),
             )
         }
         Timber.d("Migrating real shelves...")
@@ -215,7 +215,7 @@ class CheckMigrationUseCase(
                             title = title,
                             isPendingSync = true,
                             lastModifiedTimestamp = Clock.System.now().toString(),
-                        )
+                        ),
                     )
                 }
             } catch (e: Exception) {
@@ -274,7 +274,7 @@ class CheckMigrationUseCase(
                         text = "Lent to $lentToName",
                         isPendingSync = true,
                         lastModifiedTimestamp = Clock.System.now().toString(),
-                    )
+                    ),
                 )
             }
         }

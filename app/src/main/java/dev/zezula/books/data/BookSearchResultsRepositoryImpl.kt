@@ -4,8 +4,8 @@ import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.SearchBookResultEntity
-import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.SearchBookResultDao
 import kotlinx.coroutines.flow.Flow

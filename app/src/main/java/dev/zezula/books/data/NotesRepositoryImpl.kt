@@ -59,7 +59,7 @@ class NotesRepositoryImpl(
     override suspend fun softDeleteNote(noteId: Note.Id, bookId: Book.Id) {
         noteDao.softDeleteNote(
             noteId = noteId,
-            lastModifiedTimestamp = Clock.System.now().toString()
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
     }
 }

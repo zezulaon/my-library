@@ -3,8 +3,8 @@ package dev.zezula.books.data
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
 import dev.zezula.books.data.model.book.BookSuggestionEntity
-import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.book.asExternalModel
+import dev.zezula.books.data.model.book.toBookEntity
 import dev.zezula.books.data.model.myLibrary.toBookFormData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.BookSuggestionDao

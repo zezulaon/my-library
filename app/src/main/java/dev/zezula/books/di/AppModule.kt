@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dev.zezula.books.BuildConfig
+import dev.zezula.books.data.BackupService
 import dev.zezula.books.data.BookSearchResultsRepository
 import dev.zezula.books.data.BookSearchResultsRepositoryImpl
 import dev.zezula.books.data.BookSuggestionsRepository
@@ -57,7 +58,6 @@ import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
-import dev.zezula.books.data.BackupService
 import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel

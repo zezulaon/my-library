@@ -85,29 +85,33 @@ class NavigationTest : KoinTest {
 
     @Before
     fun setup() = runTest {
-        db.shelfDao().insertOrUpdateShelves(previewShelves.map {
-            ShelfEntity(
-                id = it.id,
-                dateAdded = it.dateAdded,
-                title = it.title,
-            )
-        })
+        db.shelfDao().insertOrUpdateShelves(
+            previewShelves.map {
+                ShelfEntity(
+                    id = it.id,
+                    dateAdded = it.dateAdded,
+                    title = it.title,
+                )
+            },
+        )
 
-        db.bookDao().insertOrUpdateBooks(previewBooks.map {
-            BookEntity(
-                id = it.id,
-                dateAdded = it.dateAdded,
-                title = it.title,
-                author = it.author,
-                description = it.description,
-                isbn = it.isbn,
-                publisher = it.publisher,
-                yearPublished = it.yearPublished,
-                pageCount = it.pageCount,
-                thumbnailLink = it.thumbnailLink,
-                isInLibrary = true,
-            )
-        })
+        db.bookDao().insertOrUpdateBooks(
+            previewBooks.map {
+                BookEntity(
+                    id = it.id,
+                    dateAdded = it.dateAdded,
+                    title = it.title,
+                    author = it.author,
+                    description = it.description,
+                    isbn = it.isbn,
+                    publisher = it.publisher,
+                    yearPublished = it.yearPublished,
+                    pageCount = it.pageCount,
+                    thumbnailLink = it.thumbnailLink,
+                    isInLibrary = true,
+                )
+            },
+        )
     }
 
     @After

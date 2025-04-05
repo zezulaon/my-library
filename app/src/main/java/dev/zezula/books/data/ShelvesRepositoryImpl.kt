@@ -23,8 +23,8 @@ class ShelvesRepositoryImpl(
     override fun getAllShelvesFlow(): Flow<List<Shelf>> {
         return shelvesAndBooksDao.getAllShelvesFlow()
             .map { shelfEntities ->
-            shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
-        }
+                shelfEntities.map(ShelfWithBookCountEntity::asExternalModel)
+            }
     }
 
     override fun getAllShelvesForBookFlow(bookId: Book.Id): Flow<List<ShelfForBook>> {
@@ -50,14 +50,14 @@ class ShelvesRepositoryImpl(
         shelfDao.updateShelf(
             shelfId = shelfId,
             title = updatedTitle,
-            lastModifiedTimestamp = Clock.System.now().toString()
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
     }
 
     override suspend fun softDeleteShelf(shelf: Shelf) {
         shelfDao.softDeleteShelf(
             shelfId = shelf.id,
-            lastModifiedTimestamp = Clock.System.now().toString()
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
         shelvesAndBooksDao.softDeleteShelvesWithBooksForShelf(shelfId = shelf.id, lastModifiedTimestamp = Clock.System.now().toString())
     }

@@ -1,6 +1,5 @@
 package dev.zezula.books.data.source.network
 
-import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.note.NetworkNote
 import dev.zezula.books.data.model.shelf.NetworkShelf

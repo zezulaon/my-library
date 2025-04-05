@@ -42,7 +42,7 @@ class BooksRepositoryImpl(
         shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
         noteDao.softDeleteNotesForBook(
             bookId = bookId,
-            lastModifiedTimestamp = Clock.System.now().toString()
+            lastModifiedTimestamp = Clock.System.now().toString(),
         )
     }
 }
