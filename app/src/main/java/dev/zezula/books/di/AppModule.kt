@@ -199,7 +199,7 @@ val appModule = module {
     }
 
     // UseCases
-    single { SyncUseCase(get(), get(), get(), get(), get()) }
+    single { SyncUseCase(get(), get(), get(), get(), get(), get()) }
     single { GetBooksForShelfUseCase(get()) }
     single { FetchSuggestionsUseCase(get()) }
     single { GetShelvesUseCase(get()) }
@@ -235,7 +235,7 @@ val appModule = module {
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }

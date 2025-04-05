@@ -29,7 +29,6 @@ import timber.log.Timber
 class BookListViewModel(
     getShelvesUseCase: GetShelvesUseCase,
     private val getBooksForShelfUseCase: GetBooksForShelfUseCase,
-    private val syncUseCase: SyncUseCase,
     private val checkMigrationUseCase: CheckMigrationUseCase,
 ) : ViewModel() {
 
@@ -132,12 +131,6 @@ class BookListViewModel(
             } finally {
                 migrationProgress.value = null
             }
-
-            // Refreshes and syncs the library
-            syncUseCase().fold(
-                onSuccess = { Timber.d("refresh() - successful") },
-                onFailure = { errorMessage.value = R.string.home_failed_to_refresh },
-            )
         }
     }
 

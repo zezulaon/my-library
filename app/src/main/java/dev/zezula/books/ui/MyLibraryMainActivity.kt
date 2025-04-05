@@ -10,15 +10,19 @@ import androidx.activity.result.contract.ActivityResultContracts.StartIntentSend
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
+import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.screen.signin.SignInViewModel
 import dev.zezula.books.util.getGoogleSignInRequest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MyLibraryMainActivity : ComponentActivity() {
 
     private val userViewModel: SignInViewModel by viewModel()
+
+    private val syncUseCase: SyncUseCase by inject()
 
     // TODO: This could be replaced with rememberLauncherForActivityResult()
     private val googleSignInResultLauncher = registerForActivityResult(StartIntentSenderForResult()) { activityResult ->
@@ -35,6 +39,18 @@ class MyLibraryMainActivity : ComponentActivity() {
 
         setContent {
             MyLibraryUiApp(getStartDestination())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            // Refreshes and syncs the library
+            syncUseCase().fold(
+                onSuccess = { Timber.d("refresh() - successful") },
+                onFailure = { },
+            )
         }
     }
 
