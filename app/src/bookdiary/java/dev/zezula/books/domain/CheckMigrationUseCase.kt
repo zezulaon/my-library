@@ -311,18 +311,6 @@ class CheckMigrationUseCase(
                 )
                 shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
             }
-//                toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)
-//                    .fold(
-//                        onSuccess = {
-//                            Timber.d("Book added to shelf successfully")
-//                        },
-//                        onFailure = {
-//                            Timber.w(it, "Failed to add book to shelf")
-//                        },
-//                    )
-//            } else {
-//                Timber.w("Legacy group not migrated. Book or shelf missing.")
-//            }
         }
     }
 }
