@@ -95,9 +95,11 @@ class BackupService(
             .onStart {
                 Timber.d("[$entityName] - Backup started")
             }
-            .onCompletion {
+            .onCompletion { cause ->
                 Timber.d("[$entityName] - Backup completed")
-                Timber.e(it)
+                if (cause != null) {
+                    Timber.e(cause)
+                }
             }
             .collect { list ->
                 Timber.d("[$entityName] - Pending items: ${list.size}")
