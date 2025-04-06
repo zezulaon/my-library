@@ -2,7 +2,10 @@ package dev.zezula.books.data.model.legacy
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.book.BookEntity
+import kotlinx.datetime.Clock
+import java.time.LocalDateTime
 import java.util.Calendar
 
 // Schema:
@@ -36,7 +39,7 @@ data class LegacyBookEntity(
     val isDeleteAfterRefreshFlag: Int?,
 )
 
-fun LegacyBookEntity.toBookFormData(): BookFormData {
+fun LegacyBookEntity.toBookEntity(bookId: String): BookEntity {
     val yearPublished = if (publishedDate != null) {
         val cal = Calendar.getInstance()
         cal.timeInMillis = publishedDate
@@ -44,14 +47,23 @@ fun LegacyBookEntity.toBookFormData(): BookFormData {
     } else {
         null
     }
-    return BookFormData(
-        title = this.title,
-        author = this.authors,
-        description = this.description,
-        isbn = this.isbn13 ?: this.isbn10,
-        publisher = this.publisher,
+
+    return BookEntity(
+        id = Book.Id(bookId),
+        title = title,
+        author = authors,
+        description = description,
+        isbn = isbn13 ?: isbn10,
+        publisher = publisher,
         yearPublished = yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnail,
+        pageCount = null,
+        thumbnailLink = null,
+        dateAdded = LocalDateTime.now().toString(),
+        userRating = null,
+        subject = null,
+        binding = null,
+        isInLibrary = true,
+        isPendingSync = true,
+        lastModifiedTimestamp = Clock.System.now().toString(),
     )
 }

@@ -27,6 +27,6 @@ import androidx.room.ForeignKey.Companion.CASCADE
     ],
 )
 data class BookSuggestionEntity(
-    val bookId: String,
-    val parentBookId: String,
+    val bookId: Book.Id,
+    val parentBookId: Book.Id,
 )

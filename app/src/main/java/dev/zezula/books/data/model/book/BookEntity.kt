@@ -1,13 +1,13 @@
 package dev.zezula.books.data.model.book
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "books")
 data class BookEntity(
     @PrimaryKey
-    val id: String,
-    // TODO: [LibraryBookEntity] would be better place for this property.
+    val id: Book.Id,
     val dateAdded: String,
     val title: String? = null,
     val author: String? = null,
@@ -22,77 +22,54 @@ data class BookEntity(
     val thumbnailLink: String? = null,
     val userRating: Int? = null,
     val pageCount: Int? = null,
+    val isInLibrary: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
 
 fun BookEntity.asExternalModel(): Book {
     return Book(
-        id = this.id,
-        dateAdded = this.dateAdded,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
+        id = id,
+        dateAdded = dateAdded,
+        title = title,
+        author = author,
+        description = description,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        pageCount = pageCount,
+        thumbnailLink = thumbnailLink,
+        userRating = userRating,
     )
 }
 
 fun BookEntity.asNetworkBook(): NetworkBook {
+    // [isInLibrary] is not needed since all [NetworkBook]s are already in library.
     return NetworkBook(
-        id = this.id,
-        dateAdded = this.dateAdded,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
-    )
-}
-
-fun fromNetworkBook(networkBook: NetworkBook): BookEntity {
-    checkNotNull(networkBook.id) { "Book needs [id] property" }
-    checkNotNull(networkBook.dateAdded) { "Book needs [dateAdded] property" }
-    return BookEntity(
-        id = networkBook.id,
-        dateAdded = networkBook.dateAdded,
-        title = networkBook.title,
-        author = networkBook.author,
-        description = networkBook.description,
-        isbn = networkBook.isbn,
-        publisher = networkBook.publisher,
-        yearPublished = networkBook.yearPublished,
-        pageCount = networkBook.pageCount,
-        thumbnailLink = networkBook.thumbnailLink,
-        userRating = networkBook.userRating,
-    )
-}
-
-fun fromBookFormData(id: String, dateAdded: String, bookFormData: BookFormData): BookEntity {
-    return BookEntity(
-        id = id,
+        id = id.value,
         dateAdded = dateAdded,
-        title = bookFormData.title,
-        author = bookFormData.author,
-        description = bookFormData.description,
-        isbn = bookFormData.isbn,
-        publisher = bookFormData.publisher,
-        yearPublished = bookFormData.yearPublished,
-        pageCount = bookFormData.pageCount,
-        thumbnailLink = bookFormData.thumbnailLink,
-        userRating = bookFormData.userRating,
+        title = title,
+        author = author,
+        description = description,
+        subject = subject,
+        binding = binding,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        thumbnailLink = thumbnailLink,
+        userRating = userRating,
+        pageCount = pageCount,
+        isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
 val previewBookEntities = listOf(
     BookEntity(
-        id = "1",
+        id = Book.Id("1"),
         title = "Hobit",
         author = "J. R. R. Tolkien",
         description = "Hobit desc",
@@ -102,9 +79,10 @@ val previewBookEntities = listOf(
         pageCount = 152,
         thumbnailLink = null,
         dateAdded = "2022-01-05T17:43:25.629",
+        lastModifiedTimestamp = "2022-01-05T17:43:25.629",
     ),
     BookEntity(
-        id = "2",
+        id = Book.Id("2"),
         title = "Neverwhere",
         author = "N. Gaiman",
         description = "Neverwhere description",
@@ -114,5 +92,6 @@ val previewBookEntities = listOf(
         pageCount = 152,
         thumbnailLink = null,
         dateAdded = "2023-01-05T17:43:25.629",
+        lastModifiedTimestamp = "2023-01-05T17:43:25.629",
     ),
 )

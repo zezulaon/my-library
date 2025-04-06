@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReviewsRepository {
 
-    fun getReviewsForBookStream(bookId: String): Flow<List<Review>>
+    fun getReviewsForBookFlow(bookId: Book.Id): Flow<List<Review>>
 
-    fun getRatingStream(bookId: String): Flow<Rating?>
+    fun getRatingForBookFlow(bookId: Book.Id): Flow<Rating?>
 
     suspend fun refreshReviews(book: Book)
 

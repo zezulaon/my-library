@@ -6,12 +6,19 @@ import androidx.core.database.getStringOrNull
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.data.model.MigrationProgress
 import dev.zezula.books.data.model.MigrationType
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.legacy.LegacyBookEntity
-import dev.zezula.books.data.model.legacy.toBookFormData
-import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.legacy.toBookEntity
+import dev.zezula.books.data.model.note.Note
+import dev.zezula.books.data.model.note.NoteEntity
+import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.data.model.shelf.ShelfEntity
+import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
 import dev.zezula.books.data.model.user.NetworkMigrationData
 import dev.zezula.books.data.source.db.BookDao
+import dev.zezula.books.data.source.db.NoteDao
 import dev.zezula.books.data.source.db.ShelfAndBookDao
+import dev.zezula.books.data.source.db.ShelfDao
 import dev.zezula.books.data.source.db.legacy.LegacyAppDatabase
 import dev.zezula.books.data.source.db.legacy.LegacyBookDao
 import dev.zezula.books.data.source.network.NetworkDataSource
@@ -19,22 +26,20 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Clock
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.time.measureTime
 
 class CheckMigrationUseCase(
-    private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
-    private val moveBookToLibraryUseCase: MoveBookToLibraryUseCase,
-    private val updateShelfUseCase: UpdateShelfUseCase,
-    private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
-    private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
-    private val legacyAppDatabase: LegacyAppDatabase,
     private val bookDao: BookDao,
-    private val shelfDao: ShelfAndBookDao,
-    private val legacyBookDao: LegacyBookDao,
+    private val shelfAndBookDao: ShelfAndBookDao,
+    private val shelfDao: ShelfDao,
+    private val noteDao: NoteDao,
     private val networkDataSource: NetworkDataSource,
+    private val legacyAppDatabase: LegacyAppDatabase,
+    private val legacyBookDao: LegacyBookDao,
 ) {
 
     suspend operator fun invoke(migrationProgress: MutableStateFlow<MigrationProgress?>): Response<Unit> {
@@ -101,22 +106,20 @@ class CheckMigrationUseCase(
                 val page = cursor.getStringOrNull(cursor.getColumnIndexOrThrow("page"))
                 val text = cursor.getStringOrNull(cursor.getColumnIndexOrThrow("text"))
 
-                val noteFormData = NoteFormData(
-                    text = text ?: "",
-                    page = page?.toIntOrNull(),
-                    type = "quote",
-                )
                 if (id != null && bookId != null) {
                     val noteId = "${bookId}_${id}_quote"
-                    createOrUpdateNoteUseCase(noteId, noteFormData, bookId.toString())
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Quote created successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to create quote")
-                            },
-                        )
+                    noteDao.insertNote(
+                        NoteEntity(
+                            id = Note.Id(noteId),
+                            bookId = Book.Id(bookId.toString()),
+                            dateAdded = LocalDateTime.now().toString(),
+                            text = text ?: "",
+                            page = page?.toIntOrNull(),
+                            type = "quote",
+                            isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
+                        ),
+                    )
                 }
             } while (cursor.moveToNext())
         }
@@ -144,21 +147,18 @@ class CheckMigrationUseCase(
                 } else {
                     null
                 }
-                val noteFormData = NoteFormData(
-                    text = text ?: "",
-                    dateAdded = dateAdded?.toString(),
-                )
                 if (id != null && bookId != null) {
                     val noteId = "${bookId}_${id}_comment"
-                    createOrUpdateNoteUseCase(noteId, noteFormData, bookId.toString())
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Comment created successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to create comment")
-                            },
-                        )
+                    noteDao.insertNote(
+                        NoteEntity(
+                            id = Note.Id(noteId),
+                            bookId = Book.Id(bookId.toString()),
+                            dateAdded = dateAdded?.toString() ?: LocalDateTime.now().toString(),
+                            text = text ?: "",
+                            isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
+                        ),
+                    )
                 }
             } while (cursor.moveToNext())
         }
@@ -184,15 +184,15 @@ class CheckMigrationUseCase(
                 total = legacyShelvesSize,
                 current = index + 1,
             )
-            updateShelfUseCase(legacyShelfType.shelfId, legacyShelfType.title)
-                .fold(
-                    onSuccess = {
-                        Timber.d("Legacy Shelf migrated successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to migrate legacy shelf")
-                    },
-                )
+            shelfDao.insertShelf(
+                ShelfEntity(
+                    id = Shelf.Id(legacyShelfType.shelfId),
+                    dateAdded = LocalDateTime.now().toString(),
+                    title = legacyShelfType.title,
+                    isPendingSync = true,
+                    lastModifiedTimestamp = Clock.System.now().toString(),
+                ),
+            )
         }
         Timber.d("Migrating real shelves...")
         val shelves = legacyBookDao.getAllShelves()
@@ -208,15 +208,15 @@ class CheckMigrationUseCase(
                 val id = shelf._id
                 val title = shelf.name
                 if (id != null && title != null) {
-                    updateShelfUseCase(id.toString(), title)
-                        .fold(
-                            onSuccess = {
-                                Timber.d("Shelf migrated successfully")
-                            },
-                            onFailure = {
-                                Timber.w(it, "Failed to migrate the shelf")
-                            },
-                        )
+                    shelfDao.insertShelf(
+                        ShelfEntity(
+                            id = Shelf.Id(id.toString()),
+                            dateAdded = LocalDateTime.now().toString(),
+                            title = title,
+                            isPendingSync = true,
+                            lastModifiedTimestamp = Clock.System.now().toString(),
+                        ),
+                    )
                 }
             } catch (e: Exception) {
                 Timber.w(e, "Failed to migrate shelf: $shelf")
@@ -236,7 +236,7 @@ class CheckMigrationUseCase(
             Timber.d("Migrating book: $book")
             try {
                 // Check if the book is already migrated
-                val existingBook = bookDao.getBookStream(book._id.toString()).firstOrNull()
+                val existingBook = bookDao.getBookFlow(Book.Id(book._id.toString())).firstOrNull()
                 if (existingBook != null) {
                     Timber.d("Book already migrated. Skipping...")
                 } else {
@@ -251,24 +251,9 @@ class CheckMigrationUseCase(
     private suspend fun migrateBook(book: LegacyBookEntity) {
         val bookId = book._id
         if (bookId != null) {
-            addOrUpdateBookUseCase(bookId.toString(), book.toBookFormData())
-                .fold(
-                    onSuccess = {
-                        Timber.d("Book migrated successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to migrate the book")
-                    },
-                )
-            moveBookToLibraryUseCase(bookId.toString())
-                .fold(
-                    onSuccess = {
-                        Timber.d("Book moved to library successfully")
-                    },
-                    onFailure = {
-                        Timber.w(it, "Failed to move the book to library")
-                    },
-                )
+            val bookEntity = book.toBookEntity(bookId = bookId.toString())
+            bookDao.insertBook(bookEntity)
+
             val state = legacyBookDao.getStatesForBookId(bookId)?.firstOrNull()
             if (state != null) {
                 if (state.favorite == 1) addBookToShelf(LegacyShelfType.FAVORITE.shelfId, bookId.toString())
@@ -281,20 +266,16 @@ class CheckMigrationUseCase(
             val lentToName = book.lentToName
             if (lentToName != null && lentToName.isNotEmpty()) {
                 addBookToShelf(LegacyShelfType.LENT_TO.shelfId, bookId.toString())
-                val noteFormData = NoteFormData(
-                    text = "Lent to $lentToName",
-                    page = null,
-                    type = null,
+                noteDao.insertNote(
+                    NoteEntity(
+                        id = Note.Id("${bookId}_lent_to_id"),
+                        bookId = Book.Id(bookId.toString()),
+                        dateAdded = LocalDateTime.now().toString(),
+                        text = "Lent to $lentToName",
+                        isPendingSync = true,
+                        lastModifiedTimestamp = Clock.System.now().toString(),
+                    ),
                 )
-                createOrUpdateNoteUseCase("${bookId}_lent_to_id", noteFormData, bookId.toString())
-                    .fold(
-                        onSuccess = {
-                            Timber.d("Lent Note created successfully")
-                        },
-                        onFailure = {
-                            Timber.w(it, "Failed to create lent note")
-                        },
-                    )
             }
         }
     }
@@ -317,21 +298,18 @@ class CheckMigrationUseCase(
 
     private suspend fun addBookToShelf(shelfId: String?, bookId: String?) {
         if (bookId != null && shelfId != null) {
-            val bookExists = bookDao.getBookStream(bookId.toString()).firstOrNull() != null
-            val shelfExists = shelfDao.getAllShelvesStream()
-                .firstOrNull()?.any { it.id == shelfId.toString() } == true
+            val bookExists = bookDao.getBookFlow(Book.Id(bookId)).firstOrNull() != null
+            val shelfExists = shelfAndBookDao.getAllShelvesFlow()
+                .firstOrNull()?.any { it.id.value == shelfId.toString() } == true
             if (bookExists && shelfExists) {
-                toggleBookInShelfUseCase(bookId.toString(), shelfId.toString(), true)
-                    .fold(
-                        onSuccess = {
-                            Timber.d("Book added to shelf successfully")
-                        },
-                        onFailure = {
-                            Timber.w(it, "Failed to add book to shelf")
-                        },
-                    )
-            } else {
-                Timber.w("Legacy group not migrated. Book or shelf missing.")
+                val shelvesWithBooksEntity = ShelfWithBookEntity(
+                    bookId = Book.Id(bookId),
+                    shelfId = Shelf.Id(shelfId),
+                    isPendingSync = true,
+                    isDeleted = false,
+                    lastModifiedTimestamp = Clock.System.now().toString(),
+                )
+                shelfAndBookDao.insertOrUpdateShelfWithBook(shelvesWithBooksEntity)
             }
         }
     }

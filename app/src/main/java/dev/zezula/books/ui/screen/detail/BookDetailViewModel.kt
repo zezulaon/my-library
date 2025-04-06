@@ -4,12 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.domain.AllBookDetailResult
 import dev.zezula.books.domain.CheckReviewsDownloadedUseCase
-import dev.zezula.books.domain.CreateOrUpdateNoteUseCase
+import dev.zezula.books.domain.CreateNoteUseCase
 import dev.zezula.books.domain.DeleteBookFromLibraryUseCase
 import dev.zezula.books.domain.DeleteNoteUseCase
 import dev.zezula.books.domain.FetchSuggestionsUseCase
@@ -17,6 +19,7 @@ import dev.zezula.books.domain.GetAllBookDetailUseCase
 import dev.zezula.books.domain.MoveBookToLibraryUseCase
 import dev.zezula.books.domain.RefreshBookCoverUseCase
 import dev.zezula.books.domain.ToggleBookInShelfUseCase
+import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
@@ -37,7 +40,8 @@ class BookDetailViewModel(
     private val deleteBookUseCase: DeleteBookFromLibraryUseCase,
     private val checkReviewsDownloadedUseCase: CheckReviewsDownloadedUseCase,
     private val fetchSuggestionsUseCase: FetchSuggestionsUseCase,
-    private val createOrUpdateNoteUseCase: CreateOrUpdateNoteUseCase,
+    private val createNoteUseCase: CreateNoteUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
     private val toggleBookInShelfUseCase: ToggleBookInShelfUseCase,
     private val refreshBookCoverUseCase: RefreshBookCoverUseCase,
@@ -45,7 +49,7 @@ class BookDetailViewModel(
     getAllBookDetailUseCase: GetAllBookDetailUseCase,
 ) : ViewModel() {
 
-    private val bookId: String = checkNotNull(savedStateHandle[DestinationArgs.bookIdArg])
+    private val bookId: Book.Id = Book.Id(checkNotNull(savedStateHandle[DestinationArgs.bookIdArg]))
 
     private val allBookDetail: Flow<Response<AllBookDetailResult>> = getAllBookDetailUseCase(bookId)
         .onResponseError { _errorMessage.value = R.string.error_failed_get_data }
@@ -79,7 +83,7 @@ class BookDetailViewModel(
 
     // Keeps shelf items that are being updated (in order to display progress or temporary check before
     // the updating is done)
-    private val _shelvesToggleProgressList = MutableStateFlow<Map<String, Boolean>>(emptyMap())
+    private val _shelvesToggleProgressList = MutableStateFlow<Map<Shelf.Id, Boolean>>(emptyMap())
 
     val uiState: StateFlow<BookDetailUiState> = combine(
         allBookDetail,
@@ -116,7 +120,7 @@ class BookDetailViewModel(
 
     private fun mergeShelvesWithToggleProgress(
         shelves: List<ShelfForBook>,
-        shelvesToggleProgressList: Map<String, Boolean>,
+        shelvesToggleProgressList: Map<Shelf.Id, Boolean>,
     ): List<ShelfForBook> {
         val mutableShelves = shelves.toMutableList()
         shelvesToggleProgressList.forEach { toggleShelfMap ->
@@ -212,7 +216,7 @@ class BookDetailViewModel(
     fun createNote(text: String) {
         viewModelScope.launch {
             val noteFormData = NoteFormData(text = text)
-            createOrUpdateNoteUseCase(noteId = null, noteFormData = noteFormData, bookId = bookId)
+            createNoteUseCase(bookId = bookId, noteFormData = noteFormData)
                 .onError {
                     _errorMessage.value = R.string.detail_failed_to_create_note
                 }
@@ -224,7 +228,7 @@ class BookDetailViewModel(
         dismissNoteDialog()
         viewModelScope.launch {
             val noteFormData = NoteFormData(text = text, dateAdded = note.dateAdded, page = note.page, type = note.type)
-            createOrUpdateNoteUseCase(noteId = note.id, noteFormData = noteFormData, bookId = bookId)
+            updateNoteUseCase(noteId = note.id, noteFormData = noteFormData)
                 .onError {
                     _errorMessage.value = R.string.detail_failed_to_update_note
                 }

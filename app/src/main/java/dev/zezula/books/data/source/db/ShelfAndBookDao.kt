@@ -1,14 +1,12 @@
 package dev.zezula.books.data.source.db
 
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Upsert
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.shelf.ShelfEntity
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfForBookEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookCountEntity
 import dev.zezula.books.data.model.shelf.ShelfWithBookEntity
@@ -18,32 +16,73 @@ import kotlinx.coroutines.flow.Flow
 interface ShelfAndBookDao {
 
     @Upsert
-    suspend fun addOrUpdate(shelf: ShelfEntity)
+    suspend fun insertOrUpdateShelfWithBook(shelfWithBookEntity: ShelfWithBookEntity)
 
     @Upsert
-    suspend fun addOrUpdate(shelves: List<ShelfEntity>)
-
-    @Query("DELETE FROM shelves WHERE id = :shelfId")
-    suspend fun delete(shelfId: String)
+    suspend fun insertOrUpdateShelvesWithBooks(shelfWithBookEntities: List<ShelfWithBookEntity>)
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT *, Count(bookId) as numberOfBooks FROM shelves LEFT JOIN shelf_with_book ON shelfId=id GROUP BY id ORDER BY dateAdded DESC")
-    fun getAllShelvesStream(): Flow<List<ShelfWithBookCountEntity>>
+    @Query(
+        """
+        SELECT *, Count(bookId) as numberOfBooks 
+        FROM shelves 
+        LEFT JOIN shelf_with_book ON shelfId=id AND shelf_with_book.isDeleted = 0 
+        WHERE shelves.isDeleted = 0 AND (shelf_with_book.isDeleted = 0 OR shelf_with_book.isDeleted IS NULL)
+        GROUP BY id 
+        ORDER BY dateAdded DESC
+        """,
+    )
+    fun getAllShelvesFlow(): Flow<List<ShelfWithBookCountEntity>>
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM books INNER JOIN shelf_with_book ON bookId=id WHERE shelfId=:shelfId ORDER BY dateAdded DESC")
-    fun getBooksForShelfStream(shelfId: String): Flow<List<BookEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addBookToShelf(shelvesWithBooksEntity: ShelfWithBookEntity)
-
-    @Delete
-    suspend fun removeBookFromShelf(shelvesWithBooksEntity: ShelfWithBookEntity)
-
-    @Query("SELECT * FROM shelf_with_book")
-    suspend fun getAllShelfWithBookEntity(): List<ShelfWithBookEntity>
+    @Query(
+        """
+        SELECT * FROM books     
+        INNER JOIN shelf_with_book ON bookId=books.id 
+        WHERE shelf_with_book.shelfId=:shelfId AND shelf_with_book.isDeleted = 0 AND books.isDeleted = 0
+        ORDER BY books.dateAdded DESC
+        """,
+    )
+    fun getAllBooksForShelfStream(shelfId: Shelf.Id): Flow<List<BookEntity>>
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT id, dateAdded, title, CASE WHEN bookId=:bookId THEN '1' ELSE '0' END AS isBookAdded FROM shelves LEFT JOIN (SELECT * FROM shelf_with_book WHERE bookId=:bookId) ON id=shelfId")
-    fun getShelvesForBookStream(bookId: String): Flow<List<ShelfForBookEntity>>
+    @Query(
+        """
+        SELECT id, dateAdded, title, 
+            CASE WHEN bookId=:bookId THEN '1' ELSE '0' END AS isBookAdded 
+        FROM shelves 
+        LEFT JOIN 
+            (SELECT * FROM shelf_with_book WHERE shelf_with_book.isDeleted = 0 AND bookId=:bookId)
+            ON id=shelfId
+        WHERE shelves.isDeleted = 0
+        """,
+    )
+    fun getAllShelvesForBookFlow(bookId: Book.Id): Flow<List<ShelfForBookEntity>>
+
+    @Query(
+        """
+        UPDATE shelf_with_book 
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
+        WHERE shelfId = :shelfId
+        """,
+    )
+    suspend fun softDeleteShelvesWithBooksForShelf(shelfId: Shelf.Id, lastModifiedTimestamp: String)
+
+    @Query(
+        """
+        UPDATE shelf_with_book 
+        SET isDeleted = 1, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
+        WHERE bookId = :bookId
+        """,
+    )
+    suspend fun softDeleteShelvesWithBooksForBook(bookId: Book.Id, lastModifiedTimestamp: String)
+
+    @Query("SELECT * FROM shelf_with_book WHERE isPendingSync = 1")
+    fun getAllShelvesWithBooksPendingSyncFlow(): Flow<List<ShelfWithBookEntity>>
+
+    @Query("UPDATE shelf_with_book SET isPendingSync = 0 WHERE shelfId = :shelfId AND bookId = :bookId")
+    suspend fun resetShelfWithBookPendingSyncStatus(shelfId: Shelf.Id, bookId: Book.Id)
+
+    @Query("SELECT lastModifiedTimestamp FROM shelf_with_book ORDER BY lastModifiedTimestamp DESC LIMIT 1")
+    suspend fun getLatestLastModifiedTimestamp(): String?
 }

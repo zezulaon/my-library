@@ -28,14 +28,14 @@ class ReviewsRepositoryImpl(
     private val onlineBookFinderService: OnlineBookFinderService,
 ) : ReviewsRepository {
 
-    override fun getReviewsForBookStream(bookId: String): Flow<List<Review>> {
-        return reviewsDao.getReviewsForBookStream(bookId).mapNotNull {
+    override fun getReviewsForBookFlow(bookId: Book.Id): Flow<List<Review>> {
+        return reviewsDao.getReviewsForBookFlow(bookId).mapNotNull {
             it.map(ReviewEntity::asExternalModel)
         }
     }
 
-    override fun getRatingStream(bookId: String): Flow<Rating?> {
-        return ratingsDao.getRatingForBookStream(bookId)
+    override fun getRatingForBookFlow(bookId: Book.Id): Flow<Rating?> {
+        return ratingsDao.getRatingForBookFlow(bookId)
             .map {
                 it?.asExternalModel()
             }
@@ -56,7 +56,7 @@ class ReviewsRepositoryImpl(
         book: Book,
         fetchBookNetworkResponse: FindBookOnlineResponse,
     ) {
-        val existingBook = bookDao.getBookStream(book.id).first()
+        val existingBook = bookDao.getBookFlow(book.id).first()
         // Check if there is a book in the database
         if (existingBook == null) {
             Timber.w("Cannot save reviews -> Book with id: [${book.id}] not found in database.")
@@ -74,11 +74,11 @@ class ReviewsRepositoryImpl(
         }
     }
 
-    private suspend fun insertReviews(bookId: String, goodReadsReview: List<GoodReadsReview>) {
+    private suspend fun insertReviews(bookId: Book.Id, goodReadsReview: List<GoodReadsReview>) {
         val reviews = goodReadsReview
             .map {
                 ReviewEntity(
-                    id = UUID.randomUUID().toString(),
+                    id = Review.Id(UUID.randomUUID().toString()),
                     bookId = bookId,
                     body = it.body?.removeHtmlTags()?.trim(),
                     link = it.link,
@@ -93,10 +93,10 @@ class ReviewsRepositoryImpl(
         reviewsDao.addReviews(reviews)
     }
 
-    private suspend fun insertRating(bookId: String, goodreadsBook: GoodreadsBook) {
+    private suspend fun insertRating(bookId: Book.Id, goodreadsBook: GoodreadsBook) {
         val rating = with(goodreadsBook) {
             RatingEntity(
-                id = UUID.randomUUID().toString(),
+                id = Rating.Id(UUID.randomUUID().toString()),
                 bookId = bookId,
                 averageRating = this.average_rating,
                 textReviewsCount = this.work?.text_reviews_count,

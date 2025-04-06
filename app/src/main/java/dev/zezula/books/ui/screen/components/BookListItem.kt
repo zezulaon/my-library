@@ -24,7 +24,7 @@ import dev.zezula.books.ui.screen.list.ImageThumbnail
 @Composable
 internal fun BookListItem(
     book: Book,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book.Id) -> Unit,
     modifier: Modifier = Modifier,
     isLast: Boolean = false,
 ) {

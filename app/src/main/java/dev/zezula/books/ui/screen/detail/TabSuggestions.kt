@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
@@ -32,7 +33,7 @@ private const val DURATION_TO_REFRESH_IN_MILLIS = 35000
 @Composable
 fun TabSuggestions(
     uiState: SuggestionsUiState,
-    onBookClick: (bookId: String) -> Unit,
+    onBookClick: (bookId: Book.Id) -> Unit,
     onGenerateSuggestionsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.domain.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.GetBookUseCase
@@ -23,7 +24,7 @@ class CreateBookViewModel(
     private val addOrUpdateBookUseCase: AddOrUpdateLibraryBookUseCase,
 ) : ViewModel() {
 
-    private val bookId: String?
+    private val bookId: Book.Id?
 
     private val _bookFormData = MutableStateFlow(BookFormData())
     private val _errorMessage = MutableStateFlow<Int?>(null)
@@ -54,7 +55,7 @@ class CreateBookViewModel(
     init {
         val bookIdArg: String? = savedStateHandle[DestinationArgs.bookIdArg]
         bookId = if (bookIdArg != null && bookIdArg != "null") {
-            bookIdArg
+            Book.Id(bookIdArg)
         } else {
             null
         }
@@ -85,7 +86,6 @@ class CreateBookViewModel(
                         description = book.description,
                         thumbnailLink = book.thumbnailLink,
                         userRating = book.userRating,
-                        dateAdded = book.dateAdded,
                     )
                 }
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.VisibleForTesting
 fun SearchMyLibraryRoute(
     viewModel: SearchMyLibraryViewModel,
     onNavigateBack: () -> Unit,
-    onBookClick: (bookId: String) -> Unit,
+    onBookClick: (bookId: Book.Id) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -61,7 +62,7 @@ fun SearchMyLibraryScreen(
     modifier: Modifier = Modifier,
     searchFocusRequester: FocusRequester = remember { FocusRequester() },
     onNavigateBack: () -> Unit = {},
-    onBookClick: (bookId: String) -> Unit = {},
+    onBookClick: (bookId: Book.Id) -> Unit = {},
     onQueryChange: (query: String) -> Unit = {},
     onSearchButtonClick: () -> Unit = {},
 ) {

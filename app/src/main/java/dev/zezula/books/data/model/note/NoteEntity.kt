@@ -1,11 +1,14 @@
 package dev.zezula.books.data.model.note
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
+import kotlinx.datetime.Instant
 
 /**
  * Represents a note entity in the database.
@@ -33,30 +36,50 @@ import dev.zezula.books.data.model.book.BookEntity
 )
 data class NoteEntity(
     @PrimaryKey
-    val id: String,
-    val bookId: String,
+    val id: Note.Id,
+    val bookId: Book.Id,
     val dateAdded: String,
     val text: String,
     val page: Int? = null,
     val type: String? = null,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isPendingSync: Boolean = false,
+    @ColumnInfo(defaultValue = "0", typeAffinity = ColumnInfo.INTEGER)
+    val isDeleted: Boolean = false,
+    val lastModifiedTimestamp: String? = null,
 )
+
+fun NoteEntity.asNetworkNote(): NetworkNote {
+    return NetworkNote(
+        id = id.value,
+        bookId = bookId.value,
+        dateAdded = dateAdded,
+        text = text,
+        page = page,
+        type = type,
+        isDeleted = isDeleted,
+        lastModifiedTimestamp = lastModifiedTimestamp,
+    )
+}
 
 val previewNoteEntities = listOf(
     NoteEntity(
-        id = "1",
-        bookId = "101",
+        id = Note.Id("1"),
+        bookId = Book.Id("101"),
         dateAdded = "2021-01-01T00:00:00",
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies ultricni.",
         page = 1,
         type = "NOTE",
+        lastModifiedTimestamp = "2021-01-01T00:00:00",
     ),
     NoteEntity(
-        id = "2",
-        bookId = "102",
+        id = Note.Id("2"),
+        bookId = Book.Id("102"),
         dateAdded = "2021-01-01T00:00:00",
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae aliquet nisl nunc vitae nisl.",
         page = 1,
         type = "QUOTE",
+        lastModifiedTimestamp = "2021-01-01T00:00:00",
     ),
 )
 
@@ -71,19 +94,20 @@ fun NoteEntity.asExternalModel(): Note {
     )
 }
 
-fun fromNetworkNote(
-    networkNote: NetworkNote,
-    bookId: String,
+fun fromNoteFormData(
+    noteId: Note.Id,
+    bookId: Book.Id,
+    noteFormData: NoteFormData,
+    dateAdded: String,
+    lastModifiedTimestamp: Instant,
 ): NoteEntity {
-    checkNotNull(networkNote.id) { "Note needs [id] property" }
-    checkNotNull(networkNote.dateAdded) { "Note needs [dateAdded] property" }
-    checkNotNull(networkNote.text) { "Note needs [text] property" }
     return NoteEntity(
-        id = networkNote.id,
+        id = noteId,
         bookId = bookId,
-        dateAdded = networkNote.dateAdded,
-        text = networkNote.text,
-        page = networkNote.page,
-        type = networkNote.type,
+        dateAdded = dateAdded,
+        text = noteFormData.text,
+        page = noteFormData.page,
+        type = noteFormData.type,
+        lastModifiedTimestamp = lastModifiedTimestamp.toString(),
     )
 }

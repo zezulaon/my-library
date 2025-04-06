@@ -45,6 +45,7 @@ import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.review.Review
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.data.model.shelf.ShelfForBook
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import timber.log.Timber
@@ -54,9 +55,9 @@ fun BookDetailRoute(
     viewModel: BookDetailViewModel,
     onNavigateBack: () -> Unit,
     onReviewClick: (Review) -> Unit,
-    onEditBookClick: (String) -> Unit,
+    onEditBookClick: (Book.Id) -> Unit,
     onBookDeletedSuccess: () -> Unit,
-    onSuggestedBookClick: (bookId: String) -> Unit,
+    onSuggestedBookClick: (bookId: Book.Id) -> Unit,
     onNewShelfClick: () -> Unit,
     onAmazonLinkClicked: (book: Book) -> Unit = {},
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
@@ -143,7 +144,7 @@ fun BookDetailScreen(
     modifier: Modifier = Modifier,
     onAddBookToLibraryClick: () -> Unit = {},
     onAmazonLinkClicked: (book: Book) -> Unit = {},
-    onSuggestedBookClick: (bookId: String) -> Unit = {},
+    onSuggestedBookClick: (bookId: Book.Id) -> Unit = {},
     onSuggestionsGenerateClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -357,10 +358,10 @@ private fun DefaultPreview() {
         BookDetailScreen(
             uiState = BookDetailUiState(
                 selectedTab = DetailTab.Detail,
-                shelves = listOf(ShelfForBook("1", "Test", true)),
+                shelves = listOf(ShelfForBook(Shelf.Id("1"), "Test", true)),
                 isBookDeleted = false,
                 book = Book(
-                    id = "id",
+                    id = Book.Id("id"),
                     title = "Title",
                     author = "Tolkien",
                     description = "Desc",

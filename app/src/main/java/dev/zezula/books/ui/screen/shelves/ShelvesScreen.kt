@@ -159,7 +159,7 @@ private fun ShelvesList(
     LazyColumn(
         modifier = modifier,
     ) {
-        itemsIndexed(items = shelves, key = { _, item -> item.id }) { _, shelf ->
+        itemsIndexed(items = shelves, key = { _, item -> item.id.value }) { _, shelf ->
             val isExpanded = expandedShelfItem.value == shelf
             ShelfListItem(
                 modifier = Modifier.testTag(manageShelvesShelfItem),

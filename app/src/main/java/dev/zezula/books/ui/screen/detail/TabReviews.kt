@@ -84,7 +84,7 @@ fun TabReviews(
                             uiState = uiState,
                         )
                     }
-                    itemsIndexed(items = uiState.reviews, key = { _, item -> item.id }) { _, review ->
+                    itemsIndexed(items = uiState.reviews, key = { _, item -> item.id.value }) { _, review ->
                         ReviewCard(
                             modifier = modifier
                                 .padding(horizontal = 24.dp)

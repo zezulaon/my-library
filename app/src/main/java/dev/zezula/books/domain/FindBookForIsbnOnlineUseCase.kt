@@ -2,6 +2,7 @@ package dev.zezula.books.domain
 
 import dev.zezula.books.data.BooksRepository
 import dev.zezula.books.data.UserLibraryRepository
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.source.network.OnlineBookFinderService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
@@ -14,7 +15,7 @@ class FindBookForIsbnOnlineUseCase(
     private val userLibraryRepository: UserLibraryRepository,
 ) {
 
-    suspend operator fun invoke(isbn: String): Response<String?> {
+    suspend operator fun invoke(isbn: String): Response<Book.Id?> {
         return asResponse {
             findBook(isbn)
         }
@@ -23,20 +24,21 @@ class FindBookForIsbnOnlineUseCase(
             }
     }
 
-    private suspend fun findBook(isbn: String): String? {
+    private suspend fun findBook(isbn: String): Book.Id? {
         // Skips downloading if the book is already in the DB
-        val existingId = booksRepository.getBookId(isbn)
-        if (existingId != null) {
-            if (userLibraryRepository.isBookInLibrary(existingId).first().not()) {
-                userLibraryRepository.moveBookToLibrary(existingId)
+        val existingBooks = booksRepository.getBooksByIsbn(isbn)
+        if (existingBooks.isNotEmpty()) {
+            val existingBookId = existingBooks.first().id
+            if (userLibraryRepository.isBookInLibrary(existingBookId).first().not()) {
+                userLibraryRepository.moveExistingBookToLibrary(existingBookId)
             }
-            return existingId
+            return existingBookId
         }
 
         val bookFormData = onlineBookFinderService.findBookForIsbnOnline(isbn)
         return if (bookFormData != null) {
-            val addedBook = userLibraryRepository.addBook(bookFormData)
-            addedBook.id
+            val addedBookId = userLibraryRepository.addBookToLibrary(bookFormData)
+            addedBookId
         } else {
             null
         }

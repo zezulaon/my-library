@@ -13,20 +13,22 @@ class AddOrUpdateLibraryBookUseCase(private val userLibraryRepository: UserLibra
      * Updates the book in the app (if [bookId] is available). If [bookId] wasn't provided, then new book record
      * is created in the app.
      */
-    suspend operator fun invoke(bookId: String?, bookFormData: BookFormData): Response<Book> {
+    suspend operator fun invoke(bookId: Book.Id?, bookFormData: BookFormData): Response<Unit> {
         return asResponse {
-            if (bookId != null) {
-                // If there is a bookId, then we update the book.
-                userLibraryRepository.addOrUpdateBook(bookId = bookId, bookFormData = bookFormData)
-            } else {
-                // If there is no bookId, then we create a new book.
-                val addedBook = userLibraryRepository.addBook(bookFormData)
-
-                addedBook
-            }
+            addOrUpdate(bookId, bookFormData)
         }
             .onError {
                 Timber.e(it, "Failed to update the book: [$bookId].")
             }
+    }
+
+    private suspend fun addOrUpdate(bookId: Book.Id?, bookFormData: BookFormData) {
+        if (bookId != null) {
+            // If there is a bookId, then we update the book.
+            userLibraryRepository.updateBookInLibrary(bookId = bookId, bookFormData = bookFormData)
+        } else {
+            // If there is no bookId, then we create a new book.
+            userLibraryRepository.addBookToLibrary(bookFormData = bookFormData)
+        }
     }
 }

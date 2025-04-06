@@ -3,10 +3,9 @@ package dev.zezula.books.data.model.book
 import dev.zezula.books.util.formatDate
 import dev.zezula.books.util.toSortingAuthor
 import dev.zezula.books.util.toSortingTitle
-import java.time.LocalDateTime
 
 data class Book(
-    val id: String,
+    val id: Id,
     val title: String? = null,
     val author: String? = null,
     val description: String? = null,
@@ -18,6 +17,10 @@ data class Book(
     val userRating: Int? = null,
     val dateAdded: String,
 ) {
+
+    @JvmInline
+    value class Id(val value: String)
+
     val dateAddedFormatted: String = formatDate(dateAdded)
 
     // Titles without articles (a, an, the) for sorting
@@ -38,30 +41,30 @@ data class BookFormData(
     val publisher: String? = null,
     val yearPublished: Int? = null,
     val pageCount: Int? = null,
-    val thumbnailLink: String? = null,
     val userRating: Int? = null,
-    val dateAdded: String? = null,
+    val thumbnailLink: String? = null,
     // Subject is legacy property from older version of the app. It's not used right now.
     val subject: String? = null,
     // Binding is legacy property from older version of the app. It's not used right now.
     val binding: String? = null,
 )
 
-fun BookFormData.asNetworkBook(id: String): NetworkBook {
-    return NetworkBook(
+fun BookFormData.toBookEntity(id: Book.Id, dateAdded: String, lastModifiedTimestamp: String): BookEntity {
+    return BookEntity(
         id = id,
-        title = this.title,
-        author = this.author,
-        description = this.description,
-        isbn = this.isbn,
-        publisher = this.publisher,
-        yearPublished = this.yearPublished,
-        pageCount = this.pageCount,
-        thumbnailLink = this.thumbnailLink,
-        userRating = this.userRating,
-        dateAdded = this.dateAdded ?: LocalDateTime.now().toString(),
-        subject = this.subject,
-        binding = this.binding,
+        title = title,
+        author = author,
+        description = description,
+        isbn = isbn,
+        publisher = publisher,
+        yearPublished = yearPublished,
+        pageCount = pageCount,
+        userRating = userRating,
+        dateAdded = dateAdded,
+        subject = subject,
+        binding = binding,
+        thumbnailLink = thumbnailLink,
+        lastModifiedTimestamp = lastModifiedTimestamp,
     )
 }
 
@@ -98,7 +101,7 @@ fun BookFormData.updateNullValues(other: BookFormData?): BookFormData {
 
 val previewBooks = listOf(
     Book(
-        id = "1",
+        id = Book.Id("1"),
         title = "Hobit",
         author = "J. R. R. Tolkien",
         description = "Hobit desc",
@@ -111,7 +114,7 @@ val previewBooks = listOf(
         dateAdded = "2023-01-05T17:43:25.629",
     ),
     Book(
-        id = "2",
+        id = Book.Id("2"),
         title = "Neverwhere",
         author = "N. Gaiman",
         description = "Neverwhere description",

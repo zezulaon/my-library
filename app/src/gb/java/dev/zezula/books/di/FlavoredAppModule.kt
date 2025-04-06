@@ -23,6 +23,6 @@ val flavoredAppModule = module {
         database.legacyBookDao()
     }
 
-    single { RefreshBookCoverUseCase(get(), get(), get()) }
-    single { CheckMigrationUseCase(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { RefreshBookCoverUseCase(get(), get()) }
+    single { CheckMigrationUseCase(get(), get(), get(), get(), get()) }
 }

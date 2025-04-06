@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.allAuthorsAppBar
@@ -32,7 +33,7 @@ import dev.zezula.books.util.allAuthorsAppBar
 @Composable
 fun AuthorBooksRoute(
     viewModel: AuthorBooksViewModel,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book.Id) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,7 +51,7 @@ fun AuthorBooksScreen(
     uiState: AuthorBooksUiState,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    onBookClick: (String) -> Unit = {},
+    onBookClick: (Book.Id) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,

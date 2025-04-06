@@ -1,5 +1,6 @@
 package dev.zezula.books.data.source.network.fake
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.NetworkBook
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.note.NetworkNote
@@ -12,10 +13,10 @@ import dev.zezula.books.data.source.network.NetworkDataSource
 
 open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
-    private val booksMap: MutableMap<String, NetworkBook> = previewBooks
+    private val booksMap: MutableMap<Book.Id, NetworkBook> = previewBooks
         .map { book ->
             NetworkBook(
-                id = book.id,
+                id = book.id.value,
                 dateAdded = book.dateAdded,
                 title = book.title,
                 author = book.author,
@@ -27,12 +28,12 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
                 thumbnailLink = book.thumbnailLink,
             )
         }
-        .associateBy { book -> book.id!! }
+        .associateBy { book -> Book.Id(book.id!!) }
         .toMutableMap()
 
     private val shelvesMap: MutableMap<String, NetworkShelf> = previewShelves
         .map { shelf ->
-            NetworkShelf(id = shelf.id, dateAdded = shelf.dateAdded, title = shelf.title)
+            NetworkShelf(id = shelf.id.value, dateAdded = shelf.dateAdded, title = shelf.title)
         }
         .associateBy { book -> book.id!! }
         .toMutableMap()
@@ -40,8 +41,8 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
     private val notesMap: MutableMap<String, NetworkNote> = previewNotes
         .map { note ->
             NetworkNote(
-                id = note.id,
-                bookId = note.bookId,
+                id = note.id.value,
+                bookId = note.bookId.value,
                 dateAdded = note.dateAdded,
                 text = note.text,
             )
@@ -49,17 +50,13 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         .associateBy { note -> note.id!! }
         .toMutableMap()
 
-    override suspend fun getBooks(): List<NetworkBook> {
-        return booksMap.values.toList()
-    }
-
     override suspend fun addOrUpdateBook(book: NetworkBook): NetworkBook {
-        booksMap[book.id!!] = book
+        booksMap[Book.Id(book.id!!)] = book
         return book
     }
 
-    override suspend fun deleteBook(bookId: String) {
-        booksMap.remove(bookId)
+    override suspend fun getModifiedShelves(lastModifiedTimestamp: String?): List<NetworkShelf> {
+        return emptyList()
     }
 
     override suspend fun addOrUpdateShelf(shelf: NetworkShelf): NetworkShelf {
@@ -67,12 +64,16 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         return shelf
     }
 
-    override suspend fun deleteShelf(shelfId: String) {
-        shelvesMap.remove(shelfId)
+    override suspend fun getModifiedBooks(lastModifiedTimestamp: String?): List<NetworkBook> {
+        return emptyList()
     }
 
-    override suspend fun getShelves(): List<NetworkShelf> {
-        return shelvesMap.values.toList()
+    override suspend fun getModifiedShelvesWithBooks(lastModifiedTimestamp: String?): List<NetworkShelfWithBook> {
+        return emptyList()
+    }
+
+    override suspend fun getModifiedNotes(lastModifiedTimestamp: String?): List<NetworkNote> {
+        return emptyList()
     }
 
     override suspend fun getMigrationData(): NetworkMigrationData {
@@ -83,29 +84,12 @@ open class FakeNetworkDataSourceImpl : NetworkDataSource {
         // Not used in this fake
     }
 
-    override suspend fun getShelvesWithBooks(): List<NetworkShelfWithBook> {
-        // Starts without any book<->shelf connection
-        return emptyList()
-    }
-
-    override suspend fun updateBookInShelf(shelfId: String, bookId: String, isBookInShelf: Boolean) {
-        // book<->shelf connection not used in this fake
+    override suspend fun updateBookInShelf(shelfWithBook: NetworkShelfWithBook) {
+        // Not used in this fake
     }
 
     override suspend fun addOrUpdateNote(note: NetworkNote): NetworkNote {
         notesMap[note.id!!] = note
         return note
-    }
-
-    override suspend fun deleteNote(noteId: String, bookId: String) {
-        notesMap.remove(noteId)
-    }
-
-    override suspend fun getNotesForBook(bookId: String): List<NetworkNote> {
-        return notesMap.values.filter { it.bookId == bookId }
-    }
-
-    override suspend fun updateBookCover(bookId: String, thumbnailLink: String) {
-        TODO("Not yet implemented")
     }
 }

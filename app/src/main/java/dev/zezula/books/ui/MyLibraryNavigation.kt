@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
 import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.data.model.shelf.Shelf
 import dev.zezula.books.ui.DestinationArgs.authorNameIdArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
@@ -83,20 +84,20 @@ fun NavHostController.navigateToFindBookOnline() {
     navigate(findBookRoute)
 }
 
-fun NavHostController.navigateToBarcodeSearch(isBulkScanOn: Boolean = false, shelfId: String? = null) {
+fun NavHostController.navigateToBarcodeSearch(isBulkScanOn: Boolean = false, shelfId: Shelf.Id? = null) {
     var route = "$searchBarcode?$isBulkScanOnArg=$isBulkScanOn"
     if (shelfId != null) {
-        route = "$route&$shelfIdArg=$shelfId"
+        route = "$route&$shelfIdArg=${shelfId.value}"
     }
     this.navigate(route)
 }
 
-fun NavHostController.navigateToAddOrEdit(bookId: String? = null) {
-    navigate("$bookForm/$bookId")
+fun NavHostController.navigateToAddOrEdit(bookId: Book.Id? = null) {
+    navigate("$bookForm/${bookId?.value}")
 }
 
-fun NavHostController.navigateToBookDetail(bookId: String, popupToBookList: Boolean = false) {
-    navigate("$bookDetail/$bookId") {
+fun NavHostController.navigateToBookDetail(bookId: Book.Id, popupToBookList: Boolean = false) {
+    navigate("$bookDetail/${bookId.value}") {
         if (popupToBookList) {
             // popUpTo() ensures that there will be only one book detail screen right after book list screen
             popUpTo(bookListRoute) {

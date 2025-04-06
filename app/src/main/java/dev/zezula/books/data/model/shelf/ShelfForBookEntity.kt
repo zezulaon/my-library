@@ -1,7 +1,7 @@
 package dev.zezula.books.data.model.shelf
 
 data class ShelfForBookEntity(
-    val id: String,
+    val id: Shelf.Id,
     val title: String,
     val isBookAdded: Boolean,
 )

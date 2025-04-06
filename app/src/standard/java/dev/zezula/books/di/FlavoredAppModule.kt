@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val flavoredAppModule = module {
     single { CheckMigrationUseCase() }
-    single { RefreshBookCoverUseCase(get(), get(), get()) }
+    single { RefreshBookCoverUseCase(get(), get()) }
 }

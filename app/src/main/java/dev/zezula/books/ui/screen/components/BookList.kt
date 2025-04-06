@@ -13,7 +13,7 @@ import dev.zezula.books.util.isLastIndex
 @Composable
 fun BookList(
     books: List<Book>,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Book.Id) -> Unit,
     modifier: Modifier = Modifier,
     animateItemChanges: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(),
@@ -22,7 +22,7 @@ fun BookList(
         modifier = modifier,
         contentPadding = contentPadding,
     ) {
-        itemsIndexed(key = { _, item -> item.id }, items = books) { index, book ->
+        itemsIndexed(key = { _, item -> item.id.value }, items = books) { index, book ->
             val isLast = books.isLastIndex(index)
             val itemModifier = if (animateItemChanges) {
                 Modifier.animateItemPlacement()

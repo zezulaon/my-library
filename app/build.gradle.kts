@@ -69,6 +69,7 @@ android {
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.generateKotlin", "true")
         }
     }
 
@@ -210,6 +211,9 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.google.mlkit.barcode.scanning)
+
+    // Date and time
+    implementation(libs.kotlinx.datetime)
 
     // Tests
     testImplementation(libs.junit)

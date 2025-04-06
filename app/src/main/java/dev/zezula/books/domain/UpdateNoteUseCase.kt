@@ -7,11 +7,11 @@ import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
 import timber.log.Timber
 
-class CreateOrUpdateNoteUseCase(private val notesRepository: NotesRepository) {
+class UpdateNoteUseCase(private val notesRepository: NotesRepository) {
 
-    suspend operator fun invoke(noteId: String?, noteFormData: NoteFormData, bookId: String): Response<Note> {
+    suspend operator fun invoke(noteId: Note.Id, noteFormData: NoteFormData): Response<Unit> {
         return asResponse {
-            notesRepository.addOrUpdateNote(noteId = noteId, bookId = bookId, noteFormData = noteFormData)
+            notesRepository.updateNote(noteId = noteId, noteFormData = noteFormData)
         }
             .onError {
                 Timber.e(it, "Failed to add the shelf.")

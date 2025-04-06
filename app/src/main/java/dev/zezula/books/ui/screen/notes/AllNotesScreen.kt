@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.NoteWithBook
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.allNotesAppBar
@@ -42,7 +43,7 @@ import dev.zezula.books.util.allNotesAppBar
 @Composable
 fun AllNotesRoute(
     viewModel: AllNotesViewModel,
-    onNoteClick: (bookId: String) -> Unit,
+    onNoteClick: (bookId: Book.Id) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,7 +61,7 @@ fun AllNotesScreen(
     uiState: AllNotesUiState,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
-    onNoteClick: (bookId: String) -> Unit = {},
+    onNoteClick: (bookId: Book.Id) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -128,12 +129,12 @@ private fun AllNotesAppBarTitle(uiState: AllNotesUiState) {
 private fun AllNotesList(
     notes: List<NoteWithBook>,
     modifier: Modifier = Modifier,
-    onNoteClick: (bookId: String) -> Unit = {},
+    onNoteClick: (bookId: Book.Id) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
-        itemsIndexed(key = { _, item -> item.note.id }, items = notes) { index, (note, title) ->
+        itemsIndexed(key = { _, item -> item.note.id.value }, items = notes) { index, (note, title) ->
             var footNote = title ?: "-"
             if (note.page != null) {
                 footNote = "$footNote, page: ${note.page}"

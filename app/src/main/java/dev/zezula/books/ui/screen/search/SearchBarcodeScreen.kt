@@ -40,6 +40,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import dev.zezula.books.R
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.ui.screen.components.BookListItem
 import dev.zezula.books.ui.screen.scanner.IsbnScannerComponent
@@ -52,7 +53,7 @@ fun SearchBarcodeRoute(
     isBulkScanningEnabled: Boolean,
     viewModel: SearchBarcodeViewModel,
     onNavigateBack: () -> Unit,
-    onBookFound: (bookId: String) -> Unit,
+    onBookFound: (bookId: Book.Id) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
@@ -239,7 +240,7 @@ fun DefaultPreview() {
             isBulkScanningEnabled = true,
             uiState = SearchBarcodeUiState(
                 noBookFound = false,
-                foundedBookId = "xxx",
+                foundedBookId = Book.Id("xxx"),
                 scannedIsbn = "978555444777",
                 foundedBook = previewBooks.first(),
             ),

@@ -1,5 +1,6 @@
 package dev.zezula.books.data
 
+import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.note.Note
 import dev.zezula.books.data.model.note.NoteFormData
 import dev.zezula.books.data.model.note.NoteWithBook
@@ -7,15 +8,19 @@ import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {
 
-    fun getAllNotesStream(): Flow<List<NoteWithBook>>
+    fun getAllNotesFlow(): Flow<List<NoteWithBook>>
 
-    fun getNotesForBookStream(bookId: String): Flow<List<Note>>
+    fun getNotesForBookFlow(bookId: Book.Id): Flow<List<Note>>
 
-    suspend fun addOrUpdateNote(
-        noteId: String?,
-        bookId: String,
+    suspend fun createNote(
+        bookId: Book.Id,
         noteFormData: NoteFormData,
-    ): Note
+    )
 
-    suspend fun deleteNote(noteId: String, bookId: String)
+    suspend fun updateNote(
+        noteId: Note.Id,
+        noteFormData: NoteFormData,
+    )
+
+    suspend fun softDeleteNote(noteId: Note.Id, bookId: Book.Id)
 }

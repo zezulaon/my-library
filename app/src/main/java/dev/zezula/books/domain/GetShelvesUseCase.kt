@@ -11,7 +11,7 @@ import timber.log.Timber
 class GetShelvesUseCase(private val repository: ShelvesRepository) {
 
     operator fun invoke(): Flow<Response<List<Shelf>>> {
-        return repository.getShelvesStream()
+        return repository.getAllShelvesFlow()
             .asResponse()
             .onResponseError {
                 Timber.e(it, "Failed to load shelves")
