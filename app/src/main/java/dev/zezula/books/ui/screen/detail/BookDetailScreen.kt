@@ -117,7 +117,6 @@ fun BookDetailRoute(
         onAddBookToLibraryClick = { viewModel.addBookToLibrary() },
         onAmazonLinkClicked = onAmazonLinkClicked,
         onSuggestedBookClick = onSuggestedBookClick,
-        onSuggestionsGenerateClick = { viewModel.generateSuggestions() },
     )
 }
 
@@ -145,7 +144,6 @@ fun BookDetailScreen(
     onAddBookToLibraryClick: () -> Unit = {},
     onAmazonLinkClicked: (book: Book) -> Unit = {},
     onSuggestedBookClick: (bookId: Book.Id) -> Unit = {},
-    onSuggestionsGenerateClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     if (uiState.isDeleteDialogDisplayed) {
@@ -244,7 +242,6 @@ fun BookDetailScreen(
                 DetailTab.Suggestions -> TabSuggestions(
                     uiState = uiState.suggestionsUiState,
                     onBookClick = onSuggestedBookClick,
-                    onGenerateSuggestionsClick = onSuggestionsGenerateClick,
                 )
             }
         }

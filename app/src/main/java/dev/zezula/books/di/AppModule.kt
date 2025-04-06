@@ -109,6 +109,7 @@ val appModule = module {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://openlibrary.org/")
+            .client(get())
             .build()
             .create(OpenLibraryApi::class.java)
     }
@@ -120,24 +121,30 @@ val appModule = module {
             .create(GoogleApi::class.java)
     }
     single<MyLibraryApi> {
-
-        val clientBuilder = OkHttpClient.Builder()
-            .readTimeout(120, TimeUnit.SECONDS)
-            .connectTimeout(15, TimeUnit.SECONDS)
-
-        if (BuildConfig.DEBUG) {
-            clientBuilder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-        }
-
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BuildConfig.ML_BASE_API_URL)
-            .client(clientBuilder.build())
+            .client(get())
             .build()
             .create(MyLibraryApi::class.java)
     }
     single<OnlineBookFinderService> { OnlineBookFinderServiceImpl(get(), get(), get()) }
     single<AuthService> { AuthServiceImpl(Firebase.auth) }
+
+    factory<OkHttpClient> {
+        val clientBuilder = OkHttpClient.Builder()
+            .readTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor(get<HttpLoggingInterceptor>())
+        }
+        clientBuilder.build()
+    }
+
+    factory<HttpLoggingInterceptor> {
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+    }
 
     single<BackupService> {
         BackupService(
