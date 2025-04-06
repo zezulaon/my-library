@@ -64,18 +64,15 @@ class BookDetailViewModel(
     private val _addBookToLibraryInProgress = MutableStateFlow(false)
 
     private val _suggestionsInProgress = MutableStateFlow(false)
-    private val _suggestionsProgress = MutableStateFlow(.0f)
     private val _suggestionsRefreshFailed = MutableStateFlow(false)
     private val suggestionsUiState: Flow<SuggestionsUiState> = combine(
         _suggestionsInProgress,
-        _suggestionsProgress,
         _suggestionsRefreshFailed,
         allBookDetail,
-    ) { suggestionsInProgress, suggestionsProgress, suggestionsRefreshFailed, bookResponse ->
+    ) { suggestionsInProgress, suggestionsRefreshFailed, bookResponse ->
         val bookDetail = bookResponse.getOrDefault(AllBookDetailResult())
         SuggestionsUiState(
             suggestions = bookDetail.suggestions,
-            progress = suggestionsProgress,
             refreshFailed = suggestionsRefreshFailed,
             isGeneratingInProgress = suggestionsInProgress,
         )
@@ -161,6 +158,9 @@ class BookDetailViewModel(
 
     fun onTabClick(tab: DetailTab) {
         _selectedTab.value = tab
+        if (tab == DetailTab.Suggestions) {
+            fetchSuggestions()
+        }
     }
 
     fun onShelfCheckChange(shelfForBook: ShelfForBook, checked: Boolean) {
@@ -262,10 +262,9 @@ class BookDetailViewModel(
         }
     }
 
-    fun generateSuggestions() {
+    fun fetchSuggestions() {
         viewModelScope.launch {
             _suggestionsInProgress.value = true
-            _suggestionsProgress.value = .95f
 
             fetchSuggestionsUseCase(bookId).fold(
                 onSuccess = {

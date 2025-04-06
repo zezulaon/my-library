@@ -167,12 +167,8 @@
 
     <string name="detail_failed_to_add_book">An error has occurred - the book wasn\'t added.</string>
 
-    <string name="detail_suggestions_generate_btn">Create Suggestions</string>
     <string name="detail_suggestions_no_suggestions_were_found">No suggestions were found</string>
     <string name="detail_suggestions_label_creating">Creating suggestions…</string>
-    <string name="detail_suggestions_info_box_title">Find Your Next Favorite</string>
-    <string name="detail_suggestions_info_box_description">Dive deeper into genres and themes you love. Just tap below and My Library will generate a list of books similar to this one.</string>
-    <string name="detail_suggestions_info_box_bottom_line">Note: This feature is currently in its experimental phase, and creating the list may take up to a minute. Feel free to contact us with your feedback.</string>
 
     <string name="detail_btn_show_less">Show Less</string>
     <string name="detail_btn_show_more">Show More</string>

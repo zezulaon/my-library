@@ -2,13 +2,14 @@ package dev.zezula.books.data
 
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.BookEntity
+import dev.zezula.books.data.model.book.BookFormData
 import dev.zezula.books.data.model.book.BookSuggestionEntity
 import dev.zezula.books.data.model.book.asExternalModel
 import dev.zezula.books.data.model.book.toBookEntity
-import dev.zezula.books.data.model.myLibrary.toBookFormData
+import dev.zezula.books.data.model.openLibrary.toBookFormData
 import dev.zezula.books.data.source.db.BookDao
 import dev.zezula.books.data.source.db.BookSuggestionDao
-import dev.zezula.books.data.source.network.MyLibraryApi
+import dev.zezula.books.data.source.network.OpenLibraryApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -21,7 +22,7 @@ import java.util.UUID
 class BookSuggestionsRepositoryImpl(
     private val bookDao: BookDao,
     private val bookSuggestionDao: BookSuggestionDao,
-    private val myLibraryApi: MyLibraryApi,
+    private val openLibraryApi: OpenLibraryApi,
 ) : BookSuggestionsRepository {
 
     override fun getAllSuggestionsForBookFlow(bookId: Book.Id): Flow<List<Book>> {
@@ -30,33 +31,42 @@ class BookSuggestionsRepositoryImpl(
         }
     }
 
-    override suspend fun fetchSuggestions(bookId: Book.Id): List<Book>? {
-        Timber.d("Fetching suggestions for book: $bookId")
+    override suspend fun fetchSuggestions(bookId: Book.Id): List<Book> {
         val parentBook = bookDao.getBookFlow(bookId).firstOrNull()
-        val title = parentBook?.title
-        val author = parentBook?.author
-        return if (parentBook != null && title != null && author != null) {
-            val suggestions = myLibraryApi.suggestions(title = title, author = author, isbn = parentBook.isbn)
-            Timber.d("Fetched suggestions: $suggestions")
-            suggestions?.forEach { suggestion ->
-                val bookEntity = suggestion
-                    .toBookFormData()
-                    .toBookEntity(
-                        id = Book.Id(UUID.randomUUID().toString()),
-                        dateAdded = LocalDateTime.now().toString(),
-                        lastModifiedTimestamp = Clock.System.now().toString(),
-                    )
 
-                // Check that the book is still in the database (it might have been deleted in the meantime).
-                if (bookDao.getBookFlow(bookId).firstOrNull() != null) {
-                    bookDao.insertBook(bookEntity)
-                    bookSuggestionDao.addToBookSuggestions(BookSuggestionEntity(bookId = bookEntity.id, parentBookId = bookId))
-                }
-            }
-            getAllSuggestionsForBookFlow(bookId).first()
+        val resultBookFormData = mutableListOf<BookFormData>()
+        resultBookFormData.addAll(suggestionsByAuthor(parentBook))
+
+        resultBookFormData.forEach { bookFormData ->
+            val entity = bookFormData.toBookEntity(
+                id = Book.Id(UUID.randomUUID().toString()),
+                dateAdded = LocalDateTime.now().toString(),
+                lastModifiedTimestamp = Clock.System.now().toString(),
+            )
+
+            bookDao.insertBook(entity)
+            bookSuggestionDao.addToBookSuggestions(
+                BookSuggestionEntity(
+                    bookId = entity.id,
+                    parentBookId = bookId,
+                ),
+            )
+        }
+
+        return getAllSuggestionsForBookFlow(bookId).first()
+    }
+
+    private suspend fun suggestionsByAuthor(
+        parentBook: BookEntity?,
+    ): Collection<BookFormData> {
+        val author = parentBook?.author
+        if (author != null) {
+            val topRatedByAuthorResponse = openLibraryApi.searchByQuery(author = author, limit = 15)
+            val topRatedByAuthorBooks: Collection<BookFormData> = topRatedByAuthorResponse?.docs?.map { it.toBookFormData() } ?: emptyList()
+            return topRatedByAuthorBooks
         } else {
-            Timber.d("Cannot fetch suggestions for book: $bookId because it is missing some data.")
-            null
+            Timber.d("Cannot fetch suggestions for book: ${parentBook?.id} because it is missing author.")
+            return emptyList()
         }
     }
 }

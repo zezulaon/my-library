@@ -26,6 +26,5 @@ data class BookDetailUiState(
 data class SuggestionsUiState(
     val suggestions: List<Book> = emptyList(),
     val isGeneratingInProgress: Boolean = false,
-    val progress: Float = 0f,
     val refreshFailed: Boolean = false,
 )

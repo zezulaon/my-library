@@ -91,7 +91,7 @@ class OnlineBookFinderServiceImpl(
         val result = mutableListOf<BookFormData>()
         result.addAll(googleBookFormDataList)
 
-        val openLibrarySearchResponse = openLibraryApi.searchByQuery(query)
+        val openLibrarySearchResponse = openLibraryApi.searchByQuery(query = query, limit = 20)
         val openLibraryBookFormDataList: Collection<BookFormData> =
             openLibrarySearchResponse?.docs?.take(10)?.map { it.toBookFormData() } ?: emptyList()
         result.addAll(openLibraryBookFormDataList)

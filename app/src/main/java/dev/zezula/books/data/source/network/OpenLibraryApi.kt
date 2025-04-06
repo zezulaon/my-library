@@ -11,8 +11,14 @@ import retrofit2.http.Query
 // https://openlibrary.org/developers/api
 interface OpenLibraryApi {
 
-    @GET("/search.json?limit=20")
-    suspend fun searchByQuery(@Query("q") query: String): OpenLibrarySearchResponse?
+    @GET("/search.json")
+    suspend fun searchByQuery(
+        @Query("q") query: String? = null,
+        @Query("author") author: String? = null,
+        @Query("title") title: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("limit") limit: Int = 20,
+    ): OpenLibrarySearchResponse?
 
     @GET("/isbn/{isbn}.json")
     suspend fun searchByIsbn(@Path("isbn") isbn: String): OpenLibraryIsbnResponse?
