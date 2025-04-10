@@ -14,6 +14,7 @@ import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
 import dev.zezula.books.ui.DestinationArgs.shelfIdArg
 import dev.zezula.books.ui.Destinations.allAuthorsRoute
 import dev.zezula.books.ui.Destinations.allNotesRoute
+import dev.zezula.books.ui.Destinations.appInfoRoute
 import dev.zezula.books.ui.Destinations.bookListRoute
 import dev.zezula.books.ui.Destinations.emailSignInRoute
 import dev.zezula.books.ui.Destinations.findBookRoute
@@ -22,6 +23,7 @@ import dev.zezula.books.ui.Destinations.shelvesRoute
 import dev.zezula.books.ui.Destinations.signInRoute
 import dev.zezula.books.ui.MyLibraryScreens.allAuthors
 import dev.zezula.books.ui.MyLibraryScreens.allNotes
+import dev.zezula.books.ui.MyLibraryScreens.appInfo
 import dev.zezula.books.ui.MyLibraryScreens.authorBookList
 import dev.zezula.books.ui.MyLibraryScreens.bookDetail
 import dev.zezula.books.ui.MyLibraryScreens.bookForm
@@ -47,6 +49,7 @@ private object MyLibraryScreens {
     const val searchMyLibrary = "searchMyLibrary"
     const val allAuthors = "allAuthors"
     const val allNotes = "allNotes"
+    const val appInfo = "appInfo"
     const val findBook = "findBook"
     const val searchBarcode = "searchBarcode"
 }
@@ -69,6 +72,7 @@ object Destinations {
     const val searchMyLibraryRoute = searchMyLibrary
     const val allAuthorsRoute = allAuthors
     const val allNotesRoute = allNotes
+    const val appInfoRoute = appInfo
     const val findBookRoute = findBook
     const val searchBarcodeRoute = "$searchBarcode?$isBulkScanOnArg={$isBulkScanOnArg}&$shelfIdArg={$shelfIdArg}"
 }
@@ -125,6 +129,10 @@ fun NavHostController.navigateToAllAuthorsShelves() {
 
 fun NavHostController.navigateToAllNotes() {
     navigate(allNotesRoute)
+}
+
+fun NavHostController.navigateToAppInfo() {
+    navigate(appInfoRoute)
 }
 
 fun NavHostController.navigateToEmailSignIn() {

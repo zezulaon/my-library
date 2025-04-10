@@ -1,4 +1,4 @@
-package dev.zezula.books.ui.screen.about
+package dev.zezula.books.ui.screen.signin
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -6,50 +6,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
-import dev.zezula.books.ui.theme.MyLibraryTheme
 import dev.zezula.books.util.shortUserId
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun AboutDialog(
-    onDismissRequested: () -> Unit,
-    onContactUsClicked: () -> Unit,
-    onReleaseNotesClicked: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequested,
-    ) {
-        Surface(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight(),
-            shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-        ) {
-            AboutContent(onReleaseNotesClicked, onDismissRequested, onContactUsClicked)
-        }
-    }
-}
 
 @Composable
 fun AboutCard(
@@ -118,21 +88,5 @@ private fun AboutContent(
                 Text(stringResource(R.string.about_btn_contact))
             }
         }
-    }
-}
-
-@Composable
-@Preview
-fun PreviewAboutDialog() {
-    MyLibraryTheme {
-        AboutDialog({}, {}, {})
-    }
-}
-
-@Composable
-@Preview
-fun PreviewAboutCard() {
-    MyLibraryTheme {
-        AboutCard({}, {})
     }
 }

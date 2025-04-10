@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserLibraryRepository {
 
-    fun getAllLibraryBooksStream(): Flow<List<Book>>
+    fun getAllLibraryBooksFlow(): Flow<List<Book>>
 
     fun getAllBooksForShelfStream(shelfId: Shelf.Id): Flow<List<Book>>
 

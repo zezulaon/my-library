@@ -13,6 +13,7 @@ import dev.zezula.books.domain.GetShelvesUseCase
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
+import dev.zezula.books.domain.sync.SyncUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import dev.zezula.books.util.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,13 +30,13 @@ class BookListViewModel(
     getShelvesUseCase: GetShelvesUseCase,
     private val getBooksForShelfUseCase: GetBooksForShelfUseCase,
     private val checkMigrationUseCase: CheckMigrationUseCase,
+    private val syncUseCase: SyncUseCase,
 ) : ViewModel() {
 
     private val errorMessage = MutableStateFlow<Int?>(null)
     private val selectedShelf = MutableStateFlow<Shelf?>(null)
     private val drawerItemClicked = MutableStateFlow<DrawerClickItem?>(null)
     private val addBookSheetOpened = MutableStateFlow(false)
-    private val moreDialogDisplayed = MutableStateFlow(false)
     private val sortBooksDialogDisplayed = MutableStateFlow(false)
     private val sortBooksBy = MutableStateFlow(SortBooksBy.DATE_ADDED)
     private val migrationProgress = MutableStateFlow<MigrationProgress?>(null)
@@ -76,12 +77,10 @@ class BookListViewModel(
 
     private val infoMessagesFlow = combine(
         addBookSheetOpened,
-        moreDialogDisplayed,
         errorMessage,
-    ) { addBookSheetOpened, moreDialogDisplayed, errorMessage ->
+    ) { addBookSheetOpened, errorMessage ->
         InfoMessagesState(
             addBookSheetOpened = addBookSheetOpened,
-            moreDialogDisplayed = moreDialogDisplayed,
             errorMessage = errorMessage,
         )
     }
@@ -130,6 +129,12 @@ class BookListViewModel(
             } finally {
                 migrationProgress.value = null
             }
+
+            // Refreshes and syncs the library
+            syncUseCase().fold(
+                onSuccess = { Timber.d("refresh() - successful") },
+                onFailure = { },
+            )
         }
     }
 
@@ -159,14 +164,6 @@ class BookListViewModel(
 
     fun onAddBookSheetDismissRequest() {
         addBookSheetOpened.value = false
-    }
-
-    fun onMoreClicked() {
-        moreDialogDisplayed.value = true
-    }
-
-    fun onAboutDialogDismissRequest() {
-        moreDialogDisplayed.value = false
     }
 
     fun onSortBooksClicked() {

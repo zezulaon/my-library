@@ -77,7 +77,6 @@ import dev.zezula.books.data.model.MigrationType
 import dev.zezula.books.data.model.book.Book
 import dev.zezula.books.data.model.book.previewBooks
 import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.ui.screen.about.AboutDialog
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.screen.signin.SignInUiState
 import dev.zezula.books.ui.screen.signin.SignInViewModel
@@ -105,9 +104,8 @@ fun BookListRoute(
     onManageShelvesClick: () -> Unit,
     onAllAuthorsShelvesClick: () -> Unit,
     onAllNotesClick: () -> Unit,
-    onContactClicked: () -> Unit,
-    onReleaseNotesClicked: () -> Unit,
     onSearchMyLibraryClick: () -> Unit,
+    onMoreClicked: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -194,14 +192,11 @@ fun BookListRoute(
             scope.launch { drawerState.close() }
             viewModel.onShelfSelected(it)
         },
-        onMoreClicked = { viewModel.onMoreClicked() },
+        onMoreClicked = onMoreClicked,
         onSortBooksClick = { viewModel.onSortBooksClicked() },
         onSortDialogDismissRequested = { viewModel.onSortDialogDismissRequest() },
         onSortSelected = { viewModel.onSortBooksSelected(it) },
-        onAboutDialogDismissRequested = { viewModel.onAboutDialogDismissRequest() },
         onSearchMyLibraryClick = onSearchMyLibraryClick,
-        onContactClicked = onContactClicked,
-        onReleaseNotesClicked = onReleaseNotesClicked,
         onAnonymUpgradeSignUpClick = onGoogleSignIn,
         onAnonymUpgradeDismissClick = { signInViewModel.onAnonymUpgradeDismissed() },
     )
@@ -227,9 +222,6 @@ fun BookListScreen(
     onAllNotesClick: () -> Unit = {},
     onShelfClick: (Shelf) -> Unit = {},
     onMoreClicked: () -> Unit = {},
-    onReleaseNotesClicked: () -> Unit = {},
-    onContactClicked: () -> Unit = {},
-    onAboutDialogDismissRequested: () -> Unit = {},
     onSortBooksClick: () -> Unit = {},
     onSortDialogDismissRequested: () -> Unit = {},
     onSortSelected: (SortBooksBy) -> Unit = {},
@@ -241,13 +233,6 @@ fun BookListScreen(
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    if (uiState.infoMessages.moreDialogDisplayed) {
-        AboutDialog(
-            onDismissRequested = onAboutDialogDismissRequested,
-            onContactUsClicked = onContactClicked,
-            onReleaseNotesClicked = onReleaseNotesClicked,
-        )
-    }
     if (uiState.sorting.sortDialogDisplayed) {
         SortBooksDialog(
             uiState = uiState,

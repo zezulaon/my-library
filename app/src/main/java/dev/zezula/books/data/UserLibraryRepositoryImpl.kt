@@ -21,7 +21,7 @@ class UserLibraryRepositoryImpl(
     private val shelfAndBookDao: ShelfAndBookDao,
 ) : UserLibraryRepository {
 
-    override fun getAllLibraryBooksStream(): Flow<List<Book>> {
+    override fun getAllLibraryBooksFlow(): Flow<List<Book>> {
         return bookDao.getAllLibraryBooksStream().map {
             it.map(BookEntity::asExternalModel)
         }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">My Library</string>
     <string name="app_name_migration">My Library</string>
+    <string name="app_version">Version: %1s</string>
 
     <string name="screen_title_sign_in">Sign Up</string>
     <string name="btn_add">Save</string>
@@ -234,6 +235,11 @@
     <string name="about_btn_release_notes">Release Notes</string>
     <string name="about_btn_contact">Contact Us</string>
 
+    <!-- App more info-->
+    <string name="app_more_info_export_in_progress_label">Exporting library…</string>
+    <string name="app_more_info_export_dir">Recent exported files:</string>
+    <string name="app_more_info_export_text">Export files into CSV format. Exported files are saved in:</string>
+
     <!-- Upgrade Anonymous dialog -->
     <string name="upgrade_anonymous_text">You\'re currently accessing the app anonymously. To ensure you don\'t lose your book collection after reinstalling the app or getting a new phone, consider signing up with a Google account.</string>
     <string name="upgrade_anonymous_btn_sign_up">Sign Up</string>
@@ -244,5 +250,6 @@
     <string name="error_message_no_email_client">No email app found.</string>
     <string name="error_message_no_browser">No internet browser app found.</string>
     <string name="error_email_contact_subject">My Library Assistance request.</string>
+
 
 </resources>
