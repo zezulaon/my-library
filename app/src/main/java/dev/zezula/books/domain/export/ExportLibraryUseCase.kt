@@ -166,7 +166,12 @@ class ExportLibraryUseCase(
 
     private fun exportData(fileName: String, csvRows: List<List<String?>>, timestamp: String) {
         try {
-            val file = File(getExportDirUseCase(), "exported_${fileName}_$timestamp.csv")
+            val exportDir = getExportDirUseCase()
+            if (exportDir == null) {
+                Timber.e("Export directory is null")
+                return
+            }
+            val file = File(exportDir, "exported_${fileName}_$timestamp.csv")
 
             file.printWriter().use { writer ->
                 csvRows
