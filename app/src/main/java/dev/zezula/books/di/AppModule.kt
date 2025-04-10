@@ -58,7 +58,11 @@ import dev.zezula.books.domain.ToggleBookInShelfUseCase
 import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
 import dev.zezula.books.domain.UpdateNoteUseCase
 import dev.zezula.books.domain.UpdateShelfUseCase
+import dev.zezula.books.domain.export.ExportLibraryUseCase
+import dev.zezula.books.domain.export.GetExportDirUseCase
+import dev.zezula.books.domain.export.LastExportedFilesUseCase
 import dev.zezula.books.domain.sync.SyncUseCase
+import dev.zezula.books.ui.screen.appinfo.AppInfoViewModel
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
 import dev.zezula.books.ui.screen.create.CreateBookViewModel
@@ -230,6 +234,9 @@ val appModule = module {
     single { GetAllAuthorsUseCase(get()) }
     single { GetAllNotesUseCase(get()) }
     single { GetBooksForAuthorUseCase(get()) }
+    factory { ExportLibraryUseCase(get(), get(), get(), get()) }
+    factory { GetExportDirUseCase(get()) }
+    factory { LastExportedFilesUseCase(get()) }
 
     // Repositories
     single<BooksRepository> { BooksRepositoryImpl(get(), get(), get()) }
@@ -242,7 +249,7 @@ val appModule = module {
     single<ReviewsRepository> { ReviewsRepositoryImpl(get(), get(), get(), get()) }
 
     // ViewModels
-    viewModel { BookListViewModel(get(), get(), get()) }
+    viewModel { BookListViewModel(get(), get(), get(), get()) }
     viewModel { ShelvesViewModel(get(), get(), get(), get()) }
     viewModel { AllAuthorsViewModel(get()) }
     viewModel { AuthorBooksViewModel(get(), get()) }
@@ -254,4 +261,5 @@ val appModule = module {
     viewModel { SearchMyLibraryViewModel(get()) }
     viewModel { AllNotesViewModel(get()) }
     viewModel { SearchBarcodeViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AppInfoViewModel(get(), get(), get()) }
 }

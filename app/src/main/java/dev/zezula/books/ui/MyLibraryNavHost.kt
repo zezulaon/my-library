@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
 import dev.zezula.books.ui.DestinationArgs.shelfIdArg
+import dev.zezula.books.ui.screen.appinfo.AppInfoRoute
 import dev.zezula.books.ui.screen.authors.AllAuthorsRoute
 import dev.zezula.books.ui.screen.authors.AuthorBooksRoute
 import dev.zezula.books.ui.screen.create.CreateBookRoute
@@ -71,9 +72,8 @@ fun MyLibraryNavHost(
                 onManageShelvesClick = { navController.navigateToManageShelves() },
                 onAllAuthorsShelvesClick = { navController.navigateToAllAuthorsShelves() },
                 onAllNotesClick = { navController.navigateToAllNotes() },
-                onContactClicked = { navController.navigateToContactEmailDraft() },
-                onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
                 onSearchMyLibraryClick = { navController.navigateToSearchMyLibrary() },
+                onMoreClicked = { navController.navigateToAppInfo() },
                 viewModel = koinViewModel(),
                 // Get the same ViewModel as in main activity
                 signInViewModel = koinViewModel(viewModelStoreOwner = LocalContext.current.findMyLibraryMainActivity()),
@@ -180,6 +180,15 @@ fun MyLibraryNavHost(
                 onNavigateBack = { navController.popBackStack() },
                 onBookFound = { bookId -> navController.navigateToBookDetail(bookId = bookId, popupToBookList = true) },
                 viewModel = koinViewModel(),
+            )
+        }
+
+        composable(route = Destinations.appInfoRoute) {
+            AppInfoRoute(
+                viewModel = koinViewModel(),
+                onNavigateBack = { navController.popBackStack() },
+                onContactUsClicked = { navController.navigateToContactEmailDraft() },
+                onReleaseNotesClicked = { navController.navigateToReleaseNotes() },
             )
         }
     }

@@ -27,6 +27,5 @@ data class SortingState(
 
 data class InfoMessagesState(
     val addBookSheetOpened: Boolean = false,
-    val moreDialogDisplayed: Boolean = false,
     val errorMessage: Int? = null,
 )
