@@ -1,10 +1,10 @@
 package dev.zezula.books.ui.screen.detail
 
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.note.Note
-import dev.zezula.books.data.model.review.Rating
-import dev.zezula.books.data.model.review.Review
-import dev.zezula.books.data.model.shelf.ShelfForBook
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Note
+import dev.zezula.books.core.model.Rating
+import dev.zezula.books.core.model.Review
+import dev.zezula.books.core.model.ShelfForBook
 
 data class BookDetailUiState(
     val book: Book? = null,

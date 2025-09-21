@@ -24,8 +24,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.util.manageShelvesBtnExpand
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable

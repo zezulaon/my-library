@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
+import dev.zezula.books.core.utils.shortUserId
 import dev.zezula.books.ui.theme.MyLibraryTheme
-import dev.zezula.books.util.shortUserId
 
 @Composable
 fun AppInfoRoute(

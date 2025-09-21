@@ -3,11 +3,11 @@ package dev.zezula.books.ui.screen.notes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
-import dev.zezula.books.data.model.note.NoteWithBook
-import dev.zezula.books.domain.GetAllNotesUseCase
+import dev.zezula.books.core.model.NoteWithBook
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.getOrDefault
 import dev.zezula.books.domain.model.onResponseError
+import dev.zezula.books.domain.usecases.GetAllNotesUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -20,9 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.util.homeNavDrawer
-import dev.zezula.books.util.homeNavDrawerShelfItem
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.utils.test.homeNavDrawer
+import dev.zezula.books.core.utils.test.homeNavDrawerShelfItem
 
 @Composable
 internal fun NavigationDrawer(

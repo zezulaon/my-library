@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
-import dev.zezula.books.util.shortUserId
+import dev.zezula.books.core.utils.shortUserId
 
 @Composable
 fun AboutCard(

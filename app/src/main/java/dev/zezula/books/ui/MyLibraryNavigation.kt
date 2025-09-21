@@ -6,8 +6,10 @@ import android.widget.Toast
 import androidx.navigation.NavHostController
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.utils.shortUserId
+import dev.zezula.books.findMyLibraryMainActivity
 import dev.zezula.books.ui.DestinationArgs.authorNameIdArg
 import dev.zezula.books.ui.DestinationArgs.bookIdArg
 import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
@@ -34,8 +36,6 @@ import dev.zezula.books.ui.MyLibraryScreens.searchBarcode
 import dev.zezula.books.ui.MyLibraryScreens.searchMyLibrary
 import dev.zezula.books.ui.MyLibraryScreens.shelves
 import dev.zezula.books.ui.MyLibraryScreens.signIn
-import dev.zezula.books.util.findMyLibraryMainActivity
-import dev.zezula.books.util.shortUserId
 import timber.log.Timber
 
 private object MyLibraryScreens {

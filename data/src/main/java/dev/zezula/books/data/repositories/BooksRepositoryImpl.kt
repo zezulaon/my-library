@@ -1,0 +1,49 @@
+package dev.zezula.books.data.repositories
+
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.data.database.BookDao
+import dev.zezula.books.data.database.NoteDao
+import dev.zezula.books.data.database.ShelfAndBookDao
+import dev.zezula.books.data.database.entities.asExternalModel
+import dev.zezula.books.domain.repositories.BooksRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+
+class BooksRepositoryImpl(
+    private val bookDao: BookDao,
+    private val shelfAndBookDao: ShelfAndBookDao,
+    private val noteDao: NoteDao,
+) : BooksRepository {
+
+    override fun getBookFlow(bookId: Book.Id): Flow<Book?> {
+        return bookDao.getBookFlow(bookId)
+            .map {
+                it?.asExternalModel()
+            }
+    }
+
+    override suspend fun getBook(bookId: Book.Id): Book? {
+        return getBookFlow(bookId).first()
+    }
+
+    override suspend fun getBooksByIsbn(isbn: String): List<Book> {
+        return bookDao
+            .getBooksByIsbn(isbn)
+            .map { it.asExternalModel() }
+    }
+
+    override suspend fun updateBookCover(bookId: Book.Id, thumbnailLink: String) {
+        bookDao.updateBookCover(bookId = bookId, thumbnailLink = thumbnailLink, lastModifiedTimestamp = Clock.System.now().toString())
+    }
+
+    override suspend fun softDeleteBook(bookId: Book.Id) {
+        bookDao.softDeleteBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
+        shelfAndBookDao.softDeleteShelvesWithBooksForBook(bookId = bookId, lastModifiedTimestamp = Clock.System.now().toString())
+        noteDao.softDeleteNotesForBook(
+            bookId = bookId,
+            lastModifiedTimestamp = Clock.System.now().toString(),
+        )
+    }
+}

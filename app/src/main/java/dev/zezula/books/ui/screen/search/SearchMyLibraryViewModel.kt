@@ -2,8 +2,8 @@ package dev.zezula.books.ui.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.domain.SearchMyLibraryBooksUseCase
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.domain.usecases.SearchMyLibraryBooksUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine

@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import org.jetbrains.annotations.VisibleForTesting

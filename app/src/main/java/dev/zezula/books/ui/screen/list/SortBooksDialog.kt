@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.SortBooksBy
+import dev.zezula.books.domain.repositories.SortBooksBy
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

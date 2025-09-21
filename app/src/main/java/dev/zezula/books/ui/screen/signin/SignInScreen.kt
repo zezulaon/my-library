@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
+import dev.zezula.books.core.utils.PHONE_MOTO_G5_PLUS
 import dev.zezula.books.ui.theme.MyLibraryTheme
-import dev.zezula.books.util.PHONE_MOTO_G5_PLUS
 
 @Composable
 fun SignInRoute(

@@ -2,9 +2,9 @@ package dev.zezula.books.ui.screen.appinfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.zezula.books.domain.export.ExportLibraryUseCase
-import dev.zezula.books.domain.export.GetExportDirUseCase
-import dev.zezula.books.domain.export.LastExportedFilesUseCase
+import dev.zezula.books.domain.usecases.export.ExportLibraryUseCase
+import dev.zezula.books.domain.usecases.export.GetExportDirUseCase
+import dev.zezula.books.domain.usecases.export.LastExportedFilesUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine

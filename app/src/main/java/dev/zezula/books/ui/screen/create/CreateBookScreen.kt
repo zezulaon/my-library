@@ -37,7 +37,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import timber.log.Timber
 

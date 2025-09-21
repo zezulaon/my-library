@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.util.isLastIndex
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.utils.isLastIndex
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

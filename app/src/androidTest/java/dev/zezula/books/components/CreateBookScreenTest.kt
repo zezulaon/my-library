@@ -12,7 +12,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.ui.screen.create.CreateBookScreen
 import dev.zezula.books.ui.screen.create.CreateBookUiState
 import org.junit.Rule

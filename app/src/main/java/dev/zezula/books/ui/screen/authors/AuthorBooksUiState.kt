@@ -1,6 +1,6 @@
 package dev.zezula.books.ui.screen.authors
 
-import dev.zezula.books.data.model.book.Book
+import dev.zezula.books.core.model.Book
 
 data class AuthorBooksUiState(
     val books: List<Book> = emptyList(),

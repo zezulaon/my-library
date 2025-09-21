@@ -1,6 +1,6 @@
 package dev.zezula.books.ui.screen.shelves
 
-import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.core.model.Shelf
 
 data class ShelvesUiState(
     val shelves: List<Shelf> = emptyList(),

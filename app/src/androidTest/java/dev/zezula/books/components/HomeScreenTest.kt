@@ -13,13 +13,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onSiblings
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.previewBooks
-import dev.zezula.books.data.model.shelf.previewShelves
+import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.core.model.previewShelves
+import dev.zezula.books.core.utils.test.homeAppBar
 import dev.zezula.books.ui.screen.list.BookListScreen
 import dev.zezula.books.ui.screen.list.BookListUiState
 import dev.zezula.books.ui.screen.list.DrawerNavigationState
 import dev.zezula.books.ui.screen.signin.SignInUiState
-import dev.zezula.books.util.homeAppBar
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

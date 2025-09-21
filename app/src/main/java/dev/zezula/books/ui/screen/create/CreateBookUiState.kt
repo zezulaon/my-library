@@ -1,6 +1,6 @@
 package dev.zezula.books.ui.screen.create
 
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.core.model.BookFormData
 
 data class CreateBookUiState(
     val bookFormData: BookFormData = BookFormData(),

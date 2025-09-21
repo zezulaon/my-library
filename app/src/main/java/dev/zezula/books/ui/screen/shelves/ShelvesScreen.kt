@@ -32,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.util.manageShelvesShelfItem
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.utils.test.manageShelvesShelfItem
 
 @Composable
 fun ShelvesRoute(

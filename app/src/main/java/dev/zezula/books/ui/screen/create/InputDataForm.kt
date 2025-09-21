@@ -21,16 +21,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.BookFormData
+import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.core.utils.test.createBookInputAuthor
+import dev.zezula.books.core.utils.test.createBookInputDesc
+import dev.zezula.books.core.utils.test.createBookInputIsbn
+import dev.zezula.books.core.utils.test.createBookInputPages
+import dev.zezula.books.core.utils.test.createBookInputPublisher
+import dev.zezula.books.core.utils.test.createBookInputTitle
+import dev.zezula.books.core.utils.test.createBookInputYear
 import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.theme.MyLibraryTheme
-import dev.zezula.books.util.createBookInputAuthor
-import dev.zezula.books.util.createBookInputDesc
-import dev.zezula.books.util.createBookInputIsbn
-import dev.zezula.books.util.createBookInputPages
-import dev.zezula.books.util.createBookInputPublisher
-import dev.zezula.books.util.createBookInputTitle
-import dev.zezula.books.util.createBookInputYear
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
