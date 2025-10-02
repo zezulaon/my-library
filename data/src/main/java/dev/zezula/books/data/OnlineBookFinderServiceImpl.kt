@@ -1,14 +1,21 @@
-package dev.zezula.books.data.source.network
+package dev.zezula.books.data
 
-import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.book.isComplete
-import dev.zezula.books.data.model.book.updateNullValues
-import dev.zezula.books.data.model.goodreads.GoodreadsBook
-import dev.zezula.books.data.model.goodreads.thumbnailUrl
-import dev.zezula.books.data.model.goodreads.toBookFormData
-import dev.zezula.books.data.model.google.thumbnailUrl
-import dev.zezula.books.data.model.google.toBookFormData
-import dev.zezula.books.data.model.openLibrary.toBookFormData
+import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.core.model.isComplete
+import dev.zezula.books.core.model.updateNullValues
+import dev.zezula.books.data.network.api.GoodreadsApi
+import dev.zezula.books.data.network.api.GoogleApi
+import dev.zezula.books.data.network.api.OpenLibraryApi
+import dev.zezula.books.data.network.api.findBookByIsbnOrNull
+import dev.zezula.books.data.network.api.searchByBibKeyIsbn
+import dev.zezula.books.data.network.api.searchByIsbn
+import dev.zezula.books.data.network.api.searchByQuery
+import dev.zezula.books.data.network.dto.goodreads.thumbnailUrl
+import dev.zezula.books.data.network.dto.goodreads.toBookFormData
+import dev.zezula.books.data.network.dto.google.thumbnailUrl
+import dev.zezula.books.data.network.dto.google.toBookFormData
+import dev.zezula.books.data.network.dto.openLibrary.toBookFormData
+import dev.zezula.books.domain.services.OnlineBookFinderService
 import timber.log.Timber
 
 class OnlineBookFinderServiceImpl(
@@ -61,14 +68,16 @@ class OnlineBookFinderServiceImpl(
         // Try to get book cover from OpenLibrary API
         val openLibraryBook = openLibraryApi.searchByBibKeyIsbn(isbn)
         Timber.d("OpenLibrary book: $openLibraryBook")
-        if (openLibraryBook?.cover?.medium != null) {
-            return openLibraryBook.cover.medium
+        val openLibraryCover = openLibraryBook?.cover?.medium
+        if (openLibraryCover != null) {
+            return openLibraryCover
         }
         // Try to get book cover from Google API
         val googleBook = googleApi.searchByIsbn(isbn)
         Timber.d("Google book: $googleBook")
-        if (googleBook?.volumeInfo?.thumbnailUrl() != null) {
-            return googleBook.volumeInfo.thumbnailUrl()
+        val googleCover = googleBook?.volumeInfo?.thumbnailUrl()
+        if (googleCover != null) {
+            return googleCover
         }
 
         // Try to get book cover from Goodreads API
@@ -79,10 +88,6 @@ class OnlineBookFinderServiceImpl(
         }
 
         return null
-    }
-
-    override suspend fun findReviewsForIsbn(isbn: String?, title: String?, author: String?): GoodreadsBook? {
-        return goodreadsApi.findReviewsOrNull(isbn = isbn, title = title, author = author)
     }
 
     override suspend fun findBookForQueryOnline(query: String): List<BookFormData> {

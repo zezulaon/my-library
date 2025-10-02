@@ -1,17 +1,12 @@
-package dev.zezula.books.data.source.network.fake
+package dev.zezula.books.data.fake
 
-import dev.zezula.books.data.model.book.BookFormData
-import dev.zezula.books.data.model.goodreads.GoodreadsBook
-import dev.zezula.books.data.source.network.OnlineBookFinderService
+import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.domain.services.OnlineBookFinderService
 
 class FakeOnlineBookFinderServiceImpl : OnlineBookFinderService {
 
     override suspend fun findBookForIsbnOnline(isbn: String): BookFormData {
         return BookFormData()
-    }
-
-    override suspend fun findReviewsForIsbn(isbn: String?, title: String?, author: String?): GoodreadsBook {
-        return GoodreadsBook()
     }
 
     override suspend fun findBookForQueryOnline(query: String): List<BookFormData> {

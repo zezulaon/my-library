@@ -9,8 +9,9 @@ import dev.zezula.books.data.network.NetworkBook
 import dev.zezula.books.data.network.NetworkNote
 import dev.zezula.books.data.network.NetworkShelf
 import dev.zezula.books.data.network.NetworkShelfWithBook
+import dev.zezula.books.data.network.api.NetworkDataSource
 
-open class FakeNetworkDataSourceImpl : dev.zezula.books.data.network.api.NetworkDataSource {
+open class FakeNetworkDataSourceImpl : NetworkDataSource {
 
     private val booksMap: MutableMap<Book.Id, NetworkBook> = previewBooks
         .map { book ->
