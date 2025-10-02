@@ -76,7 +76,6 @@ class MyLibraryMainActivity : ComponentActivity() {
         }
     }
 
-    // FIXME: moved from tools
     private fun getGoogleSignInRequest(): BeginSignInRequest = BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
