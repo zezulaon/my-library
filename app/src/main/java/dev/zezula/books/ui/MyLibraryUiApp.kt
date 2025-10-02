@@ -13,10 +13,10 @@ fun MyLibraryUiApp(startDestination: String = Destinations.signInRoute) {
         val navController = rememberNavController()
 
         if (BuildConfig.DEBUG) {
-            LaunchedEffect(Unit) {
-                navController.addOnDestinationChangedListener { controller, _, _ ->
-                    val route = controller.backQueue.map { it.destination.route }.joinToString(separator = " -> ")
-                    Timber.d("NavController destinations changed: $route")
+            LaunchedEffect(navController) {
+                navController.currentBackStackEntryFlow.collect {
+                    val route = it.destination.route
+                    Timber.d("Current destination: $route")
                 }
             }
         }
