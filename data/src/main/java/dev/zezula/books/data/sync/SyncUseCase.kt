@@ -6,9 +6,9 @@ import dev.zezula.books.data.database.NoteDao
 import dev.zezula.books.data.database.ShelfAndBookDao
 import dev.zezula.books.data.database.ShelfDao
 import dev.zezula.books.data.network.api.NetworkDataSource
-import dev.zezula.books.domain.services.AuthService
 import dev.zezula.books.domain.model.Response
 import dev.zezula.books.domain.model.asResponse
+import dev.zezula.books.domain.services.AuthService
 import timber.log.Timber
 
 class SyncUseCase(

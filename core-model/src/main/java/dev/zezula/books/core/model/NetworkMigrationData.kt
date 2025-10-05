@@ -9,4 +9,3 @@ data class NetworkMigrationData(
     val versionCode: String? = null,
     val migrationDurationInSeconds: String? = null,
 )
-

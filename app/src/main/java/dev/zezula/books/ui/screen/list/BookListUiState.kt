@@ -1,8 +1,8 @@
 package dev.zezula.books.ui.screen.list
 
 import dev.zezula.books.core.model.Book
-import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.MigrationProgress
+import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.domain.repositories.SortBooksBy
 
 data class BookListUiState(

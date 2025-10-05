@@ -1,9 +1,9 @@
 package dev.zezula.books.core.utils.test
 
 import dev.zezula.books.core.utils.TestTree
-import timber.log.Timber
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
+import timber.log.Timber
 
 class TimberLogRule() : TestWatcher() {
 

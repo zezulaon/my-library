@@ -4,7 +4,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext
 import org.koin.core.context.GlobalContext.getKoinApplicationOrNull
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin

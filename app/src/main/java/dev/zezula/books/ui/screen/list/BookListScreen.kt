@@ -72,6 +72,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.MigrationProgress
+import dev.zezula.books.core.model.MigrationType
 import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.core.utils.test.homeAppBar
@@ -79,8 +81,6 @@ import dev.zezula.books.core.utils.test.homeBtnAddBook
 import dev.zezula.books.core.utils.test.homeBtnAddBookManually
 import dev.zezula.books.core.utils.test.homeBtnBulkScanBarcode
 import dev.zezula.books.core.utils.test.homeBtnScanBarcode
-import dev.zezula.books.core.model.MigrationProgress
-import dev.zezula.books.core.model.MigrationType
 import dev.zezula.books.domain.repositories.SortBooksBy
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.screen.signin.SignInUiState

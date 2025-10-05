@@ -123,7 +123,7 @@ fun NetworkNote.asEntity(): NoteEntity? {
     return if (networkId == null || networkBookId == null || networkDateAdded == null || networkText == null) {
         Timber.e(
             "ID, bookId, dateAdded, or text is null:" +
-                    " id=$networkId, bookId=$networkBookId, dateAdded=$networkDateAdded, text=$networkText"
+                " id=$networkId, bookId=$networkBookId, dateAdded=$networkDateAdded, text=$networkText",
         )
         null
     } else {

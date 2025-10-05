@@ -6,9 +6,9 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.Note
 import dev.zezula.books.core.model.NoteFormData
-import dev.zezula.books.core.model.Book
 import kotlinx.datetime.Instant
 
 /**

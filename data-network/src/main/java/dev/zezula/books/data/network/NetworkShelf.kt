@@ -13,4 +13,3 @@ data class NetworkShelf(
     val isDeleted: Boolean? = null,
     val lastModifiedTimestamp: String? = null,
 )
-

@@ -33,4 +33,3 @@ data class ShelfWithBookEntity(
     val isDeleted: Boolean = false,
     val lastModifiedTimestamp: String? = null,
 )
-

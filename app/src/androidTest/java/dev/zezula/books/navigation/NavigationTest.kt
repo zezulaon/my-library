@@ -103,7 +103,7 @@ class NavigationTest : KoinTest {
                     yearPublished = it.yearPublished,
                     pageCount = it.pageCount,
                     thumbnailLink = it.thumbnailLink,
-                )
+                ),
             )
         }
     }

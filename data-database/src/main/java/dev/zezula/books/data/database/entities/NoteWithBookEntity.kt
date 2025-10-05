@@ -1,7 +1,7 @@
 package dev.zezula.books.data.database.entities
 
-import dev.zezula.books.core.model.Note
 import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Note
 import dev.zezula.books.core.model.NoteWithBook
 
 class NoteWithBookEntity(

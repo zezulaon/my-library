@@ -1,20 +1,20 @@
 package dev.zezula.books.domain.usecases
 
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Note
+import dev.zezula.books.core.model.Rating
+import dev.zezula.books.core.model.Review
+import dev.zezula.books.core.model.ShelfForBook
+import dev.zezula.books.core.utils.combine
+import dev.zezula.books.domain.model.Response
+import dev.zezula.books.domain.model.asResponse
+import dev.zezula.books.domain.model.onResponseError
 import dev.zezula.books.domain.repositories.BookSuggestionsRepository
 import dev.zezula.books.domain.repositories.BooksRepository
 import dev.zezula.books.domain.repositories.NotesRepository
 import dev.zezula.books.domain.repositories.ReviewsRepository
 import dev.zezula.books.domain.repositories.ShelvesRepository
 import dev.zezula.books.domain.repositories.UserLibraryRepository
-import dev.zezula.books.core.model.Book
-import dev.zezula.books.core.model.Note
-import dev.zezula.books.core.model.Rating
-import dev.zezula.books.core.model.Review
-import dev.zezula.books.core.model.ShelfForBook
-import dev.zezula.books.domain.model.Response
-import dev.zezula.books.domain.model.asResponse
-import dev.zezula.books.domain.model.onResponseError
-import dev.zezula.books.core.utils.combine
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
