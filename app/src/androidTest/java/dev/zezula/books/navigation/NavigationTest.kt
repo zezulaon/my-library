@@ -22,35 +22,34 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoActivityResumedException
 import dev.zezula.books.KoinTestRule
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.book.BookEntity
-import dev.zezula.books.data.model.book.previewBooks
-import dev.zezula.books.data.model.shelf.ShelfEntity
-import dev.zezula.books.data.model.shelf.previewShelves
-import dev.zezula.books.data.source.db.AppDatabase
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.core.model.previewShelves
+import dev.zezula.books.core.utils.test.createBookInputAuthor
+import dev.zezula.books.core.utils.test.createBookInputDesc
+import dev.zezula.books.core.utils.test.createBookInputIsbn
+import dev.zezula.books.core.utils.test.createBookInputPages
+import dev.zezula.books.core.utils.test.createBookInputPublisher
+import dev.zezula.books.core.utils.test.createBookInputTitle
+import dev.zezula.books.core.utils.test.createBookInputYear
+import dev.zezula.books.core.utils.test.createShelfInputTitle
+import dev.zezula.books.core.utils.test.detailShelfCheckbox
+import dev.zezula.books.core.utils.test.homeBtnAddBook
+import dev.zezula.books.core.utils.test.homeBtnAddBookManually
+import dev.zezula.books.core.utils.test.homeBtnScanBarcode
+import dev.zezula.books.core.utils.test.homeNavDrawer
+import dev.zezula.books.core.utils.test.homeNavDrawerShelfItem
+import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
+import dev.zezula.books.core.utils.test.manageShelvesShelfItem
 import dev.zezula.books.di.appInstrumentedTestModule
 import dev.zezula.books.di.appModule
 import dev.zezula.books.di.flavoredAppModule
+import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
+import dev.zezula.books.domain.usecases.CreateShelfUseCase
 import dev.zezula.books.ui.MyLibraryMainActivity
-import dev.zezula.books.util.createBookInputAuthor
-import dev.zezula.books.util.createBookInputDesc
-import dev.zezula.books.util.createBookInputIsbn
-import dev.zezula.books.util.createBookInputPages
-import dev.zezula.books.util.createBookInputPublisher
-import dev.zezula.books.util.createBookInputTitle
-import dev.zezula.books.util.createBookInputYear
-import dev.zezula.books.util.createShelfInputTitle
-import dev.zezula.books.util.detailShelfCheckbox
-import dev.zezula.books.util.homeBtnAddBook
-import dev.zezula.books.util.homeBtnAddBookManually
-import dev.zezula.books.util.homeBtnScanBarcode
-import dev.zezula.books.util.homeNavDrawer
-import dev.zezula.books.util.homeNavDrawerShelfItem
-import dev.zezula.books.util.manageShelvesBtnExpand
-import dev.zezula.books.util.manageShelvesShelfItem
 import dev.zezula.books.waitUntilExists
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -59,7 +58,8 @@ import org.koin.test.inject
 
 class NavigationTest : KoinTest {
 
-    private val db: AppDatabase by inject()
+    private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
+    private val createShelfUseCase: CreateShelfUseCase by inject()
 
     private val bookToCreate = Book(
         id = Book.Id("123"),
@@ -76,7 +76,6 @@ class NavigationTest : KoinTest {
 
     @get:Rule(order = 0)
     val koinTestRule = KoinTestRule(
-        // Override some production components with instrumented module
         modules = listOf(appModule, flavoredAppModule, appInstrumentedTestModule),
     )
 
@@ -85,21 +84,17 @@ class NavigationTest : KoinTest {
 
     @Before
     fun setup() = runTest {
-        db.shelfDao().insertOrUpdateShelves(
-            previewShelves.map {
-                ShelfEntity(
-                    id = it.id,
-                    dateAdded = it.dateAdded,
-                    title = it.title,
-                )
-            },
-        )
+        // Add preview shelves to the database
+        previewShelves.forEach {
+            createShelfUseCase(
+                shelfTitle = it.title,
+            )
+        }
 
-        db.bookDao().insertOrUpdateBooks(
-            previewBooks.map {
-                BookEntity(
-                    id = it.id,
-                    dateAdded = it.dateAdded,
+        previewBooks.forEach {
+            addOrUpdateLibraryBookUseCase(
+                bookId = null,
+                bookFormData = BookFormData(
                     title = it.title,
                     author = it.author,
                     description = it.description,
@@ -108,15 +103,9 @@ class NavigationTest : KoinTest {
                     yearPublished = it.yearPublished,
                     pageCount = it.pageCount,
                     thumbnailLink = it.thumbnailLink,
-                    isInLibrary = true,
-                )
-            },
-        )
-    }
-
-    @After
-    fun closeDb() {
-        db.close()
+                ),
+            )
+        }
     }
 
     @Test(expected = NoActivityResumedException::class)

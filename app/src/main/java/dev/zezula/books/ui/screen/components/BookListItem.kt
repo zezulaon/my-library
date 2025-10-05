@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 
 @Composable

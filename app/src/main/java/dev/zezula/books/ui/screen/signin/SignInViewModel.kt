@@ -3,8 +3,8 @@ package dev.zezula.books.ui.screen.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
-import dev.zezula.books.data.source.network.AuthService
-import dev.zezula.books.domain.UpdateLastSignedInDateUseCase
+import dev.zezula.books.domain.services.AuthService
+import dev.zezula.books.domain.usecases.UpdateLastSignedInDateUseCase
 import dev.zezula.books.ui.whileSubscribedInActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine

@@ -1,7 +1,7 @@
 package dev.zezula.books.ui.screen.search
 
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.shelf.Shelf
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Shelf
 
 data class SearchBarcodeUiState(
     val scannedIsbn: String? = null,

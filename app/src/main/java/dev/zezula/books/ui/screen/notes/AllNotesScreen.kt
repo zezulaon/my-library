@@ -35,10 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.note.NoteWithBook
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.NoteWithBook
+import dev.zezula.books.core.utils.test.allNotesAppBar
 import dev.zezula.books.ui.theme.MyLibraryTheme
-import dev.zezula.books.util.allNotesAppBar
 
 @Composable
 fun AllNotesRoute(

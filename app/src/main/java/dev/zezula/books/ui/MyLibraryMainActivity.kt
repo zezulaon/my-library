@@ -8,10 +8,11 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
+import dev.zezula.books.BuildConfig
 import dev.zezula.books.ui.screen.signin.SignInViewModel
-import dev.zezula.books.util.getGoogleSignInRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -74,6 +75,19 @@ class MyLibraryMainActivity : ComponentActivity() {
             userViewModel.onGoogleSignInFailed()
         }
     }
+
+    private fun getGoogleSignInRequest(): BeginSignInRequest = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                // Set to true to return Google ID token (which is used for Firebase sign in).
+                .setSupported(true)
+                // Firebase/google cloud client ID.
+                .setServerClientId(BuildConfig.ML_FIREBASE_CLIENT_ID)
+                // Show all available accounts.
+                .setFilterByAuthorizedAccounts(false)
+                .build(),
+        )
+        .build()
 
     private fun onSignInResult(activityResult: ActivityResult) {
         Timber.d("onSignInResult() isSuccess: ${activityResult.resultCode == RESULT_OK}")

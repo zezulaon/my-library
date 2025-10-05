@@ -2,14 +2,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
     namespace = "dev.zezula.books"
-    compileSdk = 34
+    compileSdk = 35
     buildToolsVersion = "34.0.0"
 
     defaultConfig {
@@ -24,18 +23,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        buildConfigField(
-            type = "String",
-            name = "ML_GOODREADS_API_KEY",
-            value = getStringProperty("myLibrary.goodreadsApiKey", true),
-        )
-
-        buildConfigField(
-            type = "String",
-            name = "ML_GOOGLE_API_KEY",
-            value = getStringProperty("myLibrary.googleApiKey", true),
-        )
 
         buildConfigField(
             type = "String",
@@ -60,17 +47,6 @@ android {
             name = "ML_URL_AMAZON_SEARCH",
             value = getStringProperty("myLibrary.linkAmazonSearch", true),
         )
-
-        buildConfigField(
-            type = "String",
-            name = "ML_BASE_API_URL",
-            value = getStringProperty("myLibrary.myLibraryBaseApiUrl", true),
-        )
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-            arg("room.generateKotlin", "true")
-        }
     }
 
     signingConfigs {
@@ -114,14 +90,12 @@ android {
     }
 
     compileOptions {
-        // Desugaring for access to LocalDateTime APIs (this can be removed once the app the minSdk=API 26)
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 
     buildFeatures {
@@ -140,6 +114,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core-model"))
+    implementation(project(":core-utils"))
+    implementation(project(":data"))
+    implementation(project(":legacy"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -164,20 +143,14 @@ dependencies {
     // Required for createAndroidComposeRule (also ads generic ComponentActivity to Manifest during tests)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Room DB
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
     // DI
+    implementation(project.dependencies.platform(libs.koin.bom))
+    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
     androidTestImplementation(libs.koin.test)
-
-    // Logging
-    implementation(libs.jakewharton.timber)
 
     // Firebase
     implementation(platform(libs.google.firebase.bom))
@@ -187,7 +160,6 @@ dependencies {
 
     // Glide
     implementation(libs.bumptech.glide)
-    ksp(libs.bumptech.glide.compiler)
     implementation(libs.bumptech.glide.compose)
 
     // HTTP/REST/XML/JSON
@@ -212,9 +184,6 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.google.mlkit.barcode.scanning)
 
-    // Date and time
-    implementation(libs.kotlinx.datetime)
-
     // Tests
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -227,7 +196,14 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso)
 
-    coreLibraryDesugaring(libs.android.tools.desugar.jdk)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
 
 fun getStringProperty(propertyName: String, wrap: Boolean = false): String {

@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.note.Note
-import dev.zezula.books.util.manageShelvesBtnExpand
+import dev.zezula.books.core.model.Note
+import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
 
 @Composable
 internal fun NoteListItem(

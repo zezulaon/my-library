@@ -3,11 +3,11 @@ package dev.zezula.books.ui.screen.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zezula.books.R
-import dev.zezula.books.data.source.network.AuthService
-import dev.zezula.books.data.source.network.EmailSignResult
+import dev.zezula.books.core.utils.combine
+import dev.zezula.books.core.utils.isValidEmail
+import dev.zezula.books.domain.services.AuthService
+import dev.zezula.books.domain.services.EmailSignResult
 import dev.zezula.books.ui.whileSubscribedInActivity
-import dev.zezula.books.util.combine
-import dev.zezula.books.util.isValidEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update

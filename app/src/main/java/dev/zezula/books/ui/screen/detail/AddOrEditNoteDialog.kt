@@ -23,8 +23,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.zezula.books.R
-import dev.zezula.books.data.model.note.Note
-import dev.zezula.books.util.createNoteInputTitle
+import dev.zezula.books.core.model.Note
+import dev.zezula.books.core.utils.test.createNoteInputTitle
 
 @Composable
 internal fun AddOrEditNoteDialog(

@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.note.Note
+import dev.zezula.books.core.model.Note
 
 @Composable
 fun TabNotes(

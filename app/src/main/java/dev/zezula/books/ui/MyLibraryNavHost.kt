@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import dev.zezula.books.findMyLibraryMainActivity
 import dev.zezula.books.ui.DestinationArgs.isBulkScanOnArg
 import dev.zezula.books.ui.DestinationArgs.shelfIdArg
 import dev.zezula.books.ui.screen.appinfo.AppInfoRoute
@@ -24,7 +25,6 @@ import dev.zezula.books.ui.screen.search.SearchMyLibraryRoute
 import dev.zezula.books.ui.screen.shelves.ShelvesRoute
 import dev.zezula.books.ui.screen.signin.EmailSignInRoute
 import dev.zezula.books.ui.screen.signin.SignInRoute
-import dev.zezula.books.util.findMyLibraryMainActivity
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
@@ -102,8 +102,9 @@ fun MyLibraryNavHost(
                 onBookDeletedSuccess = { navController.popBackStack() },
                 onReviewClick = { review ->
                     Timber.d("Navigate to review: ${review.link}")
-                    review.link?.let {
-                        navController.navigateToReviewDetail(review.link)
+                    val link = review.link
+                    link?.let {
+                        navController.navigateToReviewDetail(link)
                     }
                 },
                 onEditBookClick = { bookId ->

@@ -40,8 +40,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.book.previewBooks
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.ui.screen.components.BookListItem
 import dev.zezula.books.ui.screen.scanner.IsbnScannerComponent
 import dev.zezula.books.ui.theme.MyLibraryTheme

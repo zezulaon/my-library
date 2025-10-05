@@ -13,4 +13,12 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "My Library"
+
 include(":app")
+include(":domain")
+include(":core-model")
+include(":core-utils")
+include(":data")
+include(":data-database")
+include(":data-network")
+include(":legacy")

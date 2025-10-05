@@ -9,10 +9,10 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.previewBooks
-import dev.zezula.books.data.model.review.previewRatings
-import dev.zezula.books.data.model.review.previewReviews
-import dev.zezula.books.data.model.shelf.previewShelvesForBook
+import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.core.model.previewRatings
+import dev.zezula.books.core.model.previewReviews
+import dev.zezula.books.core.model.previewShelvesForBook
 import dev.zezula.books.ui.screen.detail.BookDetailScreen
 import dev.zezula.books.ui.screen.detail.BookDetailUiState
 import dev.zezula.books.ui.screen.detail.DetailTab

@@ -23,8 +23,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.zezula.books.R
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.util.createShelfInputTitle
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.utils.test.createShelfInputTitle
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

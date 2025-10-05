@@ -34,9 +34,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.data.model.shelf.ShelfForBook
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.model.ShelfForBook
 import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.screen.list.ImageThumbnail
 import dev.zezula.books.ui.theme.MyLibraryTheme

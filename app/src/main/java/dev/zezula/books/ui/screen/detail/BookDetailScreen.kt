@@ -42,11 +42,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
-import dev.zezula.books.data.model.book.Book
-import dev.zezula.books.data.model.note.Note
-import dev.zezula.books.data.model.review.Review
-import dev.zezula.books.data.model.shelf.Shelf
-import dev.zezula.books.data.model.shelf.ShelfForBook
+import dev.zezula.books.core.model.Book
+import dev.zezula.books.core.model.Note
+import dev.zezula.books.core.model.Review
+import dev.zezula.books.core.model.Shelf
+import dev.zezula.books.core.model.ShelfForBook
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import timber.log.Timber
 

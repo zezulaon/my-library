@@ -4,10 +4,10 @@ import android.app.Application
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import dev.zezula.books.core.utils.CrashlyticsTree
 import dev.zezula.books.data.BackupService
 import dev.zezula.books.di.appModule
 import dev.zezula.books.di.flavoredAppModule
-import dev.zezula.books.util.CrashlyticsTree
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

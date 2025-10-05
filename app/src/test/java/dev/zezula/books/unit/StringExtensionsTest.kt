@@ -1,9 +1,9 @@
 package dev.zezula.books.unit
 
-import dev.zezula.books.util.splitToAuthors
-import dev.zezula.books.util.toAuthorNameId
-import dev.zezula.books.util.toSortingAuthor
-import dev.zezula.books.util.toSortingTitle
+import dev.zezula.books.core.utils.splitToAuthors
+import dev.zezula.books.core.utils.toAuthorNameId
+import dev.zezula.books.core.utils.toSortingAuthor
+import dev.zezula.books.core.utils.toSortingTitle
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

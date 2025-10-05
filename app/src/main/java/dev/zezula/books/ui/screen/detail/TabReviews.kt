@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import dev.zezula.books.R
-import dev.zezula.books.data.model.review.Review
-import dev.zezula.books.data.model.review.previewReviews
+import dev.zezula.books.core.model.Review
+import dev.zezula.books.core.model.previewReviews
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
@@ -123,7 +123,7 @@ private fun RatingCard(
                         tint = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = rating.averageRating, style = MaterialTheme.typography.headlineMedium)
+                    Text(text = rating.averageRating.orEmpty(), style = MaterialTheme.typography.headlineMedium)
                 }
                 val ratingReviewLabel = stringResource(
                     id = R.string.detail_label_rating_reviews_count,

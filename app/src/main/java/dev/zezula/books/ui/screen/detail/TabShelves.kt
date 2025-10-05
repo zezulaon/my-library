@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
-import dev.zezula.books.data.model.shelf.ShelfForBook
-import dev.zezula.books.util.detailShelfCheckbox
+import dev.zezula.books.core.model.ShelfForBook
+import dev.zezula.books.core.utils.test.detailShelfCheckbox
 
 @Composable
 fun TabShelves(

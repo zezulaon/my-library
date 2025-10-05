@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.1.1"
+androidGradlePlugin = "8.7.2"
 kotlin = "1.9.20"
 androidxCore = "1.12.0"
 androidxLifecycle = "2.6.2"
@@ -8,7 +8,7 @@ androidxComposeCompiler = "1.5.4"
 androidxComposeBom = "2023.10.01"
 composeMaterial3 = "1.2.0-alpha11"
 activityKtx = "2.6.2"
-androidxNavigation = "1.7.2"
+androidxNavigation = "2.9.1"
 androidxRoom = "2.6.0"
 androidxTestExt = "1.1.5"
 androidxTestRunner = "1.5.2"
@@ -20,6 +20,7 @@ junit = "4.13.2"
 koinAdroidCompose = "3.4.1"
 koinAdroid = "3.3.2"
 koinTest = "3.3.2"
+koinBom = "4.0.3"
 desugarJdk = "2.0.4"
 googleGmsServices = "4.3.15"
 androidGmsServices = "20.7.0"
@@ -40,6 +41,8 @@ ktlint = "0.48.2"
 spotless = "6.13.0"
 mockitoCore = "5.0.0"
 mockitoKotlin = "4.1.0"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -81,10 +84,11 @@ bumptech-glide = { module = "com.github.bumptech.glide:glide", version.ref = "gl
 bumptech-glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 
 # Koin DI
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAdroid" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAdroidCompose" }
-koin-test = { module = "io.insert-koin:koin-test", version.ref = "koinTest" }
-koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinTest" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+koin-test = { module = "io.insert-koin:koin-test" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4" }
 
 # Coroutines
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -110,9 +114,6 @@ androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", vers
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 
-# Accessing new Java APIs through desugaring (LocalDateTime for example)
-android-tools-desugar-jdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdk" }
-
 # Logging
 jakewharton-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
@@ -134,6 +135,8 @@ google-mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", 
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraVersion" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraVersion" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraVersion" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 [plugins]
