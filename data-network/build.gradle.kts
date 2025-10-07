@@ -4,13 +4,8 @@ plugins {
 
 android {
     namespace = "dev.zezula.data.network"
-    compileSdk = 34
 
     defaultConfig {
-        minSdk = 23
-
-        consumerProguardFiles("consumer-rules.pro")
-
         buildConfigField(
             type = "String",
             name = "ML_GOODREADS_API_KEY",
@@ -28,15 +23,6 @@ android {
             name = "ML_BASE_API_URL",
             value = getStringProperty("myLibrary.myLibraryBaseApiUrl", true),
         )
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 

@@ -5,25 +5,13 @@ plugins {
 
 android {
     namespace = "dev.zezula.books.legacy"
-    compileSdk = 34
 
     defaultConfig {
-        minSdk = 23
-        consumerProguardFiles("consumer-rules.pro")
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
             arg("room.generateKotlin", "true")
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 

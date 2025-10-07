@@ -5,28 +5,9 @@ plugins {
 
 android {
     namespace = "dev.zezula.data.database"
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 23
-
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.generateKotlin", "true")
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 
