@@ -139,6 +139,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -148,9 +150,11 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 google-gms-services = { id = "com.google.gms.google-services", version.ref = "googleGmsServices" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }
 diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+androidx-room = { id = "androidx.room", version.ref = "androidxRoom" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # Plugins defined by this project
 mylibrary-android-application = { id = "mylibrary.android.application" }
 mylibrary-android-library = { id = "mylibrary.android.library" }
+mylibrary-android-room = { id = "mylibrary.android.room" }
