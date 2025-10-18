@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     alias(libs.plugins.mylibrary.android.application)
     alias(libs.plugins.compose.compiler)
@@ -9,21 +8,12 @@ plugins {
 
 android {
     namespace = "dev.zezula.books"
-    compileSdk = 35
-    buildToolsVersion = "34.0.0"
 
     defaultConfig {
-        applicationId = "dev.zezula.books"
-        minSdk = 23
-        targetSdk = 34
         versionCode = 306
         versionName = "3.2.2"
 
         testInstrumentationRunner = "dev.zezula.books.InstrumentationTestRunner"
-
-        vectorDrawables {
-            useSupportLibrary = true
-        }
 
         buildConfigField(
             type = "String",
@@ -90,20 +80,11 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
