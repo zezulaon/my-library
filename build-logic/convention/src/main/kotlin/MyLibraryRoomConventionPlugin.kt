@@ -10,7 +10,6 @@ import org.gradle.kotlin.dsl.dependencies
 class MyLibraryRoomConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
-        println("#### MyLibraryRoomConventionPlugin applied to ${target.name} ####")
         with(target) {
             apply(plugin = "androidx.room")
             apply(plugin = "com.google.devtools.ksp")

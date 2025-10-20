@@ -37,5 +37,9 @@ gradlePlugin {
             id = "mylibrary.android.room"
             implementationClass = "MyLibraryRoomConventionPlugin"
         }
+        register("myLibraryDi") {
+            id = "mylibrary.di"
+            implementationClass = "MyLibraryDiConventionPlugin"
+        }
     }
 }

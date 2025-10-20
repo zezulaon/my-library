@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.mylibrary.android.library)
+    alias(libs.plugins.mylibrary.di)
 }
 
 android {
@@ -43,15 +44,6 @@ dependencies {
     }
     implementation(libs.squareup.okhttp3.okhttp)
     implementation(libs.squareup.okhttp3.logging)
-
-    // DI
-    implementation(project.dependencies.platform(libs.koin.bom))
-    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.koin.test.junit4)
-    androidTestImplementation(libs.koin.test)
 
     // Tests
     testImplementation(libs.kotlinx.coroutines.test)

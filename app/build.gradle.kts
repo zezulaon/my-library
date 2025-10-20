@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mylibrary.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.mylibrary.di)
 
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.google.firebase.crashlytics)
@@ -120,15 +121,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     // Required for createAndroidComposeRule (also ads generic ComponentActivity to Manifest during tests)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // DI
-    implementation(project.dependencies.platform(libs.koin.bom))
-    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.koin.test.junit4)
-    androidTestImplementation(libs.koin.test)
 
     // Firebase
     implementation(platform(libs.google.firebase.bom))

@@ -158,3 +158,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 mylibrary-android-application = { id = "mylibrary.android.application" }
 mylibrary-android-library = { id = "mylibrary.android.library" }
 mylibrary-android-room = { id = "mylibrary.android.room" }
+mylibrary-di = { id = "mylibrary.di" }
