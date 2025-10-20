@@ -132,16 +132,6 @@ dependencies {
     implementation(libs.bumptech.glide)
     implementation(libs.bumptech.glide.compose)
 
-    // HTTP/REST/XML/JSON
-    implementation(libs.squareup.retrofit2)
-    implementation(libs.squareup.retrofit2.converter.gson)
-    implementation(libs.squareup.retrofit2.converter.simplexml) {
-        // XmlPullParser (Since it is already included: https://issuetracker.google.com/issues/289087852)
-        exclude(group = "xpp3", module = "xpp3")
-    }
-    implementation(libs.squareup.okhttp3.okhttp)
-    implementation(libs.squareup.okhttp3.logging)
-
     // Accompanist - permissions
     implementation(libs.google.accompanist.permissions)
 
