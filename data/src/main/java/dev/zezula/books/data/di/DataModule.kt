@@ -2,7 +2,7 @@ package dev.zezula.books.data.di
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import dev.zezula.books.core.utils.di.IO_SCOPE
+import dev.zezula.books.core.utils.di.IO_QUALIFIER
 import dev.zezula.books.data.AuthServiceImpl
 import dev.zezula.books.data.BackupService
 import dev.zezula.books.data.OnlineBookFinderServiceImpl
@@ -52,7 +52,7 @@ val dataModule = module {
 
     single<BackupService> {
         BackupService(
-            coroutineScope = get(qualifier = named(IO_SCOPE)),
+            coroutineScope = get(qualifier = named(IO_QUALIFIER)),
             networkDataSource = get(),
             bookDao = get(),
             shelfDao = get(),

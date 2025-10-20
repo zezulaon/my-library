@@ -1,7 +1,9 @@
 package dev.zezula.books.di
 
 import dev.zezula.books.BuildConfig
-import dev.zezula.books.core.utils.di.IO_SCOPE
+import dev.zezula.books.core.utils.di.GOODREADS_API_KEY_QUALIFIER
+import dev.zezula.books.core.utils.di.GOOGLE_API_KEY_QUALIFIER
+import dev.zezula.books.core.utils.di.IO_QUALIFIER
 import dev.zezula.books.data.di.dataModule
 import dev.zezula.books.legacy.MigrationConfigDataProvider
 import dev.zezula.books.ui.screen.appinfo.AppInfoViewModel
@@ -29,7 +31,10 @@ val appModule = module {
 
     includes(domainModule, dataModule)
 
-    factory<CoroutineScope>(qualifier = named(IO_SCOPE)) {
+    single(named(GOODREADS_API_KEY_QUALIFIER)) { BuildConfig.ML_GOODREADS_API_KEY }
+    single(named(GOOGLE_API_KEY_QUALIFIER)) { BuildConfig.ML_GOOGLE_API_KEY }
+
+    factory<CoroutineScope>(qualifier = named(IO_QUALIFIER)) {
         CoroutineScope(Dispatchers.IO + SupervisorJob())
     }
 

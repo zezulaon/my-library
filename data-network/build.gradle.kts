@@ -5,26 +5,6 @@ plugins {
 
 android {
     namespace = "dev.zezula.data.network"
-
-    defaultConfig {
-        buildConfigField(
-            type = "String",
-            name = "ML_GOODREADS_API_KEY",
-            value = getStringProperty("myLibrary.goodreadsApiKey", true),
-        )
-
-        buildConfigField(
-            type = "String",
-            name = "ML_GOOGLE_API_KEY",
-            value = getStringProperty("myLibrary.googleApiKey", true),
-        )
-
-        buildConfigField(
-            type = "String",
-            name = "ML_BASE_API_URL",
-            value = getStringProperty("myLibrary.myLibraryBaseApiUrl", true),
-        )
-    }
 }
 
 dependencies {
@@ -51,11 +31,3 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
 }
 
-fun getStringProperty(propertyName: String, wrap: Boolean = false): String {
-    val prop = providers.gradleProperty(propertyName).get()
-    return if (wrap) {
-        "\"" + prop + "\""
-    } else {
-        prop
-    }
-}

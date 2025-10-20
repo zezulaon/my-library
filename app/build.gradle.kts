@@ -39,6 +39,18 @@ android {
             name = "ML_URL_AMAZON_SEARCH",
             value = getStringProperty("myLibrary.linkAmazonSearch", true),
         )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_GOODREADS_API_KEY",
+            value = getStringProperty("myLibrary.goodreadsApiKey", true),
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_GOOGLE_API_KEY",
+            value = getStringProperty("myLibrary.googleApiKey", true),
+        )
     }
 
     signingConfigs {

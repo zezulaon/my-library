@@ -2,7 +2,6 @@ package dev.zezula.books.data.network.api
 
 import dev.zezula.books.data.network.dto.goodreads.GoodreadsBook
 import dev.zezula.books.data.network.dto.goodreads.GoodreadsResponse
-import dev.zezula.data.network.BuildConfig
 import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,19 +11,19 @@ import timber.log.Timber
 // https://www.goodreads.com/api/index#book.show_by_isbn (Unfortunately this API isn't maintained anymore)
 interface GoodreadsApi {
 
-    @GET("/book/isbn/{isbn}?key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    @GET("/book/isbn/{isbn}")
     suspend fun goodreadsBookWithReviews(@Path("isbn") isbn: String): GoodreadsResponse
 
-    @GET("/book/title.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    @GET("/book/title.xml")
     suspend fun goodreadsBookWithReviews(
         @Query("title") title: String,
         @Query("author") author: String,
     ): GoodreadsResponse
 
-    @GET("/search/index.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    @GET("/search/index.xml")
     suspend fun searchBookByQuery(@Query("q") query: String): GoodreadsResponse
 
-    @GET("/book/title.xml?key=" + BuildConfig.ML_GOODREADS_API_KEY)
+    @GET("/book/title.xml")
     suspend fun goodreadsBookByTitle(@Query("title") title: String): GoodreadsResponse
 }
 
