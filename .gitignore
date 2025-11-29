@@ -5,6 +5,11 @@
 /app/release/
 /local.properties
 
+build/
+
+# Gradle cache
+.gradle
+
 /.idea/
 *.iml
 
@@ -12,3 +17,6 @@
 /captures
 .externalNativeBuild
 .cxx
+
+# Kotlin
+.kotlin

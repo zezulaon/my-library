@@ -4,7 +4,6 @@ import dev.zezula.books.core.utils.isIsbn
 import dev.zezula.books.core.utils.toIsbnDigits
 import dev.zezula.books.data.network.dto.google.GoogleSearchItem
 import dev.zezula.books.data.network.dto.google.GoogleSearchResponse
-import dev.zezula.data.network.BuildConfig
 import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,7 +12,7 @@ import timber.log.Timber
 // https://developers.google.com/books/docs/v1/using
 interface GoogleApi {
 
-    @GET("/books/v1/volumes?key=" + BuildConfig.ML_GOOGLE_API_KEY)
+    @GET("/books/v1/volumes")
     suspend fun search(@Query("q") query: String): GoogleSearchResponse?
 }
 

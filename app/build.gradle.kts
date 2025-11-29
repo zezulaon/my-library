@@ -1,28 +1,20 @@
-@Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mylibrary.android.application)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.mylibrary.di)
+
     alias(libs.plugins.google.gms.services)
     alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
     namespace = "dev.zezula.books"
-    compileSdk = 35
-    buildToolsVersion = "34.0.0"
 
     defaultConfig {
-        applicationId = "dev.zezula.books"
-        minSdk = 23
-        targetSdk = 34
         versionCode = 306
         versionName = "3.2.2"
 
         testInstrumentationRunner = "dev.zezula.books.InstrumentationTestRunner"
-
-        vectorDrawables {
-            useSupportLibrary = true
-        }
 
         buildConfigField(
             type = "String",
@@ -46,6 +38,18 @@ android {
             type = "String",
             name = "ML_URL_AMAZON_SEARCH",
             value = getStringProperty("myLibrary.linkAmazonSearch", true),
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_GOODREADS_API_KEY",
+            value = getStringProperty("myLibrary.goodreadsApiKey", true),
+        )
+
+        buildConfigField(
+            type = "String",
+            name = "ML_GOOGLE_API_KEY",
+            value = getStringProperty("myLibrary.googleApiKey", true),
         )
     }
 
@@ -89,24 +93,11 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
     buildFeatures {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
-
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -143,15 +134,6 @@ dependencies {
     // Required for createAndroidComposeRule (also ads generic ComponentActivity to Manifest during tests)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // DI
-    implementation(project.dependencies.platform(libs.koin.bom))
-    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.koin.test.junit4)
-    androidTestImplementation(libs.koin.test)
-
     // Firebase
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.firestore)
@@ -161,16 +143,6 @@ dependencies {
     // Glide
     implementation(libs.bumptech.glide)
     implementation(libs.bumptech.glide.compose)
-
-    // HTTP/REST/XML/JSON
-    implementation(libs.squareup.retrofit2)
-    implementation(libs.squareup.retrofit2.converter.gson)
-    implementation(libs.squareup.retrofit2.converter.simplexml) {
-        // XmlPullParser (Since it is already included: https://issuetracker.google.com/issues/289087852)
-        exclude(group = "xpp3", module = "xpp3")
-    }
-    implementation(libs.squareup.okhttp3.okhttp)
-    implementation(libs.squareup.okhttp3.logging)
 
     // Accompanist - permissions
     implementation(libs.google.accompanist.permissions)

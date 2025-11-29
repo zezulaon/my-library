@@ -1,31 +1,10 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.mylibrary.android.library)
+    alias(libs.plugins.mylibrary.android.room)
 }
 
 android {
     namespace = "dev.zezula.books.legacy"
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 23
-        consumerProguardFiles("consumer-rules.pro")
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-            arg("room.generateKotlin", "true")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 }
 
 dependencies {
@@ -34,10 +13,6 @@ dependencies {
     implementation(project(":core-utils"))
     implementation(project(":data-network"))
     implementation(project(":data-database"))
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)
 
