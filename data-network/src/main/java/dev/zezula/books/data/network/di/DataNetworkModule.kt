@@ -39,17 +39,16 @@ val dataNetworkModule = module {
     // Network services
     single<GoodreadsApi> {
         val apiKey: String = get(named(GOODREADS_API_KEY_QUALIFIER))
+        val client = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                chain.addQueryParameter(host = "www.goodreads.com", queryParameterName = "key", queryValue = apiKey)
+            }
+            .build()
 
         // SimpleXmlConverterFactory is deprecated but working. There seems to be no alternative for Android right now:
         // https://github.com/square/retrofit/issues/2733
         @Suppress("DEPRECATION")
         val create = retrofit2.converter.simplexml.SimpleXmlConverterFactory.create()
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                chain.response(host = "www.goodreads.com", queryParameter = "key", apiKey = apiKey)
-            }
-            .build()
 
         Retrofit.Builder()
             .addConverterFactory(create)
@@ -68,10 +67,9 @@ val dataNetworkModule = module {
     }
     single<GoogleApi> {
         val apiKey: String = get(named(GOOGLE_API_KEY_QUALIFIER))
-
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
-                chain.response(host = "www.googleapis.com", queryParameter = "key", apiKey = apiKey)
+                chain.addQueryParameter(host = "www.googleapis.com", queryParameterName = "key", queryValue = apiKey)
             }
             .build()
 
@@ -88,12 +86,12 @@ val dataNetworkModule = module {
     }
 }
 
-private fun Interceptor.Chain.response(host: String, queryParameter: String, apiKey: String): Response {
+private fun Interceptor.Chain.addQueryParameter(host: String, queryParameterName: String, queryValue: String): Response {
     val req = request()
     val url = req.url
 
-    val newUrl = if (url.host == host && url.queryParameter(queryParameter) == null) {
-        url.newBuilder().addQueryParameter(queryParameter, apiKey).build()
+    val newUrl = if (url.host == host && url.queryParameter(queryParameterName) == null) {
+        url.newBuilder().addQueryParameter(name = queryParameterName, value = queryValue).build()
     } else {
         url
     }
