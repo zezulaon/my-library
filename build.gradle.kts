@@ -28,7 +28,7 @@ allprojects {
 }
 
 moduleGraphConfig {
-    readmePath.set("${rootDir}/README.md")
+    readmePath.set("$rootDir/README.md")
     showFullPath.set(false)
     orientation.set(Orientation.LEFT_TO_RIGHT)
 
