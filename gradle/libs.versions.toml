@@ -43,6 +43,7 @@ mockitoCore = "5.0.0"
 mockitoKotlin = "4.1.0"
 appcompat = "1.7.0"
 material = "1.12.0"
+modulegraph = "0.13.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -151,6 +152,7 @@ google-gms-services = { id = "com.google.gms.google-services", version.ref = "go
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }
 diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 androidx-room = { id = "androidx.room", version.ref = "androidxRoom" }
+modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 

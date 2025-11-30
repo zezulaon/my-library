@@ -52,6 +52,44 @@ myLibrary.goodreadsApiKey=GOODREADS_API_KEY
 myLibrary.firebaseClientId=FIREBASE_CLIENT_ID
 ~~~~
 
+# Module Graph
+
+```mermaid
+%%{
+  init: {
+    'theme': 'neutral'
+  }
+}%%
+
+graph LR
+  :data-network --> :core-model
+  :data-network --> :core-utils
+  :core-model --> :core-utils
+  :data-database --> :core-model
+  :data-database --> :core-utils
+  :app --> :domain
+  :app --> :core-model
+  :app --> :core-utils
+  :app --> :data
+  :data --> :domain
+  :data --> :core-model
+  :data --> :core-utils
+  :data --> :data-database
+  :data --> :data-network
+  :domain --> :core-model
+  :domain --> :core-utils
+
+classDef android-library fill:#3BD482,stroke:#fff,stroke-width:2px,color:#fff;
+classDef android-application fill:#2C4162,stroke:#fff,stroke-width:2px,color:#fff;
+class :data-network android-library
+class :core-model android-library
+class :core-utils android-library
+class :data-database android-library
+class :app android-application
+class :domain android-library
+class :data android-library
+
+```
 # License
 **My Library** is distributed under the terms of the Apache License (Version 2.0).
 
@@ -70,7 +108,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ~~~~
-
 
 
 
