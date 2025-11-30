@@ -16,7 +16,7 @@ class KoinTestRule(
 ) : TestWatcher() {
 
     override fun starting(description: Description) {
-        Timber.Forest.d("starting()")
+        Timber.d("starting()")
         if (GlobalContext.getKoinApplicationOrNull() == null) {
             startKoin {
                 androidContext(InstrumentationRegistry.getInstrumentation().targetContext.applicationContext)
@@ -28,7 +28,7 @@ class KoinTestRule(
     }
 
     override fun finished(description: Description) {
-        Timber.Forest.d("finished()")
+        Timber.d("finished()")
         unloadKoinModules(modules)
     }
 }
