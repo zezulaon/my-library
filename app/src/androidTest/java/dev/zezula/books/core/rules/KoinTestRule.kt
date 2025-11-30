@@ -1,10 +1,10 @@
-package dev.zezula.books
+package dev.zezula.books.core.rules
 
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.getKoinApplicationOrNull
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
@@ -16,8 +16,8 @@ class KoinTestRule(
 ) : TestWatcher() {
 
     override fun starting(description: Description) {
-        Timber.d("starting()")
-        if (getKoinApplicationOrNull() == null) {
+        Timber.Forest.d("starting()")
+        if (GlobalContext.getKoinApplicationOrNull() == null) {
             startKoin {
                 androidContext(InstrumentationRegistry.getInstrumentation().targetContext.applicationContext)
                 modules(modules)
@@ -28,7 +28,7 @@ class KoinTestRule(
     }
 
     override fun finished(description: Description) {
-        Timber.d("finished()")
+        Timber.Forest.d("finished()")
         unloadKoinModules(modules)
     }
 }

@@ -15,6 +15,7 @@ android {
         versionName = "3.2.2"
 
         testInstrumentationRunner = "dev.zezula.books.InstrumentationTestRunner"
+        testInstrumentationRunnerArguments["useTestStorageService"] = "true"
 
         buildConfigField(
             type = "String",
@@ -102,6 +103,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("mediumPhoneApi35") {
+                    device = "Medium Phone"
+                    apiLevel = 35
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -167,6 +180,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso)
+    // Used to access Test Storage Service (for example to save screenshots)
+    androidTestUtil(libs.androidx.test.services)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
