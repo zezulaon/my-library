@@ -20,12 +20,14 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoActivityResumedException
-import dev.zezula.books.KoinTestRule
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.core.model.previewShelves
+import dev.zezula.books.core.rules.KoinTestRule
+import dev.zezula.books.core.rules.PrintSemanticsOnFailureRule
+import dev.zezula.books.core.rules.ScreenshotOnFailureRule
 import dev.zezula.books.core.utils.test.createBookInputAuthor
 import dev.zezula.books.core.utils.test.createBookInputDesc
 import dev.zezula.books.core.utils.test.createBookInputIsbn
@@ -81,6 +83,12 @@ class NavigationTest : KoinTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MyLibraryMainActivity>()
+
+    @get:Rule(order = 2)
+    val printSemanticsOnFailureRule = PrintSemanticsOnFailureRule(composeTestRule)
+
+    @get:Rule(order = 3)
+    val screenshotOnFailureRule = ScreenshotOnFailureRule(composeTestRule)
 
     @Before
     fun setup() = runTest {

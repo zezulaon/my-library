@@ -11,6 +11,7 @@ activityKtx = "2.6.2"
 androidxNavigation = "2.9.1"
 androidxRoom = "2.6.0"
 androidxTestExt = "1.1.5"
+androidxTestServices = "1.6.0"
 androidxTestRunner = "1.5.2"
 # https://developer.android.com/training/testing/espresso/setup (espresso requires test runner)
 androidxEspresso = "3.5.1"
@@ -107,6 +108,7 @@ squareup-okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref 
 # JUnit/Tests
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
+androidx-test-services = { module = "androidx.test.services:test-services", version.ref = "androidxTestServices" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxEspresso" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }

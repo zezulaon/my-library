@@ -12,6 +12,10 @@ class MyLibraryDiConventionPlugin : Plugin<Project> {
                     "implementation",
                     project.dependencies.platform(libs.findLibrary("koin.bom").get()),
                 )
+                add(
+                    "androidTestImplementation",
+                    project.dependencies.platform(libs.findLibrary("koin.bom").get()),
+                )
                 add("implementation", libs.findLibrary("koin.androidx.compose").get())
                 add("implementation", libs.findLibrary("koin.android").get())
                 add("testImplementation", libs.findLibrary("koin.test").get())
