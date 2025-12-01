@@ -50,3 +50,8 @@ jobs:
 
       - name: Run Unit Tests
         run: ./gradlew testStandardDebugUnitTest
+
+      - name: Run instrumented tests on GMD (standardDebug)
+        run: |
+          ./gradlew :app:mediumPhoneApi35StandardDebugAndroidTest \
+            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
