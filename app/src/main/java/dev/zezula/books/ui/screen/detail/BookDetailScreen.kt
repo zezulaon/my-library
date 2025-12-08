@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,7 @@ import dev.zezula.books.core.model.Note
 import dev.zezula.books.core.model.Review
 import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.ShelfForBook
+import dev.zezula.books.testtag.BookDetailTestTag
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import timber.log.Timber
 
@@ -158,7 +160,8 @@ fun BookDetailScreen(
         )
     }
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(BookDetailTestTag.ROOT),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
@@ -326,13 +329,19 @@ private fun BookDetailAppBar(
                     }
 
                     DetailTab.Detail -> {
-                        IconButton(onClick = { onDeleteClick() }) {
+                        IconButton(
+                            modifier = Modifier.testTag(BookDetailTestTag.BTN_DELETE_BOOK),
+                            onClick = { onDeleteClick() },
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
                                 contentDescription = stringResource(R.string.content_desc_delete),
                             )
                         }
-                        IconButton(onClick = { onEditBookClick() }) {
+                        IconButton(
+                            modifier = Modifier.testTag(BookDetailTestTag.BTN_EDIT_BOOK),
+                            onClick = { onEditBookClick() },
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
                                 contentDescription = stringResource(R.string.content_desc_edit),

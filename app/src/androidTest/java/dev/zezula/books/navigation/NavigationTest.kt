@@ -9,7 +9,6 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isOn
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -18,8 +17,6 @@ import androidx.compose.ui.test.onSiblings
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoActivityResumedException
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.BookFormData
@@ -28,17 +25,8 @@ import dev.zezula.books.core.model.previewShelves
 import dev.zezula.books.core.rules.KoinTestRule
 import dev.zezula.books.core.rules.PrintSemanticsOnFailureRule
 import dev.zezula.books.core.rules.ScreenshotOnFailureRule
-import dev.zezula.books.core.utils.test.createBookInputAuthor
-import dev.zezula.books.core.utils.test.createBookInputDesc
-import dev.zezula.books.core.utils.test.createBookInputIsbn
-import dev.zezula.books.core.utils.test.createBookInputPages
-import dev.zezula.books.core.utils.test.createBookInputPublisher
-import dev.zezula.books.core.utils.test.createBookInputTitle
-import dev.zezula.books.core.utils.test.createBookInputYear
 import dev.zezula.books.core.utils.test.createShelfInputTitle
 import dev.zezula.books.core.utils.test.detailShelfCheckbox
-import dev.zezula.books.core.utils.test.homeBtnAddBook
-import dev.zezula.books.core.utils.test.homeBtnAddBookManually
 import dev.zezula.books.core.utils.test.homeBtnScanBarcode
 import dev.zezula.books.core.utils.test.homeNavDrawer
 import dev.zezula.books.core.utils.test.homeNavDrawerShelfItem
@@ -49,6 +37,8 @@ import dev.zezula.books.di.appModule
 import dev.zezula.books.di.flavoredAppModule
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
+import dev.zezula.books.testtag.BookEditorTestTag
+import dev.zezula.books.testtag.HomeTestTag
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.waitUntilExists
 import kotlinx.coroutines.test.runTest
@@ -116,21 +106,11 @@ class NavigationTest : KoinTest {
         }
     }
 
-    @Test(expected = NoActivityResumedException::class)
-    fun home_back_quitsApp() {
-        composeTestRule.apply {
-            // GIVEN the user is on detail screen
-            // WHEN the user uses the system button/gesture to go back
-            Espresso.pressBack()
-            // THEN the app quits
-        }
-    }
-
     @Test
     fun scannerScreen_firstLaunch_showsMissingPermissionInfo() {
         composeTestRule.apply {
             // GIVEN the user is on "Scan a book" screen
-            onNodeWithTag(homeBtnAddBook).performClick()
+            onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
             onNodeWithTag(homeBtnScanBarcode).performClick()
             // THEN information about missing camera permission is displayed
             onNodeWithText(activity.getString(R.string.scanner_perm_required))
@@ -146,45 +126,14 @@ class NavigationTest : KoinTest {
     fun createBookScreen_saveEmptyForm_showsError() {
         composeTestRule.apply {
             // GIVEN the user is on "Create" screen
-            onNodeWithTag(homeBtnAddBook).performClick()
-            onNodeWithTag(homeBtnAddBookManually).performClick()
+            onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
+            onNodeWithTag(HomeTestTag.BTN_ADD_BOOK_MANUALLY).performClick()
             // WHEN user tries to save the empty form
             onNodeWithText(activity.getString(R.string.btn_add))
                 .assertIsDisplayed()
                 .performClick()
             // THEN snackbar with error message is displayed
             onNodeWithText(activity.getString(R.string.invalid_input_form)).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun createBookScreen_fillAndSaveForm_addsABook() {
-        composeTestRule.apply {
-            // GIVEN the user is on "Create" screen
-            onNodeWithTag(homeBtnAddBook).performClick()
-            onNodeWithTag(homeBtnAddBookManually).performClick()
-            // WHEN user fills in all required data
-            onNodeWithTag(createBookInputTitle).performTextInput(bookToCreate.title!!)
-            onNodeWithTag(createBookInputAuthor).performTextInput(bookToCreate.author!!)
-            onNodeWithTag(createBookInputPublisher).performTextInput(bookToCreate.publisher!!)
-            onNodeWithTag(createBookInputYear).performTextInput(bookToCreate.yearPublished!!.toString())
-            onNodeWithTag(createBookInputPages).performTextInput(bookToCreate.pageCount!!.toString())
-            onNodeWithTag(createBookInputIsbn).performTextInput(bookToCreate.isbn!!)
-            onNodeWithTag(createBookInputDesc).performTextInput(bookToCreate.description!!)
-            // AND user saves the book
-            onNodeWithText(activity.getString(R.string.btn_add)).performClick()
-            // THEN "All books" screen is visible
-            onAllNodesWithText(activity.getString(R.string.home_shelf_title_all_books)).onFirst().assertExists()
-            // AND the given book is visible (was added)
-            onNodeWithText(bookToCreate.title!!).assertIsDisplayed()
-            // AND the book detail can be displayed with all the inserted data
-            onNodeWithText(bookToCreate.title!!).performClick()
-            onNodeWithText(bookToCreate.author!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.publisher!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.yearPublished!!.toString()).assertIsDisplayed()
-            onNodeWithText(bookToCreate.pageCount!!.toString()).assertIsDisplayed()
-            onNodeWithText(bookToCreate.isbn!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.description!!).assertIsDisplayed()
         }
     }
 
@@ -201,17 +150,17 @@ class NavigationTest : KoinTest {
                 useUnmergedTree = true,
             ).performClick()
             // WHEN user fills in all required data
-            onNodeWithTag(createBookInputTitle).apply { performTextClearance() }.performTextInput(bookToCreate.title!!)
-            onNodeWithTag(createBookInputAuthor).apply { performTextClearance() }
+            onNodeWithTag(BookEditorTestTag.INPUT_TITLE).apply { performTextClearance() }.performTextInput(bookToCreate.title!!)
+            onNodeWithTag(BookEditorTestTag.INPUT_AUTHOR).apply { performTextClearance() }
                 .performTextInput(bookToCreate.author!!)
-            onNodeWithTag(createBookInputPublisher).apply { performTextClearance() }
+            onNodeWithTag(BookEditorTestTag.INPUT_PUBLISHER).apply { performTextClearance() }
                 .performTextInput(bookToCreate.publisher!!)
-            onNodeWithTag(createBookInputYear).apply { performTextClearance() }
+            onNodeWithTag(BookEditorTestTag.INPUT_YEAR).apply { performTextClearance() }
                 .performTextInput(bookToCreate.yearPublished!!.toString())
-            onNodeWithTag(createBookInputPages).apply { performTextClearance() }
+            onNodeWithTag(BookEditorTestTag.INPUT_PAGES).apply { performTextClearance() }
                 .performTextInput(bookToCreate.pageCount!!.toString())
-            onNodeWithTag(createBookInputIsbn).apply { performTextClearance() }.performTextInput(bookToCreate.isbn!!)
-            onNodeWithTag(createBookInputDesc).apply { performTextClearance() }
+            onNodeWithTag(BookEditorTestTag.INPUT_ISBN).apply { performTextClearance() }.performTextInput(bookToCreate.isbn!!)
+            onNodeWithTag(BookEditorTestTag.INPUT_DESC).apply { performTextClearance() }
                 .performTextInput(bookToCreate.description!!)
             // AND user updates the book
             onNodeWithText(activity.getString(R.string.btn_update)).performClick()
@@ -225,36 +174,6 @@ class NavigationTest : KoinTest {
             onNodeWithText(bookToCreate.pageCount!!.toString()).assertIsDisplayed()
             onNodeWithText(bookToCreate.isbn!!).assertIsDisplayed()
             onNodeWithText(bookToCreate.description!!).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun bookDetailScreen_clickOnDelete_deletesBook() {
-        val bookToDelete = previewBooks.first()
-
-        composeTestRule.apply {
-            // GIVEN the user is on "Detail" screen
-            onNodeWithText(bookToDelete.title!!).performClick()
-            // AND the "book to delete" detail is displayed
-            onNodeWithText(bookToDelete.title!!).assertIsDisplayed()
-            // WHEN user clicks on delete button
-            onNodeWithContentDescription(
-                label = activity.getString(R.string.content_desc_delete),
-                useUnmergedTree = true,
-            ).performClick()
-            // AND user confirms the deletion
-            onNodeWithText(activity.getString(R.string.detail_btn_confirm_delete)).performClick()
-            // THEN "all books" home screen is displayed
-            onAllNodesWithText(activity.getString(R.string.home_shelf_title_all_books)).onFirst().assertExists()
-            // AND the book is not in the list (was deleted)
-            onNodeWithText(bookToDelete.title!!).assertDoesNotExist()
-            // AND the subtitle has correct number of books string
-            onNodeWithText(
-                activity.resources.getQuantityString(
-                    R.plurals.home_number_of_books_subtitle,
-                    previewBooks.size - 1,
-                ),
-            ).assertIsDisplayed()
         }
     }
 

@@ -77,11 +77,10 @@ import dev.zezula.books.core.model.MigrationType
 import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.core.utils.test.homeAppBar
-import dev.zezula.books.core.utils.test.homeBtnAddBook
-import dev.zezula.books.core.utils.test.homeBtnAddBookManually
 import dev.zezula.books.core.utils.test.homeBtnBulkScanBarcode
 import dev.zezula.books.core.utils.test.homeBtnScanBarcode
 import dev.zezula.books.domain.repositories.SortBooksBy
+import dev.zezula.books.testtag.HomeTestTag
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.screen.signin.SignInUiState
 import dev.zezula.books.ui.screen.signin.SignInViewModel
@@ -241,6 +240,7 @@ fun BookListScreen(
         )
     }
     ModalNavigationDrawer(
+        modifier = Modifier.testTag(HomeTestTag.ROOT),
         drawerState = drawerState,
         drawerContent = {
             NavigationDrawer(
@@ -527,7 +527,7 @@ private fun AddBookBottomSheet(
             )
             ListItem(
                 modifier = Modifier
-                    .testTag(homeBtnAddBookManually)
+                    .testTag(HomeTestTag.BTN_ADD_BOOK_MANUALLY)
                     .clickable {
                         onAddManuallyClick()
                         onAddBookSheetCloseRequested()
@@ -564,22 +564,25 @@ private fun BookListTopAppBar(
 
 @Composable
 private fun HomeAppBarTitle(uiState: BookListUiState) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.testTag(HomeTestTag.CONTAINER_TOOLBAR),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(uiState.selectedShelf?.title ?: stringResource(R.string.home_shelf_title_all_books))
         val numberOfBooks = uiState.books?.count() ?: 0
-        val noBooksFormatted = pluralStringResource(
+        val numberBooksFormatted = pluralStringResource(
             R.plurals.home_number_of_books_subtitle,
             numberOfBooks,
             numberOfBooks,
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(noBooksFormatted, style = MaterialTheme.typography.bodySmall)
+            Text(numberBooksFormatted, style = MaterialTheme.typography.bodySmall)
             if (numberOfBooks > 1) {
                 val sortType = when (uiState.sorting.sortBooksBy) {
-                    SortBooksBy.TITLE -> stringResource(R.string.sort_books_by_label_title, noBooksFormatted)
-                    SortBooksBy.AUTHOR -> stringResource(R.string.sort_books_by_label_author, noBooksFormatted)
-                    SortBooksBy.DATE_ADDED -> stringResource(R.string.sort_books_by_label_date, noBooksFormatted)
-                    SortBooksBy.USER_RATING -> stringResource(R.string.sort_books_by_label_rating, noBooksFormatted)
+                    SortBooksBy.TITLE -> stringResource(R.string.sort_books_by_label_title, numberBooksFormatted)
+                    SortBooksBy.AUTHOR -> stringResource(R.string.sort_books_by_label_author, numberBooksFormatted)
+                    SortBooksBy.DATE_ADDED -> stringResource(R.string.sort_books_by_label_date, numberBooksFormatted)
+                    SortBooksBy.USER_RATING -> stringResource(R.string.sort_books_by_label_rating, numberBooksFormatted)
                 }
                 Text(", ", style = MaterialTheme.typography.bodySmall)
                 Icon(
@@ -626,7 +629,7 @@ private fun BookListBottomBar(
 @Composable
 private fun AddBookButton(onButtonClick: () -> Unit) {
     ExtendedFloatingActionButton(
-        modifier = Modifier.testTag(homeBtnAddBook),
+        modifier = Modifier.testTag(HomeTestTag.BTN_ADD_BOOK),
         icon = { Icon(Icons.Default.Add, contentDescription = null) },
         text = { Text(text = stringResource(R.string.home_btn_add)) },
         onClick = onButtonClick,

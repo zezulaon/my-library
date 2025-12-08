@@ -1,4 +1,4 @@
-package dev.zezula.books
+package dev.zezula.books.core
 
 import android.app.Application
 import android.content.Context
