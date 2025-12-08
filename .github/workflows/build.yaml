@@ -41,6 +41,13 @@ jobs:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: touch ./app/google-services.json && echo $DATA | base64 -d > ./app/google-services.json
 
+      # https://github.blog/changelog/2024-04-02-github-actions-hardware-accelerated-android-virtualization-now-available/
+      - name: Enable KVM group perms
+        run: |
+            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+            sudo udevadm control --reload-rules
+            sudo udevadm trigger --name-match=kvm
+
       - uses: gradle/gradle-build-action@v2
         with:
           gradle-home-cache-cleanup: true
@@ -50,3 +57,8 @@ jobs:
 
       - name: Run Unit Tests
         run: ./gradlew testStandardDebugUnitTest
+
+      - name: Run instrumented tests on GMD (standardDebug)
+        run: |
+          ./gradlew :app:mediumPhoneApi35StandardDebugAndroidTest \
+            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
