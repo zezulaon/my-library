@@ -18,7 +18,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import dev.zezula.books.R
-import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.core.model.previewShelves
