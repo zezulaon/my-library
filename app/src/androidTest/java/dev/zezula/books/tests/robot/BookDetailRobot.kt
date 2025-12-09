@@ -3,6 +3,7 @@ package dev.zezula.books.tests.robot
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -38,13 +39,23 @@ class BookDetailRobot {
         }
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton() {
+    fun ComposeTestRule.tapOnDeleteButton() {
         onNodeWithTag(BookDetailTestTag.BTN_DELETE_BOOK)
+            .performClick()
+    }
+
+    fun ComposeTestRule.tapOnEditButton() {
+        onNodeWithTag(BookDetailTestTag.BTN_EDIT_BOOK)
             .performClick()
     }
 
     fun AndroidComposeTestRule<*, *>.confirmDeletion() {
         onNodeWithText(activity.getString(R.string.detail_btn_confirm_delete)).performClick()
+    }
+
+    fun AndroidComposeTestRule<*, *>.tapOnNavigateUp() {
+        onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back))
+            .performClick()
     }
 }
 

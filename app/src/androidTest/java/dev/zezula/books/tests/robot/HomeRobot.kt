@@ -56,6 +56,10 @@ class HomeRobot {
     fun AndroidComposeTestRule<*, *>.assertBookTitleDoesNotExist(bookTitle: String) {
         onNodeWithText(bookTitle).assertDoesNotExist()
     }
+
+    fun AndroidComposeTestRule<*, *>.assertBookTitleIsDisplayed(bookTitle: String) {
+        onNodeWithText(bookTitle).assertIsDisplayed()
+    }
 }
 
 fun ComposeTestRule.onHomeScreen(scope: HomeRobot.() -> Unit) {

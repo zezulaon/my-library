@@ -22,6 +22,8 @@ class BookEditorTestTag {
         const val INPUT_PAGES = "bookEditor/input/Pages"
         const val INPUT_ISBN = "bookEditor/input/Isbn"
         const val INPUT_DESC = "bookEditor/input/Desc"
+
+        const val BTN_SAVE = "bookEditor/btn/Save"
     }
 }
 

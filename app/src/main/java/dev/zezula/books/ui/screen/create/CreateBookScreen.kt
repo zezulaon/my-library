@@ -137,7 +137,11 @@ fun CreateBookScreen(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
                 actions = {
-                    TextButton(onClick = onSaveButtonClick, enabled = uiState.isInProgress.not()) {
+                    TextButton(
+                        modifier = Modifier.testTag(BookEditorTestTag.BTN_SAVE),
+                        onClick = onSaveButtonClick,
+                        enabled = uiState.isInProgress.not(),
+                    ) {
                         val titleRes = if (uiState.isInEditMode) R.string.btn_update else R.string.btn_add
                         Text(text = stringResource(titleRes))
                     }

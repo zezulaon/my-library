@@ -37,7 +37,6 @@ import dev.zezula.books.di.appModule
 import dev.zezula.books.di.flavoredAppModule
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
-import dev.zezula.books.testtag.BookEditorTestTag
 import dev.zezula.books.testtag.HomeTestTag
 import dev.zezula.books.ui.MyLibraryMainActivity
 import dev.zezula.books.waitUntilExists
@@ -52,19 +51,6 @@ class NavigationTest : KoinTest {
 
     private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
     private val createShelfUseCase: CreateShelfUseCase by inject()
-
-    private val bookToCreate = Book(
-        id = Book.Id("123"),
-        title = "New title",
-        author = "New author",
-        description = "New desc",
-        isbn = "987456",
-        publisher = "newPublisher",
-        yearPublished = 2000,
-        pageCount = 10,
-        thumbnailLink = null,
-        dateAdded = "2023-01-05T17:43:25.629",
-    )
 
     @get:Rule(order = 0)
     val koinTestRule = KoinTestRule(
@@ -134,46 +120,6 @@ class NavigationTest : KoinTest {
                 .performClick()
             // THEN snackbar with error message is displayed
             onNodeWithText(activity.getString(R.string.invalid_input_form)).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun updateBookScreen_fillBookData_updatesBook() {
-        composeTestRule.apply {
-            // Wait till list items are fetched and visible
-            waitUntilExists(hasText(previewBooks.first().title!!))
-
-            // GIVEN the user is on "Update" screen
-            onNodeWithText(previewBooks.first().title!!).performClick()
-            onNodeWithContentDescription(
-                label = activity.getString(R.string.content_desc_edit),
-                useUnmergedTree = true,
-            ).performClick()
-            // WHEN user fills in all required data
-            onNodeWithTag(BookEditorTestTag.INPUT_TITLE).apply { performTextClearance() }.performTextInput(bookToCreate.title!!)
-            onNodeWithTag(BookEditorTestTag.INPUT_AUTHOR).apply { performTextClearance() }
-                .performTextInput(bookToCreate.author!!)
-            onNodeWithTag(BookEditorTestTag.INPUT_PUBLISHER).apply { performTextClearance() }
-                .performTextInput(bookToCreate.publisher!!)
-            onNodeWithTag(BookEditorTestTag.INPUT_YEAR).apply { performTextClearance() }
-                .performTextInput(bookToCreate.yearPublished!!.toString())
-            onNodeWithTag(BookEditorTestTag.INPUT_PAGES).apply { performTextClearance() }
-                .performTextInput(bookToCreate.pageCount!!.toString())
-            onNodeWithTag(BookEditorTestTag.INPUT_ISBN).apply { performTextClearance() }.performTextInput(bookToCreate.isbn!!)
-            onNodeWithTag(BookEditorTestTag.INPUT_DESC).apply { performTextClearance() }
-                .performTextInput(bookToCreate.description!!)
-            // AND user updates the book
-            onNodeWithText(activity.getString(R.string.btn_update)).performClick()
-            // THEN book detail screen and tab is visible and contains updated data
-            onNodeWithText(activity.getString(R.string.screen_detail_tab_book))
-                .assertExists()
-            onNodeWithText(bookToCreate.title!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.author!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.publisher!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.yearPublished!!.toString()).assertIsDisplayed()
-            onNodeWithText(bookToCreate.pageCount!!.toString()).assertIsDisplayed()
-            onNodeWithText(bookToCreate.isbn!!).assertIsDisplayed()
-            onNodeWithText(bookToCreate.description!!).assertIsDisplayed()
         }
     }
 

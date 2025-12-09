@@ -5,14 +5,13 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
-import dev.zezula.books.R
-import dev.zezula.books.tests.onNodeWithStringRes
 import dev.zezula.books.testtag.BookEditorTestTag
 
 class BookEditorRobot {
 
-    fun ComposeTestRule.typeInput(content: String, type: InputType) {
+    fun ComposeTestRule.typeInput(text: String, type: InputType, clearExistingText: Boolean = false) {
         val tag = when (type) {
             InputType.TITLE -> BookEditorTestTag.INPUT_TITLE
             InputType.AUTHOR -> BookEditorTestTag.INPUT_AUTHOR
@@ -23,11 +22,16 @@ class BookEditorRobot {
             InputType.DESC -> BookEditorTestTag.INPUT_DESC
         }
         onNodeWithTag(tag).performClick()
-        onNodeWithTag(tag).performTextInput(content)
+        onNodeWithTag(tag).apply {
+            if (clearExistingText) {
+                performTextClearance()
+            }
+            performTextInput(text)
+        }
     }
 
     fun AndroidComposeTestRule<*, *>.tapOnSave() {
-        onNodeWithStringRes(R.string.btn_add).performClick()
+        onNodeWithTag(BookEditorTestTag.BTN_SAVE).performClick()
     }
 }
 
