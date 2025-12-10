@@ -607,7 +607,10 @@ private fun BookListBottomBar(
     BottomAppBar(
         modifier = modifier,
         actions = {
-            IconButton(onClick = onOpenDrawerClick) {
+            IconButton(
+                modifier = Modifier.testTag(HomeTestTag.BTN_OPEN_NAV_DRAWER),
+                onClick = onOpenDrawerClick,
+            ) {
                 Icon(
                     painterResource(id = R.drawable.ic_shelves),
                     contentDescription = stringResource(id = R.string.content_open_drawer),

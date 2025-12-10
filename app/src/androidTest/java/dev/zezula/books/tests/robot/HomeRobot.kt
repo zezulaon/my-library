@@ -14,6 +14,16 @@ import dev.zezula.books.testtag.HomeTestTag
 
 class HomeRobot {
 
+    fun ComposeTestRule.openNavigationDrawer() {
+        onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
+    }
+
+    fun AndroidComposeTestRule<*, *>.tapOnNavigationDrawerItem(itemLabel: String) {
+        val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
+        onNode(hasText(itemLabel) and isInNavDrawer)
+            .performClick()
+    }
+
     fun ComposeTestRule.tapOnAddBook(option: AddBookOption) {
         onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
         when (option) {

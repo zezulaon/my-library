@@ -5,7 +5,9 @@ class HomeTestTag {
         const val ROOT = "home/Root"
 
         const val CONTAINER_TOOLBAR = "home/container/Toolbar"
+        const val CONTAINER_NAV_DRAWER = "home/container/NavDrawer"
 
+        const val BTN_OPEN_NAV_DRAWER = "home/btn/OpenNavDrawer"
         const val BTN_ADD_BOOK = "home/btn/AddBook"
         const val BTN_ADD_BOOK_MANUALLY = "home/btn/AddBookManually"
     }

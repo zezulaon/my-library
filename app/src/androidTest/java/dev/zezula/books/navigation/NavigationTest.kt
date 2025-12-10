@@ -27,7 +27,6 @@ import dev.zezula.books.core.rules.ScreenshotOnFailureRule
 import dev.zezula.books.core.utils.test.createShelfInputTitle
 import dev.zezula.books.core.utils.test.detailShelfCheckbox
 import dev.zezula.books.core.utils.test.homeBtnScanBarcode
-import dev.zezula.books.core.utils.test.homeNavDrawer
 import dev.zezula.books.core.utils.test.homeNavDrawerShelfItem
 import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
 import dev.zezula.books.core.utils.test.manageShelvesShelfItem
@@ -145,7 +144,7 @@ class NavigationTest : KoinTest {
             onAllNodesWithTag(detailShelfCheckbox).filter(isOn()).assertCountEquals(1)
             // AND book list for this shelf contains the correct book
             onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back)).performClick()
-            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
             onNodeWithTag("$homeNavDrawerShelfItem${shelfToCheck.title}").performClick()
             onNodeWithText(bookToCheck.title!!).assertIsDisplayed()
         }
@@ -157,7 +156,7 @@ class NavigationTest : KoinTest {
 
         composeTestRule.apply {
             // GIVEN the user is on "Manage Shelves" screen
-            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
             onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
             // WHEN user clicks on New Shelf button
             onNodeWithText(
@@ -180,7 +179,7 @@ class NavigationTest : KoinTest {
     fun manageShelvesScreen_clickOnDelete_shelfIsDeleted() {
         composeTestRule.apply {
             // GIVEN the user is on "Manage Shelves" screen
-            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
             onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
             // WHEN user clicks on expand button
             onAllNodesWithTag(manageShelvesBtnExpand).onFirst().performClick()
@@ -188,7 +187,7 @@ class NavigationTest : KoinTest {
             onNodeWithText(activity.getString(R.string.shelves_btn_remove)).performClick()
             // AND user goes back to home screen and back to "Manage Shelves" screen
             onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back)).performClick()
-            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
             onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
             // THEN the shelves list is updated (shelf is deleted)
             onAllNodesWithTag(manageShelvesShelfItem).assertCountEquals(previewShelves.size - 1)
@@ -201,7 +200,7 @@ class NavigationTest : KoinTest {
 
         composeTestRule.apply {
             // GIVEN the user is on "Manage Shelves" screen
-            onNodeWithTag(homeNavDrawer).performClick()
+            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
             onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
             // WHEN user clicks on expand button
             onAllNodesWithTag(manageShelvesBtnExpand).onFirst().performClick()

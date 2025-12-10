@@ -5,7 +5,6 @@ package dev.zezula.books.core.utils.test
 const val homeAppBar = "homeAppBar"
 const val allAuthorsAppBar = "allAuthorsAppBar"
 const val allNotesAppBar = "allNotesAppBar"
-const val homeNavDrawer = "homeNavDrawer"
 const val homeNavDrawerShelfItem = "homeNavDrawerShelfItem_"
 const val homeBtnScanBarcode = "homeBtnScanBarcode"
 const val homeBtnBulkScanBarcode = "homeBtnBulkScanBarcode"
