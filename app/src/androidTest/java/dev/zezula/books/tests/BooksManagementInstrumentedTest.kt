@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.koin.test.inject
 
-class BookCrudInstrumentedTest : BaseInstrumentedTest() {
+class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
 
@@ -142,6 +142,20 @@ class BookCrudInstrumentedTest : BaseInstrumentedTest() {
                 assertToolbarBookSize(testPreviewBooks.size)
                 assertBookTitleDoesNotExist(bookToUpdate.title!!)
                 assertBookTitleIsDisplayed(bookToCreate.title!!)
+            }
+        }
+    }
+
+    @Test
+    fun when_user_confirms_empty_book_form_then_error_is_shown() {
+        composeTestRule.apply {
+            onHomeScreen {
+                tapOnAddBook(AddBookOption.MANUALLY)
+            }
+
+            onBookEditorScreen {
+                tapOnSave()
+                assertInvalidInputErrorDisplayed()
             }
         }
     }

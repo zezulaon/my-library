@@ -37,3 +37,21 @@ class BookDetailTestTag {
         const val BTN_EDIT_BOOK = "bookDetail/btn/EditBook"
     }
 }
+
+class ManageShelvesTestTag {
+    companion object {
+        const val ROOT = "manageShelves/Root"
+
+        const val CONTAINER_SHELF_ITEM = "manageShelves/container/ShelfItem"
+
+        const val BTN_EXPAND_SHELF = "manageShelves/btn/ExpandShelf"
+        const val INPUT_SHELF_NAME = "manageShelves/input/ShelfName"
+    }
+}
+
+class NotesTestTag {
+    companion object {
+        const val CONTAINER_NOTE_ITEM = "notes/container/NoteItem"
+        const val BTN_EXPAND_NOTE = "notes/btn/ExpandShelf"
+    }
+}

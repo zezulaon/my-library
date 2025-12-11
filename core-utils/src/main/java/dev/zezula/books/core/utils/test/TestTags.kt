@@ -9,8 +9,5 @@ const val homeNavDrawerShelfItem = "homeNavDrawerShelfItem_"
 const val homeBtnScanBarcode = "homeBtnScanBarcode"
 const val homeBtnBulkScanBarcode = "homeBtnBulkScanBarcode"
 
-const val createShelfInputTitle = "createShelfInputTitle"
 const val createNoteInputTitle = "createNoteInputTitle"
-const val manageShelvesBtnExpand = "manageShelvesBtnExpand"
-const val manageShelvesShelfItem = "manageShelvesShelfItem"
 const val detailShelfCheckbox = "detailShelfCheckbox"

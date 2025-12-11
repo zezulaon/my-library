@@ -18,10 +18,19 @@ class HomeRobot {
         onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnNavigationDrawerItem(itemLabel: String) {
+    fun AndroidComposeTestRule<*, *>.tapOnNavigationDrawerItem(item: DrawerItemType) {
         val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
-        onNode(hasText(itemLabel) and isInNavDrawer)
-            .performClick()
+        when (item) {
+            is DrawerItemType.ManageShelves -> {
+                val label = activity.getString(R.string.drawer_item_manage_shelves)
+                onNode(hasText(label) and isInNavDrawer)
+                    .performClick()
+            }
+            is DrawerItemType.CustomShelf -> {
+                onNode(hasText(item.name) and isInNavDrawer)
+                    .performClick()
+            }
+        }
     }
 
     fun ComposeTestRule.tapOnAddBook(option: AddBookOption) {
@@ -89,4 +98,9 @@ enum class AddBookOption {
 sealed interface HomeCategory {
     object AllBooks : HomeCategory
     data class Custom(val name: String) : HomeCategory
+}
+
+sealed interface DrawerItemType {
+    object ManageShelves : DrawerItemType
+    data class CustomShelf(val name: String) : DrawerItemType
 }
