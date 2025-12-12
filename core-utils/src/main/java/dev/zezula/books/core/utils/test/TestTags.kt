@@ -10,4 +10,3 @@ const val homeBtnScanBarcode = "homeBtnScanBarcode"
 const val homeBtnBulkScanBarcode = "homeBtnBulkScanBarcode"
 
 const val createNoteInputTitle = "createNoteInputTitle"
-const val detailShelfCheckbox = "detailShelfCheckbox"

@@ -33,8 +33,12 @@ class BookDetailTestTag {
     companion object {
         const val ROOT = "bookDetail/Root"
 
+        const val CONTAINER_TAB_BAR = "bookDetail/container/TabBar"
+
         const val BTN_DELETE_BOOK = "bookDetail/btn/DeleteBook"
         const val BTN_EDIT_BOOK = "bookDetail/btn/EditBook"
+
+        fun checkboxShelf(shelfTitle: String) = "bookDetail/checkbox/Shelf/$shelfTitle"
     }
 }
 

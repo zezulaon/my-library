@@ -208,6 +208,7 @@ fun BookDetailScreen(
             val tabs = DetailTab.entries.filter { uiState.isBookInLibrary || it.isVisibleOutsideLibrary }
             val currentlySelectedIndex = tabs.indexOf(uiState.selectedTab)
             PrimaryScrollableTabRow(
+                modifier = Modifier.testTag(BookDetailTestTag.CONTAINER_TAB_BAR),
                 selectedTabIndex = currentlySelectedIndex,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ) {

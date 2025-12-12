@@ -4,8 +4,10 @@ import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
+import dev.zezula.books.tests.robot.BookDetailTab
 import dev.zezula.books.tests.robot.DrawerItemType
 import dev.zezula.books.tests.robot.HomeCategory
+import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onManageShelvesScreen
 import dev.zezula.books.tests.utils.testBooksData
@@ -115,5 +117,28 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_edit_to_shelf_then_it_appears_in_that_shelf() {
+        val book = testBooksData.first()
+        val shelfTitle = testShelvesData
+            .first()
+            .title
+
+        composeTestRule.apply {
+            onHomeScreen {
+                tapOnBookTitle(book.title!!)
+            }
+
+            onBookDetailScreen {
+                tapOnTab(BookDetailTab.SHELVES)
+                toggleShelfSelection(shelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                openNavigationDrawer()
+                tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(shelfTitle))
+                assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
+                assertBookTitleIsDisplayed(book.title!!)
+            }
+        }
     }
 }

@@ -1,6 +1,11 @@
 package dev.zezula.books.tests.robot
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -59,6 +64,28 @@ class BookDetailRobot {
         onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back))
             .performClick()
     }
+
+    fun AndroidComposeTestRule<*, *>.tapOnTab(tab: BookDetailTab) {
+        val tabStringRes = when (tab) {
+            BookDetailTab.SHELVES -> R.string.screen_detail_tab_shelves
+            BookDetailTab.DETAIL -> R.string.screen_detail_tab_book
+            BookDetailTab.REVIEWS -> R.string.screen_detail_tab_reviews
+            BookDetailTab.SUGGESTIONS -> R.string.screen_detail_tab_suggestions
+            BookDetailTab.NOTES -> R.string.screen_detail_tab_notes
+        }
+        val tabLabel = activity.getString(tabStringRes)
+
+        onNode(hasText(tabLabel) and hasAnyAncestor(hasTestTag(BookDetailTestTag.CONTAINER_TAB_BAR)))
+            .performClick()
+    }
+
+    fun ComposeTestRule.toggleShelfSelection(shelfTitle: String) {
+        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle)).apply {
+            assertIsOff()
+            performClick()
+            assertIsOn()
+        }
+    }
 }
 
 fun ComposeTestRule.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {
@@ -68,4 +95,12 @@ fun ComposeTestRule.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {
 
 private fun ComposeTestRule.verifyBookDetailScreenDisplayed() {
     onNodeWithTag(BookDetailTestTag.ROOT).assertIsDisplayed()
+}
+
+enum class BookDetailTab {
+    SHELVES,
+    DETAIL,
+    REVIEWS,
+    SUGGESTIONS,
+    NOTES,
 }
