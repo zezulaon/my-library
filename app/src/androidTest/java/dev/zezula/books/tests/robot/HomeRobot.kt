@@ -50,7 +50,7 @@ class HomeRobot {
                 onNodeWithTag(HomeTestTag.BTN_ADD_BOOK_MANUALLY).performClick()
             }
             AddBookOption.SCAN -> {
-                TODO("Scan not implemented yet")
+                onNodeWithTag(HomeTestTag.BTN_SCAN_BARCODE).performClick()
             }
         }
     }

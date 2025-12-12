@@ -76,7 +76,6 @@ import dev.zezula.books.core.model.MigrationProgress
 import dev.zezula.books.core.model.MigrationType
 import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.previewBooks
-import dev.zezula.books.core.utils.test.homeBtnScanBarcode
 import dev.zezula.books.domain.repositories.SortBooksBy
 import dev.zezula.books.testtag.HomeTestTag
 import dev.zezula.books.ui.screen.components.BookList
@@ -504,7 +503,7 @@ private fun AddBookBottomSheet(
             )
             ListItem(
                 modifier = Modifier
-                    .testTag(homeBtnScanBarcode)
+                    .testTag(HomeTestTag.BTN_SCAN_BARCODE)
                     .clickable {
                         onScanBarcodeClick()
                         onAddBookSheetCloseRequested()

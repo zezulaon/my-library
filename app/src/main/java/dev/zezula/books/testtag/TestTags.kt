@@ -10,6 +10,7 @@ class HomeTestTag {
         const val BTN_OPEN_NAV_DRAWER = "home/btn/OpenNavDrawer"
         const val BTN_ADD_BOOK = "home/btn/AddBook"
         const val BTN_ADD_BOOK_MANUALLY = "home/btn/AddBookManually"
+        const val BTN_SCAN_BARCODE = "home/btn/ScanBarcode"
     }
 }
 
@@ -58,5 +59,11 @@ class NotesTestTag {
     companion object {
         const val CONTAINER_NOTE_ITEM = "notes/container/NoteItem"
         const val BTN_EXPAND_NOTE = "notes/btn/ExpandShelf"
+    }
+}
+
+class ScanBarcodeTestTag {
+    companion object {
+        const val ROOT = "scanBarcode/Root"
     }
 }
