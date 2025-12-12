@@ -93,25 +93,4 @@ class NavigationTest : KoinTest {
                 .assertHasClickAction()
         }
     }
-
-    @Test
-    fun manageShelvesScreen_clickOnEdit_updateNewTitle_newTitleIsSaved() {
-        val updatedShelfTitle = "updated shelf title"
-
-        composeTestRule.apply {
-            // GIVEN the user is on "Manage Shelves" screen
-            onNodeWithTag(HomeTestTag.CONTAINER_NAV_DRAWER).performClick()
-            onNodeWithText(activity.getString(R.string.drawer_item_manage_shelves)).performClick()
-            // WHEN user clicks on expand button
-            onAllNodesWithTag(ManageShelvesTestTag.BTN_EXPAND_SHELF).onFirst().performClick()
-            // AND user clicks on edit button
-            onNodeWithText(activity.getString(R.string.shelves_btn_edit)).performClick()
-            // AND user updates shelf title
-            onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME).apply { performTextClearance() }.performTextInput(updatedShelfTitle)
-            // AND user saves the shelf
-            onNodeWithText(activity.getString(R.string.shelves_dialog_btn_update)).performClick()
-            // THEN new shelf was updated in the list of shelves
-            onNodeWithText(updatedShelfTitle).assertIsDisplayed()
-        }
-    }
 }

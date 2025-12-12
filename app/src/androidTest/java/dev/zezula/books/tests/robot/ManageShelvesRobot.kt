@@ -1,5 +1,6 @@
 package dev.zezula.books.tests.robot
 
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyDescendant
@@ -10,37 +11,60 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import dev.zezula.books.R
 import dev.zezula.books.testtag.ManageShelvesTestTag
 
 class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
 
-    fun AndroidComposeTestRule<*, *>.addNewShelf(name: String) {
+    fun AndroidComposeTestRule<*, *>.addNewShelf(shelfTitle: String) {
         val label = activity.getString(R.string.shelves_btn_new_shelf)
         onNodeWithText(text = label, useUnmergedTree = true)
             .performClick()
 
         onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
-            .performTextInput(name)
+            .performTextInput(shelfTitle)
 
         onNodeWithText(activity.getString(R.string.shelves_dialog_btn_save))
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton(shelfTitle: String) {
-        // BTN_EXPAND_SHELF is inside ManageShelvesTestTag.CONTAINER_SHELF_ITEM and ManageShelvesTestTag.CONTAINER_SHELF_ITEM also has child with shelf name text
+    fun AndroidComposeTestRule<*, *>.editShelf(shelfToEditTitle: String, newShelfTitle: String) {
+        expandShelfCard(shelfToEditTitle)
+
+        val editLabel = activity.getString(R.string.shelves_btn_edit)
+        onNode(hasText(editLabel) and isInShelfItemContainer(shelfToEditTitle))
+            .performClick()
+
+        onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
+            .apply {
+                performTextClearance()
+                performTextInput(newShelfTitle)
+            }
+
+        onNodeWithText(activity.getString(R.string.shelves_dialog_btn_update))
+            .performClick()
+    }
+
+    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton(shelfToDeleteTitle: String) {
+        expandShelfCard(shelfToDeleteTitle)
+
+        onNode(hasText(activity.getString(R.string.shelves_btn_remove)) and isInShelfItemContainer(shelfToDeleteTitle))
+            .performClick()
+    }
+
+    private fun ComposeTestRule.expandShelfCard(shelfTitle: String) {
+        onNode(hasTestTag(ManageShelvesTestTag.BTN_EXPAND_SHELF) and isInShelfItemContainer(shelfTitle))
+            .performClick()
+    }
+
+    private fun isInShelfItemContainer(shelfTitle: String): SemanticsMatcher {
         val shelfItemMatcher =
             hasTestTag(ManageShelvesTestTag.CONTAINER_SHELF_ITEM) and
-                hasAnyDescendant(hasText(shelfTitle))
+                    hasAnyDescendant(hasText(shelfTitle))
 
-        val isInShelfItem = hasAnyAncestor(shelfItemMatcher)
-
-        onNode(hasTestTag(ManageShelvesTestTag.BTN_EXPAND_SHELF) and isInShelfItem)
-            .performClick()
-
-        onNode(hasText(activity.getString(R.string.shelves_btn_remove)) and isInShelfItem)
-            .performClick()
+        return hasAnyAncestor(shelfItemMatcher)
     }
 
     fun ComposeTestRule.assertShelfIsDisplayed(name: String) {

@@ -89,4 +89,29 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             }
         }
     }
+
+    @Test
+    fun when_existing_shelf_is_edited_then_new_title_appears_in_the_app() {
+        val shelfToEditTitle = previewShelves.first().title
+        val newShelfTitle = "Updated Shelf Title"
+
+        composeTestRule.apply {
+            onHomeScreen {
+                openNavigationDrawer()
+                tapOnNavigationDrawerItem(DrawerItemType.ManageShelves)
+            }
+
+            onManageShelvesScreen {
+                editShelf(shelfToEditTitle = shelfToEditTitle, newShelfTitle = newShelfTitle)
+                assertShelfIsDisplayed(newShelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                openNavigationDrawer()
+                tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(newShelfTitle))
+                assertCategoryDisplayed(HomeCategory.Custom(newShelfTitle))
+            }
+        }
+    }
 }
