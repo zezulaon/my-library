@@ -1,9 +1,9 @@
-package dev.zezula.books.tests
+package dev.zezula.books.tests.utils
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 
-fun AndroidComposeTestRule<*, *>.onNodeWithStringRes(@StringRes resId: Int): SemanticsNodeInteraction =
+fun AndroidComposeTestRule<*, *>.onNodeWithTextStringRes(@StringRes resId: Int): SemanticsNodeInteraction =
     onNodeWithText(activity.getString(resId))

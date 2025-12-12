@@ -3,13 +3,8 @@ package dev.zezula.books.navigation
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextClearance
-import androidx.compose.ui.test.performTextInput
 import dev.zezula.books.R
 import dev.zezula.books.core.model.BookFormData
 import dev.zezula.books.core.model.previewBooks
@@ -23,8 +18,8 @@ import dev.zezula.books.di.appModule
 import dev.zezula.books.di.flavoredAppModule
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
+import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.HomeTestTag
-import dev.zezula.books.testtag.ManageShelvesTestTag
 import dev.zezula.books.ui.MyLibraryMainActivity
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -85,10 +80,10 @@ class NavigationTest : KoinTest {
             onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
             onNodeWithTag(homeBtnScanBarcode).performClick()
             // THEN information about missing camera permission is displayed
-            onNodeWithText(activity.getString(R.string.scanner_perm_required))
+            onNodeWithTextStringRes(R.string.scanner_perm_required)
                 .assertIsDisplayed()
             // AND button that allows permission is displayed
-            onNodeWithText(activity.getString(R.string.scanner_btn_allow_camera))
+            onNodeWithTextStringRes(R.string.scanner_btn_allow_camera)
                 .assertIsDisplayed()
                 .assertHasClickAction()
         }

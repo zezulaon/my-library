@@ -14,6 +14,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import dev.zezula.books.R
+import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.ManageShelvesTestTag
 
 class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
@@ -26,7 +27,7 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
         onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
             .performTextInput(shelfTitle)
 
-        onNodeWithText(activity.getString(R.string.shelves_dialog_btn_save))
+        onNodeWithTextStringRes(R.string.shelves_dialog_btn_save)
             .performClick()
     }
 
@@ -43,7 +44,7 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
                 performTextInput(newShelfTitle)
             }
 
-        onNodeWithText(activity.getString(R.string.shelves_dialog_btn_update))
+        onNodeWithTextStringRes(R.string.shelves_dialog_btn_update)
             .performClick()
     }
 
@@ -62,7 +63,7 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
     private fun isInShelfItemContainer(shelfTitle: String): SemanticsMatcher {
         val shelfItemMatcher =
             hasTestTag(ManageShelvesTestTag.CONTAINER_SHELF_ITEM) and
-                    hasAnyDescendant(hasText(shelfTitle))
+                hasAnyDescendant(hasText(shelfTitle))
 
         return hasAnyAncestor(shelfItemMatcher)
     }

@@ -2,14 +2,14 @@ package dev.zezula.books.tests
 
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.BookFormData
-import dev.zezula.books.core.model.previewBooks
-import dev.zezula.books.core.model.previewShelves
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
 import dev.zezula.books.tests.robot.DrawerItemType
 import dev.zezula.books.tests.robot.HomeCategory
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onManageShelvesScreen
+import dev.zezula.books.tests.utils.testBooksData
+import dev.zezula.books.tests.utils.testShelvesData
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -20,11 +20,9 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
     private val createShelfUseCase: CreateShelfUseCase by inject()
 
-    private val testPreviewBooks = previewBooks
-
     @Before
     fun setup() = runTest {
-        testPreviewBooks.forEach {
+        testBooksData.forEach {
             addOrUpdateLibraryBookUseCase(
                 bookId = null,
                 bookFormData = BookFormData(
@@ -39,7 +37,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                 ),
             )
         }
-        previewShelves.forEach {
+        testShelvesData.forEach {
             createShelfUseCase(
                 shelfTitle = it.title,
             )
@@ -73,7 +71,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     @Test
     fun when_existing_shelf_is_deleted_then_it_no_longer_appears_in_the_app() {
         // FIXME: first add a book to shelf, then assert shelf has 1 book, then delete and then assert shelf is gone and book has no shelf
-        val shelfToDeleteTitle = previewShelves
+        val shelfToDeleteTitle = testShelvesData
             .first()
             .title
 
@@ -92,7 +90,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_existing_shelf_is_edited_then_new_title_appears_in_the_app() {
-        val shelfToEditTitle = previewShelves.first().title
+        val shelfToEditTitle = testShelvesData.first().title
         val newShelfTitle = "Updated Shelf Title"
 
         composeTestRule.apply {
@@ -113,5 +111,9 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                 assertCategoryDisplayed(HomeCategory.Custom(newShelfTitle))
             }
         }
+    }
+
+    @Test
+    fun when_book_is_edit_to_shelf_then_it_appears_in_that_shelf() {
     }
 }

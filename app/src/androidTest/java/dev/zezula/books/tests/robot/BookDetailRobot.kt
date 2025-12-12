@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
+import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookDetailTestTag
 
 class BookDetailRobot {
@@ -50,7 +51,8 @@ class BookDetailRobot {
     }
 
     fun AndroidComposeTestRule<*, *>.confirmDeletion() {
-        onNodeWithText(activity.getString(R.string.detail_btn_confirm_delete)).performClick()
+        onNodeWithTextStringRes(R.string.detail_btn_confirm_delete)
+            .performClick()
     }
 
     fun AndroidComposeTestRule<*, *>.tapOnNavigateUp() {

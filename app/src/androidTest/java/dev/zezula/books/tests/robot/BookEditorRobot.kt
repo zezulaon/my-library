@@ -4,11 +4,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import dev.zezula.books.R
+import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookEditorTestTag
 
 class BookEditorRobot {
@@ -37,7 +37,7 @@ class BookEditorRobot {
     }
 
     fun AndroidComposeTestRule<*, *>.assertInvalidInputErrorDisplayed() {
-        onNodeWithText(activity.getString(R.string.invalid_input_form))
+        onNodeWithTextStringRes(R.string.invalid_input_form)
             .assertIsDisplayed()
     }
 }

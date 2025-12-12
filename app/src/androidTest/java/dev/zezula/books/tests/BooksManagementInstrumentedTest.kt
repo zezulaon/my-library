@@ -3,7 +3,6 @@ package dev.zezula.books.tests
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.BookFormData
-import dev.zezula.books.core.model.previewBooks
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.tests.robot.AddBookOption
 import dev.zezula.books.tests.robot.HomeCategory
@@ -11,6 +10,7 @@ import dev.zezula.books.tests.robot.InputType
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onBookEditorScreen
 import dev.zezula.books.tests.robot.onHomeScreen
+import dev.zezula.books.tests.utils.testBooksData
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -19,8 +19,6 @@ import org.koin.test.inject
 class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
-
-    private val testPreviewBooks = previewBooks
 
     private val bookToCreate = Book(
         id = Book.Id("123"),
@@ -37,7 +35,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Before
     fun setup() = runTest {
-        testPreviewBooks.forEach {
+        testBooksData.forEach {
             addOrUpdateLibraryBookUseCase(
                 bookId = null,
                 bookFormData = BookFormData(
@@ -75,7 +73,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
             onHomeScreen {
                 assertCategoryDisplayed(HomeCategory.AllBooks)
-                assertToolbarBookSize(testPreviewBooks.size + 1)
+                assertToolbarBookSize(testBooksData.size + 1)
 
                 tapOnBookTitle(bookToCreate.title!!)
             }
@@ -88,7 +86,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_deleted_from_detail_then_it_disappears_from_library() {
-        val bookToDelete = testPreviewBooks.first()
+        val bookToDelete = testBooksData.first()
 
         composeTestRule.apply {
             onHomeScreen {
@@ -103,7 +101,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
             onHomeScreen {
                 assertCategoryDisplayed(HomeCategory.AllBooks)
-                assertToolbarBookSize(testPreviewBooks.size - 1)
+                assertToolbarBookSize(testBooksData.size - 1)
                 assertBookTitleDoesNotExist(bookToDelete.title!!)
             }
         }
@@ -111,7 +109,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_updated_from_detail_then_changes_are_reflected_in_library() {
-        val bookToUpdate = testPreviewBooks.first()
+        val bookToUpdate = testBooksData.first()
 
         composeTestRule.apply {
             onHomeScreen {
@@ -139,7 +137,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
             }
 
             onHomeScreen {
-                assertToolbarBookSize(testPreviewBooks.size)
+                assertToolbarBookSize(testBooksData.size)
                 assertBookTitleDoesNotExist(bookToUpdate.title!!)
                 assertBookTitleIsDisplayed(bookToCreate.title!!)
             }
