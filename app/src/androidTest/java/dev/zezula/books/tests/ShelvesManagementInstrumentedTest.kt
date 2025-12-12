@@ -116,7 +116,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun when_book_is_edit_to_shelf_then_it_appears_in_that_shelf() {
+    fun when_book_is_added_to_shelf_and_then_removed_from_shelf_then_it_is_no_longer_in_the_shelf() {
         val book = testBooksData.first()
         val shelfTitle = testShelvesData
             .first()
@@ -138,6 +138,19 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                 tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(shelfTitle))
                 assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
                 assertBookTitleIsDisplayed(book.title!!)
+
+                tapOnBookTitle(book.title!!)
+            }
+
+            onBookDetailScreen {
+                tapOnTab(BookDetailTab.SHELVES)
+                toggleShelfSelection(shelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
+                assertBookTitleDoesNotExist(book.title!!)
             }
         }
     }

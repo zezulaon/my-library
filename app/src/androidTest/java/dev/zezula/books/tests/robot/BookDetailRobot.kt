@@ -1,8 +1,6 @@
 package dev.zezula.books.tests.robot
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsOff
-import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -80,11 +78,8 @@ class BookDetailRobot {
     }
 
     fun ComposeTestRule.toggleShelfSelection(shelfTitle: String) {
-        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle)).apply {
-            assertIsOff()
-            performClick()
-            assertIsOn()
-        }
+        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
+            .performClick()
     }
 }
 
