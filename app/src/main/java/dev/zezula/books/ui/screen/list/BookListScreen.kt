@@ -76,8 +76,6 @@ import dev.zezula.books.core.model.MigrationProgress
 import dev.zezula.books.core.model.MigrationType
 import dev.zezula.books.core.model.Shelf
 import dev.zezula.books.core.model.previewBooks
-import dev.zezula.books.core.utils.test.homeAppBar
-import dev.zezula.books.core.utils.test.homeBtnBulkScanBarcode
 import dev.zezula.books.core.utils.test.homeBtnScanBarcode
 import dev.zezula.books.domain.repositories.SortBooksBy
 import dev.zezula.books.testtag.HomeTestTag
@@ -485,7 +483,6 @@ private fun AddBookBottomSheet(
             val label = stringResource(R.string.home_btn_bulk_scan_barcodes)
             ListItem(
                 modifier = Modifier
-                    .testTag(homeBtnBulkScanBarcode)
                     .clickable {
                         onBulkScanBooksClick()
                         onAddBookSheetCloseRequested()
@@ -547,7 +544,6 @@ private fun BookListTopAppBar(
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
-        modifier = Modifier.testTag(homeAppBar),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),

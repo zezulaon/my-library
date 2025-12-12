@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Shelf
-import dev.zezula.books.core.utils.test.homeNavDrawerShelfItem
 import dev.zezula.books.testtag.HomeTestTag
 
 @Composable
@@ -95,8 +94,7 @@ internal fun NavigationDrawer(
                     },
                     onClick = { onShelfClick(shelf) },
                     modifier = Modifier
-                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                        .testTag("$homeNavDrawerShelfItem${shelf.title}"),
+                        .padding(NavigationDrawerItemDefaults.ItemPadding),
                 )
             }
         }

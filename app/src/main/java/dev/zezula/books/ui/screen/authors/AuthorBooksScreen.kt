@@ -19,14 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
-import dev.zezula.books.core.utils.test.allAuthorsAppBar
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
@@ -75,7 +73,6 @@ private fun AuthorBooksTopAppBar(
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
-        modifier = Modifier.testTag(allAuthorsAppBar),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
