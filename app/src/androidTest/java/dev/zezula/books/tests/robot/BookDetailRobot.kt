@@ -81,6 +81,11 @@ class BookDetailRobot {
         onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
             .performClick()
     }
+
+    fun ComposeTestRule.tapOnManageShelvesButton() {
+        onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
+            .performClick()
+    }
 }
 
 fun ComposeTestRule.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {

@@ -37,6 +37,7 @@ class BookDetailTestTag {
 
         const val BTN_DELETE_BOOK = "bookDetail/btn/DeleteBook"
         const val BTN_EDIT_BOOK = "bookDetail/btn/EditBook"
+        const val BTN_MANAGE_SHELVES = "bookDetail/btn/ManageShelves"
 
         fun checkboxShelf(shelfTitle: String) = "bookDetail/checkbox/Shelf/$shelfTitle"
     }

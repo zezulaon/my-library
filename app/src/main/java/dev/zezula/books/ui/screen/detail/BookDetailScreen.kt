@@ -312,7 +312,9 @@ private fun BookDetailAppBar(
             if (uiState.isBookInLibrary) {
                 when (uiState.selectedTab) {
                     DetailTab.Shelves -> {
-                        IconButton(onClick = { onNewShelfClick() }) {
+                        IconButton(
+                            modifier = Modifier.testTag(BookDetailTestTag.BTN_MANAGE_SHELVES),
+                            onClick = { onNewShelfClick() }) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(R.string.content_add_new_shelf),
