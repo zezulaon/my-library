@@ -60,20 +60,26 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
             .performClick()
     }
 
-    private fun isInShelfItemContainer(shelfTitle: String): SemanticsMatcher {
-        val shelfItemMatcher =
-            hasTestTag(ManageShelvesTestTag.CONTAINER_SHELF_ITEM) and
-                hasAnyDescendant(hasText(shelfTitle))
-
-        return hasAnyAncestor(shelfItemMatcher)
-    }
-
     fun ComposeTestRule.assertShelfIsDisplayed(name: String) {
         onNodeWithText(name).assertIsDisplayed()
     }
 
     fun ComposeTestRule.assertShelfDoesNotExist(name: String) {
         onNodeWithText(name).assertDoesNotExist()
+    }
+
+    fun AndroidComposeTestRule<*, *>.assertShelfWithBookCountDisplayed(shelfTitle: String, count: Int) {
+        val countString = activity
+            .resources.getQuantityString(R.plurals.shelves_label_books_count, count, count)
+        onNode(hasText(countString) and isInShelfItemContainer(shelfTitle)).assertIsDisplayed()
+    }
+
+    private fun isInShelfItemContainer(shelfTitle: String): SemanticsMatcher {
+        val shelfItemMatcher =
+            hasTestTag(ManageShelvesTestTag.CONTAINER_SHELF_ITEM) and
+                hasAnyDescendant(hasText(shelfTitle))
+
+        return hasAnyAncestor(shelfItemMatcher)
     }
 }
 

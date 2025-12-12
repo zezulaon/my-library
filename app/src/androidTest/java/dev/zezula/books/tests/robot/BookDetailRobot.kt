@@ -82,6 +82,11 @@ class BookDetailRobot {
             .performClick()
     }
 
+    fun ComposeTestRule.assertShelfDoesNotExist(shelfTitle: String) {
+        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
+            .assertDoesNotExist()
+    }
+
     fun ComposeTestRule.tapOnManageShelvesButton() {
         onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
             .performClick()

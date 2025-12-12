@@ -314,7 +314,8 @@ private fun BookDetailAppBar(
                     DetailTab.Shelves -> {
                         IconButton(
                             modifier = Modifier.testTag(BookDetailTestTag.BTN_MANAGE_SHELVES),
-                            onClick = { onNewShelfClick() }) {
+                            onClick = { onNewShelfClick() },
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(R.string.content_add_new_shelf),

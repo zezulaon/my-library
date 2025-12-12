@@ -72,7 +72,6 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_existing_shelf_is_deleted_then_it_no_longer_appears_in_the_app() {
-        // FIXME: first add a book to shelf, then assert shelf has 1 book, then delete and then assert shelf is gone and book has no shelf
         val shelfToDeleteTitle = testShelvesData
             .first()
             .title
@@ -151,6 +150,54 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             onHomeScreen {
                 assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
                 assertBookTitleDoesNotExist(book.title!!)
+            }
+        }
+    }
+
+    @Test
+    fun when_book_is_added_to_shelf_and_shelf_is_deleted_then_book_is_no_longer_in_shelf() {
+        val book = testBooksData.first()
+        val firstShelfTitle = testShelvesData[0].title
+        val secondShelfTitle = testShelvesData[1].title
+
+        composeTestRule.apply {
+            onHomeScreen {
+                tapOnBookTitle(book.title!!)
+            }
+
+            onBookDetailScreen {
+                tapOnTab(BookDetailTab.SHELVES)
+                toggleShelfSelection(firstShelfTitle)
+                toggleShelfSelection(secondShelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                openNavigationDrawer()
+                tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(firstShelfTitle))
+                assertBookTitleIsDisplayed(book.title!!)
+                tapOnBookTitle(book.title!!)
+            }
+
+            onBookDetailScreen {
+                tapOnTab(BookDetailTab.SHELVES)
+                tapOnManageShelvesButton()
+            }
+
+            onManageShelvesScreen {
+                assertShelfWithBookCountDisplayed(shelfTitle = firstShelfTitle, count = 1)
+                tapOnDeleteButton(firstShelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onBookDetailScreen {
+                assertShelfDoesNotExist(firstShelfTitle)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                openNavigationDrawer()
+                assertNavigationDrawerItemDoesNotExist(DrawerItemType.CustomShelf(firstShelfTitle))
             }
         }
     }

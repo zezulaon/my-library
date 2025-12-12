@@ -1,5 +1,6 @@
 package dev.zezula.books.tests.robot
 
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
@@ -19,16 +20,25 @@ class HomeRobot {
     }
 
     fun AndroidComposeTestRule<*, *>.tapOnNavigationDrawerItem(item: DrawerItemType) {
+        getNavigationDrawerNode(item)
+            .assertIsDisplayed()
+            .performClick()
+    }
+
+    fun AndroidComposeTestRule<*, *>.assertNavigationDrawerItemDoesNotExist(item: DrawerItemType) {
+        getNavigationDrawerNode(item)
+            .assertDoesNotExist()
+    }
+
+    private fun AndroidComposeTestRule<*, *>.getNavigationDrawerNode(item: DrawerItemType): SemanticsNodeInteraction {
         val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
-        when (item) {
+        return when (item) {
             is DrawerItemType.ManageShelves -> {
                 val label = activity.getString(R.string.drawer_item_manage_shelves)
                 onNode(hasText(label) and isInNavDrawer)
-                    .performClick()
             }
             is DrawerItemType.CustomShelf -> {
                 onNode(hasText(item.name) and isInNavDrawer)
-                    .performClick()
             }
         }
     }
