@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Shelf
-import dev.zezula.books.core.utils.test.manageShelvesShelfItem
+import dev.zezula.books.testtag.ManageShelvesTestTag
 
 @Composable
 fun ShelvesRoute(
@@ -81,7 +81,8 @@ fun ShelvesListScreen(
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = modifier,
+        modifier = modifier
+            .testTag(ManageShelvesTestTag.ROOT),
         topBar = { ShelvesListTopAppBar(onNavigateBack = onNavigateBack) },
         bottomBar = { ShelvesBottomBar(onAddShelfClick = onAddShelfClick) },
     ) { innerPadding ->
@@ -162,7 +163,6 @@ private fun ShelvesList(
         itemsIndexed(items = shelves, key = { _, item -> item.id.value }) { _, shelf ->
             val isExpanded = expandedShelfItem.value == shelf
             ShelfListItem(
-                modifier = Modifier.testTag(manageShelvesShelfItem),
                 shelf = shelf,
                 onDeleteClick = onDeleteClick,
                 onEditShelfClick = onEditShelfClick,

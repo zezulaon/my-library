@@ -8,7 +8,7 @@ import dev.zezula.books.R
  * The [isVisibleOutsideLibrary] flag indicates whether the tab should be visible when the book is not in
  * the user's library (some tabs are unusable when the book is not in the library).
  */
-enum class DetailTab(@StringRes val tabTitle: Int, val isVisibleOutsideLibrary: Boolean) {
+enum class DetailTab(@field:StringRes val tabTitle: Int, val isVisibleOutsideLibrary: Boolean) {
     Shelves(tabTitle = R.string.screen_detail_tab_shelves, isVisibleOutsideLibrary = false),
     Detail(tabTitle = R.string.screen_detail_tab_book, isVisibleOutsideLibrary = true),
     Reviews(tabTitle = R.string.screen_detail_tab_reviews, isVisibleOutsideLibrary = true),
