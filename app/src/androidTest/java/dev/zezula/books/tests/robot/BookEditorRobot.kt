@@ -2,7 +2,6 @@ package dev.zezula.books.tests.robot
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
@@ -13,7 +12,7 @@ import dev.zezula.books.testtag.BookEditorTestTag
 
 class BookEditorRobot {
 
-    fun ComposeTestRule.typeInput(text: String, type: InputType, clearExistingText: Boolean = false) {
+    fun AndroidComposeTestRule<*, *>.typeInput(text: String, type: InputType, clearExistingText: Boolean = false) {
         val tag = when (type) {
             InputType.TITLE -> BookEditorTestTag.INPUT_TITLE
             InputType.AUTHOR -> BookEditorTestTag.INPUT_AUTHOR
@@ -23,8 +22,8 @@ class BookEditorRobot {
             InputType.ISBN -> BookEditorTestTag.INPUT_ISBN
             InputType.DESC -> BookEditorTestTag.INPUT_DESC
         }
-        onNodeWithTag(tag).performClick()
         onNodeWithTag(tag).apply {
+            performClick()
             if (clearExistingText) {
                 performTextClearance()
             }
@@ -42,12 +41,12 @@ class BookEditorRobot {
     }
 }
 
-fun ComposeTestRule.onBookEditorScreen(scope: BookEditorRobot.() -> Unit) {
+fun AndroidComposeTestRule<*, *>.onBookEditorScreen(scope: BookEditorRobot.() -> Unit) {
     verifyBookEditorScreenDisplayed()
     BookEditorRobot().apply(scope)
 }
 
-private fun ComposeTestRule.verifyBookEditorScreenDisplayed() {
+private fun AndroidComposeTestRule<*, *>.verifyBookEditorScreenDisplayed() {
     onNodeWithTag(BookEditorTestTag.ROOT).assertIsDisplayed()
 }
 

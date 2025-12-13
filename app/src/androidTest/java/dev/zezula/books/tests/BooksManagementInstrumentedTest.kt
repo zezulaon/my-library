@@ -10,8 +10,10 @@ import dev.zezula.books.tests.robot.InputType
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onBookEditorScreen
 import dev.zezula.books.tests.robot.onHomeScreen
+import dev.zezula.books.tests.utils.bookHobit
+import dev.zezula.books.tests.utils.tapOnNavigateUp
 import dev.zezula.books.tests.utils.testBooksData
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.koin.test.inject
@@ -34,7 +36,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
     )
 
     @Before
-    fun setup() = runTest {
+    fun setup() = runBlocking {
         testBooksData.forEach {
             addOrUpdateLibraryBookUseCase(
                 bookId = null,
@@ -86,7 +88,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_deleted_from_detail_then_it_disappears_from_library() {
-        val bookToDelete = testBooksData.first()
+        val bookToDelete = testBooksData.bookHobit
 
         composeTestRule.apply {
             onHomeScreen {
@@ -109,7 +111,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_updated_from_detail_then_changes_are_reflected_in_library() {
-        val bookToUpdate = testBooksData.first()
+        val bookToUpdate = testBooksData.bookHobit
 
         composeTestRule.apply {
             onHomeScreen {

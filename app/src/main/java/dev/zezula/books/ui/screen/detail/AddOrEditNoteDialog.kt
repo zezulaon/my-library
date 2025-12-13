@@ -53,7 +53,7 @@ internal fun AddOrEditNoteDialog(
                 OutlinedTextField(
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
-                        .heightIn(min = 500.dp, max = 100.dp),
+                        .heightIn(min = 100.dp, max = 500.dp),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     value = textValue.value,
                     onValueChange = { textValue.value = it },
@@ -68,9 +68,7 @@ internal fun AddOrEditNoteDialog(
                         enabled = textValue.value.isEmpty().not(),
                         onClick = {
                             if (isInEditMode) {
-                                selectedNote?.let {
-                                    onDialogUpdateClick(it, textValue.value)
-                                }
+                                onDialogUpdateClick(selectedNote, textValue.value)
                             } else {
                                 onDialogSaveClick(textValue.value)
                             }

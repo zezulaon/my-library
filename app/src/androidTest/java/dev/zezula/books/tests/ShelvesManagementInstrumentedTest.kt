@@ -10,9 +10,13 @@ import dev.zezula.books.tests.robot.HomeCategory
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onManageShelvesScreen
+import dev.zezula.books.tests.utils.bookHobit
+import dev.zezula.books.tests.utils.shelfFavorites
+import dev.zezula.books.tests.utils.shelfWishList
+import dev.zezula.books.tests.utils.tapOnNavigateUp
 import dev.zezula.books.tests.utils.testBooksData
 import dev.zezula.books.tests.utils.testShelvesData
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.koin.test.inject
@@ -23,7 +27,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     private val createShelfUseCase: CreateShelfUseCase by inject()
 
     @Before
-    fun setup() = runTest {
+    fun setup() = runBlocking {
         testBooksData.forEach {
             addOrUpdateLibraryBookUseCase(
                 bookId = null,
@@ -71,27 +75,10 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun when_existing_shelf_is_deleted_then_it_no_longer_appears_in_the_app() {
-        val shelfToDeleteTitle = testShelvesData
-            .first()
-            .title
-
-        composeTestRule.apply {
-            onHomeScreen {
-                openNavigationDrawer()
-                tapOnNavigationDrawerItem(DrawerItemType.ManageShelves)
-            }
-
-            onManageShelvesScreen {
-                tapOnDeleteButton(shelfToDeleteTitle)
-                assertShelfDoesNotExist(shelfToDeleteTitle)
-            }
-        }
-    }
-
-    @Test
     fun when_existing_shelf_is_edited_then_new_title_appears_in_the_app() {
-        val shelfToEditTitle = testShelvesData.first().title
+        val shelfToEditTitle = testShelvesData
+            .shelfFavorites
+            .title
         val newShelfTitle = "Updated Shelf Title"
 
         composeTestRule.apply {
@@ -115,10 +102,10 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun when_book_is_added_to_shelf_and_then_removed_from_shelf_then_it_is_no_longer_in_the_shelf() {
-        val book = testBooksData.first()
+    fun when_book_removed_from_shelf_it_disappears() {
+        val book = testBooksData.bookHobit
         val shelfTitle = testShelvesData
-            .first()
+            .shelfFavorites
             .title
 
         composeTestRule.apply {
@@ -156,9 +143,9 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_added_to_shelf_and_shelf_is_deleted_then_book_is_no_longer_in_shelf() {
-        val book = testBooksData.first()
-        val firstShelfTitle = testShelvesData[0].title
-        val secondShelfTitle = testShelvesData[1].title
+        val book = testBooksData.bookHobit
+        val firstShelfTitle = testShelvesData.shelfFavorites.title
+        val secondShelfTitle = testShelvesData.shelfWishList.title
 
         composeTestRule.apply {
             onHomeScreen {
@@ -176,6 +163,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                 openNavigationDrawer()
                 tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(firstShelfTitle))
                 assertBookTitleIsDisplayed(book.title!!)
+                assertToolbarBookSize(1)
                 tapOnBookTitle(book.title!!)
             }
 
@@ -187,6 +175,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             onManageShelvesScreen {
                 assertShelfWithBookCountDisplayed(shelfTitle = firstShelfTitle, count = 1)
                 tapOnDeleteButton(firstShelfTitle)
+                assertShelfDoesNotExist(firstShelfTitle)
                 tapOnNavigateUp()
             }
 

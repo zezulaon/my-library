@@ -5,8 +5,6 @@ import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -17,7 +15,7 @@ import dev.zezula.books.testtag.BookDetailTestTag
 
 class BookDetailRobot {
 
-    fun ComposeTestRule.assertBookDisplayed(book: Book) {
+    fun AndroidComposeTestRule<*, *>.assertBookDisplayed(book: Book) {
         with(book) {
             title?.let {
                 onNodeWithText(it).assertIsDisplayed()
@@ -43,23 +41,18 @@ class BookDetailRobot {
         }
     }
 
-    fun ComposeTestRule.tapOnDeleteButton() {
+    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton() {
         onNodeWithTag(BookDetailTestTag.BTN_DELETE_BOOK)
             .performClick()
     }
 
-    fun ComposeTestRule.tapOnEditButton() {
+    fun AndroidComposeTestRule<*, *>.tapOnEditButton() {
         onNodeWithTag(BookDetailTestTag.BTN_EDIT_BOOK)
             .performClick()
     }
 
     fun AndroidComposeTestRule<*, *>.confirmDeletion() {
         onNodeWithTextStringRes(R.string.detail_btn_confirm_delete)
-            .performClick()
-    }
-
-    fun AndroidComposeTestRule<*, *>.tapOnNavigateUp() {
-        onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back))
             .performClick()
     }
 
@@ -77,28 +70,28 @@ class BookDetailRobot {
             .performClick()
     }
 
-    fun ComposeTestRule.toggleShelfSelection(shelfTitle: String) {
+    fun AndroidComposeTestRule<*, *>.toggleShelfSelection(shelfTitle: String) {
         onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
             .performClick()
     }
 
-    fun ComposeTestRule.assertShelfDoesNotExist(shelfTitle: String) {
+    fun AndroidComposeTestRule<*, *>.assertShelfDoesNotExist(shelfTitle: String) {
         onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
             .assertDoesNotExist()
     }
 
-    fun ComposeTestRule.tapOnManageShelvesButton() {
+    fun AndroidComposeTestRule<*, *>.tapOnManageShelvesButton() {
         onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
             .performClick()
     }
 }
 
-fun ComposeTestRule.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {
+fun AndroidComposeTestRule<*, *>.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {
     verifyBookDetailScreenDisplayed()
     BookDetailRobot().apply(scope)
 }
 
-private fun ComposeTestRule.verifyBookDetailScreenDisplayed() {
+private fun AndroidComposeTestRule<*, *>.verifyBookDetailScreenDisplayed() {
     onNodeWithTag(BookDetailTestTag.ROOT).assertIsDisplayed()
 }
 

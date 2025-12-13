@@ -6,7 +6,6 @@ import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -15,7 +14,7 @@ import dev.zezula.books.testtag.HomeTestTag
 
 class HomeRobot {
 
-    fun ComposeTestRule.openNavigationDrawer() {
+    fun AndroidComposeTestRule<*, *>.openNavigationDrawer() {
         onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
     }
 
@@ -43,7 +42,7 @@ class HomeRobot {
         }
     }
 
-    fun ComposeTestRule.tapOnAddBook(option: AddBookOption) {
+    fun AndroidComposeTestRule<*, *>.tapOnAddBook(option: AddBookOption) {
         onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
         when (option) {
             AddBookOption.MANUALLY -> {
@@ -78,7 +77,7 @@ class HomeRobot {
             .assertIsDisplayed()
     }
 
-    fun ComposeTestRule.tapOnBookTitle(bookTitle: String) {
+    fun AndroidComposeTestRule<*, *>.tapOnBookTitle(bookTitle: String) {
         onNodeWithText(bookTitle).performClick()
     }
 
@@ -91,12 +90,12 @@ class HomeRobot {
     }
 }
 
-fun ComposeTestRule.onHomeScreen(scope: HomeRobot.() -> Unit) {
+fun AndroidComposeTestRule<*, *>.onHomeScreen(scope: HomeRobot.() -> Unit) {
     verifyHomeScreenDisplayed()
     HomeRobot().apply(scope)
 }
 
-private fun ComposeTestRule.verifyHomeScreenDisplayed() {
+private fun AndroidComposeTestRule<*, *>.verifyHomeScreenDisplayed() {
     onNodeWithTag(HomeTestTag.ROOT).assertIsDisplayed()
 }
 

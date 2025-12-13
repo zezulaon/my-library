@@ -7,7 +7,6 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -17,7 +16,7 @@ import dev.zezula.books.R
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.ManageShelvesTestTag
 
-class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
+class ManageShelvesRobot {
 
     fun AndroidComposeTestRule<*, *>.addNewShelf(shelfTitle: String) {
         val label = activity.getString(R.string.shelves_btn_new_shelf)
@@ -55,16 +54,16 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
             .performClick()
     }
 
-    private fun ComposeTestRule.expandShelfCard(shelfTitle: String) {
+    private fun AndroidComposeTestRule<*, *>.expandShelfCard(shelfTitle: String) {
         onNode(hasTestTag(ManageShelvesTestTag.BTN_EXPAND_SHELF) and isInShelfItemContainer(shelfTitle))
             .performClick()
     }
 
-    fun ComposeTestRule.assertShelfIsDisplayed(name: String) {
+    fun AndroidComposeTestRule<*, *>.assertShelfIsDisplayed(name: String) {
         onNodeWithText(name).assertIsDisplayed()
     }
 
-    fun ComposeTestRule.assertShelfDoesNotExist(name: String) {
+    fun AndroidComposeTestRule<*, *>.assertShelfDoesNotExist(name: String) {
         onNodeWithText(name).assertDoesNotExist()
     }
 
@@ -83,11 +82,11 @@ class ManageShelvesRobot : BackRobotFeature by BackRobotFeatureImpl() {
     }
 }
 
-fun ComposeTestRule.onManageShelvesScreen(scope: ManageShelvesRobot.() -> Unit) {
+fun AndroidComposeTestRule<*, *>.onManageShelvesScreen(scope: ManageShelvesRobot.() -> Unit) {
     verifyManageShelvesScreenIsDisplayed()
     ManageShelvesRobot().apply(scope)
 }
 
-private fun ComposeTestRule.verifyManageShelvesScreenIsDisplayed() {
+private fun AndroidComposeTestRule<*, *>.verifyManageShelvesScreenIsDisplayed() {
     onNodeWithTag(ManageShelvesTestTag.ROOT).assertIsDisplayed()
 }
