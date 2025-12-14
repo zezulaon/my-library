@@ -16,61 +16,69 @@ import dev.zezula.books.R
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.ManageShelvesTestTag
 
-class ManageShelvesRobot {
+class ManageShelvesRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun AndroidComposeTestRule<*, *>.addNewShelf(shelfTitle: String) {
-        val label = activity.getString(R.string.shelves_btn_new_shelf)
-        onNodeWithText(text = label, useUnmergedTree = true)
-            .performClick()
+    fun addNewShelf(shelfTitle: String) {
+        with(rule) {
+            val label = activity.getString(R.string.shelves_btn_new_shelf)
+            onNodeWithText(text = label, useUnmergedTree = true)
+                .performClick()
 
-        onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
-            .performTextInput(shelfTitle)
+            onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
+                .performTextInput(shelfTitle)
 
-        onNodeWithTextStringRes(R.string.shelves_dialog_btn_save)
+            onNodeWithTextStringRes(R.string.shelves_dialog_btn_save)
+                .performClick()
+        }
+    }
+
+    fun editShelf(shelfToEditTitle: String, newShelfTitle: String) {
+        with(rule) {
+            expandShelfCard(shelfToEditTitle)
+
+            val editLabel = activity.getString(R.string.shelves_btn_edit)
+            onNode(hasText(editLabel) and isInShelfItemContainer(shelfToEditTitle))
+                .performClick()
+
+            onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
+                .apply {
+                    performTextClearance()
+                    performTextInput(newShelfTitle)
+                }
+
+            onNodeWithTextStringRes(R.string.shelves_dialog_btn_update)
+                .performClick()
+        }
+    }
+
+    fun tapOnDeleteButton(shelfToDeleteTitle: String) {
+        with(rule) {
+            expandShelfCard(shelfToDeleteTitle)
+
+            onNode(hasText(activity.getString(R.string.shelves_btn_remove)) and isInShelfItemContainer(shelfToDeleteTitle))
+                .performClick()
+        }
+    }
+
+    private fun expandShelfCard(shelfTitle: String) {
+        rule.onNode(hasTestTag(ManageShelvesTestTag.BTN_EXPAND_SHELF) and isInShelfItemContainer(shelfTitle))
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.editShelf(shelfToEditTitle: String, newShelfTitle: String) {
-        expandShelfCard(shelfToEditTitle)
-
-        val editLabel = activity.getString(R.string.shelves_btn_edit)
-        onNode(hasText(editLabel) and isInShelfItemContainer(shelfToEditTitle))
-            .performClick()
-
-        onNodeWithTag(ManageShelvesTestTag.INPUT_SHELF_NAME)
-            .apply {
-                performTextClearance()
-                performTextInput(newShelfTitle)
-            }
-
-        onNodeWithTextStringRes(R.string.shelves_dialog_btn_update)
-            .performClick()
+    fun assertShelfIsDisplayed(name: String) {
+        rule.onNodeWithText(name).assertIsDisplayed()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton(shelfToDeleteTitle: String) {
-        expandShelfCard(shelfToDeleteTitle)
-
-        onNode(hasText(activity.getString(R.string.shelves_btn_remove)) and isInShelfItemContainer(shelfToDeleteTitle))
-            .performClick()
+    fun assertShelfDoesNotExist(name: String) {
+        rule.onNodeWithText(name).assertDoesNotExist()
     }
 
-    private fun AndroidComposeTestRule<*, *>.expandShelfCard(shelfTitle: String) {
-        onNode(hasTestTag(ManageShelvesTestTag.BTN_EXPAND_SHELF) and isInShelfItemContainer(shelfTitle))
-            .performClick()
-    }
-
-    fun AndroidComposeTestRule<*, *>.assertShelfIsDisplayed(name: String) {
-        onNodeWithText(name).assertIsDisplayed()
-    }
-
-    fun AndroidComposeTestRule<*, *>.assertShelfDoesNotExist(name: String) {
-        onNodeWithText(name).assertDoesNotExist()
-    }
-
-    fun AndroidComposeTestRule<*, *>.assertShelfWithBookCountDisplayed(shelfTitle: String, count: Int) {
-        val countString = activity
-            .resources.getQuantityString(R.plurals.shelves_label_books_count, count, count)
-        onNode(hasText(countString) and isInShelfItemContainer(shelfTitle)).assertIsDisplayed()
+    fun assertShelfWithBookCountDisplayed(shelfTitle: String, count: Int) {
+        with(rule) {
+            val countString = activity
+                .resources.getQuantityString(R.plurals.shelves_label_books_count, count, count)
+            onNode(hasText(countString) and isInShelfItemContainer(shelfTitle)).assertIsDisplayed()
+        }
     }
 
     private fun isInShelfItemContainer(shelfTitle: String): SemanticsMatcher {
@@ -82,9 +90,9 @@ class ManageShelvesRobot {
     }
 }
 
-fun AndroidComposeTestRule<*, *>.onManageShelvesScreen(scope: ManageShelvesRobot.() -> Unit) {
-    verifyManageShelvesScreenIsDisplayed()
-    ManageShelvesRobot().apply(scope)
+fun AppRobot.onManageShelvesScreen(block: ManageShelvesRobot.() -> Unit) {
+    rule.verifyManageShelvesScreenIsDisplayed()
+    ManageShelvesRobot(rule).apply(block)
 }
 
 private fun AndroidComposeTestRule<*, *>.verifyManageShelvesScreenIsDisplayed() {

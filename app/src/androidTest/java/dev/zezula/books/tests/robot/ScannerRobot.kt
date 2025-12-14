@@ -8,23 +8,27 @@ import androidx.compose.ui.test.onNodeWithText
 import dev.zezula.books.R
 import dev.zezula.books.testtag.ScanBarcodeTestTag
 
-class ScannerRobot {
+class ScannerRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun AndroidComposeTestRule<*, *>.assertPermissionInfoDisplayed() {
-        onNodeWithText(activity.getString(R.string.scanner_perm_required))
-            .assertIsDisplayed()
+    fun assertPermissionInfoDisplayed() {
+        with(rule) {
+            onNodeWithText(activity.getString(R.string.scanner_perm_required))
+                .assertIsDisplayed()
+        }
     }
 
-    fun AndroidComposeTestRule<*, *>.assertAllowCameraButtonDisplayed() {
-        onNodeWithText(activity.getString(R.string.scanner_btn_allow_camera))
-            .assertIsDisplayed()
-            .assertHasClickAction()
+    fun assertAllowCameraButtonDisplayed() {
+        with(rule) {
+            onNodeWithText(activity.getString(R.string.scanner_btn_allow_camera))
+                .assertIsDisplayed()
+                .assertHasClickAction()
+        }
     }
 }
 
-fun AndroidComposeTestRule<*, *>.onScannerScreen(scope: ScannerRobot.() -> Unit) {
-    verifyScannerScreenIsDisplayed()
-    ScannerRobot().apply(scope)
+fun AppRobot.onScannerScreen(block: ScannerRobot.() -> Unit) {
+    rule.verifyScannerScreenIsDisplayed()
+    ScannerRobot(rule).apply(block)
 }
 
 private fun AndroidComposeTestRule<*, *>.verifyScannerScreenIsDisplayed() {

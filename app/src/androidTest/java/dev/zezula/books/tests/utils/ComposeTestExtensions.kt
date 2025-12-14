@@ -7,11 +7,14 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
+import dev.zezula.books.tests.robot.AppRobot
 
 fun AndroidComposeTestRule<*, *>.onNodeWithTextStringRes(@StringRes resId: Int): SemanticsNodeInteraction =
     onNodeWithText(activity.getString(resId))
 
-fun AndroidComposeTestRule<*, *>.tapOnNavigateUp() {
-    onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back))
-        .performClick()
+fun AppRobot.tapOnNavigateUp() {
+    with(rule) {
+        onNodeWithContentDescription(activity.getString(R.string.content_desc_navigate_back))
+            .performClick()
+    }
 }

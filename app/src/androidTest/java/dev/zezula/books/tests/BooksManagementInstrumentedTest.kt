@@ -7,6 +7,7 @@ import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.tests.robot.AddBookOption
 import dev.zezula.books.tests.robot.HomeCategory
 import dev.zezula.books.tests.robot.InputType
+import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onBookEditorScreen
 import dev.zezula.books.tests.robot.onHomeScreen
@@ -56,7 +57,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_book_is_added_manually_then_it_appears_in_the_library() {
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnAddBook(AddBookOption.MANUALLY)
             }
@@ -90,7 +91,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
     fun when_book_is_deleted_from_detail_then_it_disappears_from_library() {
         val bookToDelete = testBooksData.bookHobit
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnBookTitle(bookToDelete.title!!)
             }
@@ -113,7 +114,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
     fun when_book_is_updated_from_detail_then_changes_are_reflected_in_library() {
         val bookToUpdate = testBooksData.bookHobit
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnBookTitle(bookToUpdate.title!!)
             }
@@ -148,7 +149,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     @Test
     fun when_user_confirms_empty_book_form_then_error_is_shown() {
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnAddBook(AddBookOption.MANUALLY)
             }

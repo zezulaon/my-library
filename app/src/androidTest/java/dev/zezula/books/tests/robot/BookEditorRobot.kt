@@ -10,9 +10,9 @@ import dev.zezula.books.R
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookEditorTestTag
 
-class BookEditorRobot {
+class BookEditorRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun AndroidComposeTestRule<*, *>.typeInput(text: String, type: InputType, clearExistingText: Boolean = false) {
+    fun typeInput(text: String, type: InputType, clearExistingText: Boolean = false) {
         val tag = when (type) {
             InputType.TITLE -> BookEditorTestTag.INPUT_TITLE
             InputType.AUTHOR -> BookEditorTestTag.INPUT_AUTHOR
@@ -22,7 +22,7 @@ class BookEditorRobot {
             InputType.ISBN -> BookEditorTestTag.INPUT_ISBN
             InputType.DESC -> BookEditorTestTag.INPUT_DESC
         }
-        onNodeWithTag(tag).apply {
+        rule.onNodeWithTag(tag).apply {
             performClick()
             if (clearExistingText) {
                 performTextClearance()
@@ -31,19 +31,19 @@ class BookEditorRobot {
         }
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnSave() {
-        onNodeWithTag(BookEditorTestTag.BTN_SAVE).performClick()
+    fun tapOnSave() {
+        rule.onNodeWithTag(BookEditorTestTag.BTN_SAVE).performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.assertInvalidInputErrorDisplayed() {
-        onNodeWithTextStringRes(R.string.invalid_input_form)
+    fun assertInvalidInputErrorDisplayed() {
+        rule.onNodeWithTextStringRes(R.string.invalid_input_form)
             .assertIsDisplayed()
     }
 }
 
-fun AndroidComposeTestRule<*, *>.onBookEditorScreen(scope: BookEditorRobot.() -> Unit) {
-    verifyBookEditorScreenDisplayed()
-    BookEditorRobot().apply(scope)
+fun AppRobot.onBookEditorScreen(block: BookEditorRobot.() -> Unit) {
+    rule.verifyBookEditorScreenDisplayed()
+    BookEditorRobot(rule).apply(block)
 }
 
 private fun AndroidComposeTestRule<*, *>.verifyBookEditorScreenDisplayed() {

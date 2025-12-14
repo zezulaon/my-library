@@ -12,87 +12,95 @@ import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
 import dev.zezula.books.testtag.HomeTestTag
 
-class HomeRobot {
+class HomeRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun AndroidComposeTestRule<*, *>.openNavigationDrawer() {
-        onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
+    fun openNavigationDrawer() {
+        rule.onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnNavigationDrawerItem(item: DrawerItemType) {
+    fun tapOnNavigationDrawerItem(item: DrawerItemType) {
         getNavigationDrawerNode(item)
             .assertIsDisplayed()
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.assertNavigationDrawerItemDoesNotExist(item: DrawerItemType) {
+    fun assertNavigationDrawerItemDoesNotExist(item: DrawerItemType) {
         getNavigationDrawerNode(item)
             .assertDoesNotExist()
     }
 
-    private fun AndroidComposeTestRule<*, *>.getNavigationDrawerNode(item: DrawerItemType): SemanticsNodeInteraction {
-        val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
-        return when (item) {
-            is DrawerItemType.ManageShelves -> {
-                val label = activity.getString(R.string.drawer_item_manage_shelves)
-                onNode(hasText(label) and isInNavDrawer)
-            }
-            is DrawerItemType.CustomShelf -> {
-                onNode(hasText(item.name) and isInNavDrawer)
-            }
-        }
-    }
+    private fun getNavigationDrawerNode(item: DrawerItemType): SemanticsNodeInteraction {
+        with(rule) {
+            val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
+            return when (item) {
+                is DrawerItemType.ManageShelves -> {
+                    val label = activity.getString(R.string.drawer_item_manage_shelves)
+                    onNode(hasText(label) and isInNavDrawer)
+                }
 
-    fun AndroidComposeTestRule<*, *>.tapOnAddBook(option: AddBookOption) {
-        onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
-        when (option) {
-            AddBookOption.MANUALLY -> {
-                onNodeWithTag(HomeTestTag.BTN_ADD_BOOK_MANUALLY).performClick()
-            }
-            AddBookOption.SCAN -> {
-                onNodeWithTag(HomeTestTag.BTN_SCAN_BARCODE).performClick()
+                is DrawerItemType.CustomShelf -> {
+                    onNode(hasText(item.name) and isInNavDrawer)
+                }
             }
         }
     }
 
-    fun AndroidComposeTestRule<*, *>.assertCategoryDisplayed(category: HomeCategory) {
-        val categoryTitle: String = when (category) {
-            is HomeCategory.AllBooks -> activity.getString(R.string.home_shelf_title_all_books)
-            is HomeCategory.Custom -> category.name
+    fun tapOnAddBook(option: AddBookOption) {
+        with(rule) {
+            onNodeWithTag(HomeTestTag.BTN_ADD_BOOK).performClick()
+            when (option) {
+                AddBookOption.MANUALLY -> {
+                    onNodeWithTag(HomeTestTag.BTN_ADD_BOOK_MANUALLY).performClick()
+                }
+
+                AddBookOption.SCAN -> {
+                    onNodeWithTag(HomeTestTag.BTN_SCAN_BARCODE).performClick()
+                }
+            }
         }
-        val hasToolbarAncestor = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_TOOLBAR))
-        onNode(hasText(categoryTitle) and hasToolbarAncestor)
-            .assertIsDisplayed()
     }
 
-    fun AndroidComposeTestRule<*, *>.assertToolbarBookSize(size: Int) {
-        val hasToolbarAncestor = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_TOOLBAR))
-
-        val numberBooksFormatted = activity.resources.getQuantityString(
-            R.plurals.home_number_of_books_subtitle,
-            size,
-            size,
-        )
-
-        onNode(hasText(numberBooksFormatted) and hasToolbarAncestor)
-            .assertIsDisplayed()
+    fun assertCategoryDisplayed(category: HomeCategory) {
+        with(rule) {
+            val categoryTitle: String = when (category) {
+                is HomeCategory.AllBooks -> activity.getString(R.string.home_shelf_title_all_books)
+                is HomeCategory.Custom -> category.name
+            }
+            val hasToolbarAncestor = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_TOOLBAR))
+            onNode(hasText(categoryTitle) and hasToolbarAncestor)
+                .assertIsDisplayed()
+        }
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnBookTitle(bookTitle: String) {
-        onNodeWithText(bookTitle).performClick()
+    fun assertToolbarBookSize(size: Int) {
+        with(rule) {
+            val hasToolbarAncestor = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_TOOLBAR))
+            val numberBooksFormatted = activity.resources.getQuantityString(
+                R.plurals.home_number_of_books_subtitle,
+                size,
+                size,
+            )
+            onNode(hasText(numberBooksFormatted) and hasToolbarAncestor)
+                .assertIsDisplayed()
+        }
     }
 
-    fun AndroidComposeTestRule<*, *>.assertBookTitleDoesNotExist(bookTitle: String) {
-        onNodeWithText(bookTitle).assertDoesNotExist()
+    fun tapOnBookTitle(bookTitle: String) {
+        rule.onNodeWithText(bookTitle).performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.assertBookTitleIsDisplayed(bookTitle: String) {
-        onNodeWithText(bookTitle).assertIsDisplayed()
+    fun assertBookTitleDoesNotExist(bookTitle: String) {
+        rule.onNodeWithText(bookTitle).assertDoesNotExist()
+    }
+
+    fun assertBookTitleIsDisplayed(bookTitle: String) {
+        rule.onNodeWithText(bookTitle).assertIsDisplayed()
     }
 }
 
-fun AndroidComposeTestRule<*, *>.onHomeScreen(scope: HomeRobot.() -> Unit) {
-    verifyHomeScreenDisplayed()
-    HomeRobot().apply(scope)
+fun AppRobot.onHomeScreen(block: HomeRobot.() -> Unit) {
+    rule.verifyHomeScreenDisplayed()
+    HomeRobot(rule).apply(block)
 }
 
 private fun AndroidComposeTestRule<*, *>.verifyHomeScreenDisplayed() {

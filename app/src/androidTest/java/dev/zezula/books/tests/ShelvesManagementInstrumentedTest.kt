@@ -7,6 +7,7 @@ import dev.zezula.books.domain.usecases.CreateShelfUseCase
 import dev.zezula.books.tests.robot.BookDetailTab
 import dev.zezula.books.tests.robot.DrawerItemType
 import dev.zezula.books.tests.robot.HomeCategory
+import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onManageShelvesScreen
@@ -54,7 +55,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
     fun when_shelf_is_added_manually_then_it_appears_in_the_app() {
         val customShelfTitle = "My test shelf"
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 openNavigationDrawer()
                 tapOnNavigationDrawerItem(DrawerItemType.ManageShelves)
@@ -81,7 +82,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             .title
         val newShelfTitle = "Updated Shelf Title"
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 openNavigationDrawer()
                 tapOnNavigationDrawerItem(DrawerItemType.ManageShelves)
@@ -108,7 +109,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             .shelfFavorites
             .title
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnBookTitle(book.title!!)
             }
@@ -147,7 +148,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
         val firstShelfTitle = testShelvesData.shelfFavorites.title
         val secondShelfTitle = testShelvesData.shelfWishList.title
 
-        composeTestRule.apply {
+        onApp(composeTestRule) {
             onHomeScreen {
                 tapOnBookTitle(book.title!!)
             }

@@ -13,50 +13,52 @@ import dev.zezula.books.core.model.Book
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookDetailTestTag
 
-class BookDetailRobot {
+class BookDetailRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun AndroidComposeTestRule<*, *>.assertBookDisplayed(book: Book) {
-        with(book) {
-            title?.let {
-                onNodeWithText(it).assertIsDisplayed()
-            }
-            author?.let {
-                onNodeWithText(it).assertIsDisplayed()
-            }
-            publisher?.let {
-                onNodeWithText(it).assertIsDisplayed()
-            }
-            yearPublished?.let {
-                onNodeWithText(it.toString()).assertIsDisplayed()
-            }
-            pageCount?.let {
-                onNodeWithText(it.toString()).assertIsDisplayed()
-            }
-            isbn?.let {
-                onNodeWithText(it).assertIsDisplayed()
-            }
-            description?.let {
-                onNodeWithText(it).assertIsDisplayed()
+    fun assertBookDisplayed(book: Book) {
+        with(rule) {
+            with(book) {
+                title?.let {
+                    onNodeWithText(it).assertIsDisplayed()
+                }
+                author?.let {
+                    onNodeWithText(it).assertIsDisplayed()
+                }
+                publisher?.let {
+                    onNodeWithText(it).assertIsDisplayed()
+                }
+                yearPublished?.let {
+                    onNodeWithText(it.toString()).assertIsDisplayed()
+                }
+                pageCount?.let {
+                    onNodeWithText(it.toString()).assertIsDisplayed()
+                }
+                isbn?.let {
+                    onNodeWithText(it).assertIsDisplayed()
+                }
+                description?.let {
+                    onNodeWithText(it).assertIsDisplayed()
+                }
             }
         }
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnDeleteButton() {
-        onNodeWithTag(BookDetailTestTag.BTN_DELETE_BOOK)
+    fun tapOnDeleteButton() {
+        rule.onNodeWithTag(BookDetailTestTag.BTN_DELETE_BOOK)
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnEditButton() {
-        onNodeWithTag(BookDetailTestTag.BTN_EDIT_BOOK)
+    fun tapOnEditButton() {
+        rule.onNodeWithTag(BookDetailTestTag.BTN_EDIT_BOOK)
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.confirmDeletion() {
-        onNodeWithTextStringRes(R.string.detail_btn_confirm_delete)
+    fun confirmDeletion() {
+        rule.onNodeWithTextStringRes(R.string.detail_btn_confirm_delete)
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnTab(tab: BookDetailTab) {
+    fun tapOnTab(tab: BookDetailTab) {
         val tabStringRes = when (tab) {
             BookDetailTab.SHELVES -> R.string.screen_detail_tab_shelves
             BookDetailTab.DETAIL -> R.string.screen_detail_tab_book
@@ -64,31 +66,32 @@ class BookDetailRobot {
             BookDetailTab.SUGGESTIONS -> R.string.screen_detail_tab_suggestions
             BookDetailTab.NOTES -> R.string.screen_detail_tab_notes
         }
-        val tabLabel = activity.getString(tabStringRes)
+        with(rule) {
+            val tabLabel = activity.getString(tabStringRes)
+            onNode(hasText(tabLabel) and hasAnyAncestor(hasTestTag(BookDetailTestTag.CONTAINER_TAB_BAR)))
+                .performClick()
+        }
+    }
 
-        onNode(hasText(tabLabel) and hasAnyAncestor(hasTestTag(BookDetailTestTag.CONTAINER_TAB_BAR)))
+    fun toggleShelfSelection(shelfTitle: String) {
+        rule.onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
             .performClick()
     }
 
-    fun AndroidComposeTestRule<*, *>.toggleShelfSelection(shelfTitle: String) {
-        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
-            .performClick()
-    }
-
-    fun AndroidComposeTestRule<*, *>.assertShelfDoesNotExist(shelfTitle: String) {
-        onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
+    fun assertShelfDoesNotExist(shelfTitle: String) {
+        rule.onNodeWithTag(BookDetailTestTag.checkboxShelf(shelfTitle))
             .assertDoesNotExist()
     }
 
-    fun AndroidComposeTestRule<*, *>.tapOnManageShelvesButton() {
-        onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
+    fun tapOnManageShelvesButton() {
+        rule.onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
             .performClick()
     }
 }
 
-fun AndroidComposeTestRule<*, *>.onBookDetailScreen(scope: BookDetailRobot.() -> Unit) {
-    verifyBookDetailScreenDisplayed()
-    BookDetailRobot().apply(scope)
+fun AppRobot.onBookDetailScreen(block: BookDetailRobot.() -> Unit) {
+    rule.verifyBookDetailScreenDisplayed()
+    BookDetailRobot(rule).apply(block)
 }
 
 private fun AndroidComposeTestRule<*, *>.verifyBookDetailScreenDisplayed() {
