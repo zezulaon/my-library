@@ -11,6 +11,7 @@ import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onBookEditorScreen
 import dev.zezula.books.tests.robot.onHomeScreen
+import dev.zezula.books.tests.utils.TestBook
 import dev.zezula.books.tests.utils.bookHobit
 import dev.zezula.books.tests.utils.tapOnNavigateUp
 import dev.zezula.books.tests.utils.testBooksData
@@ -23,7 +24,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
     private val addOrUpdateLibraryBookUseCase: AddOrUpdateLibraryBookUseCase by inject()
 
-    private val bookToCreate = Book(
+    private val bookToCreate = TestBook(
         id = Book.Id("123"),
         title = "New title",
         author = "New author",
@@ -32,8 +33,6 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
         publisher = "newPublisher",
         yearPublished = 2000,
         pageCount = 10,
-        thumbnailLink = null,
-        dateAdded = "2023-01-05T17:43:25.629",
     )
 
     @Before
@@ -49,7 +48,6 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
                     publisher = it.publisher,
                     yearPublished = it.yearPublished,
                     pageCount = it.pageCount,
-                    thumbnailLink = it.thumbnailLink,
                 ),
             )
         }
@@ -63,13 +61,13 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
             }
 
             onBookEditorScreen {
-                typeInput(text = bookToCreate.title!!, type = InputType.TITLE)
-                typeInput(text = bookToCreate.author!!, type = InputType.AUTHOR)
-                typeInput(text = bookToCreate.publisher!!, type = InputType.PUBLISHER)
-                typeInput(text = bookToCreate.yearPublished!!.toString(), type = InputType.YEAR)
-                typeInput(text = bookToCreate.pageCount!!.toString(), type = InputType.PAGES)
-                typeInput(text = bookToCreate.isbn!!, type = InputType.ISBN)
-                typeInput(text = bookToCreate.description!!, type = InputType.DESC)
+                typeInput(text = bookToCreate.title, type = InputType.TITLE)
+                typeInput(text = bookToCreate.author, type = InputType.AUTHOR)
+                typeInput(text = bookToCreate.publisher, type = InputType.PUBLISHER)
+                typeInput(text = bookToCreate.yearPublished.toString(), type = InputType.YEAR)
+                typeInput(text = bookToCreate.pageCount.toString(), type = InputType.PAGES)
+                typeInput(text = bookToCreate.isbn, type = InputType.ISBN)
+                typeInput(text = bookToCreate.description, type = InputType.DESC)
 
                 tapOnSave()
             }
@@ -78,7 +76,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
                 assertCategoryDisplayed(HomeCategory.AllBooks)
                 assertToolbarBookSize(testBooksData.size + 1)
 
-                tapOnBookTitle(bookToCreate.title!!)
+                tapOnBookTitle(bookToCreate.title)
             }
 
             onBookDetailScreen {
@@ -93,7 +91,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
         onApp(composeTestRule) {
             onHomeScreen {
-                tapOnBookTitle(bookToDelete.title!!)
+                tapOnBookTitle(bookToDelete.title)
             }
 
             onBookDetailScreen {
@@ -105,7 +103,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
             onHomeScreen {
                 assertCategoryDisplayed(HomeCategory.AllBooks)
                 assertToolbarBookSize(testBooksData.size - 1)
-                assertBookTitleDoesNotExist(bookToDelete.title!!)
+                assertBookTitleDoesNotExist(bookToDelete.title)
             }
         }
     }
@@ -116,7 +114,7 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
         onApp(composeTestRule) {
             onHomeScreen {
-                tapOnBookTitle(bookToUpdate.title!!)
+                tapOnBookTitle(bookToUpdate.title)
             }
 
             onBookDetailScreen {
@@ -124,13 +122,13 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
             }
 
             onBookEditorScreen {
-                typeInput(text = bookToCreate.title!!, type = InputType.TITLE, clearExistingText = true)
-                typeInput(text = bookToCreate.author!!, type = InputType.AUTHOR, clearExistingText = true)
-                typeInput(text = bookToCreate.publisher!!, type = InputType.PUBLISHER, clearExistingText = true)
-                typeInput(text = bookToCreate.yearPublished!!.toString(), type = InputType.YEAR, clearExistingText = true)
-                typeInput(text = bookToCreate.pageCount!!.toString(), type = InputType.PAGES, clearExistingText = true)
-                typeInput(text = bookToCreate.isbn!!, type = InputType.ISBN, clearExistingText = true)
-                typeInput(text = bookToCreate.description!!, type = InputType.DESC, clearExistingText = true)
+                typeInput(text = bookToCreate.title, type = InputType.TITLE, clearExistingText = true)
+                typeInput(text = bookToCreate.author, type = InputType.AUTHOR, clearExistingText = true)
+                typeInput(text = bookToCreate.publisher, type = InputType.PUBLISHER, clearExistingText = true)
+                typeInput(text = bookToCreate.yearPublished.toString(), type = InputType.YEAR, clearExistingText = true)
+                typeInput(text = bookToCreate.pageCount.toString(), type = InputType.PAGES, clearExistingText = true)
+                typeInput(text = bookToCreate.isbn, type = InputType.ISBN, clearExistingText = true)
+                typeInput(text = bookToCreate.description, type = InputType.DESC, clearExistingText = true)
                 tapOnSave()
             }
 
@@ -141,8 +139,8 @@ class BooksManagementInstrumentedTest : BaseInstrumentedTest() {
 
             onHomeScreen {
                 assertToolbarBookSize(testBooksData.size)
-                assertBookTitleDoesNotExist(bookToUpdate.title!!)
-                assertBookTitleIsDisplayed(bookToCreate.title!!)
+                assertBookTitleDoesNotExist(bookToUpdate.title)
+                assertBookTitleIsDisplayed(bookToCreate.title)
             }
         }
     }

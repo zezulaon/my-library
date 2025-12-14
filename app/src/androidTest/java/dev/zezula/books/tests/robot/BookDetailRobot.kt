@@ -9,37 +9,21 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
-import dev.zezula.books.core.model.Book
+import dev.zezula.books.tests.utils.TestBook
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookDetailTestTag
 
 class BookDetailRobot(private val rule: AndroidComposeTestRule<*, *>) {
 
-    fun assertBookDisplayed(book: Book) {
+    fun assertBookDisplayed(book: TestBook) {
         with(rule) {
-            with(book) {
-                title?.let {
-                    onNodeWithText(it).assertIsDisplayed()
-                }
-                author?.let {
-                    onNodeWithText(it).assertIsDisplayed()
-                }
-                publisher?.let {
-                    onNodeWithText(it).assertIsDisplayed()
-                }
-                yearPublished?.let {
-                    onNodeWithText(it.toString()).assertIsDisplayed()
-                }
-                pageCount?.let {
-                    onNodeWithText(it.toString()).assertIsDisplayed()
-                }
-                isbn?.let {
-                    onNodeWithText(it).assertIsDisplayed()
-                }
-                description?.let {
-                    onNodeWithText(it).assertIsDisplayed()
-                }
-            }
+            onNodeWithText(book.title).assertIsDisplayed()
+            onNodeWithText(book.author).assertIsDisplayed()
+            onNodeWithText(book.publisher).assertIsDisplayed()
+            onNodeWithText(book.yearPublished.toString()).assertIsDisplayed()
+            onNodeWithText(book.pageCount.toString()).assertIsDisplayed()
+            onNodeWithText(book.isbn).assertIsDisplayed()
+            onNodeWithText(book.description).assertIsDisplayed()
         }
     }
 

@@ -40,7 +40,6 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                     publisher = it.publisher,
                     yearPublished = it.yearPublished,
                     pageCount = it.pageCount,
-                    thumbnailLink = it.thumbnailLink,
                 ),
             )
         }
@@ -111,7 +110,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
         onApp(composeTestRule) {
             onHomeScreen {
-                tapOnBookTitle(book.title!!)
+                tapOnBookTitle(book.title)
             }
 
             onBookDetailScreen {
@@ -124,9 +123,9 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
                 openNavigationDrawer()
                 tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(shelfTitle))
                 assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
-                assertBookTitleIsDisplayed(book.title!!)
+                assertBookTitleIsDisplayed(book.title)
 
-                tapOnBookTitle(book.title!!)
+                tapOnBookTitle(book.title)
             }
 
             onBookDetailScreen {
@@ -137,7 +136,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
             onHomeScreen {
                 assertCategoryDisplayed(HomeCategory.Custom(shelfTitle))
-                assertBookTitleDoesNotExist(book.title!!)
+                assertBookTitleDoesNotExist(book.title)
             }
         }
     }
@@ -150,7 +149,7 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
 
         onApp(composeTestRule) {
             onHomeScreen {
-                tapOnBookTitle(book.title!!)
+                tapOnBookTitle(book.title)
             }
 
             onBookDetailScreen {
@@ -163,9 +162,9 @@ class ShelvesManagementInstrumentedTest : BaseInstrumentedTest() {
             onHomeScreen {
                 openNavigationDrawer()
                 tapOnNavigationDrawerItem(DrawerItemType.CustomShelf(firstShelfTitle))
-                assertBookTitleIsDisplayed(book.title!!)
+                assertBookTitleIsDisplayed(book.title)
                 assertToolbarBookSize(1)
-                tapOnBookTitle(book.title!!)
+                tapOnBookTitle(book.title)
             }
 
             onBookDetailScreen {
