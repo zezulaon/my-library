@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Shelf
-import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
+import dev.zezula.books.testtag.ManageShelvesTestTag
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +42,11 @@ internal fun ShelfListItem(
         shape = RoundedCornerShape(16.dp),
         tonalElevation = if (isExpanded) 8.dp else 0.dp,
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .testTag(ManageShelvesTestTag.CONTAINER_SHELF_ITEM)
+                .fillMaxWidth(),
+        ) {
             ListItem(
                 headlineContent = { Text(text = shelf.title) },
                 supportingContent = {
@@ -57,7 +61,7 @@ internal fun ShelfListItem(
                 trailingContent = {
                     IconButton(
                         onClick = onExpandClick,
-                        modifier = Modifier.testTag(manageShelvesBtnExpand),
+                        modifier = Modifier.testTag(ManageShelvesTestTag.BTN_EXPAND_SHELF),
                     ) {
                         val expandIonRes = if (isExpanded) {
                             R.drawable.ic_shelf_item_expand_less

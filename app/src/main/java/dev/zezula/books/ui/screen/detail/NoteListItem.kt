@@ -20,10 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
+import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.Note
-import dev.zezula.books.core.utils.test.manageShelvesBtnExpand
+import dev.zezula.books.testtag.NotesTestTag
+import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
 internal fun NoteListItem(
@@ -35,7 +38,9 @@ internal fun NoteListItem(
     isExpanded: Boolean = false,
 ) {
     OutlinedCard(
-        modifier = modifier.padding(horizontal = 24.dp),
+        modifier = modifier
+            .testTag(NotesTestTag.CONTAINER_NOTE_ITEM)
+            .padding(horizontal = 24.dp),
     ) {
         Column(
             modifier = Modifier
@@ -70,7 +75,7 @@ internal fun NoteListItem(
                     onClick = onExpandClick,
                     modifier = Modifier
                         .align(Alignment.End)
-                        .testTag(manageShelvesBtnExpand),
+                        .testTag(NotesTestTag.BTN_EXPAND_NOTE),
                 ) {
                     val expandIonRes = if (isExpanded) {
                         R.drawable.ic_shelf_item_expand_less
@@ -105,5 +110,26 @@ internal fun NoteListItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun NoteListItemPreview() {
+    MyLibraryTheme {
+        NoteListItem(
+            note = Note(
+                id = Note.Id("1"),
+                bookId = Book.Id("1"),
+                text = "Shelf Title",
+                page = 42,
+                type = "quote",
+                dateAdded = "2023-01-05T17:43:25.629",
+            ),
+            onEditClick = {},
+            onDeleteClick = {},
+            onExpandClick = {},
+            isExpanded = true,
+        )
     }
 }

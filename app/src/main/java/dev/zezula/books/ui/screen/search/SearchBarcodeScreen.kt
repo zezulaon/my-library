@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,6 +43,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.testtag.ScanBarcodeTestTag
 import dev.zezula.books.ui.screen.components.BookListItem
 import dev.zezula.books.ui.screen.scanner.IsbnScannerComponent
 import dev.zezula.books.ui.theme.MyLibraryTheme
@@ -96,7 +98,7 @@ fun SearchBarcodeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag(ScanBarcodeTestTag.ROOT),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.search_title)) },

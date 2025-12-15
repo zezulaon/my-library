@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.core.model.ShelfForBook
-import dev.zezula.books.core.utils.test.detailShelfCheckbox
+import dev.zezula.books.testtag.BookDetailTestTag
 
 @Composable
 fun TabShelves(
@@ -52,7 +52,7 @@ private fun ShelvesList(
                     Text(text = shelfForBook.title)
                     Spacer(modifier = modifier.weight(weight = 1f))
                     Checkbox(
-                        modifier = Modifier.testTag(detailShelfCheckbox),
+                        modifier = Modifier.testTag(BookDetailTestTag.checkboxShelf(shelfForBook.title)),
                         checked = shelfForBook.isBookAdded,
                         onCheckedChange = { onShelfCheckedChange(shelfForBook, it) },
                     )

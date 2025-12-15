@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Shelf
-import dev.zezula.books.core.utils.test.createShelfInputTitle
+import dev.zezula.books.testtag.ManageShelvesTestTag
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,7 @@ internal fun AddOrEditShelfDialog(
                 OutlinedTextField(
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
-                        .testTag(createShelfInputTitle),
+                        .testTag(ManageShelvesTestTag.INPUT_SHELF_NAME),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     value = textValue.value,
                     onValueChange = { textValue.value = it },

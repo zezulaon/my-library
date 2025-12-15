@@ -62,3 +62,14 @@ jobs:
         run: |
           ./gradlew :app:mediumPhoneApi35StandardDebugAndroidTest \
             -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+
+      - name: Upload AndroidTest reports & screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-instrumented-test-output
+          path: |
+            app/build/reports/androidTests/managedDevice/**
+            app/build/outputs/managed_device_android_test_additional_output/**
+          if-no-files-found: ignore
+

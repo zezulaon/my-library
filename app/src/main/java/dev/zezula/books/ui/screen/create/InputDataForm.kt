@@ -22,13 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.core.model.BookFormData
-import dev.zezula.books.core.utils.test.createBookInputAuthor
-import dev.zezula.books.core.utils.test.createBookInputDesc
-import dev.zezula.books.core.utils.test.createBookInputIsbn
-import dev.zezula.books.core.utils.test.createBookInputPages
-import dev.zezula.books.core.utils.test.createBookInputPublisher
-import dev.zezula.books.core.utils.test.createBookInputTitle
-import dev.zezula.books.core.utils.test.createBookInputYear
+import dev.zezula.books.testtag.BookEditorTestTag
 import dev.zezula.books.ui.screen.components.EditableStarRating
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
@@ -56,7 +50,7 @@ internal fun InputDataForm(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(createBookInputTitle),
+                .testTag(BookEditorTestTag.INPUT_TITLE),
             value = bookFormData.title.orEmpty(),
             isError = invalidTitle,
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
@@ -68,7 +62,7 @@ internal fun InputDataForm(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(createBookInputAuthor),
+                .testTag(BookEditorTestTag.INPUT_AUTHOR),
             value = bookFormData.author.orEmpty(),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
@@ -80,7 +74,7 @@ internal fun InputDataForm(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(createBookInputPublisher),
+                .testTag(BookEditorTestTag.INPUT_PUBLISHER),
             value = bookFormData.publisher.orEmpty(),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
@@ -92,7 +86,7 @@ internal fun InputDataForm(
             OutlinedTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .testTag(createBookInputYear),
+                    .testTag(BookEditorTestTag.INPUT_YEAR),
                 value = bookFormData.yearPublished?.toString().orEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = enabled,
@@ -102,7 +96,7 @@ internal fun InputDataForm(
             OutlinedTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .testTag(createBookInputPages),
+                    .testTag(BookEditorTestTag.INPUT_PAGES),
                 value = bookFormData.pageCount?.toString().orEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = enabled,
@@ -114,7 +108,7 @@ internal fun InputDataForm(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(createBookInputIsbn),
+                .testTag(BookEditorTestTag.INPUT_ISBN),
             value = bookFormData.isbn.orEmpty(),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
@@ -136,7 +130,7 @@ internal fun InputDataForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 100.dp, max = 300.dp)
-                .testTag(createBookInputDesc),
+                .testTag(BookEditorTestTag.INPUT_DESC),
             value = bookFormData.description.orEmpty(),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,

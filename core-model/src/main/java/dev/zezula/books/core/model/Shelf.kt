@@ -11,6 +11,6 @@ data class Shelf(
 }
 
 val previewShelves = listOf(
-    Shelf(id = Shelf.Id("1"), dateAdded = "2023-01-05T17:43:25.629", title = "Favorites", numberOfBooks = 0),
-    Shelf(id = Shelf.Id("2"), dateAdded = "2022-01-05T17:43:25.629", title = "Have Read", numberOfBooks = 0),
+    Shelf(id = Shelf.Id("1"), dateAdded = "2023-01-05T17:43:25.629", title = "My Favorites", numberOfBooks = 0),
+    Shelf(id = Shelf.Id("2"), dateAdded = "2022-01-05T17:43:25.629", title = "Wish List", numberOfBooks = 0),
 )

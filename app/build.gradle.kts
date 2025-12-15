@@ -14,7 +14,7 @@ android {
         versionCode = 306
         versionName = "3.2.2"
 
-        testInstrumentationRunner = "dev.zezula.books.InstrumentationTestRunner"
+        testInstrumentationRunner = "dev.zezula.books.core.InstrumentationTestRunner"
         testInstrumentationRunnerArguments["useTestStorageService"] = "true"
 
         buildConfigField(
