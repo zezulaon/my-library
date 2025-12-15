@@ -8,12 +8,13 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import dev.zezula.books.R
 import dev.zezula.books.tests.utils.TestBook
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookDetailTestTag
 
-class BookDetailRobot(private val rule: AndroidComposeTestRule<*, *>) {
+class BookDetailRobot(val rule: AndroidComposeTestRule<*, *>) {
 
     fun assertBookDisplayed(book: TestBook) {
         with(rule) {
@@ -53,6 +54,7 @@ class BookDetailRobot(private val rule: AndroidComposeTestRule<*, *>) {
         with(rule) {
             val tabLabel = activity.getString(tabStringRes)
             onNode(hasText(tabLabel) and hasAnyAncestor(hasTestTag(BookDetailTestTag.CONTAINER_TAB_BAR)))
+                .performScrollTo()
                 .performClick()
         }
     }

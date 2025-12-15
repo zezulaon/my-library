@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
 import dev.zezula.books.testtag.HomeTestTag
 
-class HomeRobot(private val rule: AndroidComposeTestRule<*, *>) {
+class HomeRobot(val rule: AndroidComposeTestRule<*, *>) {
 
     fun openNavigationDrawer() {
         rule.onNodeWithTag(HomeTestTag.BTN_OPEN_NAV_DRAWER).performClick()
@@ -32,16 +32,25 @@ class HomeRobot(private val rule: AndroidComposeTestRule<*, *>) {
     private fun getNavigationDrawerNode(item: DrawerItemType): SemanticsNodeInteraction {
         with(rule) {
             val isInNavDrawer = hasAnyAncestor(hasTestTag(HomeTestTag.CONTAINER_NAV_DRAWER))
-            return when (item) {
+            val label = when (item) {
                 is DrawerItemType.ManageShelves -> {
-                    val label = activity.getString(R.string.drawer_item_manage_shelves)
-                    onNode(hasText(label) and isInNavDrawer)
+                    activity.getString(R.string.drawer_item_manage_shelves)
+                }
+
+                DrawerItemType.AllNotes -> {
+                    activity.getString(R.string.drawer_item_all_notes)
+                }
+
+                DrawerItemType.AllAuthors -> {
+                    activity.getString(R.string.drawer_item_all_authors)
                 }
 
                 is DrawerItemType.CustomShelf -> {
-                    onNode(hasText(item.name) and isInNavDrawer)
+                    item.name
                 }
             }
+
+            return onNode(hasText(label) and isInNavDrawer)
         }
     }
 
@@ -120,4 +129,6 @@ sealed interface HomeCategory {
 sealed interface DrawerItemType {
     object ManageShelves : DrawerItemType
     data class CustomShelf(val name: String) : DrawerItemType
+    object AllNotes : DrawerItemType
+    object AllAuthors : DrawerItemType
 }

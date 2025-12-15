@@ -324,7 +324,10 @@ private fun BookDetailAppBar(
                     }
 
                     DetailTab.Notes -> {
-                        IconButton(onClick = { onNewNoteClick() }) {
+                        IconButton(
+                            modifier = Modifier.testTag(BookDetailTestTag.BTN_ADD_NOTE),
+                            onClick = { onNewNoteClick() },
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(R.string.content_add_new_note),
