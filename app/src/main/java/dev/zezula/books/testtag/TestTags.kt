@@ -34,6 +34,11 @@ object BookDetailTestTag {
     const val BTN_DELETE_BOOK = "bookDetail/btn/DeleteBook"
     const val BTN_EDIT_BOOK = "bookDetail/btn/EditBook"
     const val BTN_MANAGE_SHELVES = "bookDetail/btn/ManageShelves"
+    const val BTN_ADD_NOTE = "bookDetail/btn/AddNote"
+
+    const val INPUT_NOTE_TEXT = "bookDetail/input/NoteText"
+
+    const val TAB_CONTAINER_NOTES = "bookDetail/container/TabNotes"
 
     fun checkboxShelf(shelfTitle: String) = "bookDetail/checkbox/Shelf/$shelfTitle"
 }
@@ -50,6 +55,12 @@ object ManageShelvesTestTag {
 object NotesTestTag {
     const val CONTAINER_NOTE_ITEM = "notes/container/NoteItem"
     const val BTN_EXPAND_NOTE = "notes/btn/ExpandNote"
+}
+
+object AllNotesTestTag {
+    const val ROOT = "allNotes/Root"
+
+    const val CONTAINER_NOTE_ITEM = "allNotes/container/NoteItem"
 }
 
 object ScanBarcodeTestTag {

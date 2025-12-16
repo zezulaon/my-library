@@ -17,12 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Note
+import dev.zezula.books.testtag.BookDetailTestTag
 
 @Composable
 internal fun AddOrEditNoteDialog(
@@ -53,7 +55,8 @@ internal fun AddOrEditNoteDialog(
                 OutlinedTextField(
                     modifier = Modifier
                         .padding(top = 16.dp, bottom = 24.dp)
-                        .heightIn(min = 100.dp, max = 500.dp),
+                        .heightIn(min = 100.dp, max = 500.dp)
+                        .testTag(BookDetailTestTag.INPUT_NOTE_TEXT),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     value = textValue.value,
                     onValueChange = { textValue.value = it },

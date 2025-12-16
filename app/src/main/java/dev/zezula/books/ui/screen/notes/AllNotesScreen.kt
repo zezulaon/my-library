@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.NoteWithBook
+import dev.zezula.books.testtag.AllNotesTestTag
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
@@ -62,7 +64,7 @@ fun AllNotesScreen(
     onNoteClick: (bookId: Book.Id) -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag(AllNotesTestTag.ROOT),
         topBar = { AllNotesTopAppBar(uiState = uiState, onNavigateBack = onNavigateBack) },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
@@ -137,7 +139,9 @@ private fun AllNotesList(
                 footNote = "$footNote, page: ${note.page}"
             }
             ListItem(
-                modifier = Modifier.clickable { onNoteClick(note.bookId) },
+                modifier = Modifier
+                    .testTag(AllNotesTestTag.CONTAINER_NOTE_ITEM)
+                    .clickable { onNoteClick(note.bookId) },
                 headlineContent = { Text(text = note.text, style = MaterialTheme.typography.bodyMedium) },
                 overlineContent = { Text(text = note.dateAddedFormatted, style = MaterialTheme.typography.bodySmall) },
                 supportingContent = { Text(text = footNote, style = MaterialTheme.typography.bodySmall) },

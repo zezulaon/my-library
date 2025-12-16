@@ -17,10 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Note
+import dev.zezula.books.testtag.BookDetailTestTag
 
 @Composable
 fun TabNotes(
@@ -29,7 +31,10 @@ fun TabNotes(
     onDeleteClick: (Note) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box {
+    Box(
+        modifier = modifier
+            .testTag(BookDetailTestTag.TAB_CONTAINER_NOTES),
+    ) {
         if (uiState.notes.isEmpty()) {
             NoNotesInfoCard(
                 modifier = Modifier
