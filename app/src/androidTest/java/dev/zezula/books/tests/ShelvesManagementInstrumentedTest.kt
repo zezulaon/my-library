@@ -2,6 +2,11 @@ package dev.zezula.books.tests
 
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.core.model.test.bookHobit
+import dev.zezula.books.core.model.test.shelfFavorites
+import dev.zezula.books.core.model.test.shelfWishList
+import dev.zezula.books.core.model.test.testBooksData
+import dev.zezula.books.core.model.test.testShelvesData
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.domain.usecases.CreateShelfUseCase
 import dev.zezula.books.tests.robot.BookDetailTab
@@ -11,12 +16,7 @@ import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onManageShelvesScreen
-import dev.zezula.books.tests.utils.bookHobit
-import dev.zezula.books.tests.utils.shelfFavorites
-import dev.zezula.books.tests.utils.shelfWishList
 import dev.zezula.books.tests.utils.tapOnNavigateUp
-import dev.zezula.books.tests.utils.testBooksData
-import dev.zezula.books.tests.utils.testShelvesData
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

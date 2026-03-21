@@ -1,4 +1,4 @@
-package dev.zezula.books.tests.utils
+package dev.zezula.books.core.model.test
 
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.Shelf
@@ -15,7 +15,7 @@ data class TestBook(
     val pageCount: Int,
 )
 
-internal val testBooksData: List<TestBook> = listOf(
+val testBooksData: List<TestBook> = listOf(
     TestBook(
         id = Book.Id("1"),
         title = "Hobit",
@@ -38,13 +38,13 @@ internal val testBooksData: List<TestBook> = listOf(
     ),
 )
 
-internal val testShelvesData: List<Shelf> = previewShelves
+val testShelvesData: List<Shelf> = previewShelves
 
-internal val List<TestBook>.bookHobit: TestBook
+val List<TestBook>.bookHobit: TestBook
     get() = first { it.title.equals("Hobit", ignoreCase = true) }
 
-internal val List<Shelf>.shelfFavorites: Shelf
+val List<Shelf>.shelfFavorites: Shelf
     get() = first { it.title.equals("My Favorites", ignoreCase = true) }
 
-internal val List<Shelf>.shelfWishList: Shelf
+val List<Shelf>.shelfWishList: Shelf
     get() = first { it.title.equals("Wish List", ignoreCase = true) }

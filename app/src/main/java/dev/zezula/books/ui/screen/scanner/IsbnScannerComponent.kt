@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -25,6 +26,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import dev.zezula.books.testtag.ScanBarcodeTestTag
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.util.concurrent.ExecutionException
@@ -56,6 +58,7 @@ fun IsbnScannerComponent(
     if (showScanner.value) {
         Box(
             modifier = modifier
+                .testTag(ScanBarcodeTestTag.CONTAINER_SCANNER)
                 .fillMaxSize(),
         ) {
             AndroidView(modifier = modifier.fillMaxSize(), factory = { previewView })

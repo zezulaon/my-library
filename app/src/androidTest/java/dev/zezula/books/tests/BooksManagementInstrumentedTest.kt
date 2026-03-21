@@ -3,6 +3,9 @@ package dev.zezula.books.tests
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.BookFormData
+import dev.zezula.books.core.model.test.TestBook
+import dev.zezula.books.core.model.test.bookHobit
+import dev.zezula.books.core.model.test.testBooksData
 import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.tests.robot.AddBookOption
 import dev.zezula.books.tests.robot.HomeCategory
@@ -11,10 +14,7 @@ import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onBookEditorScreen
 import dev.zezula.books.tests.robot.onHomeScreen
-import dev.zezula.books.tests.utils.TestBook
-import dev.zezula.books.tests.utils.bookHobit
 import dev.zezula.books.tests.utils.tapOnNavigateUp
-import dev.zezula.books.tests.utils.testBooksData
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

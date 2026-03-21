@@ -1,6 +1,7 @@
 package dev.zezula.books.ui.screen.search
 
 import android.Manifest
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -43,6 +45,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.core.model.test.bookHobit
+import dev.zezula.books.core.model.test.testBooksData
 import dev.zezula.books.testtag.ScanBarcodeTestTag
 import dev.zezula.books.ui.screen.components.BookListItem
 import dev.zezula.books.ui.screen.scanner.IsbnScannerComponent
@@ -125,6 +129,13 @@ fun SearchBarcodeScreen(
             if (uiState.scannedIsbn == null) {
                 // Launch the scanner if we don't have any scanned ISBN yet
                 IsbnScanner(isCameraPermissionGranted, onIsbnScanned, onRequestCameraPermissionClick)
+
+                // Hidden box for simulating scan in UI tests
+                Box(
+                    modifier = Modifier.size(1.dp)
+                        .testTag(ScanBarcodeTestTag.HIDDEN_BTN_ON_SCAN)
+                        .clickable { onIsbnScanned(testBooksData.bookHobit.isbn) },
+                )
             } else if (uiState.isSearchInProgress) {
                 CircularProgressIndicator()
             } else if (uiState.noBookFound) {

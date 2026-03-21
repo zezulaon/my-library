@@ -65,4 +65,7 @@ object AllNotesTestTag {
 
 object ScanBarcodeTestTag {
     const val ROOT = "scanBarcode/Root"
+
+    const val CONTAINER_SCANNER = "scanBarcode/container/Scanner"
+    const val HIDDEN_BTN_ON_SCAN = "scanBarcode/btn/HiddenOnScan"
 }

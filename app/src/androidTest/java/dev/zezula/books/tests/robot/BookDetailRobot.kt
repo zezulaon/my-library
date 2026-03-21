@@ -10,7 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import dev.zezula.books.R
-import dev.zezula.books.tests.utils.TestBook
+import dev.zezula.books.core.model.test.TestBook
 import dev.zezula.books.tests.utils.onNodeWithTextStringRes
 import dev.zezula.books.testtag.BookDetailTestTag
 
