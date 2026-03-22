@@ -5,7 +5,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import dev.zezula.books.R
 import dev.zezula.books.testtag.ScanBarcodeTestTag
 
@@ -33,9 +32,13 @@ class ScannerRobot(private val rule: AndroidComposeTestRule<*, *>) {
         }
     }
 
-    fun simulateScan() {
+    fun assertNoBookFoundDisplayed() {
         with(rule) {
-            onNodeWithTag(ScanBarcodeTestTag.HIDDEN_BTN_ON_SCAN).performClick()
+            onNodeWithText(activity.getString(R.string.search_no_book_found_for_isbn))
+                .assertIsDisplayed()
+            onNodeWithText(activity.getString(R.string.search_btn_scan_again))
+                .assertIsDisplayed()
+                .assertHasClickAction()
         }
     }
 }

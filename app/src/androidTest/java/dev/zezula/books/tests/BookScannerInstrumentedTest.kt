@@ -3,14 +3,24 @@ package dev.zezula.books.tests
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.model.test.bookHobit
 import dev.zezula.books.core.model.test.testBooksData
+import dev.zezula.books.tests.fake.FakeIsbnScannerController
 import dev.zezula.books.tests.robot.AddBookOption
 import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onScannerScreen
+import org.junit.Before
 import org.junit.Test
 
 class BookScannerInstrumentedTest : BaseInstrumentedTest() {
+
+    private lateinit var fakeScanner: FakeIsbnScannerController
+
+    @Before
+    fun setUp() {
+        fakeScanner = getKoin().get()
+        fakeScanner.reset()
+    }
 
     @Test
     fun when_scanner_screen_is_opened_without_camera_permission_then_permission_info_is_displayed() {
@@ -26,7 +36,7 @@ class BookScannerInstrumentedTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun when_scanner_screen_is_opened_with_camera_permission_then_camera_is_active() {
+    fun when_scanner_screen_is_opened_with_camera_permission_then_camera_component_is_launched() {
         grantCameraPermission()
 
         onApp(composeTestRule) {
@@ -49,11 +59,27 @@ class BookScannerInstrumentedTest : BaseInstrumentedTest() {
             }
 
             onScannerScreen {
-                simulateScan()
+                fakeScanner.emitScan(testBooksData.bookHobit.isbn)
             }
 
             onBookDetailScreen {
                 assertBookDisplayed(testBooksData.bookHobit)
+            }
+        }
+    }
+
+    @Test
+    fun when_isbn_is_scanned_and_no_book_found_then_info_is_displayed() {
+        grantCameraPermission()
+
+        onApp(composeTestRule) {
+            onHomeScreen {
+                tapOnAddBook(AddBookOption.SCAN)
+            }
+
+            onScannerScreen {
+                fakeScanner.emitScan("000000000")
+                assertNoBookFoundDisplayed()
             }
         }
     }
