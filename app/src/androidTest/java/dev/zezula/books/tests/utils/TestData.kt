@@ -15,7 +15,7 @@ data class TestBook(
     val pageCount: Int,
 )
 
-val testBooksData: List<TestBook> = listOf(
+internal val testBooksData: List<TestBook> = listOf(
     TestBook(
         id = Book.Id("1"),
         title = "Hobit",
@@ -38,13 +38,13 @@ val testBooksData: List<TestBook> = listOf(
     ),
 )
 
-val testShelvesData: List<Shelf> = previewShelves
+internal val testShelvesData: List<Shelf> = previewShelves
 
-val List<TestBook>.bookHobit: TestBook
+internal val List<TestBook>.bookHobit: TestBook
     get() = first { it.title.equals("Hobit", ignoreCase = true) }
 
-val List<Shelf>.shelfFavorites: Shelf
+internal val List<Shelf>.shelfFavorites: Shelf
     get() = first { it.title.equals("My Favorites", ignoreCase = true) }
 
-val List<Shelf>.shelfWishList: Shelf
+internal val List<Shelf>.shelfWishList: Shelf
     get() = first { it.title.equals("Wish List", ignoreCase = true) }

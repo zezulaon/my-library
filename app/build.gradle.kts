@@ -110,7 +110,7 @@ android {
                 create("mediumPhoneApi35") {
                     device = "Medium Phone"
                     apiLevel = 35
-                    systemImageSource = "aosp"
+                    systemImageSource = "aosp-atd"
                 }
             }
         }

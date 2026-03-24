@@ -12,17 +12,15 @@ class FakeOnlineBookFinderServiceImpl : OnlineBookFinderService {
         }
 
         return if (scannedBook != null) {
-            with(scannedBook) {
-                BookFormData(
-                    title = title,
-                    author = author,
-                    description = description,
-                    isbn = isbn,
-                    publisher = publisher,
-                    yearPublished = yearPublished,
-                    pageCount = pageCount,
-                )
-            }
+            BookFormData(
+                title = scannedBook.title,
+                author = scannedBook.author,
+                description = scannedBook.description,
+                isbn = scannedBook.isbn,
+                publisher = scannedBook.publisher,
+                yearPublished = scannedBook.yearPublished,
+                pageCount = scannedBook.pageCount,
+            )
         } else {
             null
         }

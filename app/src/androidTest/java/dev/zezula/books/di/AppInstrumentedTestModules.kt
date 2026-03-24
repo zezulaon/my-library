@@ -12,7 +12,6 @@ import dev.zezula.books.domain.services.OnlineBookFinderService
 import dev.zezula.books.scanner.IsbnScannerController
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import kotlin.jvm.java
 
 /**
  * Provides fake (in memory) DB and fake services, data sources and other controllers. In navigation tests, this module overrides
