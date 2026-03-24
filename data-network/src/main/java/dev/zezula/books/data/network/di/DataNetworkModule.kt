@@ -7,7 +7,6 @@ import dev.zezula.books.data.network.api.GoodreadsApi
 import dev.zezula.books.data.network.api.GoogleApi
 import dev.zezula.books.data.network.api.NetworkDataSource
 import dev.zezula.books.data.network.api.OpenLibraryApi
-import dev.zezula.books.data.network.fake.FakeNetworkDataSourceImpl
 import dev.zezula.data.network.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -97,8 +96,4 @@ private fun Interceptor.Chain.addQueryParameter(host: String, queryParameterName
     }
 
     return proceed(req.newBuilder().url(newUrl).build())
-}
-
-val testDataNetworkModuleOverride = module {
-    factory<NetworkDataSource> { FakeNetworkDataSourceImpl() }
 }

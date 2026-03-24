@@ -1,14 +1,14 @@
 package dev.zezula.books.tests
 
 import dev.zezula.books.core.BaseInstrumentedTest
-import dev.zezula.books.core.model.test.bookHobit
-import dev.zezula.books.core.model.test.testBooksData
-import dev.zezula.books.tests.fake.FakeIsbnScannerController
+import dev.zezula.books.core.fake.FakeIsbnScannerController
 import dev.zezula.books.tests.robot.AddBookOption
 import dev.zezula.books.tests.robot.onApp
 import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onScannerScreen
+import dev.zezula.books.tests.utils.bookHobit
+import dev.zezula.books.tests.utils.testBooksData
 import org.junit.Before
 import org.junit.Test
 

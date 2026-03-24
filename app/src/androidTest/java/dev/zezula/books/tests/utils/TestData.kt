@@ -1,4 +1,4 @@
-package dev.zezula.books.core.model.test
+package dev.zezula.books.tests.utils
 
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.Shelf

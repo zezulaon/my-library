@@ -1,8 +1,8 @@
-package dev.zezula.books.data.fake
+package dev.zezula.books.core.fake
 
 import dev.zezula.books.core.model.BookFormData
-import dev.zezula.books.core.model.test.testBooksData
 import dev.zezula.books.domain.services.OnlineBookFinderService
+import dev.zezula.books.tests.utils.testBooksData
 
 class FakeOnlineBookFinderServiceImpl : OnlineBookFinderService {
 

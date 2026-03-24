@@ -1,4 +1,4 @@
-package dev.zezula.books.data.network.fake
+package dev.zezula.books.core.fake
 
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.NetworkMigrationData

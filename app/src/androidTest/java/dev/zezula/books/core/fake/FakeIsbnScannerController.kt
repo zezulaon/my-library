@@ -1,4 +1,4 @@
-package dev.zezula.books.tests.fake
+package dev.zezula.books.core.fake
 
 import android.content.Context
 import androidx.camera.view.PreviewView

@@ -1,4 +1,4 @@
-package dev.zezula.books.data.fake
+package dev.zezula.books.core.fake
 
 import dev.zezula.books.domain.services.AuthService
 import dev.zezula.books.domain.services.EmailSignResult

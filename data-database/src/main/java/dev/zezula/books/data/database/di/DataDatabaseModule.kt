@@ -6,7 +6,6 @@ import dev.zezula.books.data.database.MIGRATION_3_4
 import dev.zezula.books.data.database.MIGRATION_6_7
 import dev.zezula.books.data.database.MIGRATION_9_10
 import org.koin.android.ext.koin.androidApplication
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val dataDatabaseModule = module {
@@ -54,11 +53,5 @@ val dataDatabaseModule = module {
     single {
         val database = get<AppDatabase>()
         database.shelfAndBookDao()
-    }
-}
-
-val testDataDatabaseModuleOverride = module {
-    single<AppDatabase> {
-        Room.inMemoryDatabaseBuilder(context = androidContext(), klass = AppDatabase::class.java).build()
     }
 }

@@ -7,11 +7,7 @@ import dev.zezula.books.data.AuthServiceImpl
 import dev.zezula.books.data.BackupService
 import dev.zezula.books.data.OnlineBookFinderServiceImpl
 import dev.zezula.books.data.database.di.dataDatabaseModule
-import dev.zezula.books.data.database.di.testDataDatabaseModuleOverride
-import dev.zezula.books.data.fake.FakeAuthServiceImpl
-import dev.zezula.books.data.fake.FakeOnlineBookFinderServiceImpl
 import dev.zezula.books.data.network.di.dataNetworkModule
-import dev.zezula.books.data.network.di.testDataNetworkModuleOverride
 import dev.zezula.books.data.repositories.BookSearchResultsRepositoryImpl
 import dev.zezula.books.data.repositories.BookSuggestionsRepositoryImpl
 import dev.zezula.books.data.repositories.BooksRepositoryImpl
@@ -60,11 +56,4 @@ val dataModule = module {
             shelfAndBookDao = get(),
         )
     }
-}
-
-val testDataModuleOverride = module {
-    includes(testDataDatabaseModuleOverride, testDataNetworkModuleOverride)
-
-    factory<OnlineBookFinderService> { FakeOnlineBookFinderServiceImpl() }
-    single<AuthService> { FakeAuthServiceImpl() }
 }
