@@ -32,7 +32,7 @@ interface BookDao {
         """
         SELECT * FROM books
         WHERE 
-            isInLibrary = 1 AND
+            isInLibrary = 1 AND isDeleted = 0 AND
             (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%')
         ORDER BY dateAdded DESC
         """,
@@ -58,7 +58,7 @@ interface BookDao {
     /**
      * Checks if the book is part of the user's personal book collection (library).
      */
-    @Query("SELECT EXISTS(SELECT 1 FROM books WHERE id = :bookId AND isInLibrary = 1)")
+    @Query("SELECT EXISTS(SELECT 1 FROM books WHERE id = :bookId AND isInLibrary = 1 AND isDeleted = 0)")
     fun isBookInLibrary(bookId: Book.Id): Flow<Boolean>
 
     /**
@@ -67,7 +67,7 @@ interface BookDao {
     @Query(
         """
         UPDATE books 
-        SET isInLibrary = 1, dateAdded = :dateAdded, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
+        SET isInLibrary = 1, isDeleted = 0, dateAdded = :dateAdded, isPendingSync = 1, lastModifiedTimestamp = :lastModifiedTimestamp
         WHERE id = :bookId
         """,
     )
