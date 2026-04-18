@@ -17,9 +17,26 @@ class ScannerRobot(private val rule: AndroidComposeTestRule<*, *>) {
         }
     }
 
+    fun assertCameraComponentDisplayed() {
+        with(rule) {
+            onNodeWithTag(ScanBarcodeTestTag.CONTAINER_SCANNER)
+                .assertIsDisplayed()
+        }
+    }
+
     fun assertAllowCameraButtonDisplayed() {
         with(rule) {
             onNodeWithText(activity.getString(R.string.scanner_btn_allow_camera))
+                .assertIsDisplayed()
+                .assertHasClickAction()
+        }
+    }
+
+    fun assertNoBookFoundDisplayed() {
+        with(rule) {
+            onNodeWithText(activity.getString(R.string.search_no_book_found_for_isbn))
+                .assertIsDisplayed()
+            onNodeWithText(activity.getString(R.string.search_btn_scan_again))
                 .assertIsDisplayed()
                 .assertHasClickAction()
         }

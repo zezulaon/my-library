@@ -6,6 +6,8 @@ import dev.zezula.books.core.utils.di.GOOGLE_API_KEY_QUALIFIER
 import dev.zezula.books.core.utils.di.IO_QUALIFIER
 import dev.zezula.books.data.di.dataModule
 import dev.zezula.books.legacy.MigrationConfigDataProvider
+import dev.zezula.books.scanner.CameraXIsbnScannerController
+import dev.zezula.books.scanner.IsbnScannerController
 import dev.zezula.books.ui.screen.appinfo.AppInfoViewModel
 import dev.zezula.books.ui.screen.authors.AllAuthorsViewModel
 import dev.zezula.books.ui.screen.authors.AuthorBooksViewModel
@@ -33,6 +35,8 @@ val appModule = module {
 
     single(named(GOODREADS_API_KEY_QUALIFIER)) { BuildConfig.ML_GOODREADS_API_KEY }
     single(named(GOOGLE_API_KEY_QUALIFIER)) { BuildConfig.ML_GOOGLE_API_KEY }
+
+    single<IsbnScannerController> { CameraXIsbnScannerController() }
 
     factory<CoroutineScope>(qualifier = named(IO_QUALIFIER)) {
         CoroutineScope(Dispatchers.IO + SupervisorJob())

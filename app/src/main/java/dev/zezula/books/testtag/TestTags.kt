@@ -65,4 +65,6 @@ object AllNotesTestTag {
 
 object ScanBarcodeTestTag {
     const val ROOT = "scanBarcode/Root"
+
+    const val CONTAINER_SCANNER = "scanBarcode/container/Scanner"
 }

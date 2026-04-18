@@ -110,7 +110,7 @@ android {
                 create("mediumPhoneApi35") {
                     device = "Medium Phone"
                     apiLevel = 35
-                    systemImageSource = "aosp"
+                    systemImageSource = "aosp-atd"
                 }
             }
         }
@@ -170,6 +170,11 @@ dependencies {
     implementation(libs.google.mlkit.barcode.scanning)
 
     // Tests
+    androidTestImplementation(project(":data-network"))
+    androidTestImplementation(project(":data-database"))
+
+    androidTestImplementation(libs.androidx.room.runtime)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.app.cash.turbine)
