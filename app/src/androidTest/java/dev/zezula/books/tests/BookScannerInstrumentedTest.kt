@@ -1,5 +1,6 @@
 package dev.zezula.books.tests
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import dev.zezula.books.core.BaseInstrumentedTest
 import dev.zezula.books.core.fake.FakeIsbnScannerController
 import dev.zezula.books.tests.robot.AddBookOption
@@ -8,6 +9,7 @@ import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.robot.onScannerScreen
 import dev.zezula.books.tests.utils.bookHobit
+import dev.zezula.books.tests.utils.tapOnNavigateUp
 import dev.zezula.books.tests.utils.testBooksData
 import org.junit.Before
 import org.junit.Test
@@ -64,6 +66,46 @@ class BookScannerInstrumentedTest : BaseInstrumentedTest() {
 
             onBookDetailScreen {
                 assertBookDisplayed(testBooksData.bookHobit)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun when_the_scanned_book_is_deleted_then_it_can_be_rescanned_again() {
+        grantCameraPermission()
+
+        onApp(composeTestRule) {
+            onHomeScreen {
+                tapOnAddBook(AddBookOption.SCAN)
+            }
+
+            val bookHobit = testBooksData.bookHobit
+            onScannerScreen {
+                fakeScanner.emitScan(bookHobit.isbn)
+            }
+
+            onBookDetailScreen {
+                assertBookDisplayed(bookHobit)
+                tapOnDeleteButton()
+                confirmDeletion()
+            }
+
+            onHomeScreen {
+                tapOnAddBook(AddBookOption.SCAN)
+            }
+
+            onScannerScreen {
+                fakeScanner.emitScan(bookHobit.isbn)
+            }
+
+            onBookDetailScreen {
+                assertBookDisplayed(bookHobit)
+                tapOnNavigateUp()
+            }
+
+            onHomeScreen {
+                assertBookTitleIsDisplayed(bookHobit.title)
             }
         }
     }
