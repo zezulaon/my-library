@@ -63,6 +63,10 @@ object AllNotesTestTag {
     const val CONTAINER_NOTE_ITEM = "allNotes/container/NoteItem"
 }
 
+object AllAuthorsTestTag {
+    const val ROOT = "allAuthors/Root"
+}
+
 object ScanBarcodeTestTag {
     const val ROOT = "scanBarcode/Root"
 

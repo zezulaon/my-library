@@ -64,6 +64,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
         getByName("release") {
             isDebuggable = false
             signingConfig = signingConfigs.getByName("release")
