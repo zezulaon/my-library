@@ -74,9 +74,11 @@ fun AllAuthorsScreen(
 @Composable
 private fun AllAuthorsTopAppBar(
     uiState: AllAuthorsUiState,
+    modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
+        modifier = modifier.testTag(AllAuthorsTestTag.CONTAINER_TOOLBAR),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),

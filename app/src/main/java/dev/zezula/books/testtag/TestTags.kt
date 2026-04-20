@@ -65,6 +65,12 @@ object AllNotesTestTag {
 
 object AllAuthorsTestTag {
     const val ROOT = "allAuthors/Root"
+    const val CONTAINER_TOOLBAR = "allAuthors/container/Toolbar"
+}
+
+object AuthorBooksTestTag {
+    const val ROOT = "authorBooks/Root"
+    const val CONTAINER_TOOLBAR = "authorBooks/container/Toolbar"
 }
 
 object ScanBarcodeTestTag {

@@ -7,6 +7,8 @@ import dev.zezula.books.domain.usecases.AddOrUpdateLibraryBookUseCase
 import dev.zezula.books.tests.robot.DrawerItemType
 import dev.zezula.books.tests.robot.onAllAuthorsScreen
 import dev.zezula.books.tests.robot.onApp
+import dev.zezula.books.tests.robot.onAuthorBooksScreen
+import dev.zezula.books.tests.robot.onBookDetailScreen
 import dev.zezula.books.tests.robot.onHomeScreen
 import dev.zezula.books.tests.utils.TestBook
 import kotlinx.coroutines.runBlocking
@@ -30,8 +32,8 @@ class AuthorsInstrumentedTest : BaseInstrumentedTest() {
     )
 
     private val bookToCreateSecond = TestBook(
-        id = Book.Id("1"),
-        title = "Two Towers",
+        id = Book.Id("2"),
+        title = "The Fellowship of the Ring",
         author = "J. R. R. Tolkien",
         description = "New desc",
         isbn = "987457",
@@ -41,7 +43,7 @@ class AuthorsInstrumentedTest : BaseInstrumentedTest() {
     )
 
     private val bookToCreateThird = TestBook(
-        id = Book.Id("1"),
+        id = Book.Id("3"),
         title = "Neverwhere",
         author = "Neil Gaiman",
         description = "New desc",
@@ -83,11 +85,22 @@ class AuthorsInstrumentedTest : BaseInstrumentedTest() {
             }
 
             onAllAuthorsScreen {
-                // FIXME: check that:
-                //  - there are 2 authors, and that the one of them is "J. R. R. Tolkien" with 2 books
-                //  - Subtitle in toolbar contains "2 Authors"
-                //  - Tap on the author navigates to the correct AuthorBooksScreen.kt
-                //  - Tap on the book navigates to the correct BookDetailScreen.kt
+                assertToolbarAuthorSize(2)
+                assertAuthorIsDisplayed("J. R. R. Tolkien")
+                assertAuthorBookCountIsDisplayed(2)
+
+                tapOnAuthor("J. R. R. Tolkien")
+            }
+
+            onAuthorBooksScreen {
+                assertToolbarAuthorName("J. R. R. Tolkien")
+                assertToolbarBookSize(2)
+
+                tapOnBookTitle("Two Towers")
+            }
+
+            onBookDetailScreen {
+                assertBookDisplayed(bookToCreateFirst)
             }
         }
     }
