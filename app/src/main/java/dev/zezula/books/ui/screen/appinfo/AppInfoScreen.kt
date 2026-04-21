@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.BuildConfig
 import dev.zezula.books.R
 import dev.zezula.books.core.utils.shortUserId
+import dev.zezula.books.testtag.AppInfoTestTag
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
@@ -67,6 +69,7 @@ fun AppInfoScreen(
     onNavigateBack: () -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.testTag(AppInfoTestTag.ROOT),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -161,7 +164,8 @@ fun AppInfoScreen(
                     TextButton(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .testTag(AppInfoTestTag.BTN_EXPORT),
                         onClick = {
                             onExportClicked()
                         },

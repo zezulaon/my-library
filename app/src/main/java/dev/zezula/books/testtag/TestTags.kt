@@ -10,6 +10,7 @@ object HomeTestTag {
     const val BTN_ADD_BOOK = "home/btn/AddBook"
     const val BTN_ADD_BOOK_MANUALLY = "home/btn/AddBookManually"
     const val BTN_SCAN_BARCODE = "home/btn/ScanBarcode"
+    const val BTN_MORE_OPTIONS = "home/btn/MoreOptions"
 }
 
 object BookEditorTestTag {
@@ -77,4 +78,9 @@ object ScanBarcodeTestTag {
     const val ROOT = "scanBarcode/Root"
 
     const val CONTAINER_SCANNER = "scanBarcode/container/Scanner"
+}
+
+object AppInfoTestTag {
+    const val ROOT = "appInfo/Root"
+    const val BTN_EXPORT = "appInfo/btn/Export"
 }
