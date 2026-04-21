@@ -198,11 +198,5 @@ fun NavHostController.navigateToContactEmailDraft() {
 fun NavHostController.navigateToReleaseNotes() {
     val releaseInfoUrl = BuildConfig.ML_URL_RELEASE_INFO
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseInfoUrl))
-
-    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)
-    } else {
-        Timber.w("No browser client found")
-        Toast.makeText(context, context.getString(R.string.error_message_no_browser), Toast.LENGTH_SHORT).show()
-    }
+    context.startActivity(intent)
 }
