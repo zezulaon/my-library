@@ -105,6 +105,10 @@ class HomeRobot(val rule: AndroidComposeTestRule<*, *>) {
     fun assertBookTitleIsDisplayed(bookTitle: String) {
         rule.onNodeWithText(bookTitle).assertIsDisplayed()
     }
+
+    fun navigateToAppInfo() {
+        rule.onNodeWithTag(HomeTestTag.BTN_MORE_OPTIONS).performClick()
+    }
 }
 
 fun AppRobot.onHomeScreen(block: HomeRobot.() -> Unit) {

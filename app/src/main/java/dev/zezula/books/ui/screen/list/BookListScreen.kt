@@ -550,7 +550,10 @@ private fun BookListTopAppBar(
             HomeAppBarTitle(uiState)
         },
         actions = {
-            IconButton(onClick = onMoreClicked) {
+            IconButton(
+                modifier = Modifier.testTag(HomeTestTag.BTN_MORE_OPTIONS),
+                onClick = onMoreClicked,
+            ) {
                 Icon(Icons.Filled.MoreVert, contentDescription = null)
             }
         },
