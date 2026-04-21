@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.Book
 import dev.zezula.books.core.model.previewBooks
+import dev.zezula.books.testtag.SearchMyLibraryTestTag
 import dev.zezula.books.ui.screen.components.BookList
 import dev.zezula.books.ui.theme.MyLibraryTheme
 import org.jetbrains.annotations.VisibleForTesting
@@ -67,7 +69,9 @@ fun SearchMyLibraryScreen(
     onSearchButtonClick: () -> Unit = {},
 ) {
     SearchBar(
-        modifier = modifier.focusRequester(searchFocusRequester),
+        modifier = modifier
+            .testTag(SearchMyLibraryTestTag.INPUT_QUERY)
+            .focusRequester(searchFocusRequester),
         placeholder = { Text(text = stringResource(R.string.search_my_library_placeholder)) },
         query = uiState.currentSearchQuery,
         onQueryChange = {

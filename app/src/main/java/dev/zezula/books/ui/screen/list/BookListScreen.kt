@@ -614,7 +614,10 @@ private fun BookListBottomBar(
                     contentDescription = stringResource(id = R.string.content_open_drawer),
                 )
             }
-            IconButton(onClick = onSearchMyLibraryClick) {
+            IconButton(
+                modifier = Modifier.testTag(HomeTestTag.BTN_SEARCH),
+                onClick = onSearchMyLibraryClick,
+            ) {
                 Icon(Icons.Filled.Search, contentDescription = null)
             }
             IconButton(onClick = onSortBooksClick) {
