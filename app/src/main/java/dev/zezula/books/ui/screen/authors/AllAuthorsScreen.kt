@@ -23,12 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zezula.books.R
 import dev.zezula.books.core.model.AuthorAndBooks
+import dev.zezula.books.testtag.AllAuthorsTestTag
 import dev.zezula.books.ui.theme.MyLibraryTheme
 
 @Composable
@@ -55,7 +57,7 @@ fun AllAuthorsScreen(
     onAuthorClick: (authorNameId: String) -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag(AllAuthorsTestTag.ROOT),
         topBar = { AllAuthorsTopAppBar(uiState = uiState, onNavigateBack = onNavigateBack) },
     ) { innerPadding ->
         AllAuthorsList(
@@ -72,10 +74,11 @@ fun AllAuthorsScreen(
 @Composable
 private fun AllAuthorsTopAppBar(
     uiState: AllAuthorsUiState,
-    onNavigateBack: () -> Unit = {},
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
+        modifier = modifier.testTag(AllAuthorsTestTag.CONTAINER_TOOLBAR),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
