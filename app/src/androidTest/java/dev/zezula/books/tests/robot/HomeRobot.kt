@@ -65,6 +65,10 @@ class HomeRobot(val rule: AndroidComposeTestRule<*, *>) {
                 AddBookOption.SCAN -> {
                     onNodeWithTag(HomeTestTag.BTN_SCAN_BARCODE).performClick()
                 }
+
+                AddBookOption.BULK_SCAN -> {
+                    onNodeWithTag(HomeTestTag.BTN_BULK_SCAN_BARCODES).performClick()
+                }
             }
         }
     }
@@ -127,6 +131,7 @@ private fun AndroidComposeTestRule<*, *>.verifyHomeScreenDisplayed() {
 enum class AddBookOption {
     MANUALLY,
     SCAN,
+    BULK_SCAN,
 }
 
 sealed interface HomeCategory {
