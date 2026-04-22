@@ -11,6 +11,7 @@ object HomeTestTag {
     const val BTN_ADD_BOOK_MANUALLY = "home/btn/AddBookManually"
     const val BTN_SCAN_BARCODE = "home/btn/ScanBarcode"
     const val BTN_BULK_SCAN_BARCODES = "home/btn/BulkScanBarcodes"
+    const val BTN_FIND_BOOK_ONLINE = "home/btn/FindBookOnline"
     const val BTN_MORE_OPTIONS = "home/btn/MoreOptions"
     const val BTN_SEARCH = "home/btn/Search"
 }

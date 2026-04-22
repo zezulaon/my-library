@@ -73,6 +73,11 @@ class BookDetailRobot(val rule: AndroidComposeTestRule<*, *>) {
         rule.onNodeWithTag(BookDetailTestTag.BTN_MANAGE_SHELVES)
             .performClick()
     }
+
+    fun tapOnAddToLibrary() {
+        rule.onNodeWithText(rule.activity.getString(R.string.detail_add_to_my_library_btn), useUnmergedTree = true)
+            .performClick()
+    }
 }
 
 fun AppRobot.onBookDetailScreen(block: BookDetailRobot.() -> Unit) {
