@@ -109,6 +109,10 @@ class HomeRobot(val rule: AndroidComposeTestRule<*, *>) {
     fun navigateToAppInfo() {
         rule.onNodeWithTag(HomeTestTag.BTN_MORE_OPTIONS).performClick()
     }
+
+    fun navigateToSearch() {
+        rule.onNodeWithTag(HomeTestTag.BTN_SEARCH).performClick()
+    }
 }
 
 fun AppRobot.onHomeScreen(block: HomeRobot.() -> Unit) {
