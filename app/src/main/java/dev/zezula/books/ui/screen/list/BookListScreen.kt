@@ -482,6 +482,7 @@ private fun AddBookBottomSheet(
             val label = stringResource(R.string.home_btn_bulk_scan_barcodes)
             ListItem(
                 modifier = Modifier
+                    .testTag(HomeTestTag.BTN_BULK_SCAN_BARCODES)
                     .clickable {
                         onBulkScanBooksClick()
                         onAddBookSheetCloseRequested()

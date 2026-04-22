@@ -43,6 +43,9 @@ internal val testShelvesData: List<Shelf> = previewShelves
 internal val List<TestBook>.bookHobit: TestBook
     get() = first { it.title.equals("Hobit", ignoreCase = true) }
 
+internal val List<TestBook>.bookNeverwhere: TestBook
+    get() = first { it.title.equals("Neverwhere", ignoreCase = true) }
+
 internal val List<Shelf>.shelfFavorites: Shelf
     get() = first { it.title.equals("My Favorites", ignoreCase = true) }
 
