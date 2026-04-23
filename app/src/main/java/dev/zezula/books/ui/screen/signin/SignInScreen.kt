@@ -63,9 +63,6 @@ fun SignInRoute(
             viewModel.onGoogleSignInClick()
         },
         onEmailSignInClick = onEmailSignIn,
-        onAnonymousSignInClick = {
-            viewModel.signInAnonymously()
-        },
         onContactClicked = onContactClicked,
         onReleaseNotesClicked = onReleaseNotesClicked,
     )
@@ -76,7 +73,6 @@ fun SignInScreen(
     uiState: SignInUiState,
     onGoogleSignInClick: () -> Unit,
     onEmailSignInClick: () -> Unit,
-    onAnonymousSignInClick: () -> Unit,
     onContactClicked: () -> Unit,
     onReleaseNotesClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -152,7 +148,6 @@ private fun DefaultPreview() {
         SignInScreen(
             uiState = SignInUiState(isSignInProgress = false),
             onGoogleSignInClick = {},
-            onAnonymousSignInClick = {},
             onContactClicked = {},
             onReleaseNotesClicked = {},
             onEmailSignInClick = {},

@@ -75,22 +75,6 @@ class SignInViewModel(
         }
     }
 
-    fun signInAnonymously() {
-        viewModelScope.launch {
-            isInProgress.value = true
-            val isSuccess = authService.signInAnonymously()
-            isInProgress.value = false
-            if (isSuccess) {
-                Timber.d("Anonymous Sign In successful: ${authService.getUserId()}")
-                isUserSignedIn.value = true
-                anonymUpgradeRequired.value = authService.isAccountAnonymous()
-            } else {
-                uiMessage.value = R.string.sign_in_anonymous_sign_in_failed
-                Timber.d("Anonymous Sign In failed")
-            }
-        }
-    }
-
     fun onGoogleSignInClick() {
         isInProgress.value = true
     }
