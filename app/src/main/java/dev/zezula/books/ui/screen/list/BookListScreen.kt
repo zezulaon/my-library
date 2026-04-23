@@ -515,10 +515,12 @@ private fun AddBookBottomSheet(
                 },
             )
             ListItem(
-                modifier = Modifier.clickable {
-                    onFindOnlineClick()
-                    onAddBookSheetCloseRequested()
-                },
+                modifier = Modifier
+                    .testTag(HomeTestTag.BTN_FIND_BOOK_ONLINE)
+                    .clickable {
+                        onFindOnlineClick()
+                        onAddBookSheetCloseRequested()
+                    },
                 headlineContent = { Text(stringResource(R.string.home_btn_find_online)) },
                 leadingContent = { Icon(Icons.Default.Search, contentDescription = null) },
             )
