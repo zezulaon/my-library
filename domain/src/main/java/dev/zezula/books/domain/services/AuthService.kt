@@ -10,8 +10,6 @@ interface AuthService {
 
     suspend fun googleSignIn(googleIdToken: String): Boolean
 
-    suspend fun signInAnonymously(): Boolean
-
     suspend fun emailSignIn(email: String, password: String): EmailSignResult
 
     suspend fun emailCreateUser(email: String, password: String): EmailSignResult

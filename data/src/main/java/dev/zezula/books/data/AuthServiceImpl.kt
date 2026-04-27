@@ -32,16 +32,7 @@ class AuthServiceImpl(private val auth: FirebaseAuth) : AuthService {
                 auth.signInWithCredential(firebaseCredential).await()?.user?.uid != null
             }
         } catch (e: Exception) {
-            Timber.e("Failed to sign in with Google.", e)
-            false
-        }
-    }
-
-    override suspend fun signInAnonymously(): Boolean {
-        return try {
-            auth.signInAnonymously().await()?.user?.uid != null
-        } catch (e: Exception) {
-            Timber.e("Failed to sign in anonymously.", e)
+            Timber.e(e, "Failed to sign in with Google.")
             false
         }
     }
@@ -56,14 +47,14 @@ class AuthServiceImpl(private val auth: FirebaseAuth) : AuthService {
             }
         } catch (e: FirebaseAuthInvalidCredentialsException) {
             // Wrong password
-            Timber.e("Failed to sign in using email (InvalidCredentials): ${e.errorCode}", e)
+            Timber.e(e, "Failed to sign in using email (InvalidCredentials): ${e.errorCode}")
             return EmailSignResult.InvalidCredentials
         } catch (e: FirebaseAuthInvalidUserException) {
             // User probably doesn't exist
-            Timber.e("Failed to sign in using email (InvalidUser): ${e.errorCode}", e)
+            Timber.e(e, "Failed to sign in using email (InvalidUser): ${e.errorCode}")
             return EmailSignResult.InvalidUser
         } catch (e: Exception) {
-            Timber.e("Failed to sign in using email/password.", e)
+            Timber.e(e, "Failed to sign in using email/password.")
             return EmailSignResult.UnknownError
         }
     }
@@ -78,10 +69,10 @@ class AuthServiceImpl(private val auth: FirebaseAuth) : AuthService {
             }
         } catch (e: FirebaseAuthUserCollisionException) {
             // User already exists
-            Timber.e("Failed to create account (UserCollision): ${e.errorCode}", e)
+            Timber.e(e, "Failed to create account (UserCollision): ${e.errorCode}")
             return EmailSignResult.UserCollision
         } catch (e: Exception) {
-            Timber.e("Failed to sign in using email/password.", e)
+            Timber.e(e, "Failed to sign in using email/password.")
             return EmailSignResult.UnknownError
         }
     }
@@ -92,10 +83,10 @@ class AuthServiceImpl(private val auth: FirebaseAuth) : AuthService {
             EmailSignResult.Success
         } catch (e: FirebaseAuthInvalidUserException) {
             // User probably doesn't exist
-            Timber.e("Failed to create account (InvalidUser): ${e.errorCode}", e)
+            Timber.e(e, "Failed to create account (InvalidUser): ${e.errorCode}")
             return EmailSignResult.InvalidUser
         } catch (e: Exception) {
-            Timber.e("Failed to request password reset.", e)
+            Timber.e(e, "Failed to request password reset.")
             return EmailSignResult.UnknownError
         }
     }
